@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { styled, useTheme } from '@mui/material/styles';
+import { styled } from '@mui/material/styles';
 import Box from '@mui/material/Box';
 import MuiDrawer from '@mui/material/Drawer';
 import MuiAppBar from '@mui/material/AppBar';
@@ -9,16 +9,18 @@ import CssBaseline from '@mui/material/CssBaseline';
 import Typography from '@mui/material/Typography';
 import Divider from '@mui/material/Divider';
 import IconButton from '@mui/material/IconButton';
-import MenuIcon from '@mui/icons-material/Menu';
-import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
-import ChevronRightIcon from '@mui/icons-material/ChevronRight';
-import ListItem from '@mui/material/ListItem';
 import ListItemButton from '@mui/material/ListItemButton';
 import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
-import CloudIcon from '@mui/icons-material/Cloud';
 import DeviceHubIcon from '@mui/icons-material/DeviceHub';
-
+import DashboardIcon from '@mui/icons-material/Dashboard';
+import { ExpandLess, ExpandMore } from '@mui/icons-material';
+import { Collapse } from '@mui/material';
+import MenuIcon from '@mui/icons-material/Menu';
+import AppsIcon from '@mui/icons-material/Apps';
+import CloudIcon from '@mui/icons-material/Cloud';
+import HubIcon from '@mui/icons-material/Hub';
+import DesktopMacIcon from '@mui/icons-material/DesktopMac';
 const drawerWidth = 240;
 
 const openedMixin = theme => ({
@@ -87,8 +89,9 @@ const Drawer = styled(MuiDrawer, {
 }));
 
 export default function MiniDrawer() {
-  const theme = useTheme();
   const [open, setOpen] = React.useState(false);
+  const [verticalOpen1, setVerticalOpen1] = React.useState(false);
+  const [verticalOpen2, setVerticalOpen2] = React.useState(false);
 
   const handleDrawerOpen = () => {
     setOpen(true);
@@ -96,6 +99,14 @@ export default function MiniDrawer() {
 
   const handleDrawerClose = () => {
     setOpen(false);
+  };
+
+  const handleClick1 = () => {
+    setVerticalOpen1(!verticalOpen1);
+  };
+
+  const handleClick2 = () => {
+    setVerticalOpen2(!verticalOpen2);
   };
 
   return (
@@ -121,22 +132,47 @@ export default function MiniDrawer() {
         </Toolbar>
       </AppBar>
       <Drawer variant='permanent' open={open}>
-        <DrawerHeader>
+        <DrawerHeader
+          sx={{
+            display: 'flex',
+            justifyContent: 'space-between',
+            alignItems: 'center',
+          }}
+        >
           <IconButton onClick={handleDrawerClose}>
-            {theme.direction === 'rtl' ? (
-              <ChevronRightIcon />
-            ) : (
-              <ChevronLeftIcon />
-            )}
+            <MenuIcon />
           </IconButton>
         </DrawerHeader>
         <Divider />
         <List>
-          {['集群', '服务'].map((text, index) => (
-            <ListItem key={text} disablePadding sx={{ display: 'block' }}>
+          <ListItemButton
+            sx={{
+              minHeight: 48,
+              justifyContent: open ? 'initial' : 'center',
+              px: 2.5,
+            }}
+            onClick={handleClick1}
+          >
+            <ListItemIcon
+              sx={{
+                minWidth: 0,
+                mr: open ? 3 : 'auto',
+                justifyContent: 'center',
+              }}
+            >
+              <DeviceHubIcon />
+            </ListItemIcon>
+            {open ? (
+              <>
+                <ListItemText primary='集群' />
+                {verticalOpen1 ? <ExpandLess /> : <ExpandMore />}
+              </>
+            ) : null}
+          </ListItemButton>
+          <Collapse in={verticalOpen1} timeout='auto' unmountOnExit={true}>
+            <List component='div' disablePadding>
               <ListItemButton
                 sx={{
-                  minHeight: 48,
                   justifyContent: open ? 'initial' : 'center',
                   px: 2.5,
                 }}
@@ -148,12 +184,93 @@ export default function MiniDrawer() {
                     justifyContent: 'center',
                   }}
                 >
-                  {index % 2 === 0 ? <DeviceHubIcon /> : <CloudIcon />}
+                  <DashboardIcon />
                 </ListItemIcon>
-                <ListItemText primary={text} sx={{ opacity: open ? 1 : 0 }} />
+                {open ? <ListItemText primary='总览' /> : null}
               </ListItemButton>
-            </ListItem>
-          ))}
+              <ListItemButton
+                sx={{
+                  justifyContent: open ? 'initial' : 'center',
+                  px: 2.5,
+                }}
+              >
+                <ListItemIcon
+                  sx={{
+                    minWidth: 0,
+                    mr: open ? 3 : 'auto',
+                    justifyContent: 'center',
+                  }}
+                >
+                  <DesktopMacIcon />
+                </ListItemIcon>
+                {open ? <ListItemText primary='节点' /> : null}
+              </ListItemButton>
+            </List>
+          </Collapse>
+        </List>
+        <List>
+          <ListItemButton
+            sx={{
+              minHeight: 48,
+              justifyContent: open ? 'initial' : 'center',
+              px: 2.5,
+            }}
+            onClick={handleClick2}
+          >
+            <ListItemIcon
+              sx={{
+                minWidth: 0,
+                mr: open ? 3 : 'auto',
+                justifyContent: 'center',
+              }}
+            >
+              <CloudIcon />
+            </ListItemIcon>
+            {open ? (
+              <>
+                <ListItemText primary='服务' />
+                {verticalOpen2 ? <ExpandLess /> : <ExpandMore />}
+              </>
+            ) : null}
+          </ListItemButton>
+          <Collapse in={verticalOpen2} timeout='auto' unmountOnExit={true}>
+            <List component='div' disablePadding>
+              <ListItemButton
+                sx={{
+                  justifyContent: open ? 'initial' : 'center',
+                  px: 2.5,
+                }}
+              >
+                <ListItemIcon
+                  sx={{
+                    minWidth: 0,
+                    mr: open ? 3 : 'auto',
+                    justifyContent: 'center',
+                  }}
+                >
+                  <AppsIcon />
+                </ListItemIcon>
+                {open ? <ListItemText primary='服务集合' /> : null}
+              </ListItemButton>
+              <ListItemButton
+                sx={{
+                  justifyContent: open ? 'initial' : 'center',
+                  px: 2.5,
+                }}
+              >
+                <ListItemIcon
+                  sx={{
+                    minWidth: 0,
+                    mr: open ? 3 : 'auto',
+                    justifyContent: 'center',
+                  }}
+                >
+                  <HubIcon />
+                </ListItemIcon>
+                {open ? <ListItemText primary='服务链路' /> : null}
+              </ListItemButton>
+            </List>
+          </Collapse>
         </List>
       </Drawer>
       <Box component='main' sx={{ flexGrow: 1, p: 3 }}>
