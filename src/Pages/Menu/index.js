@@ -15,14 +15,16 @@ import ListItemText from '@mui/material/ListItemText';
 import DeviceHubIcon from '@mui/icons-material/DeviceHub';
 import DashboardIcon from '@mui/icons-material/Dashboard';
 import { ExpandLess, ExpandMore } from '@mui/icons-material';
-import { Collapse } from '@mui/material';
+import { Button, Collapse } from '@mui/material';
 import MenuIcon from '@mui/icons-material/Menu';
 import AppsIcon from '@mui/icons-material/Apps';
 import CloudIcon from '@mui/icons-material/Cloud';
 import HubIcon from '@mui/icons-material/Hub';
 import DesktopMacIcon from '@mui/icons-material/DesktopMac';
-const drawerWidth = 240;
+import {Outlet} from "react-router-dom";
+import { useNavigate } from 'react-router-dom';
 
+const drawerWidth = 220;
 const openedMixin = theme => ({
   width: drawerWidth,
   transition: theme.transitions.create('width', {
@@ -92,6 +94,7 @@ export default function MiniDrawer() {
   const [open, setOpen] = React.useState(false);
   const [verticalOpen1, setVerticalOpen1] = React.useState(false);
   const [verticalOpen2, setVerticalOpen2] = React.useState(false);
+  const navigate = useNavigate();
 
   const handleDrawerOpen = () => {
     setOpen(true);
@@ -129,6 +132,20 @@ export default function MiniDrawer() {
           <Typography variant='h6' noWrap component='div'>
             Cloud Collaboration Platform
           </Typography>
+          <Box sx={{ marginLeft: 'auto' }}>
+            <Button
+              variant='outlined'
+              sx={{
+                borderColor: '#FFF',
+                color: '#FFF',
+              }}
+            >
+              Button
+            </Button>
+            {/*<IconButton aria-label='delete'>*/}
+            {/*  <DeleteIcon />*/}
+            {/*</IconButton>*/}
+          </Box>
         </Toolbar>
       </AppBar>
       <Drawer variant='permanent' open={open}>
@@ -144,12 +161,13 @@ export default function MiniDrawer() {
           </IconButton>
         </DrawerHeader>
         <Divider />
-        <List>
+        <List sx={{ paddingTop: '0px', paddingBottom: '0px' }}>
           <ListItemButton
             sx={{
               minHeight: 48,
               justifyContent: open ? 'initial' : 'center',
               px: 2.5,
+              backgroundColor: '#E8EDFB',
             }}
             onClick={handleClick1}
           >
@@ -175,7 +193,9 @@ export default function MiniDrawer() {
                 sx={{
                   justifyContent: open ? 'initial' : 'center',
                   px: 2.5,
+                  backgroundColor: '#E8EDFB',
                 }}
+                onClick={() => {navigate('/test/table1');}}
               >
                 <ListItemIcon
                   sx={{
@@ -192,7 +212,9 @@ export default function MiniDrawer() {
                 sx={{
                   justifyContent: open ? 'initial' : 'center',
                   px: 2.5,
+                  backgroundColor: '#E8EDFB',
                 }}
+                onClick={() => {navigate('/test/table2');}}
               >
                 <ListItemIcon
                   sx={{
@@ -208,12 +230,13 @@ export default function MiniDrawer() {
             </List>
           </Collapse>
         </List>
-        <List>
+        <List sx={{ paddingTop: '0px', paddingBottom: '0px' }}>
           <ListItemButton
             sx={{
               minHeight: 48,
               justifyContent: open ? 'initial' : 'center',
               px: 2.5,
+              backgroundColor: '#E7F6F8',
             }}
             onClick={handleClick2}
           >
@@ -239,6 +262,7 @@ export default function MiniDrawer() {
                 sx={{
                   justifyContent: open ? 'initial' : 'center',
                   px: 2.5,
+                  backgroundColor: '#E7F6F8',
                 }}
               >
                 <ListItemIcon
@@ -256,6 +280,7 @@ export default function MiniDrawer() {
                 sx={{
                   justifyContent: open ? 'initial' : 'center',
                   px: 2.5,
+                  backgroundColor: '#E7F6F8',
                 }}
               >
                 <ListItemIcon
@@ -275,7 +300,7 @@ export default function MiniDrawer() {
       </Drawer>
       <Box component='main' sx={{ flexGrow: 1, p: 3 }}>
         <DrawerHeader />
-        <Typography paragraph>里面放其他组件</Typography>
+        <Outlet />
       </Box>
     </Box>
   );
