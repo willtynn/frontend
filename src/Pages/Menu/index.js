@@ -271,6 +271,7 @@ export default function MiniDrawer() {
                     mr: open ? 3 : 'auto',
                     justifyContent: 'center',
                   }}
+                  onClick={()=>{navigate('/service/overview')}}
                 >
                   <AppsIcon />
                 </ListItemIcon>
