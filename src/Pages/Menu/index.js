@@ -113,7 +113,7 @@ export default function MiniDrawer() {
   };
 
   return (
-    <Box sx={{ display: 'flex' }}>
+    <Box sx={{ display: 'block' }}>
       <CssBaseline />
       <AppBar position='fixed' open={open}>
         <Toolbar>
@@ -299,7 +299,7 @@ export default function MiniDrawer() {
           </Collapse>
         </List>
       </Drawer>
-      <Box component='main' sx={{ flexGrow: 1, p: 3 }}>
+      <Box component='main' sx={{ flexGrow: 1, p: 3, ml: open? "220px" : "65px" }}>
         <DrawerHeader />
         <Outlet />
       </Box>

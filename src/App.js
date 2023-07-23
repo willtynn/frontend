@@ -5,9 +5,11 @@ import MyRoutes from './Route';
 
 function App() {
   return (
-    <BrowserRouter>
-      <MyRoutes />
-    </BrowserRouter>
+    <div className='Myindex'>
+      <BrowserRouter>
+        <MyRoutes />
+      </BrowserRouter>
+    </div>
   );
 }
 
