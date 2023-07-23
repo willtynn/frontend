@@ -38,6 +38,25 @@ export const StyledTableCell = styled(TableCell)(() => ({
   },
 }));
 
+export const NewStyledTableCell = styled(TableCell)(() => ({
+  [`&.${tableCellClasses.head}`]: {
+    backgroundColor: "#DFE4E8",
+    color: "#596A7C",
+    fontWeight: 600,
+    fontSize: '12px',
+    lineHeight: '18px',
+    textTransform: 'uppercase',
+    letterSpacing: '0.08em',
+  },
+  [`&.${tableCellClasses.root}`]: {
+    // paddingTop: 0,
+    // paddingBottom: 0,
+    // paddingLeft: "24px",
+    // paddingRight: '24px',
+    maxWidth: '260px',
+    border: "1px solid white"
+  },
+}));
 
 export function MyTableHeader(props) {
   //order:排序顺序，asc、desc、none

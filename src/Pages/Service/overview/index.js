@@ -4,7 +4,8 @@ import { alpha } from '@mui/material/styles';
 import {
   MyTableHeader,
   TableFooter,
-  StyledTableCell
+  StyledTableCell,
+  NewStyledTableCell
 } from '@/components/DisplayTable';
 import {
   CircularProgress,
@@ -198,27 +199,6 @@ export default function ServiceOverview() {
   };
 
   const isSelected = (name) => selected.indexOf(name) !== -1;
-
-
-  const NewStyledTableCell = styled(TableCell)(() => ({
-    [`&.${tableCellClasses.head}`]: {
-      backgroundColor: "#DFE4E8",
-      color: "#596A7C",
-      fontWeight: 600,
-      fontSize: '12px',
-      lineHeight: '18px',
-      textTransform: 'uppercase',
-      letterSpacing: '0.08em',
-    },
-    [`&.${tableCellClasses.root}`]: {
-      // paddingTop: 0,
-      // paddingBottom: 0,
-      // paddingLeft: "24px",
-      // paddingRight: '24px',
-      maxWidth: '260px',
-      border: "1px solid white"
-    },
-  }));
 
 
   return (

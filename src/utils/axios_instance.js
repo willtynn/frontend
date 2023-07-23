@@ -1,13 +1,8 @@
 import axios from 'axios';
-import Config from '../configs/Config';
 import { getLocalStorage } from '@/utils/localStorageHandler';
 
-// export const baseURLLink =  "https://simtqa.wiley.cn";
-// export const baseURLLink =  "https://simtdev.wiley.cn";
-// export const baseURLLink =  "https://simtuat.wiley.cn";
-// export const baseURLLink =  "http://47.103.142.157:2020";
-// export const baseURLLink =  "https://simtqa.wiley.cn";
-export const baseURLLink = Config.API_URL;
+
+export const baseURLLink = "http://192.168.1.102:4523";
 console.log('Now using base link: ', baseURLLink);
 
 export const cookieSet = () => {
@@ -22,9 +17,9 @@ export const cookieSet = () => {
 
 const isCookie = cookieSet();
 
-const axios_instance = axios.create({
+export const axios_instance = axios.create({
   baseURL: baseURLLink,
   timeout: 10000,
-  withCredentials: isCookie, //getLocalStorage("isAcceptCookie"),
+  // withCredentials: isCookie,
   crossDomain: true,
 });

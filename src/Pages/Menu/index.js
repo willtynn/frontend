@@ -23,6 +23,7 @@ import HubIcon from '@mui/icons-material/Hub';
 import DesktopMacIcon from '@mui/icons-material/DesktopMac';
 import {Outlet} from "react-router-dom";
 import { useNavigate } from 'react-router-dom';
+import SearchIcon from '@mui/icons-material/Search';
 
 const drawerWidth = 220;
 const openedMixin = theme => ({
@@ -195,7 +196,7 @@ export default function MiniDrawer() {
                   px: 2.5,
                   backgroundColor: '#E8EDFB',
                 }}
-                onClick={() => {navigate('/test/table1');}}
+                onClick={() => {navigate('cluster/overview');}}
               >
                 <ListItemIcon
                   sx={{
@@ -214,7 +215,7 @@ export default function MiniDrawer() {
                   px: 2.5,
                   backgroundColor: '#E8EDFB',
                 }}
-                onClick={() => {navigate('/test/table2');}}
+                onClick={() => {navigate('cluster/node');}}
               >
                 <ListItemIcon
                   sx={{
@@ -264,6 +265,7 @@ export default function MiniDrawer() {
                   px: 2.5,
                   backgroundColor: '#E7F6F8',
                 }}
+                onClick={()=>{navigate('/home/service/overview')}}
               >
                 <ListItemIcon
                   sx={{
@@ -271,7 +273,7 @@ export default function MiniDrawer() {
                     mr: open ? 3 : 'auto',
                     justifyContent: 'center',
                   }}
-                  onClick={()=>{navigate('/service/overview')}}
+                  
                 >
                   <AppsIcon />
                 </ListItemIcon>
@@ -283,6 +285,26 @@ export default function MiniDrawer() {
                   px: 2.5,
                   backgroundColor: '#E7F6F8',
                 }}
+                onClick={()=>{navigate('/home/service/query')}}
+              >
+                <ListItemIcon
+                  sx={{
+                    minWidth: 0,
+                    mr: open ? 3 : 'auto',
+                    justifyContent: 'center',
+                  }}
+                >
+                  <SearchIcon />
+                </ListItemIcon>
+                {open ? <ListItemText primary='服务查询' /> : null}
+              </ListItemButton>
+              <ListItemButton
+                sx={{
+                  justifyContent: open ? 'initial' : 'center',
+                  px: 2.5,
+                  backgroundColor: '#E7F6F8',
+                }}
+                onClick={()=>{navigate('/home/service/set')}}
               >
                 <ListItemIcon
                   sx={{

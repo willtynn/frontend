@@ -1,0 +1,191 @@
+import {
+  useState,
+  useEffect,
+} from "react"
+import { useDispatch, useSelector } from 'react-redux';
+import {
+  TextField,
+  Box,
+  Input,
+  FormControl,
+  FormHelperText,
+  InputLabel,
+  Select,
+  MenuItem,
+  Stack,
+  Button
+} from "@mui/material"
+import { SmallLightFont } from "@/components/Fonts";
+import { OutlinedButton } from "@/components/Button";
+import { UPDATE_SEARCH_SERVICE } from "@/actions/serviceAction";
+import ServiceInfoBlock from "./ServiceInfoBlock";
+
+const fakeInfo = {
+  id: "aaa",
+  name: "service_a",
+  repo: "https://github.com/aaa/service_a",
+  imageUrl: "https://github.com/aaa/service_a",
+  version: {
+    major: "1",
+    minor: "2",
+    patch: "3"
+  },
+  interfaces: [
+    {
+      id: "interfact_1",
+      path: "service_a/interfact_1",
+      inputSize: 123,
+      outputSize: "456"
+    }
+  ],
+  idleResource: {
+    cpu: 1,
+    ram: 2,
+    disk: 3,
+    gpuCore: 4,
+    gpuMem: 5
+  },
+  desiredResource: {
+    cpu: 1,
+    ram: 2,
+    disk: 3,
+    gpuCore: 4,
+    gpuMem: 5
+  },
+  desiredCapability: {
+    cpu: 1,
+    ram: 2,
+    disk: 3,
+    gpuCore: 4,
+    gpuMem: 5
+  }
+}
+
+export default function ServiceQuery() {
+
+  const [mode, setMode] = useState(0);
+  const [queryContent, setQueryContent] = useState("");
+  const [emptyError, setEmptyError] = useState(false);
+
+  const dispatch = useDispatch();
+
+  const {
+    queryResult
+  } = useSelector(state => {
+    return {
+      queryResult: state.Service.queryResult,
+    };
+  });
+
+  const handleChange = (event) => {
+    setMode(event.target.value);
+  };
+
+  const handleInputChange = (event) => {
+    setQueryContent(event.target.value);
+    if(event.target.value !== "") {
+      setEmptyError(false);
+    }
+  }
+
+  const handleSearchClick = (e) => {
+    if (!queryContent || queryContent === "") {
+      setEmptyError(true);
+      return;
+    }
+    dispatch({ type: UPDATE_SEARCH_SERVICE, data: fakeInfo });
+  }
+
+  return (
+    <Box sx={{
+      minHeight: "800px",
+      m: "32px"
+    }}>
+      <Stack direction="row" spacing={1}>
+        <Stack>
+          <SmallLightFont>
+            Query
+          </SmallLightFont>
+          <FormControl>
+            <Input
+              id="my-input"
+              aria-describedby="my-helper-text"
+              value={queryContent}
+              onChange={handleInputChange}
+              error={emptyError}
+            />
+            {
+              !emptyError && mode === 1
+                ?
+                <FormHelperText
+                  sx={{
+                    m: "3px 0px 0px 0px"
+                  }}
+                >
+                  Version Format should be "xx.xx.xx".
+                </FormHelperText>
+                :
+                <></>
+            }
+            {
+              emptyError
+              ?
+              <FormHelperText
+                sx={{
+                  m: "3px 0px 0px 0px",
+                  color: "red"
+                }}
+              >
+                This field is required.
+              </FormHelperText>
+              :
+              <></>
+            }
+
+          </FormControl>
+        </Stack>
+        <FormControl variant="standard">
+          <InputLabel
+            id="service_search_mode_label"
+            sx={{
+              color: 'var(--gray-500, #596A7C)',
+              fontFamily: 'Open Sans',
+              fontStyle: 'normal',
+            }}
+          >
+            Search Mode
+          </InputLabel>
+          <Select
+            labelId="service_search_mode_label"
+            id="service_search_mode"
+            value={mode}
+            onChange={handleChange}
+            sx={{
+              minWidth: "120px"
+            }}
+          >
+            <MenuItem value={0}>By ID</MenuItem>
+            <MenuItem value={1}>By Version</MenuItem>
+          </Select>
+        </FormControl>
+        <OutlinedButton
+          sx={{
+            mt: "16px !important",
+            width: "84px",
+            height: "32px"
+          }}
+          onClick={handleSearchClick}
+        >
+          Search
+        </OutlinedButton>
+      </Stack>
+      {
+        queryResult === null
+          ?
+          <></>
+          :
+          <ServiceInfoBlock data={queryResult}/>
+      }
+    </Box>
+  )
+}
