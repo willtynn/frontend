@@ -16,7 +16,13 @@ import {
 } from "@mui/material"
 import { SmallLightFont } from "@/components/Fonts";
 import { OutlinedButton } from "@/components/Button";
-import { UPDATE_SERVICE_DEPENDENCY } from "@/actions/serviceAction";
+import {
+  UPDATE_SERVICE_DEPENDENCY,
+  UPDATE_SEARCH_SERVICE
+} from "@/actions/serviceAction";
+import ServiceInfoBlock from "../module/ServiceInfoBlock";
+import InvokeInfoBlock from "../module/InvokeInfoBlock";
+import { fakeInfo } from "../query";
 
 const data = {
   invoked: [
@@ -58,19 +64,22 @@ function ServiceDependency() {
   const [mode, setMode] = useState(0);
   const [queryContent, setQueryContent] = useState("");
   const [emptyError, setEmptyError] = useState(false);
+  const [clickedLink, setClickedLink] = useState(null);
+
 
   const dispatch = useDispatch();
 
   const {
+    queryResult,
     serviceDependency
   } = useSelector(state => {
     return {
+      queryResult: state.Service.queryResult,
       serviceDependency: state.Service.serviceDependency,
     };
   });
 
   useEffect(() => {
-    console.log('serviceDependency', serviceDependency)
     if (serviceDependency) {
       transformData("test_service", serviceDependency);
     }
@@ -108,7 +117,8 @@ function ServiceDependency() {
       (item, index) => {
         return {
           source: item.id,
-          target: id
+          target: id,
+          invoke_info: item.invoke_info
         }
       }
     ))
@@ -116,7 +126,8 @@ function ServiceDependency() {
       (item, index) => {
         return {
           source: id,
-          target: item.id
+          target: item.id,
+          invoke_info: item.invoke_info
         }
       }
     ))
@@ -142,6 +153,15 @@ function ServiceDependency() {
     }
     dispatch({ type: UPDATE_SERVICE_DEPENDENCY, data: data });
   }
+
+  const handleNodeClick = (id) => {
+    dispatch({ type: UPDATE_SEARCH_SERVICE, data: fakeInfo });
+  }
+
+  const handleLinkClick = (data) => {
+    setClickedLink(data)
+  }
+
 
   return (
     <Box>
@@ -223,7 +243,21 @@ function ServiceDependency() {
           Search
         </OutlinedButton>
       </Stack>
-      <Canvas nodes={nodes} links={links} />
+      <Canvas nodes={nodes} links={links} handleNodeClick={handleNodeClick} handleLinkClick={handleLinkClick} />
+      {
+        queryResult !== null
+          ?
+          <ServiceInfoBlock data={queryResult} />
+          :
+          <></>
+      }
+      {
+        clickedLink !== null
+        ?
+        <InvokeInfoBlock data={clickedLink} />
+        :
+        <></>
+      }
     </Box>
   );
 }

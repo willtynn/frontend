@@ -319,6 +319,7 @@ export default function ServiceInfoBlock(props) {
                   {
                     resourceAndCapabilityHeadRow.map((item, index) =>
                       <StyledTableCell
+                        key={item.id}
                         align='center'
                       >
                         {data.desiredResource[item.id]}
@@ -349,6 +350,7 @@ export default function ServiceInfoBlock(props) {
                   {
                     resourceAndCapabilityHeadRow.map((item, index) =>
                       <StyledTableCell
+                        key={item.id}
                         align='center'
                       >
                         {data.desiredCapability[item.id]}

@@ -18,9 +18,9 @@ import {
 import { SmallLightFont } from "@/components/Fonts";
 import { OutlinedButton } from "@/components/Button";
 import { UPDATE_SEARCH_SERVICE } from "@/actions/serviceAction";
-import ServiceInfoBlock from "./ServiceInfoBlock";
+import ServiceInfoBlock from "../module/ServiceInfoBlock";
 
-const fakeInfo = {
+export const fakeInfo = {
   id: "aaa",
   name: "service_a",
   repo: "https://github.com/aaa/service_a",

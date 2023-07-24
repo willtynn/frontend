@@ -8,7 +8,7 @@ import "./styles.css";
 
 export function Canvas(props) {
 
-  const { nodes, links } = props
+  const { nodes, links, handleNodeClick, handleLinkClick } = props
 
   useEffect(() => {
     var g = new dagreD3.graphlib.Graph({ compound: true })
@@ -28,16 +28,16 @@ export function Canvas(props) {
 
     // Here we're setting the nodes
     nodes.forEach((item, index) => {
-      g.setNode(item.id, { label: item.label });
-      if(item.type === "invoked") {
+      g.setNode(item.id, { label: item.label, class: "service_node", id: item.id });
+      if (item.type === "invoked") {
         g.setParent(item.id, "top_group");
-      } else if(item.type === "invoking") {
+      } else if (item.type === "invoking") {
         g.setParent(item.id, "bottom_group");
       }
     })
 
     links.forEach((item, index) => {
-      g.setEdge(item.source, item.target);
+      g.setEdge(item.source, item.target, { class: "service_link", id: JSON.stringify(item) });
     })
 
     g.nodes().forEach(function (v) {
@@ -57,9 +57,28 @@ export function Canvas(props) {
     // Run the renderer. This is what draws the final graph.
     render(svgGroup, g);
 
+    const service_nodes = document.getElementsByClassName("service_node")
+    for (const service_node of service_nodes) {
+      service_node.addEventListener("click", () => {
+        handleNodeClick(service_node.id);
+      });
+    }
+
+    const service_links = document.getElementsByClassName("service_link")
+    for (const service_link of service_links) {
+      service_link.addEventListener("click", () => {
+        const service_link_info = JSON.parse(service_link.id)
+        handleLinkClick({
+          source: service_link_info.source,
+          target: service_link_info.target,
+          ...service_link_info.invoke_info
+        });
+      });
+    }
+
     // Center the graph
     // console.log(svg.attr("width"));
-    var xCenterOffset = (svg.attr("width") - g.graph().width) / 2;
+    var xCenterOffset = 10;
     // console.log(xCenterOffset);
     svgGroup.attr("transform", "translate(" + xCenterOffset + ", 20)");
     svg.attr("height", g.graph().height + 40);
@@ -70,7 +89,6 @@ export function Canvas(props) {
     <Box
       sx={{
         fontFamily: 'Open Sans',
-        textAlign: 'center'
       }}
     >
       <svg id="svg-canvas" width="800" height="600">
