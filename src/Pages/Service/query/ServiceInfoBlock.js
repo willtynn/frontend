@@ -238,7 +238,6 @@ export default function ServiceInfoBlock(props) {
         </Box>
 
         <Box>
-
           <TableContainer sx={{ maxHeight: '680px', overflow: "auto", width: "100%" }}>
             <Table
               stickyHeader
@@ -267,7 +266,6 @@ export default function ServiceInfoBlock(props) {
                 </TableRow>
               </TableHead>
               <TableBody>
-
                 <TableRow
                   aria-checked={false}
                   sx={{

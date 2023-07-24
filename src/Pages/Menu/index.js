@@ -24,6 +24,7 @@ import DesktopMacIcon from '@mui/icons-material/DesktopMac';
 import {Outlet} from "react-router-dom";
 import { useNavigate } from 'react-router-dom';
 import SearchIcon from '@mui/icons-material/Search';
+import PolylineIcon from '@mui/icons-material/Polyline';
 
 const drawerWidth = 220;
 const openedMixin = theme => ({
@@ -297,6 +298,25 @@ export default function MiniDrawer() {
                   <SearchIcon />
                 </ListItemIcon>
                 {open ? <ListItemText primary='服务查询' /> : null}
+              </ListItemButton>
+              <ListItemButton
+                sx={{
+                  justifyContent: open ? 'initial' : 'center',
+                  px: 2.5,
+                  backgroundColor: '#E7F6F8',
+                }}
+                onClick={()=>{navigate('/home/service/dependency')}}
+              >
+                <ListItemIcon
+                  sx={{
+                    minWidth: 0,
+                    mr: open ? 3 : 'auto',
+                    justifyContent: 'center',
+                  }}
+                >
+                  <PolylineIcon />
+                </ListItemIcon>
+                {open ? <ListItemText primary='服务依赖' /> : null}
               </ListItemButton>
               <ListItemButton
                 sx={{
