@@ -96,8 +96,6 @@ export function MyTableHeader(props) {
 
   const createSortHandler = property => event => {
     onRequestSort(event, property);
-    // console.log(`property: ${property}`);
-    // console.log(`orderBy: ${orderBy}`)
   };
   let paddingVertical = '12px';
   const doubleLine = [

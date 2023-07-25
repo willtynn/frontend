@@ -2,7 +2,8 @@ import * as actions from "../actions/serviceAction";
 
 const initState = {
   queryResult: null,
-  serviceDependency: null
+  serviceDependency: null,
+  interfaceDependency: null,
 }
 
 export default function ServiceReducer(state = initState, action) {
@@ -18,7 +19,11 @@ export default function ServiceReducer(state = initState, action) {
         ...state,
         serviceDependency: data
       }
-
+    case actions.UPDATE_INTERFACE_DEPENDENCY:
+      return {
+        ...state,
+        interfaceDependency: data
+      }
     default:
       return state
   }

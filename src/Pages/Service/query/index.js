@@ -32,8 +32,8 @@ export const fakeInfo = {
   },
   interfaces: [
     {
-      id: "interfact_1",
-      path: "service_a/interfact_1",
+      id: "interface_1",
+      path: "service_a/interface_1",
       inputSize: 123,
       outputSize: "456"
     }

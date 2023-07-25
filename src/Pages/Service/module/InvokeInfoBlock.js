@@ -43,16 +43,22 @@ export default function InvokeInfoBlock(props) {
   const labels = [
     "源服务",
     "被调用服务",
+    "调用接口ID",
+    "请求路径",
     "调用时间",
   ]
 
   const values = [
     data.source,
     data.target,
-    data.time
+    data.interface_id,
+    data.path,
+    data.time,
   ]
 
   const isUrl = [
+    false,
+    false,
     false,
     false,
     false

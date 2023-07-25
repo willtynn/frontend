@@ -6,7 +6,7 @@ import { Box } from "@mui/material";
 
 import "./styles.css";
 
-export function Canvas(props) {
+export function ThreeLayerCanvas(props) {
 
   const { nodes, links, handleNodeClick, handleLinkClick } = props
 
@@ -22,7 +22,7 @@ export function Canvas(props) {
     });
     g.setNode("bottom_group", {
       label: "当前服务调用的服务",
-      clusterLabelPos: "top",
+      clusterLabelPos: "bottom",
       style: "fill: #5f9488"
     });
 
@@ -37,7 +37,7 @@ export function Canvas(props) {
     })
 
     links.forEach((item, index) => {
-      g.setEdge(item.source, item.target, { class: "service_link", id: JSON.stringify(item) });
+      g.setEdge(item.source, item.target, { label: item.invoke_info.path, class: "service_link", id: JSON.stringify(item) });
     })
 
     g.nodes().forEach(function (v) {
@@ -93,6 +93,108 @@ export function Canvas(props) {
     >
       <svg id="svg-canvas" width="800" height="600">
         <g id="g-canvas"></g>
+      </svg>
+    </Box>
+  );
+
+}
+
+export function EdgeCenterCanvas(props) {
+
+  const { nodes, links, handleNodeClick, handleLinkClick } = props
+
+  useEffect(() => {
+    var g = new dagreD3.graphlib.Graph({ compound: true })
+      .setGraph({})
+      .setDefaultEdgeLabel(() => { return {} });
+
+    // Here we're setting the nodes
+    nodes.forEach((item, index) => {
+      g.setNode(item.id, { label: item.label, class: "service_node", id: item.id });
+    })
+
+    links.forEach((item, index) => {
+      if (item.center) {
+        g.setEdge(
+          item.source,
+          item.target,
+          {
+            label: item.invoke_info.path,
+            style: "stroke: #f66; stroke-width: 3px; stroke-dasharray: 5, 5; fill: none;",
+            arrowheadStyle: "fill: #f66; width: 3px;",
+            class: "service_link",
+            id: JSON.stringify(item)
+          }
+        );
+      } else {
+        g.setEdge(
+          item.source,
+          item.target,
+          {
+            label: item.invoke_info.path,
+            style: "stroke: #333; stroke-width: 3px; fill: none;",
+            arrowheadStyle: "fill: #333; width: 3px;",
+            class: "service_link",
+            id: JSON.stringify(item)
+          }
+        );
+      }
+
+    })
+
+    g.nodes().forEach(function (v) {
+      var node = g.node(v);
+      // Round the corners of the nodes
+      node.rx = node.ry = 5;
+    });
+
+    // Create the renderer
+    var render = new dagreD3.render();
+
+    // Set up an SVG group so that we can translate the final graph.
+
+    var svg = d3.select(document.getElementById("interface_svg-canvas"))
+    let svgGroup = d3.select(document.getElementById("interface_g-canvas"))
+
+    // Run the renderer. This is what draws the final graph.
+    render(svgGroup, g);
+
+    const service_nodes = document.getElementsByClassName("service_node")
+    for (const service_node of service_nodes) {
+      service_node.addEventListener("click", () => {
+        handleNodeClick(service_node.id);
+      });
+    }
+
+    const service_links = document.getElementsByClassName("service_link")
+    for (const service_link of service_links) {
+      service_link.addEventListener("click", () => {
+        const service_link_info = JSON.parse(service_link.id)
+        handleLinkClick({
+          source: service_link_info.source,
+          target: service_link_info.target,
+          ...service_link_info.invoke_info
+        });
+      });
+    }
+
+    // Center the graph
+    // console.log(svg.attr("width"));
+    var xCenterOffset = 10;
+    // console.log(xCenterOffset);
+    svgGroup.attr("transform", "translate(" + xCenterOffset + ", 20)");
+    svg.attr("height", g.graph().height + 40);
+
+  }, [links])
+
+  return (
+    <Box
+      sx={{
+        fontFamily: 'Open Sans',
+      }}
+    >
+      <svg id="interface_svg-canvas" width="800" height="600">
+        <g id="interface_g-canvas"></g>
       </svg>
     </Box>
   );
