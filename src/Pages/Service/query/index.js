@@ -15,7 +15,10 @@ import {
   Stack,
   Button
 } from "@mui/material"
-import { SmallLightFont } from "@/components/Fonts";
+import { 
+  SmallLightFont,
+  SuperLargeBoldFont, 
+} from "@/components/Fonts";
 import { OutlinedButton } from "@/components/Button";
 import { UPDATE_SEARCH_SERVICE } from "@/actions/serviceAction";
 import ServiceInfoBlock from "../module/ServiceInfoBlock";
@@ -99,8 +102,15 @@ export default function ServiceQuery() {
   return (
     <Box sx={{
       minHeight: "800px",
-      m: "32px"
+      m: "16px 32px 0px 32px"
     }}>
+      <SuperLargeBoldFont
+        sx={{
+          mb: "16px"
+        }}
+      >
+        服务查询
+      </SuperLargeBoldFont>
       <Stack direction="row" spacing={1}>
         <Stack>
           <SmallLightFont>

@@ -17,7 +17,10 @@ import {
   Tab,
   Typography
 } from "@mui/material"
-import { SmallLightFont } from "@/components/Fonts";
+import { 
+  SmallLightFont,
+  SuperLargeBoldFont
+} from "@/components/Fonts";
 import { OutlinedButton } from "@/components/Button";
 import {
   UPDATE_SERVICE_DEPENDENCY,
@@ -370,7 +373,17 @@ function ServiceDependency() {
 
 
   return (
-    <Box sx={{ width: '100%' }}>
+    <Box sx={{ 
+      width: '100%',
+      minHeight: "800px",
+      m: "16px"
+    }}>
+      <SuperLargeBoldFont sx={{
+        mb: "12px",
+        ml: "12px"
+      }}>
+        服务依赖
+      </SuperLargeBoldFont>
       <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
         <Tabs value={tabValue} onChange={handleTabChange} aria-label="basic tabs example">
           <Tab label="基于服务的依赖查询" {...a11yProps(0)} />

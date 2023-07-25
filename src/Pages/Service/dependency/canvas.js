@@ -6,6 +6,11 @@ import { Box } from "@mui/material";
 
 import "./styles.css";
 
+const normalEdgeStyle = {
+  style: "stroke: #333; stroke-width: 3px; fill: none;",
+  arrowheadStyle: "fill: #333; width: 3px;",
+}
+
 export function ThreeLayerCanvas(props) {
 
   const { nodes, links, handleNodeClick, handleLinkClick } = props
@@ -37,7 +42,12 @@ export function ThreeLayerCanvas(props) {
     })
 
     links.forEach((item, index) => {
-      g.setEdge(item.source, item.target, { label: item.invoke_info.path, class: "service_link", id: JSON.stringify(item) });
+      g.setEdge(item.source, item.target, { 
+        label: item.invoke_info.path, 
+        ...normalEdgeStyle,
+        class: "service_link", 
+        id: JSON.stringify(item) 
+      });
     })
 
     g.nodes().forEach(function (v) {
@@ -132,8 +142,7 @@ export function EdgeCenterCanvas(props) {
           item.target,
           {
             label: item.invoke_info.path,
-            style: "stroke: #333; stroke-width: 3px; fill: none;",
-            arrowheadStyle: "fill: #333; width: 3px;",
+            ...normalEdgeStyle,
             class: "service_link",
             id: JSON.stringify(item)
           }

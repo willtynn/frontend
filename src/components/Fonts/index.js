@@ -13,9 +13,18 @@ export const SmallLightFont = styled(Typography)({
 
 export const LargeBoldFont = styled(Typography)({
   color: '#262E35',
-  fontSize: '22px',
+  fontSize: '20px',
   fontFamily: 'Open Sans',
   fontStyle: 'normal',
   fontWeight: 800,
   lineHeight: '27.5px',
+});
+
+export const SuperLargeBoldFont = styled(Typography)({
+  color: '#262E35',
+  fontSize: '24px',
+  fontFamily: 'Open Sans',
+  fontStyle: 'normal',
+  fontWeight: 800,
+  lineHeight: '30px',
 });
