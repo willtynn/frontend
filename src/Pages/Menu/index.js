@@ -266,7 +266,7 @@ export default function MiniDrawer() {
                   px: 2.5,
                   backgroundColor: '#E7F6F8',
                 }}
-                onClick={()=>{navigate('/home/service/overview')}}
+                onClick={()=>{navigate('/service/overview')}}
               >
                 <ListItemIcon
                   sx={{
@@ -286,7 +286,7 @@ export default function MiniDrawer() {
                   px: 2.5,
                   backgroundColor: '#E7F6F8',
                 }}
-                onClick={()=>{navigate('/home/service/query')}}
+                onClick={()=>{navigate('/service/query')}}
               >
                 <ListItemIcon
                   sx={{
@@ -305,7 +305,7 @@ export default function MiniDrawer() {
                   px: 2.5,
                   backgroundColor: '#E7F6F8',
                 }}
-                onClick={()=>{navigate('/home/service/dependency')}}
+                onClick={()=>{navigate('/service/dependency')}}
               >
                 <ListItemIcon
                   sx={{
@@ -324,7 +324,7 @@ export default function MiniDrawer() {
                   px: 2.5,
                   backgroundColor: '#E7F6F8',
                 }}
-                onClick={()=>{navigate('/home/service/set')}}
+                onClick={()=>{navigate('/service/set')}}
               >
                 <ListItemIcon
                   sx={{
