@@ -1,4 +1,4 @@
-import { Route, Routes } from 'react-router-dom';
+import { Navigate, Outlet, Route, Routes } from 'react-router-dom';
 import Menu from '../Pages/Menu/index';
 import BasicTable from '../Pages/TestPages';
 import CustomizedTables from '../Pages/TestPages/table2'
@@ -9,7 +9,8 @@ import ServiceDependency from '@/Pages/Service/dependency';
 export default function newRoute() {
   return (
     <Routes>
-      <Route path='/home/' element={<Menu />} >
+      <Route path='*' element={<Navigate replace to='cluster/overview' />} />
+      <Route path='/' element={<Menu />} >
         <Route path='cluster/'>
           <Route path='overview' element={<BasicTable />} />
           <Route path='node' element={<CustomizedTables />} />
