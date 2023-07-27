@@ -8,7 +8,9 @@ import {
   TableContainer,
   Stack,
   tableCellClasses,
-  TableCell
+  TableCell,
+  IconButton,
+  Tooltip
 } from "@mui/material"
 import { LargeBoldFont } from "@/components/Fonts"
 import { transformVersion } from "@/utils/commonUtils"
@@ -16,6 +18,8 @@ import {
   StyledTableCell
 } from "@/components/DisplayTable"
 import { styled } from '@mui/system';
+import PolylineIcon from '@mui/icons-material/Polyline';
+import { useNavigate } from "react-router-dom"
 
 export const NewStyledTableCell = styled(TableCell)(() => ({
   [`&.${tableCellClasses.head}`]: {
@@ -36,9 +40,14 @@ export const NewStyledTableCell = styled(TableCell)(() => ({
   },
 }));
 
+export const QUERY = "QUERY";
+export const SERVICE_DEPENDENCY = "SERVICE_DEPENDENCY";
+export const INTERFACE_DEPENDENCY = "INTERFACE_DEPENDENCY";
+
 export default function ServiceInfoBlock(props) {
 
-  const { data } = props
+  const { data, mode, page, cb = () => { } } = props
+  const navigate = useNavigate();
 
   const labels = [
     "服务ID",
@@ -81,7 +90,8 @@ export default function ServiceInfoBlock(props) {
     createRow('id', '接口ID', false, '240px', '280px', true),
     createRow('path', '请求的路径', false, '190px', '190px', true),
     createRow('inputSize', '输入数据大小', false, '200px', '240px', true),
-    createRow('outputSize', '输出数据大小', false, '150px', '150px', true)
+    createRow('outputSize', '输出数据大小', false, '150px', '150px', true),
+    createRow('dependency', '接口依赖', false, '150px', '150px', true)
   ];
 
   const resourceAndCapabilityHeadRow = [
@@ -92,8 +102,15 @@ export default function ServiceInfoBlock(props) {
     createRow('gpuMem', 'gpu内存资源', false, '170px', '200px', true),
   ];
 
+  const handleServiceDependencyClick = (id) => {
+    navigate(`/service/dependency?type=service&by=${mode}&id=${id}`)
+    cb()
+  }
 
-
+  const handleInterfaceDependencyClick = (id) => {
+    navigate(`/service/dependency?type=interface&by=0&id=${id}`)
+    cb()
+  }
 
   return (
     <Box
@@ -101,13 +118,32 @@ export default function ServiceInfoBlock(props) {
         mt: "40px"
       }}
     >
-      <LargeBoldFont
-        sx={{
-          mb: "20px"
-        }}
-      >
-        服务详细信息
-      </LargeBoldFont>
+      <Stack sx={{
+        mb: "20px"
+      }}
+        direction="row"
+        spacing={2}>
+        <LargeBoldFont
+          sx={{
+            lineHeight: "40px !important"
+          }}
+        >
+          服务详细信息
+        </LargeBoldFont>
+        {
+          page !== SERVICE_DEPENDENCY
+            ?
+            <Tooltip title="查看依赖">
+              <IconButton onClick={() => handleServiceDependencyClick(data.id)}>
+                <PolylineIcon />
+              </IconButton>
+            </Tooltip>
+            :
+            <></>
+        }
+
+      </Stack>
+
       <LabelAndValue
         id='serviceQueryInfo'
         labels={labels}
@@ -154,7 +190,7 @@ export default function ServiceInfoBlock(props) {
                 >
                   <TableHead>
                     <TableRow>
-                      
+
                       {headRow.map((item, index) =>
                         <NewStyledTableCell
                           key={item.id}
@@ -203,6 +239,19 @@ export default function ServiceInfoBlock(props) {
                         >
                           {row.outputSize}
                         </StyledTableCell>
+                        <StyledTableCell
+                          align='center'
+                        >
+                          <Tooltip title="查看依赖">
+                            <IconButton onClick={() => {
+                              handleInterfaceDependencyClick(row.id)
+                            }} size="small">
+                              <PolylineIcon />
+                            </IconButton>
+                          </Tooltip>
+                          :
+                          <></>
+                        </StyledTableCell>
                       </TableRow>
                     )}
                   </TableBody>
@@ -250,11 +299,11 @@ export default function ServiceInfoBlock(props) {
             >
               <TableHead>
                 <TableRow>
-                <NewStyledTableCell
-                        align="center"
-                      >
-                        Type
-                      </NewStyledTableCell>
+                  <NewStyledTableCell
+                    align="center"
+                  >
+                    Type
+                  </NewStyledTableCell>
                   {resourceAndCapabilityHeadRow.map((item, index) =>
                     <NewStyledTableCell
                       key={item.id}

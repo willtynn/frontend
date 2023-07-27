@@ -22,6 +22,7 @@ import {
 import { OutlinedButton } from "@/components/Button";
 import { UPDATE_SEARCH_SERVICE } from "@/actions/serviceAction";
 import ServiceInfoBlock from "../module/ServiceInfoBlock";
+import { QUERY } from "../module/ServiceInfoBlock";
 
 export const fakeInfo = {
   id: "aaa",
@@ -79,6 +80,10 @@ export default function ServiceQuery() {
       queryResult: state.Service.queryResult,
     };
   });
+
+  useEffect(() => {
+    return () => dispatch({ type: UPDATE_SEARCH_SERVICE, data: null });
+  }, [])
 
   const handleChange = (event) => {
     setMode(event.target.value);
@@ -194,7 +199,7 @@ export default function ServiceQuery() {
           ?
           <></>
           :
-          <ServiceInfoBlock data={queryResult}/>
+          <ServiceInfoBlock data={queryResult} mode={mode} page={QUERY} />
       }
     </Box>
   )

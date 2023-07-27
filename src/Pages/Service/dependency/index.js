@@ -1,5 +1,5 @@
 import React from "react";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { ThreeLayerCanvas, EdgeCenterCanvas } from "./canvas";
 import { useDispatch, useSelector } from "react-redux";
 import {
@@ -31,6 +31,12 @@ import ServiceInfoBlock from "../module/ServiceInfoBlock";
 import InvokeInfoBlock from "../module/InvokeInfoBlock";
 import { fakeInfo } from "../query";
 import PropTypes from 'prop-types';
+import { 
+  SERVICE_DEPENDENCY,
+  INTERFACE_DEPENDENCY
+} from "../module/ServiceInfoBlock";
+import { useParams, useSearchParams, useLocation } from "react-router-dom";
+
 
 function CustomTabPanel(props) {
   const { children, value, index, ...other } = props;
@@ -201,7 +207,13 @@ function ServiceDependency() {
   const [clickedLink, setClickedLink] = useState(null);
   const [tabValue, setTabValue] = useState(0);
 
+  const [searchParams] = useSearchParams();
+  const [paramChange, setParamChange] = useState(0);
+  
   const dispatch = useDispatch();
+
+  const serviceClick = useRef();
+  const interfaceClick = useRef();
 
   const {
     queryResult,
@@ -214,6 +226,33 @@ function ServiceDependency() {
       interfaceDependency: state.Service.interfaceDependency,
     };
   });
+
+  useEffect(() => {
+    const type = searchParams.get("type");
+    const by = searchParams.get("by");
+    const target_id = searchParams.get("id");
+    // if(!type)
+    if(type === "service") {
+      setTabValue(0);
+      if(Number(by) === 0) {
+        setMode(0)
+        setQueryContent(target_id)
+        setTimeout(() => {
+          serviceClick.current.click();
+        }, 300)
+        
+      } else if(Number(by) === 1) {
+        setMode(1)
+      }
+    } else if(type === "interface") {
+      setTabValue(1);
+      setQueryContent(target_id);
+      setTimeout(() => {
+        interfaceClick.current.click();
+      }, 300)
+    }
+
+  }, [paramChange]);
 
   useEffect(() => {
     if (serviceDependency) {
@@ -460,6 +499,7 @@ function ServiceDependency() {
               </Select>
             </FormControl>
             <OutlinedButton
+              ref={serviceClick}
               sx={{
                 mt: "16px !important",
                 width: "84px",
@@ -480,7 +520,7 @@ function ServiceDependency() {
           {
             queryResult !== null
               ?
-              <ServiceInfoBlock data={queryResult} />
+              <ServiceInfoBlock data={queryResult} mode={mode} page={SERVICE_DEPENDENCY} cb={()=>{setParamChange(paramChange + 1)}} />
               :
               <></>
           }
@@ -532,6 +572,7 @@ function ServiceDependency() {
               </FormControl>
             </Stack>
             <OutlinedButton
+              ref={interfaceClick}
               sx={{
                 mt: "16px !important",
                 width: "84px",
@@ -552,7 +593,7 @@ function ServiceDependency() {
           {
             queryResult !== null
               ?
-              <ServiceInfoBlock data={queryResult} />
+              <ServiceInfoBlock data={queryResult} mode={0} page={INTERFACE_DEPENDENCY} cb={()=>{setParamChange(paramChange + 1)}}/>
               :
               <></>
           }
