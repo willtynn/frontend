@@ -23,6 +23,7 @@ import {
   tableCellClasses,
 } from '@mui/material';
 import { styled } from '@mui/system';
+import { transformVersion } from "@/utils/commonUtils"
 
 function TextLabel(props) {
   const { text } = props;
@@ -113,36 +114,36 @@ const servicesInfo = [
 ]
 
 const headFirstRow = [
-  createRow('id', '服务ID', false, '240px', '280px', true, 1, 2),
-  createRow('name', '服务名称', false, '190px', '190px', true, 1, 2),
-  createRow('repo', '代码仓库地址', false, '200px', '240px', true, 1, 2),
-  createRow('imageUrl', '镜像仓库地址&Tag', false, '150px', '150px', true, 1, 2),
-  createRow('version', '服务版本', false, '170px', '200px', true, 3, 1),
-  createRow('interfaces', '接口集合', false, '170px', '200px', true, 1, 2),
-  createRow('idleResource', '空闲时占用资源', false, '170px', '200px', true, 5, 1),
-  createRow('desiredResource', '期望资源', false, '170px', '200px', true, 5, 1),
-  createRow('desiredCapability', '处理能力', false, '170px', '200px', true, 5, 1),
+  createRow('id', '服务ID', false, '240px', '280px', true, 1, 1),
+  createRow('name', '服务名称', false, '190px', '190px', true, 1, 1),
+  createRow('repo', '代码仓库地址', false, '200px', '240px', true, 1, 1),
+  createRow('imageUrl', '镜像仓库地址&Tag', false, '150px', '150px', true, 1, 1),
+  createRow('version', '服务版本', false, '170px', '200px', true, 1, 1),
+  createRow('interfaces', '接口集合', false, '170px', '200px', true, 1, 1),
+  // createRow('idleResource', '空闲时占用资源', false, '170px', '200px', true, 5, 1),
+  // createRow('desiredResource', '期望资源', false, '170px', '200px', true, 5, 1),
+  // createRow('desiredCapability', '处理能力', false, '170px', '200px', true, 5, 1),
 ];
 
 const headSecondRow = [
   createRow('major', '大版本号', false, '240px', '280px', true),
   createRow('minor', '小版本号', false, '190px', '190px', true),
   createRow('patch', 'Patch版本号', false, '200px', '240px', true),
-  createRow('idleCpu', 'cpu资源', false, '150px', '150px', true),
-  createRow('idleRam', 'ram资源', false, '170px', '200px', true),
-  createRow('idleDisk', '硬盘资源', false, '170px', '200px', true),
-  createRow('idleGpuCore', 'gpu-core资源', false, '170px', '200px', true),
-  createRow('idleGpuMem', 'gpu内存资源', false, '170px', '200px', true),
-  createRow('desiredCpu', 'cpu资源', false, '150px', '150px', true),
-  createRow('desiredRam', 'ram资源', false, '170px', '200px', true),
-  createRow('desiredDisk', '硬盘资源', false, '170px', '200px', true),
-  createRow('desiredGpuCore', 'gpu-core资源', false, '170px', '200px', true),
-  createRow('desiredGpuMem', 'gpu内存资源', false, '170px', '200px', true),
-  createRow('desiredCapabilityCpu', 'cpu资源', false, '150px', '150px', true),
-  createRow('desiredCapabilityRam', 'ram资源', false, '170px', '200px', true),
-  createRow('desiredCapabilityDisk', '硬盘资源', false, '170px', '200px', true),
-  createRow('desiredCapabilityCore', 'gpu-core资源', false, '170px', '200px', true),
-  createRow('desiredCapabilityMem', 'gpu内存资源', false, '170px', '200px', true),
+  // createRow('idleCpu', 'cpu资源', false, '150px', '150px', true),
+  // createRow('idleRam', 'ram资源', false, '170px', '200px', true),
+  // createRow('idleDisk', '硬盘资源', false, '170px', '200px', true),
+  // createRow('idleGpuCore', 'gpu-core资源', false, '170px', '200px', true),
+  // createRow('idleGpuMem', 'gpu内存资源', false, '170px', '200px', true),
+  // createRow('desiredCpu', 'cpu资源', false, '150px', '150px', true),
+  // createRow('desiredRam', 'ram资源', false, '170px', '200px', true),
+  // createRow('desiredDisk', '硬盘资源', false, '170px', '200px', true),
+  // createRow('desiredGpuCore', 'gpu-core资源', false, '170px', '200px', true),
+  // createRow('desiredGpuMem', 'gpu内存资源', false, '170px', '200px', true),
+  // createRow('desiredCapabilityCpu', 'cpu资源', false, '150px', '150px', true),
+  // createRow('desiredCapabilityRam', 'ram资源', false, '170px', '200px', true),
+  // createRow('desiredCapabilityDisk', '硬盘资源', false, '170px', '200px', true),
+  // createRow('desiredCapabilityCore', 'gpu-core资源', false, '170px', '200px', true),
+  // createRow('desiredCapabilityMem', 'gpu内存资源', false, '170px', '200px', true),
 ];
 
 const versionKey = [
@@ -210,7 +211,15 @@ export default function ServiceOverview() {
       }}
     >
       <TableContainer
-        sx={{ maxHeight: '680px', overflow: "auto", width: "100%" }}
+        sx={{ 
+          maxHeight: '680px', 
+          overflow: "auto", 
+          width: "100%",
+          borderColor: "#DFDEE8",
+          borderWidth: "1px",
+          borderStyle: "solid",
+          borderRadius: "5px"
+        }}
       >
         <Table
           stickyHeader
@@ -219,7 +228,7 @@ export default function ServiceOverview() {
           sx={{
             // tableLayout: 'fixed',
             tableLayout: 'auto',
-            minWidth: "100%"
+            // minWidth: "100%"
             // width: '100%',
             // maxWidth: 'none',
 
@@ -238,7 +247,7 @@ export default function ServiceOverview() {
                 </NewStyledTableCell>
               )}
             </TableRow>
-            <TableRow>
+            {/* <TableRow>
               {headSecondRow.map((item, index) =>
                 <NewStyledTableCell
                   key={item.id}
@@ -249,7 +258,7 @@ export default function ServiceOverview() {
                   {item.label}
                 </NewStyledTableCell>
               )}
-            </TableRow>
+            </TableRow> */}
           </TableHead>
           <TableBody>
             {!loading &&
@@ -298,7 +307,15 @@ export default function ServiceOverview() {
                         text={row.imageUrl}
                       />
                     </StyledTableCell>
-                    {versionKey.map((key, index) =>
+                    <StyledTableCell
+                      align='center'
+                    >
+                      <TextLabel
+                        text={transformVersion(row.version)}
+                      />
+                    </StyledTableCell>
+                    
+                    {/* {versionKey.map((key, index) =>
                       <StyledTableCell
                         key={key}
                         align='center'
@@ -307,7 +324,7 @@ export default function ServiceOverview() {
                           text={row.version[key]}
                         />
                       </StyledTableCell>
-                    )}
+                    )} */}
 
                     <StyledTableCell
                       align='center'
@@ -317,7 +334,7 @@ export default function ServiceOverview() {
                       />
                     </StyledTableCell>
 
-                    {resourceKey.map((key, index) =>
+                    {/* {resourceKey.map((key, index) =>
                       <StyledTableCell
                         key={"idle" + key}
                         align='center'
@@ -348,7 +365,7 @@ export default function ServiceOverview() {
                           text={row.desiredCapability[key]}
                         />
                       </StyledTableCell>
-                    )}
+                    )} */}
                   </TableRow>
                 );
               })

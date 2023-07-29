@@ -249,8 +249,6 @@ export default function ServiceInfoBlock(props) {
                               <PolylineIcon />
                             </IconButton>
                           </Tooltip>
-                          :
-                          <></>
                         </StyledTableCell>
                       </TableRow>
                     )}

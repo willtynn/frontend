@@ -15,14 +15,15 @@ import {
   Stack,
   Button
 } from "@mui/material"
-import { 
+import {
   SmallLightFont,
-  SuperLargeBoldFont, 
+  SuperLargeBoldFont,
 } from "@/components/Fonts";
 import { OutlinedButton } from "@/components/Button";
 import { UPDATE_SEARCH_SERVICE } from "@/actions/serviceAction";
 import ServiceInfoBlock from "../module/ServiceInfoBlock";
 import { QUERY } from "../module/ServiceInfoBlock";
+import ServiceOverview from "../module/Overview";
 
 export const fakeInfo = {
   id: "aaa",
@@ -91,7 +92,7 @@ export default function ServiceQuery() {
 
   const handleInputChange = (event) => {
     setQueryContent(event.target.value);
-    if(event.target.value !== "") {
+    if (event.target.value !== "") {
       setEmptyError(false);
     }
   }
@@ -144,17 +145,17 @@ export default function ServiceQuery() {
             }
             {
               emptyError
-              ?
-              <FormHelperText
-                sx={{
-                  m: "3px 0px 0px 0px",
-                  color: "red"
-                }}
-              >
-                This field is required.
-              </FormHelperText>
-              :
-              <></>
+                ?
+                <FormHelperText
+                  sx={{
+                    m: "3px 0px 0px 0px",
+                    color: "red"
+                  }}
+                >
+                  This field is required.
+                </FormHelperText>
+                :
+                <></>
             }
 
           </FormControl>
@@ -194,13 +195,23 @@ export default function ServiceQuery() {
           Search
         </OutlinedButton>
       </Stack>
-      {
-        queryResult === null
-          ?
-          <></>
-          :
-          <ServiceInfoBlock data={queryResult} mode={mode} page={QUERY} />
-      }
+      <Stack direction="row" spacing={4} sx={{
+        mt: "24px"
+      }}>
+        <Box sx={{
+          maxWidth: queryResult === null ? "100%" : "50%"
+        }}>
+        <ServiceOverview />
+        </Box>
+
+        {
+          queryResult === null
+            ?
+            <></>
+            :
+            <ServiceInfoBlock data={queryResult} mode={mode} page={QUERY} />
+        }
+      </Stack>
     </Box>
   )
 }
