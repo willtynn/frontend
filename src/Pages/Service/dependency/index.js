@@ -17,7 +17,7 @@ import {
   Tab,
   Typography
 } from "@mui/material"
-import { 
+import {
   SmallLightFont,
   SuperLargeBoldFont
 } from "@/components/Fonts";
@@ -31,7 +31,7 @@ import ServiceInfoBlock from "../module/ServiceInfoBlock";
 import InvokeInfoBlock from "../module/InvokeInfoBlock";
 import { fakeInfo } from "../query";
 import PropTypes from 'prop-types';
-import { 
+import {
   SERVICE_DEPENDENCY,
   INTERFACE_DEPENDENCY
 } from "../module/ServiceInfoBlock";
@@ -209,7 +209,7 @@ function ServiceDependency() {
 
   const [searchParams] = useSearchParams();
   const [paramChange, setParamChange] = useState(0);
-  
+
   const dispatch = useDispatch();
 
   const serviceClick = useRef();
@@ -232,19 +232,19 @@ function ServiceDependency() {
     const by = searchParams.get("by");
     const target_id = searchParams.get("id");
     // if(!type)
-    if(type === "service") {
+    if (type === "service") {
       setTabValue(0);
-      if(Number(by) === 0) {
+      if (Number(by) === 0) {
         setMode(0)
         setQueryContent(target_id)
         setTimeout(() => {
           serviceClick.current.click();
         }, 300)
-        
-      } else if(Number(by) === 1) {
+
+      } else if (Number(by) === 1) {
         setMode(1)
       }
-    } else if(type === "interface") {
+    } else if (type === "interface") {
       setTabValue(1);
       setQueryContent(target_id);
       setTimeout(() => {
@@ -412,7 +412,7 @@ function ServiceDependency() {
 
 
   return (
-    <Box sx={{ 
+    <Box sx={{
       width: '100%',
       minHeight: "800px",
       m: "16px"
@@ -510,27 +510,32 @@ function ServiceDependency() {
               Search
             </OutlinedButton>
           </Stack>
-          {
-            (nodes.length !== 0)
-              ?
-              <ThreeLayerCanvas nodes={nodes} links={links} handleNodeClick={handleNodeClick} handleLinkClick={handleLinkClick} />
-              :
-              <></>
-          }
-          {
-            queryResult !== null
-              ?
-              <ServiceInfoBlock data={queryResult} mode={mode} page={SERVICE_DEPENDENCY} cb={()=>{setParamChange(paramChange + 1)}} />
-              :
-              <></>
-          }
-          {
-            clickedLink !== null
-              ?
-              <InvokeInfoBlock data={clickedLink} />
-              :
-              <></>
-          }
+          <Stack direction="row">
+            {
+              (nodes.length !== 0)
+                ?
+                <ThreeLayerCanvas nodes={nodes} links={links} handleNodeClick={handleNodeClick} handleLinkClick={handleLinkClick} />
+                :
+                <></>
+            }
+            <Stack direction="column">
+              {
+                queryResult !== null
+                  ?
+                  <ServiceInfoBlock data={queryResult} mode={mode} page={SERVICE_DEPENDENCY} cb={() => { setParamChange(paramChange + 1) }} />
+                  :
+                  <></>
+              }
+              {
+                clickedLink !== null
+                  ?
+                  <InvokeInfoBlock data={clickedLink} />
+                  :
+                  <></>
+              }
+            </Stack>
+          </Stack>
+
         </Box>
       </CustomTabPanel>
       <CustomTabPanel value={tabValue} index={1}>
@@ -583,27 +588,31 @@ function ServiceDependency() {
               Search
             </OutlinedButton>
           </Stack>
-          {
-            (inodes.length !== 0)
-              ?
-              <EdgeCenterCanvas nodes={inodes} links={ilinks} handleNodeClick={handleInterfaceNodeClick} handleLinkClick={handleInterfaceLinkClick} />
-              :
-              <></>
-          }
-          {
-            queryResult !== null
-              ?
-              <ServiceInfoBlock data={queryResult} mode={0} page={INTERFACE_DEPENDENCY} cb={()=>{setParamChange(paramChange + 1)}}/>
-              :
-              <></>
-          }
-          {
-            clickedLink !== null
-              ?
-              <InvokeInfoBlock data={clickedLink} />
-              :
-              <></>
-          }
+          <Stack direction="row">
+            {
+              (inodes.length !== 0)
+                ?
+                <EdgeCenterCanvas nodes={inodes} links={ilinks} handleNodeClick={handleInterfaceNodeClick} handleLinkClick={handleInterfaceLinkClick} />
+                :
+                <></>
+            }
+            <Stack direction="column">
+              {
+                queryResult !== null
+                  ?
+                  <ServiceInfoBlock data={queryResult} mode={0} page={INTERFACE_DEPENDENCY} cb={() => { setParamChange(paramChange + 1) }} />
+                  :
+                  <></>
+              }
+              {
+                clickedLink !== null
+                  ?
+                  <InvokeInfoBlock data={clickedLink} />
+                  :
+                  <></>
+              }
+            </Stack>
+          </Stack>
         </Box>
       </CustomTabPanel>
     </Box>

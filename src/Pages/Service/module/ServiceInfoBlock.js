@@ -115,7 +115,7 @@ export default function ServiceInfoBlock(props) {
   return (
     <Box
       sx={{
-        mt: "40px"
+        // mt: "40px"
       }}
     >
       <Stack sx={{
