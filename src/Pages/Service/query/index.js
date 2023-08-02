@@ -24,6 +24,10 @@ import { UPDATE_SEARCH_SERVICE } from "@/actions/serviceAction";
 import ServiceInfoBlock from "../module/ServiceInfoBlock";
 import { QUERY } from "../module/ServiceInfoBlock";
 import ServiceOverview from "../module/Overview";
+import {
+  searchServiceById,
+  searchServiceByVersion
+} from "@/actions/serviceAction";
 
 export const fakeInfo = {
   id: "aaa",
@@ -92,17 +96,21 @@ export default function ServiceQuery() {
 
   const handleInputChange = (event) => {
     setQueryContent(event.target.value);
-    if (event.target.value !== "") {
-      setEmptyError(false);
-    }
+    // if (event.target.value !== "") {
+    //   setEmptyError(false);
+    // }
   }
 
   const handleSearchClick = (e) => {
-    if (!queryContent || queryContent === "") {
-      setEmptyError(true);
-      return;
+    // if (!queryContent || queryContent === "") {
+    //   setEmptyError(true);
+    //   return;
+    // }
+    if (mode === 0) {
+      dispatch(searchServiceById(queryContent))
+    } else {
+
     }
-    dispatch({ type: UPDATE_SEARCH_SERVICE, data: fakeInfo });
   }
 
   return (
@@ -128,10 +136,10 @@ export default function ServiceQuery() {
               aria-describedby="my-helper-text"
               value={queryContent}
               onChange={handleInputChange}
-              error={emptyError}
+            // error={emptyError}
             />
             {
-              !emptyError && mode === 1
+              mode === 1
                 ?
                 <FormHelperText
                   sx={{
@@ -143,7 +151,7 @@ export default function ServiceQuery() {
                 :
                 <></>
             }
-            {
+            {/* {
               emptyError
                 ?
                 <FormHelperText
@@ -156,7 +164,7 @@ export default function ServiceQuery() {
                 </FormHelperText>
                 :
                 <></>
-            }
+            } */}
 
           </FormControl>
         </Stack>
@@ -198,12 +206,15 @@ export default function ServiceQuery() {
       <Stack direction="row" spacing={4} sx={{
         mt: "24px"
       }}>
-        <Box sx={{
-          maxWidth: queryResult === null ? "100%" : "50%"
-        }}>
-        <ServiceOverview />
-        </Box>
-
+        {
+          queryResult === null ?
+            <></> :
+            <Box sx={{
+              maxWidth: queryResult === null ? "100%" : "50%"
+            }}>
+              <ServiceOverview />
+            </Box>
+        }
         {
           queryResult === null
             ?
