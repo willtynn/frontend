@@ -1,8 +1,6 @@
 import axios from 'axios';
 import { getLocalStorage } from '@/utils/localStorageHandler';
 
-axios.defaults.headers['Content-Type'] = 'application/json';
-
 export const baseURLLink = "http://192.168.1.104:31931";
 console.log('Now using base link: ', baseURLLink);
 

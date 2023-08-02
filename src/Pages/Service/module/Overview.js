@@ -170,7 +170,9 @@ function descendingComparator(a, b, orderBy) {
   return 0;
 }
 
-export default function ServiceOverview() {
+export default function ServiceOverview(props) {
+
+  const { data, setIndex } = props
   const [orderType, setOrderType] = useState('version'); //排序的表头
   const [orderAs, setOrderAs] = useState('asc'); //排序的顺序
   const [selected, setSelected] = useState([]);
@@ -262,8 +264,8 @@ export default function ServiceOverview() {
           </TableHead>
           <TableBody>
             {!loading &&
-              servicesInfo != null ? (
-              servicesInfo.map((row, index) => {
+              data !== null ? (
+                data.map((row, index) => {
                 return (
                   <TableRow
                     key={row.id + '' + index}
@@ -280,6 +282,7 @@ export default function ServiceOverview() {
                       backgroundColor: '#F1F3F5 !important',
                     }}
                     selected={false}
+                    onClick={() => {setIndex(index)}}
                   >
                     <StyledTableCell
                       align='center'

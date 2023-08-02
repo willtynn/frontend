@@ -14,9 +14,14 @@ export function searchServiceById(id) {
         url,
         {
           serviceId: id
+        },
+        {
+          headers: {
+            'Content-Type': 'application/json',
+          }
         }
       )
-      if(res.data.code === 200) {
+      if (res.data.code === 200) {
         dispatch({ type: UPDATE_SEARCH_SERVICE, data: res.data.data });
       }
     } catch {
@@ -35,9 +40,14 @@ export function searchServiceByVersion(name, version) {
         {
           name: name,
           version: version
+        },
+        {
+          headers: {
+            'Content-Type': 'application/json',
+          }
         }
       )
-      if(res.data.code === 200) {
+      if (res.data.code === 200) {
         dispatch({ type: UPDATE_SEARCH_SERVICE, data: res.data.data });
       }
     } catch {

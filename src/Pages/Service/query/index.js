@@ -29,52 +29,55 @@ import {
   searchServiceByVersion
 } from "@/actions/serviceAction";
 
-export const fakeInfo = {
-  id: "aaa",
-  name: "service_a",
-  repo: "https://github.com/aaa/service_a",
-  imageUrl: "https://github.com/aaa/service_a",
-  version: {
-    major: "1",
-    minor: "2",
-    patch: "3"
-  },
-  interfaces: [
-    {
-      id: "interface_1",
-      path: "service_a/interface_1",
-      inputSize: 123,
-      outputSize: "456"
+export const fakeInfo = [
+  {
+    id: "aaa",
+    name: "service_a",
+    repo: "https://github.com/aaa/service_a",
+    imageUrl: "https://github.com/aaa/service_a",
+    version: {
+      major: "1",
+      minor: "2",
+      patch: "3"
+    },
+    interfaces: [
+      {
+        id: "interface_1",
+        path: "service_a/interface_1",
+        inputSize: 123,
+        outputSize: "456"
+      }
+    ],
+    idleResource: {
+      cpu: 1,
+      ram: 2,
+      disk: 3,
+      gpuCore: 4,
+      gpuMem: 5
+    },
+    desiredResource: {
+      cpu: 1,
+      ram: 2,
+      disk: 3,
+      gpuCore: 4,
+      gpuMem: 5
+    },
+    desiredCapability: {
+      cpu: 1,
+      ram: 2,
+      disk: 3,
+      gpuCore: 4,
+      gpuMem: 5
     }
-  ],
-  idleResource: {
-    cpu: 1,
-    ram: 2,
-    disk: 3,
-    gpuCore: 4,
-    gpuMem: 5
-  },
-  desiredResource: {
-    cpu: 1,
-    ram: 2,
-    disk: 3,
-    gpuCore: 4,
-    gpuMem: 5
-  },
-  desiredCapability: {
-    cpu: 1,
-    ram: 2,
-    disk: 3,
-    gpuCore: 4,
-    gpuMem: 5
   }
-}
+]
 
 export default function ServiceQuery() {
 
   const [mode, setMode] = useState(0);
   const [queryContent, setQueryContent] = useState("");
   const [emptyError, setEmptyError] = useState(false);
+  const [selectedIndex, setSelectedIndex] = useState(-1);
 
   const dispatch = useDispatch();
 
@@ -207,20 +210,22 @@ export default function ServiceQuery() {
         mt: "24px"
       }}>
         {
-          queryResult === null ?
-            <></> :
-            <Box sx={{
-              maxWidth: queryResult === null ? "100%" : "50%"
-            }}>
-              <ServiceOverview />
-            </Box>
-        }
-        {
-          queryResult === null
+          queryResult === null || queryResult.length === 0
             ?
             <></>
             :
-            <ServiceInfoBlock data={queryResult} mode={mode} page={QUERY} />
+            <Box sx={{
+              maxWidth: queryResult === null ? "100%" : "50%"
+            }}>
+              <ServiceOverview data={queryResult} setIndex={setSelectedIndex} />
+            </Box>
+        }
+        {
+          queryResult === null || queryResult.length === 0 || selectedIndex === -1
+            ?
+            <></>
+            :
+            <ServiceInfoBlock data={queryResult[selectedIndex]} mode={mode} page={QUERY} />
         }
       </Stack>
     </Box>
