@@ -260,7 +260,7 @@ export default function MiniDrawer() {
           </ListItemButton>
           <Collapse in={verticalOpen2} timeout='auto' unmountOnExit={true}>
             <List component='div' disablePadding>
-              <ListItemButton
+              {/* <ListItemButton
                 sx={{
                   justifyContent: open ? 'initial' : 'center',
                   px: 2.5,
@@ -279,7 +279,7 @@ export default function MiniDrawer() {
                   <AppsIcon />
                 </ListItemIcon>
                 {open ? <ListItemText primary='服务集合' /> : null}
-              </ListItemButton>
+              </ListItemButton> */}
               <ListItemButton
                 sx={{
                   justifyContent: open ? 'initial' : 'center',
@@ -295,9 +295,9 @@ export default function MiniDrawer() {
                     justifyContent: 'center',
                   }}
                 >
-                  <SearchIcon />
+                  <AppsIcon />
                 </ListItemIcon>
-                {open ? <ListItemText primary='服务查询' /> : null}
+                {open ? <ListItemText primary='服务集合' /> : null}
               </ListItemButton>
               <ListItemButton
                 sx={{
@@ -318,7 +318,7 @@ export default function MiniDrawer() {
                 </ListItemIcon>
                 {open ? <ListItemText primary='服务依赖' /> : null}
               </ListItemButton>
-              <ListItemButton
+              {/* <ListItemButton
                 sx={{
                   justifyContent: open ? 'initial' : 'center',
                   px: 2.5,
@@ -336,7 +336,7 @@ export default function MiniDrawer() {
                   <HubIcon />
                 </ListItemIcon>
                 {open ? <ListItemText primary='服务链路' /> : null}
-              </ListItemButton>
+              </ListItemButton> */}
             </List>
           </Collapse>
         </List>
