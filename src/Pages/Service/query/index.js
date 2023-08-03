@@ -28,6 +28,7 @@ import {
   searchServiceById,
   searchServiceByVersion
 } from "@/actions/serviceAction";
+import { checkVersionFormat } from "@/utils/commonUtils";
 
 export const fakeInfo = [
   {
@@ -77,7 +78,9 @@ export default function ServiceQuery() {
   const [mode, setMode] = useState(0);
   const [queryContent, setQueryContent] = useState("");
   const [emptyError, setEmptyError] = useState(false);
+  const [versionFormatError, setVersionFormatError] = useState(false);
   const [selectedIndex, setSelectedIndex] = useState(-1);
+  const [serviceName, setServiceName] = useState("");
 
   const dispatch = useDispatch();
 
@@ -94,14 +97,18 @@ export default function ServiceQuery() {
   }, [])
 
   const handleChange = (event) => {
+    setVersionFormatError(false)
     setMode(event.target.value);
   };
 
   const handleInputChange = (event) => {
     setQueryContent(event.target.value);
-    // if (event.target.value !== "") {
-    //   setEmptyError(false);
-    // }
+    setVersionFormatError(false);
+  }
+
+  const handleServiceNameChange = (event) => {
+    setServiceName(event.target.value)
+
   }
 
   const handleSearchClick = (e) => {
@@ -112,7 +119,12 @@ export default function ServiceQuery() {
     if (mode === 0) {
       dispatch(searchServiceById(queryContent))
     } else {
-
+      const version = checkVersionFormat(queryContent)
+      if (!version) {
+        setVersionFormatError(true);
+        return;
+      }
+      dispatch(searchServiceByVersion(serviceName, version))
     }
   }
 
@@ -129,9 +141,27 @@ export default function ServiceQuery() {
         服务查询
       </SuperLargeBoldFont>
       <Stack direction="row" spacing={1}>
+        {
+          mode === 1
+            ?
+            <Stack>
+              <SmallLightFont>
+                Service Name
+              </SmallLightFont>
+              <FormControl>
+                <Input
+                  id="ServiceNameInput"
+                  value={serviceName}
+                  onChange={handleServiceNameChange}
+                />
+              </FormControl>
+            </Stack>
+            :
+            <></>
+        }
         <Stack>
           <SmallLightFont>
-            Query
+            {mode === 0 ? "Service ID" : "Service Version"}
           </SmallLightFont>
           <FormControl>
             <Input
@@ -139,14 +169,15 @@ export default function ServiceQuery() {
               aria-describedby="my-helper-text"
               value={queryContent}
               onChange={handleInputChange}
-            // error={emptyError}
+              error={versionFormatError}
             />
             {
               mode === 1
                 ?
                 <FormHelperText
                   sx={{
-                    m: "3px 0px 0px 0px"
+                    m: "3px 0px 0px 0px",
+                    color: versionFormatError ? "red" : "#00000099"
                   }}
                 >
                   Version Format should be "xx.xx.xx".
@@ -171,6 +202,7 @@ export default function ServiceQuery() {
 
           </FormControl>
         </Stack>
+
         <FormControl variant="standard">
           <InputLabel
             id="service_search_mode_label"

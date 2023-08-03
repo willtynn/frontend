@@ -13,5 +13,24 @@ export function transformVersion(version) {
   if (!version) {
     return "";
   }
-  return version.major + "." +  version.minor + "." + version.patch;
+  return version.major + "." + version.minor + "." + version.patch;
+}
+
+export function checkVersionFormat(version) {
+  if (!version) {
+    return null;
+  }
+  try {
+    const version_arr = version.split(".")
+    if (version_arr.length !== 3) {
+      return null;
+    }
+    return {
+      major: version[0],
+      minor: version[1],
+      patch: version[2]
+    }
+  } catch (error) {
+    return null;
+  }
 }
