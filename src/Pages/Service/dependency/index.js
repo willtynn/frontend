@@ -522,7 +522,7 @@ function ServiceDependency() {
               {
                 queryResult !== null
                   ?
-                  <ServiceInfoBlock data={queryResult} mode={mode} page={SERVICE_DEPENDENCY} cb={() => { setParamChange(paramChange + 1) }} />
+                  <ServiceInfoBlock data={fakeInfo[0]} mode={mode} page={SERVICE_DEPENDENCY} cb={() => { setParamChange(paramChange + 1) }} />
                   :
                   <></>
               }
@@ -600,7 +600,7 @@ function ServiceDependency() {
               {
                 queryResult !== null
                   ?
-                  <ServiceInfoBlock data={queryResult} mode={0} page={INTERFACE_DEPENDENCY} cb={() => { setParamChange(paramChange + 1) }} />
+                  <ServiceInfoBlock data={fakeInfo[0]} mode={0} page={INTERFACE_DEPENDENCY} cb={() => { setParamChange(paramChange + 1) }} />
                   :
                   <></>
               }
