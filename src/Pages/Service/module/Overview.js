@@ -213,9 +213,9 @@ export default function ServiceOverview(props) {
       }}
     >
       <TableContainer
-        sx={{ 
-          maxHeight: '680px', 
-          overflow: "auto", 
+        sx={{
+          maxHeight: '680px',
+          overflow: "auto",
           width: "100%",
           borderColor: "#DFDEE8",
           borderWidth: "1px",
@@ -264,8 +264,8 @@ export default function ServiceOverview(props) {
           </TableHead>
           <TableBody>
             {!loading &&
-              data !== null ? (
-                data.map((row, index) => {
+              data !== null && data.length !== 0 ? (
+              data.map((row, index) => {
                 return (
                   <TableRow
                     key={row.id + '' + index}
@@ -282,7 +282,7 @@ export default function ServiceOverview(props) {
                       backgroundColor: '#F1F3F5 !important',
                     }}
                     selected={false}
-                    onClick={() => {setIndex(index)}}
+                    onClick={() => { setIndex(index) }}
                   >
                     <StyledTableCell
                       align='center'
@@ -317,7 +317,7 @@ export default function ServiceOverview(props) {
                         text={transformVersion(row.version)}
                       />
                     </StyledTableCell>
-                    
+
                     {/* {versionKey.map((key, index) =>
                       <StyledTableCell
                         key={key}
@@ -375,11 +375,16 @@ export default function ServiceOverview(props) {
 
             ) : !loading ? (
               <TableRow
-                style={{ height: '200px' }}
+                style={{ height: '120px' }}
               >
                 <TableCell
                   colSpan={6}
-                  sx={{ textAlign: 'center', fontSize: '20px' }}
+                  sx={{
+                    textAlign: 'center',
+                    fontSize: '20px',
+                    fontFamily: 'Open Sans',
+                    fontStyle: 'normal',
+                  }}
                 >
                   There are no results
                 </TableCell>

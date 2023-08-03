@@ -108,7 +108,6 @@ export default function ServiceQuery() {
 
   const handleServiceNameChange = (event) => {
     setServiceName(event.target.value)
-
   }
 
   const handleSearchClick = (e) => {
@@ -242,7 +241,7 @@ export default function ServiceQuery() {
         mt: "24px"
       }}>
         {
-          queryResult === null || queryResult.length === 0
+          queryResult === null
             ?
             <></>
             :
