@@ -26,9 +26,9 @@ export function checkVersionFormat(version) {
       return null;
     }
     return {
-      major: version[0],
-      minor: version[1],
-      patch: version[2]
+      major: version_arr[0],
+      minor: version_arr[1],
+      patch: version_arr[2]
     }
   } catch (error) {
     return null;

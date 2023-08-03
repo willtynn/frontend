@@ -23,7 +23,11 @@ export function searchServiceById(id) {
       )
       if (res.data.code === 200 || res.data.code === 0) {
         dispatch({ type: UPDATE_SEARCH_SERVICE, data: res.data.data });
-      } else {
+      } else if(res.data.code === 1) {
+        // alert(res.data.message)
+        dispatch({ type: UPDATE_SEARCH_SERVICE, data: [] });
+      } 
+      else {
         dispatch({ type: UPDATE_SEARCH_SERVICE, data: [] });
       }
     } catch {
