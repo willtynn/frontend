@@ -3,6 +3,7 @@ import * as d3 from "d3";
 import dagreD3 from "dagre-d3";
 import { useEffect, useState } from "react";
 import { Box } from "@mui/material";
+import { shadowStyle } from "@/utils/commonUtils";
 
 import "./styles.css";
 
@@ -88,9 +89,10 @@ export function ThreeLayerCanvas(props) {
 
     // Center the graph
     // console.log(svg.attr("width"));
-    var xCenterOffset = 10;
-    // console.log(xCenterOffset);
+    var xCenterOffset = (svg.attr("width") - g.graph().width) / 2;
+
     svgGroup.attr("transform", "translate(" + xCenterOffset + ", 20)");
+
     svg.attr("height", g.graph().height + 40);
 
   }, [links])
@@ -99,6 +101,7 @@ export function ThreeLayerCanvas(props) {
     <Box
       sx={{
         fontFamily: 'Open Sans',
+        ...shadowStyle
       }}
     >
       <svg id="svg-canvas" width="800" height="600">
@@ -189,9 +192,12 @@ export function EdgeCenterCanvas(props) {
 
     // Center the graph
     // console.log(svg.attr("width"));
-    var xCenterOffset = 10;
+    // var xCenterOffset = 10;
     // console.log(xCenterOffset);
+    var xCenterOffset = (svg.attr("width") - g.graph().width) / 2;
+
     svgGroup.attr("transform", "translate(" + xCenterOffset + ", 20)");
+
     svg.attr("height", g.graph().height + 40);
 
   }, [links])
@@ -200,6 +206,7 @@ export function EdgeCenterCanvas(props) {
     <Box
       sx={{
         fontFamily: 'Open Sans',
+        ...shadowStyle
       }}
     >
       <svg id="interface_svg-canvas" width="800" height="600">

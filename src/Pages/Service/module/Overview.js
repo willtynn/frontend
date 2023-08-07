@@ -23,7 +23,10 @@ import {
   tableCellClasses,
 } from '@mui/material';
 import { styled } from '@mui/system';
-import { transformVersion } from "@/utils/commonUtils"
+import { 
+  transformVersion,
+  shadowStyle
+} from "@/utils/commonUtils"
 
 function TextLabel(props) {
   const { text } = props;
@@ -209,7 +212,8 @@ export default function ServiceOverview(props) {
       id='BasicTableBox'
       sx={{
         width: "100%",
-        overflow: "hidden"
+        overflow: "hidden",
+        boxShadow: "0px 0px 12px 0px rgba(38, 46, 53, 0.12)",
       }}
     >
       <TableContainer

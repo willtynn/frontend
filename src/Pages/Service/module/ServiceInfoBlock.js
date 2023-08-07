@@ -1,3 +1,8 @@
+import { 
+  useEffect,
+  useRef,
+  useState
+} from "react"
 import LabelAndValue from "@/components/LabelAndValue"
 import {
   Box,
@@ -13,7 +18,7 @@ import {
   Tooltip
 } from "@mui/material"
 import { LargeBoldFont } from "@/components/Fonts"
-import { transformVersion } from "@/utils/commonUtils"
+import { transformVersion, shadowStyle } from "@/utils/commonUtils"
 import {
   StyledTableCell
 } from "@/components/DisplayTable"
@@ -48,6 +53,12 @@ export default function ServiceInfoBlock(props) {
 
   const { data, mode, page, cb = () => { } } = props
   const navigate = useNavigate();
+  const [resourceTableWidth, setResourceTableWidth] = useState("650px");
+  const interfaceTable = useRef();
+
+  useEffect(() => {
+    setResourceTableWidth(interfaceTable.current.clientWidth + "px")
+  }, [])
 
   const labels = [
     "服务ID",
@@ -115,7 +126,7 @@ export default function ServiceInfoBlock(props) {
   return (
     <Box
       sx={{
-        // mt: "40px"
+        ...shadowStyle
       }}
     >
       <Stack sx={{
@@ -174,7 +185,12 @@ export default function ServiceInfoBlock(props) {
         >
           接口集合
         </Box>
-        <Box>
+        <Box
+          ref={interfaceTable}
+          sx={{
+            minWidth: "650px"
+          }}
+        >
           {
             data.interfaces !== null
               ?
@@ -284,7 +300,9 @@ export default function ServiceInfoBlock(props) {
           资源与能力
         </Box>
 
-        <Box>
+        <Box sx={{
+          width: resourceTableWidth
+        }}>
           <TableContainer sx={{ maxHeight: '680px', overflow: "auto", width: "100%" }}>
             <Table
               stickyHeader
@@ -360,6 +378,7 @@ export default function ServiceInfoBlock(props) {
                 >
                   <StyledTableCell
                     align='center'
+                    
                   >
                     期望资源
                   </StyledTableCell>
@@ -394,7 +413,13 @@ export default function ServiceInfoBlock(props) {
                   >
                     处理能力
                   </StyledTableCell>
-                  {
+                  <StyledTableCell
+                    align='center'
+                    colSpan={5}
+                  >
+                    {data.desiredCapability}
+                  </StyledTableCell>
+                  {/* {
                     resourceAndCapabilityHeadRow.map((item, index) =>
                       <StyledTableCell
                         key={item.id}
@@ -403,7 +428,7 @@ export default function ServiceInfoBlock(props) {
                         {data.desiredCapability[item.id]}
                       </StyledTableCell>
                     )
-                  }
+                  } */}
                 </TableRow>
               </TableBody>
             </Table>

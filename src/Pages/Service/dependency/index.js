@@ -417,12 +417,149 @@ function ServiceDependency() {
       minHeight: "800px",
       m: "16px"
     }}>
-      <SuperLargeBoldFont sx={{
-        mb: "12px",
-        ml: "12px"
+      <Stack direction="row" spacing={4} sx={{
+        mb: "12px"
       }}>
-        服务依赖
-      </SuperLargeBoldFont>
+        <SuperLargeBoldFont sx={{
+          ml: "12px",
+          fontSize: "32px !important",
+          lineHeight: "54px !important"
+        }}>
+          服务依赖
+        </SuperLargeBoldFont>
+        {
+          tabValue == 0
+            ?
+            <Stack direction="row" spacing={1}>
+              <Stack>
+                <SmallLightFont>
+                  Query
+                </SmallLightFont>
+                <FormControl>
+                  <Input
+                    id="my-input"
+                    aria-describedby="my-helper-text"
+                    value={queryContent}
+                    onChange={handleInputChange}
+                    error={emptyError}
+                  />
+                  {
+                    !emptyError && mode === 1
+                      ?
+                      <FormHelperText
+                        sx={{
+                          m: "3px 0px 0px 0px"
+                        }}
+                      >
+                        Version Format should be "xx.xx.xx".
+                      </FormHelperText>
+                      :
+                      <></>
+                  }
+                  {
+                    emptyError
+                      ?
+                      <FormHelperText
+                        sx={{
+                          m: "3px 0px 0px 0px",
+                          color: "red"
+                        }}
+                      >
+                        This field is required.
+                      </FormHelperText>
+                      :
+                      <></>
+                  }
+
+                </FormControl>
+              </Stack>
+              <FormControl variant="standard">
+                <InputLabel
+                  id="service_search_mode_label"
+                  sx={{
+                    color: 'var(--gray-500, #596A7C)',
+                    fontFamily: 'Open Sans',
+                    fontStyle: 'normal',
+                  }}
+                >
+                  Search Mode
+                </InputLabel>
+                <Select
+                  labelId="service_search_mode_label"
+                  id="service_search_mode"
+                  value={mode}
+                  onChange={handleChange}
+                  sx={{
+                    minWidth: "120px"
+                  }}
+                >
+                  <MenuItem value={0}>By ID</MenuItem>
+                  <MenuItem value={1}>By Version</MenuItem>
+                </Select>
+              </FormControl>
+              <OutlinedButton
+                ref={serviceClick}
+                sx={{
+                  mt: "16px !important",
+                  width: "84px",
+                  height: "32px"
+                }}
+                onClick={handleSearchClick}
+              >
+                Search
+              </OutlinedButton>
+            </Stack>
+            :
+            <Stack direction="row" spacing={1}>
+              <Stack>
+                <SmallLightFont>
+                  Query
+                </SmallLightFont>
+                <FormControl>
+                  <Input
+                    id="my-input"
+                    aria-describedby="my-helper-text"
+                    value={queryContent}
+                    onChange={handleInputChange}
+                    error={emptyError}
+                  />
+                  {
+                    emptyError
+                      ?
+                      <FormHelperText
+                        sx={{
+                          m: "3px 0px 0px 0px",
+                          color: "red"
+                        }}
+                      >
+                        This field is required.
+                      </FormHelperText>
+                      :
+                      <FormHelperText
+                        sx={{
+                          m: "3px 0px 0px 0px"
+                        }}
+                      >
+                        Please enter interface id.
+                      </FormHelperText>
+                  }
+
+                </FormControl>
+              </Stack>
+              <OutlinedButton
+                ref={interfaceClick}
+                sx={{
+                  mt: "16px !important",
+                  width: "84px",
+                  height: "32px"
+                }}
+                onClick={handleInterfaceSearchClick}
+              >
+                Search
+              </OutlinedButton>
+            </Stack>
+        }
+      </Stack>
       <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
         <Tabs value={tabValue} onChange={handleTabChange} aria-label="basic tabs example">
           <Tab label="基于服务的依赖查询" {...a11yProps(0)} />
@@ -431,86 +568,8 @@ function ServiceDependency() {
       </Box>
       <CustomTabPanel value={tabValue} index={0}>
         <Box>
-          <Stack direction="row" spacing={1}>
-            <Stack>
-              <SmallLightFont>
-                Query
-              </SmallLightFont>
-              <FormControl>
-                <Input
-                  id="my-input"
-                  aria-describedby="my-helper-text"
-                  value={queryContent}
-                  onChange={handleInputChange}
-                  error={emptyError}
-                />
-                {
-                  !emptyError && mode === 1
-                    ?
-                    <FormHelperText
-                      sx={{
-                        m: "3px 0px 0px 0px"
-                      }}
-                    >
-                      Version Format should be "xx.xx.xx".
-                    </FormHelperText>
-                    :
-                    <></>
-                }
-                {
-                  emptyError
-                    ?
-                    <FormHelperText
-                      sx={{
-                        m: "3px 0px 0px 0px",
-                        color: "red"
-                      }}
-                    >
-                      This field is required.
-                    </FormHelperText>
-                    :
-                    <></>
-                }
 
-              </FormControl>
-            </Stack>
-            <FormControl variant="standard">
-              <InputLabel
-                id="service_search_mode_label"
-                sx={{
-                  color: 'var(--gray-500, #596A7C)',
-                  fontFamily: 'Open Sans',
-                  fontStyle: 'normal',
-                }}
-              >
-                Search Mode
-              </InputLabel>
-              <Select
-                labelId="service_search_mode_label"
-                id="service_search_mode"
-                value={mode}
-                onChange={handleChange}
-                sx={{
-                  minWidth: "120px"
-                }}
-              >
-                <MenuItem value={0}>By ID</MenuItem>
-                <MenuItem value={1}>By Version</MenuItem>
-              </Select>
-            </FormControl>
-            <OutlinedButton
-              ref={serviceClick}
-              sx={{
-                mt: "16px !important",
-                width: "84px",
-                height: "32px"
-              }}
-              onClick={handleSearchClick}
-            >
-              Search
-            </OutlinedButton>
-          </Stack>
-          <Stack direction="row">
+          <Stack direction="row" spacing={1}>
             {
               (nodes.length !== 0)
                 ?
@@ -518,7 +577,7 @@ function ServiceDependency() {
                 :
                 <></>
             }
-            <Stack direction="column">
+            <Stack direction="column" spacing={1}>
               {
                 queryResult !== null
                   ?
@@ -540,55 +599,8 @@ function ServiceDependency() {
       </CustomTabPanel>
       <CustomTabPanel value={tabValue} index={1}>
         <Box>
-          <Stack direction="row" spacing={1}>
-            <Stack>
-              <SmallLightFont>
-                Query
-              </SmallLightFont>
-              <FormControl>
-                <Input
-                  id="my-input"
-                  aria-describedby="my-helper-text"
-                  value={queryContent}
-                  onChange={handleInputChange}
-                  error={emptyError}
-                />
-                {
-                  emptyError
-                    ?
-                    <FormHelperText
-                      sx={{
-                        m: "3px 0px 0px 0px",
-                        color: "red"
-                      }}
-                    >
-                      This field is required.
-                    </FormHelperText>
-                    :
-                    <FormHelperText
-                      sx={{
-                        m: "3px 0px 0px 0px"
-                      }}
-                    >
-                      Please enter interface id.
-                    </FormHelperText>
-                }
 
-              </FormControl>
-            </Stack>
-            <OutlinedButton
-              ref={interfaceClick}
-              sx={{
-                mt: "16px !important",
-                width: "84px",
-                height: "32px"
-              }}
-              onClick={handleInterfaceSearchClick}
-            >
-              Search
-            </OutlinedButton>
-          </Stack>
-          <Stack direction="row">
+          <Stack direction="row" spacing={1}>
             {
               (inodes.length !== 0)
                 ?
@@ -596,7 +608,7 @@ function ServiceDependency() {
                 :
                 <></>
             }
-            <Stack direction="column">
+            <Stack direction="column" spacing={1}>
               {
                 queryResult !== null
                   ?

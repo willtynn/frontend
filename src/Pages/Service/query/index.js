@@ -63,13 +63,14 @@ export const fakeInfo = [
       gpuCore: 4,
       gpuMem: 5
     },
-    desiredCapability: {
-      cpu: 1,
-      ram: 2,
-      disk: 3,
-      gpuCore: 4,
-      gpuMem: 5
-    }
+    desiredCapability: 39
+    // desiredCapability: {
+    //   cpu: 1,
+    //   ram: 2,
+    //   disk: 3,
+    //   gpuCore: 4,
+    //   gpuMem: 5
+    // }
   }
 ]
 
@@ -93,7 +94,7 @@ export default function ServiceQuery() {
   });
 
   useEffect(() => {
-    return () => dispatch({ type: UPDATE_SEARCH_SERVICE, data: null });
+    return () => dispatch({ type: UPDATE_SEARCH_SERVICE, data: fakeInfo });
   }, [])
 
   const handleChange = (event) => {
@@ -125,6 +126,7 @@ export default function ServiceQuery() {
       }
       dispatch(searchServiceByVersion(serviceName, version))
     }
+    setSelectedIndex(-1);
   }
 
   return (

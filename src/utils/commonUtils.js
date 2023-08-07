@@ -34,3 +34,8 @@ export function checkVersionFormat(version) {
     return null;
   }
 }
+
+export const shadowStyle = {
+  boxShadow: "0px 0px 12px 0px rgba(38, 46, 53, 0.12)",
+  p: "12px"
+}

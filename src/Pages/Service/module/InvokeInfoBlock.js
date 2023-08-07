@@ -11,7 +11,7 @@ import {
   TableCell
 } from "@mui/material"
 import { LargeBoldFont } from "@/components/Fonts"
-import { transformVersion } from "@/utils/commonUtils"
+import { transformVersion, shadowStyle } from "@/utils/commonUtils"
 import {
   StyledTableCell
 } from "@/components/DisplayTable"
@@ -67,7 +67,8 @@ export default function InvokeInfoBlock(props) {
   return (
     <Box
       sx={{
-        mt: "40px"
+        mt: "40px",
+        ...shadowStyle
       }}
     >
       <LargeBoldFont
