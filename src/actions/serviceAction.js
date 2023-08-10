@@ -23,10 +23,10 @@ export function searchServiceById(id) {
       )
       if (res.data.code === 200 || res.data.code === 0) {
         dispatch({ type: UPDATE_SEARCH_SERVICE, data: res.data.data });
-      } else if(res.data.code === 1) {
+      } else if (res.data.code === 1) {
         // alert(res.data.message)
         dispatch({ type: UPDATE_SEARCH_SERVICE, data: [] });
-      } 
+      }
       else {
         dispatch({ type: UPDATE_SEARCH_SERVICE, data: [] });
       }
@@ -58,6 +58,69 @@ export function searchServiceByVersion(name, version) {
       }
     } catch {
       dispatch({ type: UPDATE_SEARCH_SERVICE, data: null });
+    }
+  }
+}
+
+export function searchDependenciesByServiceId(id) {
+  const url = "/service/getServiceInvocation";
+  return async dispatch => {
+    try {
+      const res = await axios_instance.post(
+        url,
+        {
+          id: id
+        },
+        {
+          headers: {
+            'Content-Type': 'application/json',
+          }
+        }
+      )
+      if (res.data.code === 200 || res.data.code === 0) {
+        if (
+          (res.data.data.invoked.length && res.data.data.invoked.length !== 0) ||
+          (res.data.data.invoking.length && res.data.data.invoking.length !== 0)
+        ) {
+          dispatch({ type: UPDATE_SERVICE_DEPENDENCY, data: res.data.data });
+        } else {
+          dispatch({ type: UPDATE_SERVICE_DEPENDENCY, data: { invoked: [], invoking: [] } });
+        }
+      } else {
+        dispatch({ type: UPDATE_SERVICE_DEPENDENCY, data: null });
+      }
+    } catch {
+      dispatch({ type: UPDATE_SERVICE_DEPENDENCY, data: null });
+    }
+  }
+}
+
+export function searchDependenciesByInterfaceId(id) {
+  const url = "/service/getInterfaceInvocation";
+  return async dispatch => {
+    try {
+      const res = await axios_instance.post(
+        url,
+        {
+          id: id
+        },
+        {
+          headers: {
+            'Content-Type': 'application/json',
+          }
+        }
+      )
+
+      if (res.data.code === 200 || res.data.code === 0) {
+
+        dispatch({ type: UPDATE_INTERFACE_DEPENDENCY, data: res.data.data });
+
+
+      } else {
+        dispatch({ type: UPDATE_INTERFACE_DEPENDENCY, data: null });
+      }
+    } catch {
+      dispatch({ type: UPDATE_INTERFACE_DEPENDENCY, data: null });
     }
   }
 }

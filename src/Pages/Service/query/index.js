@@ -94,7 +94,7 @@ export default function ServiceQuery() {
   });
 
   useEffect(() => {
-    return () => dispatch({ type: UPDATE_SEARCH_SERVICE, data: fakeInfo });
+    return () => dispatch({ type: UPDATE_SEARCH_SERVICE, data: null });
   }, [])
 
   const handleChange = (event) => {

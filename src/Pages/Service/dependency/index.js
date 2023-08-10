@@ -25,7 +25,9 @@ import { OutlinedButton } from "@/components/Button";
 import {
   UPDATE_SERVICE_DEPENDENCY,
   UPDATE_SEARCH_SERVICE,
-  UPDATE_INTERFACE_DEPENDENCY
+  UPDATE_INTERFACE_DEPENDENCY,
+  searchDependenciesByServiceId,
+  searchDependenciesByInterfaceId
 } from "@/actions/serviceAction";
 import ServiceInfoBlock from "../module/ServiceInfoBlock";
 import InvokeInfoBlock from "../module/InvokeInfoBlock";
@@ -256,7 +258,7 @@ function ServiceDependency() {
 
   useEffect(() => {
     if (serviceDependency) {
-      transformServiceData("test_service", serviceDependency);
+      transformServiceData(queryContent, serviceDependency);
     }
   }, [serviceDependency]);
 
@@ -280,6 +282,9 @@ function ServiceDependency() {
   };
 
   const transformServiceData = (id, data) => {
+    if (!data || (data.invoked.length === 0 && data.invoking.length === 0)) {
+      return
+    }
     let nodes = []
     let links = []
     nodes.push(
@@ -383,7 +388,8 @@ function ServiceDependency() {
       setEmptyError(true);
       return;
     }
-    dispatch({ type: UPDATE_SERVICE_DEPENDENCY, data: data });
+    dispatch(searchDependenciesByServiceId(queryContent));
+    // dispatch({ type: UPDATE_SERVICE_DEPENDENCY, data: data });
   }
 
   const handleInterfaceSearchClick = (e) => {
