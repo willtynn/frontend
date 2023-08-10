@@ -1,4 +1,6 @@
 import { axios_instance } from "../utils/axios_instance";
+import { setSnackbarMessageAndOpen } from "./snackbarAction";
+import { SEVERITIES } from "../components/CommonSnackbar";
 
 export const UPDATE_SEARCH_SERVICE = "UPDATE_SEARCH_SERVICE";
 
@@ -84,6 +86,13 @@ export function searchDependenciesByServiceId(id) {
         ) {
           dispatch({ type: UPDATE_SERVICE_DEPENDENCY, data: res.data.data });
         } else {
+          dispatch(
+            setSnackbarMessageAndOpen(
+              'serviceDependency.serviceDependencyNotFound',
+              {},
+              SEVERITIES.warning
+            )
+          );
           dispatch({ type: UPDATE_SERVICE_DEPENDENCY, data: { invoked: [], invoking: [] } });
         }
       } else {

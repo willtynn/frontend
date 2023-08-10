@@ -25,6 +25,7 @@ import {Outlet} from "react-router-dom";
 import { useNavigate } from 'react-router-dom';
 import SearchIcon from '@mui/icons-material/Search';
 import PolylineIcon from '@mui/icons-material/Polyline';
+import CommonSnackBar from '../../components/CommonSnackbar';
 
 const drawerWidth = 220;
 const openedMixin = theme => ({
@@ -345,6 +346,7 @@ export default function MiniDrawer() {
         <DrawerHeader />
         <Outlet />
       </Box>
+      <CommonSnackBar />
     </Box>
   );
 }
