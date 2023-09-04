@@ -4,6 +4,7 @@ import BasicTable from '../Pages/TestPages';
 import CustomizedTables from '../Pages/TestPages/table2'
 import ServiceQuery from '@/Pages/Service/query';
 import ServiceDependency from '@/Pages/Service/dependency';
+import RouteTrace from '../Pages/Route/trace';
 
 export default function newRoute() {
   return (
@@ -19,6 +20,9 @@ export default function newRoute() {
           <Route path='query' element={<ServiceQuery />} />
           <Route path='dependency' element={<ServiceDependency />} />
           <Route path='link' element={<CustomizedTables />} />
+        </Route>
+        <Route path='route/'>
+          <Route path='trace' element={<RouteTrace />} />
         </Route>
 
       </Route>

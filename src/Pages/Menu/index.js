@@ -14,16 +14,14 @@ import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
 import DeviceHubIcon from '@mui/icons-material/DeviceHub';
 import DashboardIcon from '@mui/icons-material/Dashboard';
-import { ExpandLess, ExpandMore } from '@mui/icons-material';
+import { CallSplit, ExpandLess, ExpandMore, Timeline } from '@mui/icons-material';
 import { Button, Collapse } from '@mui/material';
 import MenuIcon from '@mui/icons-material/Menu';
 import AppsIcon from '@mui/icons-material/Apps';
 import CloudIcon from '@mui/icons-material/Cloud';
-import HubIcon from '@mui/icons-material/Hub';
 import DesktopMacIcon from '@mui/icons-material/DesktopMac';
 import {Outlet} from "react-router-dom";
 import { useNavigate } from 'react-router-dom';
-import SearchIcon from '@mui/icons-material/Search';
 import PolylineIcon from '@mui/icons-material/Polyline';
 import CommonSnackBar from '../../components/CommonSnackbar';
 
@@ -97,6 +95,7 @@ export default function MiniDrawer() {
   const [open, setOpen] = React.useState(false);
   const [verticalOpen1, setVerticalOpen1] = React.useState(false);
   const [verticalOpen2, setVerticalOpen2] = React.useState(false);
+  const [verticalOpen3, setVerticalOpen3] = React.useState(false);
   const navigate = useNavigate();
 
   const handleDrawerOpen = () => {
@@ -113,6 +112,10 @@ export default function MiniDrawer() {
 
   const handleClick2 = () => {
     setVerticalOpen2(!verticalOpen2);
+  };
+
+  const handleClick3 = () => {
+    setVerticalOpen3(!verticalOpen3);
   };
 
   return (
@@ -136,11 +139,12 @@ export default function MiniDrawer() {
             Cloud Collaboration Platform
           </Typography>
           <Box sx={{ marginLeft: 'auto' }}>
+            {/*
             <Button
               variant='outlined'
               sx={{
                 borderColor: '#FFF',
-                color: '#FFF',
+                color: '#FFF'
               }}
             >
               Button
@@ -196,7 +200,7 @@ export default function MiniDrawer() {
                 sx={{
                   justifyContent: open ? 'initial' : 'center',
                   px: 2.5,
-                  backgroundColor: '#E8EDFB',
+                  backgroundColor: '#FFF',
                 }}
                 onClick={() => {navigate('cluster/overview');}}
               >
@@ -215,7 +219,7 @@ export default function MiniDrawer() {
                 sx={{
                   justifyContent: open ? 'initial' : 'center',
                   px: 2.5,
-                  backgroundColor: '#E8EDFB',
+                  backgroundColor: '#FFF',
                 }}
                 onClick={() => {navigate('cluster/node');}}
               >
@@ -285,7 +289,7 @@ export default function MiniDrawer() {
                 sx={{
                   justifyContent: open ? 'initial' : 'center',
                   px: 2.5,
-                  backgroundColor: '#E7F6F8',
+                  backgroundColor: '#FFF',
                 }}
                 onClick={()=>{navigate('/service/query')}}
               >
@@ -304,7 +308,7 @@ export default function MiniDrawer() {
                 sx={{
                   justifyContent: open ? 'initial' : 'center',
                   px: 2.5,
-                  backgroundColor: '#E7F6F8',
+                  backgroundColor: '#FFF',
                 }}
                 onClick={()=>{navigate('/service/dependency')}}
               >
@@ -338,6 +342,59 @@ export default function MiniDrawer() {
                 </ListItemIcon>
                 {open ? <ListItemText primary='服务链路' /> : null}
               </ListItemButton> */}
+            </List>
+          </Collapse>
+        </List>
+
+
+        <List sx={{ paddingTop: '0px', paddingBottom: '0px' }}>
+          <ListItemButton
+            sx={{
+              minHeight: 48,
+              justifyContent: open ? 'initial' : 'center',
+              px: 2.5,
+              backgroundColor: '#E8F9E6',
+            }}
+            onClick={handleClick3}
+          >
+            <ListItemIcon
+              sx={{
+                minWidth: 0,
+                mr: open ? 3 : 'auto',
+                justifyContent: 'center',
+              }}
+            >
+              <Timeline />
+            </ListItemIcon>
+            {open ? (
+              <>
+                <ListItemText primary='路由' />
+                {verticalOpen3 ? <ExpandLess /> : <ExpandMore />}
+              </>
+            ) : null}
+          </ListItemButton>
+          <Collapse in={verticalOpen3} timeout='auto' unmountOnExit={true}>
+            <List component='div' disablePadding>
+              <ListItemButton
+                sx={{
+                  justifyContent: open ? 'initial' : 'center',
+                  px: 2.5,
+                  backgroundColor: '#FFF',
+                }}
+                onClick={()=>{navigate('/route/trace')}}
+              >
+                <ListItemIcon
+                  sx={{
+                    minWidth: 0,
+                    mr: open ? 3 : 'auto',
+                    justifyContent: 'center',
+                  }}
+                >
+                  <CallSplit />
+                </ListItemIcon>
+                {open ? <ListItemText primary='路由链路' /> : null}
+              </ListItemButton>
+              
             </List>
           </Collapse>
         </List>
