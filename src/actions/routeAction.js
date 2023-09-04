@@ -1,7 +1,5 @@
-const data_trace = [
-  "a",
-  "b"
-]
+import {test_data} from "../Pages/Route/trace/test_data.js"
+const data_trace = JSON.parse(test_data)
 
 export const UPDATE_ROUTE_TRACE = "UPDATE_ROUTE_TRACE";
 export const UPDATE_ROUTE_GRAPH = "UPDATE_ROUTE_GRAPH";

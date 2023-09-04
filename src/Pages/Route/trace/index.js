@@ -23,8 +23,8 @@ import {
   UPDATE_ROUTE_TRACE,
   getRouteTrace
 } from "@/actions/routeAction";
-import { DateTimePicker, LocalizationProvider, zhCN } from "@mui/x-date-pickers"
-import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns'
+
+import {test_data} from "./test_data.js";
 
 //#region
 const durationList = [60, 120, 300, 600, 1800, 3600, 10800, 21600, 43200, 86400, 604800];
@@ -68,12 +68,21 @@ export default function RouteTrace() {
   //HOOK-开始
   //#region
   useEffect(() => {
-    console.log("SA");
     if (routeTrace) {
       //transformServiceData(1, routeTrace);
       let elements = routeTrace.map(
-        (item, index) => 
-            <RouteTraceCard key={index} trace={item} />
+        (item, index) => {
+          const data = item.spans[0];
+
+          return <RouteTraceCard 
+              title= {data.tags[0].value}
+              traceId= {item.traceID}
+              spanNum= {item.spans.length}
+              timeStamp={data.startTime}
+              duration={data.duration}
+              progress='70'
+            />;
+        }
       );
       setTraceElements(elements);
     }
