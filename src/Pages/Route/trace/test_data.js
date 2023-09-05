@@ -6,7 +6,7 @@ export const test_data = `[
                 "traceID": "427d6936879b5901c77a532d88dad55f",
                 "spanID": "c77a532d88dad55f",
                 "startTime": 1693298225032431,
-                "duration": 61839,
+                "duration": 161839,
                 "tags": [
                     {
                         "key": "istio.namespace",
@@ -151,7 +151,7 @@ export const test_data = `[
                 "traceID": "427d6936879b5901c77a532d88dad55f",
                 "spanID": "c77a532d88dad55f",
                 "startTime": 1693298225032431,
-                "duration": 61839,
+                "duration": 1561839,
                 "tags": [
                     {
                         "key": "istio.namespace",

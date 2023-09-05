@@ -9,7 +9,8 @@ import {
     Typography,
     Box,
     Stack,
-    Divider
+    Divider,
+    CardActionArea
   } from "@mui/material";
   import {
     SmallLightFont,
@@ -70,12 +71,34 @@ function calculateTimeInterval(stamp){
   }
   return 'NaN';
 }
+
+function calculateDuration(duration){
+  //要显示小数点后三位
+  if(duration < 1000){
+    return duration + 'μs';
+  }else if(duration < 1000000){
+    return (duration / 1000).toFixed(3) + 'ms';
+  }else{
+    duration /= 1000000;
+  }
+  if(duration < 60){
+    return duration.toFixed(3) + 's';
+  }else if(duration < 3600){
+    return (duration / 60).toFixed(3) + 'min';
+  }else if(duration < 86400){
+    return (duration / 3600).toFixed(3) + 'h';
+  }else{
+    return (duration / 86400).toFixed(3) + 'd';
+  }
+  //return 'Infinity';
+}
+
 //#endregion
 //fuctions-end
 
 
 export function RouteTraceCard(props) {
-  const { title, traceId, spanNum, timeStamp, duration, progress} = props;
+  const { nodeID, traceId, spanNum, timeStamp, duration, progress, action} = props;
 
   const styleSpanNum = 
     {
@@ -84,6 +107,11 @@ export function RouteTraceCard(props) {
       borderRadius: '3px',
       bgcolor: 'grey.100',
       height: '20px',
+      width: (47 + (Math.log(spanNum) / Math.log(10) * 8))
+    }
+  const styleSpanActionArea =
+    {
+      height: "20px", 
       width: (47 + (Math.log(spanNum) / Math.log(10) * 8))
     }
   const styleTime =
@@ -131,7 +159,7 @@ export function RouteTraceCard(props) {
     <Card ref={progressStack} className="card">
       <CardContent>
         <Stack direction="row">
-          <div ref={leftDiv} style={{background: "rgba(20, 161, 166, 0.75)", height: "15px"}}></div>
+          <div ref={leftDiv} style={{background: "rgba(20, 161, 166, 0.65)", height: "15px"}}></div>
           <div ref={rightDiv} style={{background: "rgba(236,236,236,1)", height: "15px"}}></div>
         </Stack>
 
@@ -140,25 +168,27 @@ export function RouteTraceCard(props) {
         <Stack direction="row" justifyContent="space-between">
           <Stack direction="row" spacing={1}>
             <NormalFontBlack>
-              {title}
+              {nodeID}
             </NormalFontBlack>
             <SmallLightFont>
               {traceId}
             </SmallLightFont>
           </Stack>
           <SmallLightFont>
-            {duration / 1000} ms
+            {calculateDuration(duration)}
           </SmallLightFont>
         </Stack>
 
         <div className='space2'/>
 
         <Stack className='middle-box' direction="row" spacing={1} justifyContent="space-between">
-          <Box sx={styleSpanNum}>
-            <SmallLightFont>
-              {spanNum} Span{spanNum > 1 ? 's' : ''}
-            </SmallLightFont>
-          </Box>
+          <CardActionArea style={styleSpanActionArea} onClick={action}>
+            <Box sx={styleSpanNum}>
+              <SmallLightFont>
+                {spanNum} Span{spanNum > 1 ? 's' : ''}
+              </SmallLightFont>
+            </Box>
+          </CardActionArea>
           <Box className='time' sx={styleTime}>
             <Stack direction="row" justifyContent="right">
               <NormalFontGreen>

@@ -8,23 +8,29 @@ import {
   Select,
   MenuItem,
   Box,
-  Input,
   Stack,
-  Button
+  Button,
+  Typography,
+  Modal,
+  Backdrop,
+  Fade,
 } from "@mui/material"
 import {
   SuperLargeBoldFont,
-  SmallLightFont
 } from "@/components/Fonts";
+import { DateTimePicker } from '@mui/x-date-pickers/DateTimePicker';
+import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
+import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
+import dayjs from 'dayjs';
+
 import SendIcon from '@mui/icons-material/Send';
 import { RouteTraceCard } from "@/components/RouteTraceCard";
-//import { OutlinedButton } from "@/components/Button";
+
 import {
   UPDATE_ROUTE_TRACE,
   getRouteTrace
 } from "@/actions/routeAction";
 
-import {test_data} from "./test_data.js";
 
 //#region
 const durationList = [60, 120, 300, 600, 1800, 3600, 10800, 21600, 43200, 86400, 604800];
@@ -35,21 +41,20 @@ export default function RouteTrace() {
 
   //定义-开始
   //#region
-  //const [namespaceContent, setNamespaceContent] = useState("");
   const [emptyError, setEmptyError] = useState(false);
   const [durationSelectIndex, setDurationSelectIndex] = useState(5);
+
+  const [startTimeValue, setStartTimeValue] = useState(dayjs().add(-15, 'minute'));
+  const [endTimeValue, setEndTimeValue] = useState(dayjs());
+  const [openModal, setOpenModal] = React.useState(false);
+  const [traceIndex, setTraceIndex] = useState(0);
   
+  const [test, setTest] = useState(false);
   
   /*
    * 用于route的依赖图
    */
-  //const [nodes, setNodes] = useState([]);
-  //const [links, setLinks] = useState([]);
-  const [traces, setTraces] = useState([]);
   const [traceElements, setTraceElements] = useState([]);
-  const [durationStartValue, setDurationStartValue] = useState(new Date());
-
-  //const dependencyClick = useRef();
 
   const dispatch = useDispatch();
 
@@ -62,25 +67,59 @@ export default function RouteTrace() {
       routeTrace: state.Route.routeTrace
     };
   });
+
   //#endregion
   //定义-结束
+
+  //style-开始
+  //#region
+  
+
+  const styleModal = {
+    position: 'absolute',
+    top: '50%',
+    left: '50%',
+    transform: 'translate(-50%, -50%)',
+    width: 400,
+    bgcolor: 'background.paper',
+    border: '2px solid #000',
+    boxShadow: 24,
+    p: 4,
+  };
+
+  //#endregion
+  //style-结束
 
   //HOOK-开始
   //#region
   useEffect(() => {
     if (routeTrace) {
-      //transformServiceData(1, routeTrace);
+      let timeSum = 0;
+      routeTrace.map((item) => {
+        timeSum += item.spans[0].duration;
+      });
+      
       let elements = routeTrace.map(
         (item, index) => {
           const data = item.spans[0];
 
+          let fullNodeID = "";
+          data.tags.forEach((tag) => {
+            if(tag.key === "node_id")
+            {
+              fullNodeID = tag.value;
+            }
+          });
+          const nodeID = fullNodeID.split("~")[2];
+
           return <RouteTraceCard 
-              title= {data.tags[0].value}
+              nodeID= {nodeID}
               traceId= {item.traceID}
               spanNum= {item.spans.length}
-              timeStamp={data.startTime}
-              duration={data.duration}
-              progress='70'
+              timeStamp= {data.startTime}
+              duration= {data.duration}
+              progress= {data.duration / timeSum * 100}
+              action= {()=>{setTraceIndex(index);handleOpenModal();}}
             />;
         }
       );
@@ -96,58 +135,7 @@ export default function RouteTrace() {
 
   //自定义函数-开始
   //#region
-  const transformServiceData = (id, data) => {
-    if (!data || (data.invoked.length === 0 && data.invoking.length === 0)) {
-      return
-    }
-    let nodes = []
-    let links = []
-    nodes.push(
-      {
-        id: id,
-        label: id,
-        type: "target"
-      }
-    )
-    nodes = nodes.concat(data.invoked.map(
-      (item, index) => {
-        return {
-          id: item.id,
-          label: item.id,
-          type: "invoked"
-        }
-      }
-    ))
-    nodes = nodes.concat(data.invoking.map(
-      (item, index) => {
-        return {
-          id: item.id,
-          label: item.id,
-          type: "invoking"
-        }
-      }
-    ))
-    links = links.concat(data.invoked.map(
-      (item, index) => {
-        return {
-          source: item.id,
-          target: id,
-          invoke_info: item.invoke_info
-        }
-      }
-    ))
-    links = links.concat(data.invoking.map(
-      (item, index) => {
-        return {
-          source: id,
-          target: item.id,
-          invoke_info: item.invoke_info
-        }
-      }
-    ))
-    //setNodes(nodes)
-    //setLinks(links)
-  }
+  
   //#endregion
   //自定义函数-结束
 
@@ -181,13 +169,24 @@ export default function RouteTrace() {
     dispatch(dispatch(getRouteTrace(0,1)));
   }
 
-  const handleDurationStartValue = (e) => {
-    setDurationStartValue(e.target.value);
-  }
-
   const handleDurationSelectChange = (e) => {
     setDurationSelectIndex(e.target.value);
   }
+
+  const handleStartTimeChange = (newValue) => {
+    setStartTimeValue(newValue);
+  }
+
+  const handleEndTimeChange = (newValue) => {
+    setEndTimeValue(newValue);
+  }
+
+  const handleTest = (e) => {
+    handleOpenModal();
+  }
+
+  const handleOpenModal = () => setOpenModal(true);
+  const handleCloseModal = () => setOpenModal(false);
 
   //#endregion
   //handle-结束
@@ -196,12 +195,35 @@ export default function RouteTrace() {
   //return
   //#region
   return (
+    
     <Box sx={{
         width: '100%',
-        minHeight: "800px",
-        m: "16px"
+        minHeight: "600px",
+        minWidth: "700px",
+        m: "8px"
       }}>
+      
+      {/* Modal */}
+      <Modal
+        aria-labelledby="transition-modal-title"
+        aria-describedby="transition-modal-description"
+        open={openModal}
+        onClose={handleCloseModal}
+        closeAfterTransition
+      >
+        <Fade in={openModal}>
+          <Box sx={styleModal}>
+            <Typography id="transition-modal-title" variant="h6" component="h2">
+              {traceIndex}
+            </Typography>
+            <Typography id="transition-modal-description" sx={{ mt: 2 }}>
+              Modal Content
+            </Typography>
+          </Box>
+        </Fade>
+      </Modal>
 
+      {/* Main Body */}
       <Stack direction="row" spacing={6} sx={{
           mb: "12px"
         }}>
@@ -213,38 +235,10 @@ export default function RouteTrace() {
             lineHeight: "54px !important"
           }}>路由链路</SuperLargeBoldFont>
 
-        {/* 搜索框 */}
+        {/* 搜索 */}
         <Stack direction="row" spacing={4} sx={{
             mt: "24px"
           }}>
-          {/* Namespcae *}
-          <Stack>
-            <SmallLightFont>
-                    Query
-            </SmallLightFont>
-            <FormControl>
-              <Input
-                id="namespace-input"
-                aria-describedby="namespace-input-text"
-                value={namespaceContent}
-                onChange={handleNamespaceChange}
-                error={emptyError}
-              />
-              {
-                !emptyError
-                  ?
-                  <FormHelperText id="namespace-input-text"
-                    sx={{
-                      m: "3px 0px 0px 0px"
-                    }}
-                  >
-                    Namespace
-                  </FormHelperText>
-                  :
-                  <></>
-              }
-            </FormControl>
-          </Stack>
           { /* Duration */ }
           <FormControl variant="standard">
             <InputLabel
@@ -281,15 +275,32 @@ export default function RouteTrace() {
             </Select>
           </FormControl>
           {
-          //TODO
-          /*
-          <LocalizationProvider dateAdapter={AdapterDateFns} adapterLocale={zhCN}>
-            <DateTimePicker
-              label="Start"
-              value={durationStartValue}
-              onChange={handleDurationStartValue}
-            />
-          </LocalizationProvider>*/
+            durationSelectIndex === 11 ? 
+            <LocalizationProvider dateAdapter={AdapterDayjs}>
+              <DateTimePicker
+                sx={{width: "200px"}}
+                label="Start Time"
+                ampm={false}
+                displayWeekNumber={true}
+                minDate={dayjs("2020-01-01")}
+                maxDate={dayjs().add(1, 'day')}
+                timeSteps={{ hours: 1, minutes: 1, seconds: 10 }}
+                value={startTimeValue}
+                onChange={handleStartTimeChange}
+                />
+                <DateTimePicker
+                  sx={{width: "200px"}}
+                  label="End Time"
+                  ampm={false}
+                  displayWeekNumber={true}
+                  minDate={dayjs("2020-01-01")}
+                  maxDate={dayjs().add(1, 'day')}
+                  timeSteps={{ hours: 1, minutes: 1, seconds: 10 }}
+                  value={endTimeValue}
+                  onChange={handleEndTimeChange}
+                  />
+            </LocalizationProvider>
+            : <></>
           }
           <Button endIcon={<SendIcon />} variant="contained"
             onClick={handleTraceSearchClick}
@@ -300,6 +311,7 @@ export default function RouteTrace() {
             }}>
             Search
           </Button>
+          <Button onClick={handleTest}>TEST</Button>
         </Stack>
       </Stack>
 
