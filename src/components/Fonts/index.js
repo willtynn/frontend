@@ -28,6 +28,15 @@ export const NormalFontBlack = styled(Typography)({
   lineHeight: '16px',
 });
 
+export const NormalLargeFont = styled(Typography)({
+  color: '#262E35',
+  fontSize: '16px',
+  fontFamily: 'Open Sans',
+  fontStyle: 'normal',
+  fontWeight: 400,
+  lineHeight: '27.5px',
+});
+
 export const LargeBoldFont = styled(Typography)({
   color: '#262E35',
   fontSize: '20px',

@@ -1,18 +1,22 @@
 import * as actions from "../actions/routeAction";
 
 const initState = {
-  queryResult: null,
-  routeTrace: null
+  routeTrace: null,
+  routeTraceDetail: null
 }
 
 export default function RouteReducer(state = initState, action) {
   const { type, data } = action
   switch (type) {
     case actions.UPDATE_ROUTE_TRACE:
-      console.log(data);
       return {
         ...state,
         routeTrace: data
+      }
+    case actions.UPDATE_ROUTE_TRACE_DETAIL:
+      return {
+        ...state,
+        routeTraceDetail: data
       }
     default:
       return state;

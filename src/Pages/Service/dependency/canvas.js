@@ -156,6 +156,8 @@ export function EdgeCenterCanvas(props) {
 
     g.nodes().forEach(function (v) {
       var node = g.node(v);
+      console.log(v);
+      console.log(node);
       // Round the corners of the nodes
       node.rx = node.ry = 5;
     });

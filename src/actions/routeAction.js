@@ -1,8 +1,9 @@
-import {test_data} from "../Pages/Route/trace/test_data.js"
+import {test_data, test_detail_data} from "../Pages/Route/trace/test_data.js"
 const data_trace = JSON.parse(test_data)
+const data_detail = JSON.parse(test_detail_data)
 
 export const UPDATE_ROUTE_TRACE = "UPDATE_ROUTE_TRACE";
-export const UPDATE_ROUTE_GRAPH = "UPDATE_ROUTE_GRAPH";
+export const UPDATE_ROUTE_TRACE_DETAIL = "UPDATE_ROUTE_TRACE_DETAIL";
 
 
 export function getRouteTrace(start, end) {
@@ -39,8 +40,8 @@ export function getRouteTrace(start, end) {
 }
 
 
-export function getRouteGraph(namespaces, duration) {
-    const url = "/graph";
+export function getRouteTraceDetail(id) {
+    const url = "/trace/detail";
     return async dispatch => {
         /*
       try {
@@ -68,6 +69,6 @@ export function getRouteGraph(namespaces, duration) {
       } catch {
         //dispatch({ type: UPDATE_SEARCH_SERVICE, data: null });
       }*/
-      //dispatch({ type: UPDATE_ROUTE_DEPENDENCY, data: data });
+      dispatch({ type: UPDATE_ROUTE_TRACE_DETAIL, data: data_detail });
     }
   }

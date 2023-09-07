@@ -98,7 +98,7 @@ function calculateDuration(duration){
 
 
 export function RouteTraceCard(props) {
-  const { nodeID, traceId, spanNum, timeStamp, duration, progress, action} = props;
+  const { nodeID, traceID, spanNum, timeStamp, duration, progress, action} = props;
 
   const styleSpanNum = 
     {
@@ -108,6 +108,10 @@ export function RouteTraceCard(props) {
       bgcolor: 'grey.100',
       height: '20px',
       width: (47 + (Math.log(spanNum) / Math.log(10) * 8))
+    }
+  const styleSpanNumFont =
+    {
+      paddingLeft: "3px"
     }
   const styleSpanActionArea =
     {
@@ -171,7 +175,7 @@ export function RouteTraceCard(props) {
               {nodeID}
             </NormalFontBlack>
             <SmallLightFont>
-              {traceId}
+              {traceID}
             </SmallLightFont>
           </Stack>
           <SmallLightFont>
@@ -184,7 +188,7 @@ export function RouteTraceCard(props) {
         <Stack className='middle-box' direction="row" spacing={1} justifyContent="space-between">
           <CardActionArea style={styleSpanActionArea} onClick={action}>
             <Box sx={styleSpanNum}>
-              <SmallLightFont>
+              <SmallLightFont style={styleSpanNumFont}>
                 {spanNum} Span{spanNum > 1 ? 's' : ''}
               </SmallLightFont>
             </Box>
@@ -194,7 +198,7 @@ export function RouteTraceCard(props) {
               <NormalFontGreen>
                 {getDate(timeStamp)}
               </NormalFontGreen>
-              <Divider orientation="vertical" />
+              <Divider orientation="vertical" sx={{ width: "5px" }}/>
               <NormalFontGreen>
                 {getTime(timeStamp)}
               </NormalFontGreen>

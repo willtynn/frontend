@@ -1,7 +1,9 @@
+// imports
+//#region
 import React from "react";
 import { useState, useEffect, useRef } from "react";
 import { useDispatch, useSelector } from "react-redux";
-//import { RouteDependencyCanvas } from "./canvas";
+import { RouteTraceCanvas } from "./canvas";
 import {
   FormControl,
   InputLabel,
@@ -10,13 +12,14 @@ import {
   Box,
   Stack,
   Button,
-  Typography,
   Modal,
-  Backdrop,
-  Fade,
+  Slide,
+  IconButton
 } from "@mui/material"
 import {
   SuperLargeBoldFont,
+  NormalFont,
+  NormalLargeFont
 } from "@/components/Fonts";
 import { DateTimePicker } from '@mui/x-date-pickers/DateTimePicker';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
@@ -24,32 +27,43 @@ import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import dayjs from 'dayjs';
 
 import SendIcon from '@mui/icons-material/Send';
+import ArrowBackIcon from '@mui/icons-material/ArrowBack';
+
 import { RouteTraceCard } from "@/components/RouteTraceCard";
 
 import {
-  UPDATE_ROUTE_TRACE,
+  getRouteTraceDetail,
   getRouteTrace
 } from "@/actions/routeAction";
 
+//#endregion
+//import
 
+
+//Constants
 //#region
 const durationList = [60, 120, 300, 600, 1800, 3600, 10800, 21600, 43200, 86400, 604800];
 //#endregion
+//Constants
 
 
 export default function RouteTrace() {
 
   //定义-开始
   //#region
-  const [emptyError, setEmptyError] = useState(false);
   const [durationSelectIndex, setDurationSelectIndex] = useState(5);
 
   const [startTimeValue, setStartTimeValue] = useState(dayjs().add(-15, 'minute'));
   const [endTimeValue, setEndTimeValue] = useState(dayjs());
   const [openModal, setOpenModal] = React.useState(false);
   const [traceIndex, setTraceIndex] = useState(0);
+  const [traceDetail, setTraceDetail] = useState({});
+
+  //const [nodes, setNodes] = useState([]);
+  //const [edges, setEdges] = useState([]);
+  const [detailID, setDetailID] = useState(-1);
   
-  const [test, setTest] = useState(false);
+  //const [test, setTest] = useState(false);
   
   /*
    * 用于route的依赖图
@@ -59,11 +73,11 @@ export default function RouteTrace() {
   const dispatch = useDispatch();
 
   const {
-    queryResult,
+    routeTraceDetail,
     routeTrace
   } = useSelector(state => {
     return {
-      queryResult: state.Route.queryResult,
+      routeTraceDetail: state.Route.routeTraceDetail,
       routeTrace: state.Route.routeTrace
     };
   });
@@ -73,19 +87,21 @@ export default function RouteTrace() {
 
   //style-开始
   //#region
-  
 
   const styleModal = {
     position: 'absolute',
-    top: '50%',
-    left: '50%',
-    transform: 'translate(-50%, -50%)',
-    width: 400,
+    left: "40%",
+    transform: 'translate(-100%, -50%)',
+    minWidth: "650px",
+    maxWidth: "1150px",
+    width: '60%',
+    height: '100%',
     bgcolor: 'background.paper',
-    border: '2px solid #000',
-    boxShadow: 24,
+    border: '2px solid #596A7C',
+    boxShadow: 'inset -15px 0px  15px -15px #444444',
     p: 4,
   };
+  //boxShadow: x坐标值 y坐标值 模糊值 扩散 颜色
 
   //#endregion
   //style-结束
@@ -96,12 +112,12 @@ export default function RouteTrace() {
     if (routeTrace) {
       let timeSum = 0;
       routeTrace.map((item) => {
-        timeSum += item.spans[0].duration;
+        timeSum += item.trace.spans[0].duration;
       });
       
       let elements = routeTrace.map(
         (item, index) => {
-          const data = item.spans[0];
+          const data = item.trace.spans[0];
 
           let fullNodeID = "";
           data.tags.forEach((tag) => {
@@ -112,14 +128,15 @@ export default function RouteTrace() {
           });
           const nodeID = fullNodeID.split("~")[2];
 
-          return <RouteTraceCard 
+          return <RouteTraceCard
+              key= {index}
               nodeID= {nodeID}
-              traceId= {item.traceID}
-              spanNum= {item.spans.length}
+              traceID= {item.traceID}
+              spanNum= {item.trace.spans.length}
               timeStamp= {data.startTime}
               duration= {data.duration}
               progress= {data.duration / timeSum * 100}
-              action= {()=>{setTraceIndex(index);handleOpenModal();}}
+              action= {() => handleSpanClick(index)}
             />;
         }
       );
@@ -135,7 +152,57 @@ export default function RouteTrace() {
 
   //自定义函数-开始
   //#region
+
+  function calculateDuration(duration){
+    //要显示小数点后三位
+    if(duration < 1000){
+      return duration + 'μs';
+    }else if(duration < 1000000){
+      return (duration / 1000).toFixed(3) + 'ms';
+    }else{
+      duration /= 1000000;
+    }
+    if(duration < 60){
+      return duration.toFixed(3) + 's';
+    }else if(duration < 3600){
+      return (duration / 60).toFixed(3) + 'min';
+    }else if(duration < 86400){
+      return (duration / 3600).toFixed(3) + 'h';
+    }else{
+      return (duration / 86400).toFixed(3) + 'd';
+    }
+  }
   
+  const getTraceDetail = (index) => {
+    const detail = {};
+    const item = routeTrace[index];
+    const data = item.trace.spans[0];
+
+    let fullNodeID = "";
+    data.tags.forEach((tag) => {
+      if(tag.key === "node_id")
+      {
+        fullNodeID = tag.value;
+      }
+    });
+    detail.nodeID = fullNodeID.split("~")[2];
+    detail.traceID = item.trace.traceID;
+    detail.spanNum = item.trace.spans.length;
+    detail.timeStamp = data.startTime;
+    detail.duration = data.duration;
+    
+    setTraceDetail(detail);
+  }
+
+  const getNodesAndEdges = (index) => {
+    const id = routeTrace[index].id;
+    setDetailID(id);
+    //dispatch(getRouteTraceDetail(id));
+    //console.log("getNodesAndEdges", routeTraceDetail);
+    //setNodes(routeTraceDetail.nodes);
+    //setEdges(routeTraceDetail.edges);
+  }
+
   //#endregion
   //自定义函数-结束
 
@@ -166,7 +233,7 @@ export default function RouteTrace() {
     {
 
     }
-    dispatch(dispatch(getRouteTrace(0,1)));
+    dispatch(getRouteTrace(0,1));
   }
 
   const handleDurationSelectChange = (e) => {
@@ -181,7 +248,14 @@ export default function RouteTrace() {
     setEndTimeValue(newValue);
   }
 
-  const handleTest = (e) => {
+  const handleSpanClick = (index)=>{
+    setTraceIndex(index);
+    getTraceDetail(index);
+    getNodesAndEdges(index);
+    handleOpenModal();
+  }
+
+  const handleTest = () => {
     handleOpenModal();
   }
 
@@ -202,6 +276,7 @@ export default function RouteTrace() {
         minWidth: "700px",
         m: "8px"
       }}>
+
       
       {/* Modal */}
       <Modal
@@ -211,17 +286,55 @@ export default function RouteTrace() {
         onClose={handleCloseModal}
         closeAfterTransition
       >
-        <Fade in={openModal}>
-          <Box sx={styleModal}>
-            <Typography id="transition-modal-title" variant="h6" component="h2">
-              {traceIndex}
-            </Typography>
-            <Typography id="transition-modal-description" sx={{ mt: 2 }}>
-              Modal Content
-            </Typography>
-          </Box>
-        </Fade>
+        <Slide direction="left" in={openModal} mountOnEnter unmountOnExit>
+          {
+            (routeTrace && traceDetail && traceIndex >= 0 && traceIndex < routeTrace.length) ?
+              <Box sx={styleModal}>
+                <IconButton aria-label="back" color="black">
+                  <ArrowBackIcon />
+                </IconButton>
+                <Stack sx={{paddingLeft: "3%"}}>
+                  <SuperLargeBoldFont variant="h5">
+                    { traceDetail.nodeID }
+                  </SuperLargeBoldFont>
+                  <Stack direction="row" justifyContent="space-between">
+                    <NormalLargeFont sx={{paddingLeft: "2%"}}>
+                      { traceDetail.traceID }
+                    </NormalLargeFont>
+                    <Stack sx={{paddingTop: "1%"}}>
+                      <NormalFont>
+                        { "Duration:" + calculateDuration(traceDetail.duration) }
+                      </NormalFont>
+                      <NormalFont>
+                        { "StartTime:" + dayjs(traceDetail.timeStamp / 1000).format('YYYY-MM-DD HH:mm:ss') }
+                      </NormalFont>
+                    </Stack>
+                  </Stack>
+
+                  {/* 依赖图 */}
+                  <Stack>
+                    <Box>
+                      <Stack direction="row" spacing={1} sx={{height: "600px"}}>
+                        {
+                          (detailID >= 0)
+                            ?
+                            <RouteTraceCanvas 
+                              id={detailID} 
+                              handleNodeClick={null} 
+                              handleLinkClick={null} />
+                            :
+                            <></>
+                        }
+                      </Stack>
+                    </Box>
+                  </Stack>
+                </Stack>
+              </Box>
+            : <Box sx={styleModal}>NONE</Box>
+          }
+        </Slide>
       </Modal>
+
 
       {/* Main Body */}
       <Stack direction="row" spacing={6} sx={{
@@ -299,6 +412,7 @@ export default function RouteTrace() {
                   value={endTimeValue}
                   onChange={handleEndTimeChange}
                   />
+                  
             </LocalizationProvider>
             : <></>
           }
@@ -316,7 +430,7 @@ export default function RouteTrace() {
       </Stack>
 
       
-      {/* 链路 */}
+      {/* Trace 列表 */}
       
       <Stack>
         <Stack spacing={1}>
@@ -331,24 +445,6 @@ export default function RouteTrace() {
       </Stack>
       
 
-
-
-      {/* 依赖图 */}
-      {/*
-      <Stack>
-        <Box>
-          <Stack direction="row" spacing={1}>
-            {
-              (nodes.length !== 0)
-                ?
-                <RouteDependencyCanvas nodes={nodes} links={links} handleNodeClick={null} handleLinkClick={null} />
-                :
-                <></>
-            }
-          </Stack>
-        </Box>
-      </Stack>
-      */}
 
     </Box>
   );
