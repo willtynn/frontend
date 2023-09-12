@@ -1,0 +1,125 @@
+import * as d3 from 'd3';
+import dagreD3 from 'dagre-d3';
+import { useEffect, useState } from 'react';
+import { Box } from '@mui/material';
+import { shadowStyle } from '@/utils/commonUtils';
+
+import './canvas.css';
+
+const normalEdgeStyle = {
+  style: 'stroke: #333; stroke-width: 3px; fill: none;',
+  arrowheadStyle: 'fill: #333; width: 3px;',
+};
+
+export function DAGCanvas(props) {
+  const { nodes, links, handleNodeClick, handleLinkClick } = props;
+
+  useEffect(() => {
+    if(!nodes || nodes.length == 0 || !links || links.length == 0) {
+      return
+    }
+    var g = new dagreD3.graphlib.Graph({ compound: true })
+      .setGraph({})
+      .setDefaultEdgeLabel(() => {
+        return {};
+      });
+
+    // Here we're setting the nodes
+    nodes.forEach((item, index) => {
+      g.setNode(item.id, {
+        label: item.label,
+        class: 'service_node',
+        clusterLabelPos: 'top',
+        id: item.id,
+      });
+      g.setNode("circle" + item.id, {
+        label: '10',
+        style: 'fill: #ffd47f',
+      });
+    });
+
+    // nodes.forEach((item, index) => {
+    //   console.log("circle"+item.id, item.id);
+    //   g.setParent("circle"+item.id, item.id);
+    // });
+
+    links.forEach((item, index) => {
+      g.setEdge(item.source, item.target, {
+        label: item.label,
+        ...normalEdgeStyle,
+        class: 'service_link',
+        // id: JSON.stringify(item)
+      });
+    });
+
+    g.setEdge('circle1', 'circle2', {
+      label: 'circle',
+      ...normalEdgeStyle,
+      class: 'circle_link',
+      // id: JSON.stringify(item)
+    });
+
+    g.setParent("circle1", "1");
+
+    g.nodes().forEach(function (v) {
+      var node = g.node(v);
+      // Round the corners of the nodes
+      node.rx = node.ry = 5;
+    });
+
+    // g.setParent("circle1", "1");
+
+    // Create the renderer
+    var render = new dagreD3.render();
+
+    // Set up an SVG group so that we can translate the final graph.
+
+    var svg = d3.select(document.getElementById('interface_svg-canvas'));
+    let svgGroup = d3.select(document.getElementById('interface_g-canvas'));
+
+    // Run the renderer. This is what draws the final graph.
+    render(svgGroup, g);
+
+    const service_nodes = document.getElementsByClassName('service_node');
+    for (const service_node of service_nodes) {
+      service_node.addEventListener('click', () => {
+        handleNodeClick(service_node.id);
+      });
+    }
+
+    const service_links = document.getElementsByClassName('service_link');
+    for (const service_link of service_links) {
+      service_link.addEventListener('click', () => {
+        const service_link_info = JSON.parse(service_link.id);
+        handleLinkClick({
+          source: service_link_info.source,
+          target: service_link_info.target,
+          ...service_link_info.invoke_info,
+        });
+      });
+    }
+
+    // Center the graph
+    // console.log(svg.attr("width"));
+    // var xCenterOffset = 10;
+    // console.log(xCenterOffset);
+    var xCenterOffset = (svg.attr('width') - g.graph().width) / 2;
+
+    svgGroup.attr('transform', 'translate(' + xCenterOffset + ', 20)');
+
+    svg.attr('height', g.graph().height + 40);
+  }, [links]);
+
+  return (
+    <Box
+      sx={{
+        fontFamily: 'Open Sans',
+        ...shadowStyle,
+      }}
+    >
+      <svg id='interface_svg-canvas' width='800' height='600'>
+        <g id='interface_g-canvas'></g>
+      </svg>
+    </Box>
+  );
+}

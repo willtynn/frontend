@@ -1,4 +1,4 @@
-import { axios_instance } from "../utils/axios_instance";
+import axios from "axios";
 import { setSnackbarMessageAndOpen } from "./snackbarAction";
 import { SEVERITIES } from "../components/CommonSnackbar";
 
@@ -7,6 +7,15 @@ export const UPDATE_SEARCH_SERVICE = "UPDATE_SEARCH_SERVICE";
 export const UPDATE_SERVICE_DEPENDENCY = "UPDATE_SERVICE_DEPENDENCY";
 
 export const UPDATE_INTERFACE_DEPENDENCY = "UPDATE_INTERFACE_DEPENDENCY";
+
+const baseURLLink = "http://192.168.1.104:31931";
+
+const axios_instance = axios.create({
+  baseURL: baseURLLink,
+  timeout: 10000,
+  // withCredentials: isCookie,
+  crossDomain: true,
+});
 
 export function searchServiceById(id) {
   const url = "/service/getById";
