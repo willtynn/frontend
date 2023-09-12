@@ -11,6 +11,7 @@ export default function newRoute() {
     <Routes>
       <Route path='*' element={<Navigate replace to='cluster/overview' />} />
       <Route path='/' element={<Menu />} >
+        <Route path='/' element={<Navigate replace to='cluster/overview' />} />
         <Route path='cluster/'>
           <Route path='overview' element={<BasicTable />} />
           <Route path='node' element={<CustomizedTables />} />
