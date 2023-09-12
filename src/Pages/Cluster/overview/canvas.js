@@ -3,6 +3,7 @@ import dagreD3 from 'dagre-d3';
 import { useEffect, useState } from 'react';
 import { Box } from '@mui/material';
 import { shadowStyle } from '@/utils/commonUtils';
+import { digitInCircle } from '@/utils/commonUtils';
 
 import './canvas.css';
 
@@ -24,50 +25,31 @@ export function DAGCanvas(props) {
         return {};
       });
 
-    // Here we're setting the nodes
+
     nodes.forEach((item, index) => {
       g.setNode(item.id, {
-        label: item.label,
-        class: 'service_node',
-        clusterLabelPos: 'top',
-        id: item.id,
-      });
-      g.setNode("circle" + item.id, {
-        label: '10',
+        labelType: "html",
+        label: `${item.label}${digitInCircle(12)}`,
+        // label: "haha",
         style: 'fill: #ffd47f',
       });
     });
-
-    // nodes.forEach((item, index) => {
-    //   console.log("circle"+item.id, item.id);
-    //   g.setParent("circle"+item.id, item.id);
-    // });
 
     links.forEach((item, index) => {
       g.setEdge(item.source, item.target, {
         label: item.label,
         ...normalEdgeStyle,
         class: 'service_link',
-        // id: JSON.stringify(item)
       });
     });
 
-    g.setEdge('circle1', 'circle2', {
-      label: 'circle',
-      ...normalEdgeStyle,
-      class: 'circle_link',
-      // id: JSON.stringify(item)
-    });
-
-    g.setParent("circle1", "1");
+    
 
     g.nodes().forEach(function (v) {
       var node = g.node(v);
       // Round the corners of the nodes
       node.rx = node.ry = 5;
     });
-
-    // g.setParent("circle1", "1");
 
     // Create the renderer
     var render = new dagreD3.render();
