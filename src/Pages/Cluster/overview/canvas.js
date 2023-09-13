@@ -12,8 +12,8 @@ const normalEdgeStyle = {
   arrowheadStyle: 'fill: #333; width: 3px;',
 };
 
-export function DAGCanvas(props) {
-  const { nodes, links, handleNodeClick, handleLinkClick } = props;
+export function ClusterCanvas(props) {
+  const { id, nodes, links, handleNodeClick, handleLinkClick } = props;
 
   useEffect(() => {
     if(!nodes || nodes.length == 0 || !links || links.length == 0) {
@@ -30,7 +30,6 @@ export function DAGCanvas(props) {
       g.setNode(item.id, {
         labelType: "html",
         label: `${item.label}${digitInCircle(12)}`,
-        // label: "haha",
         style: 'fill: #ffd47f',
       });
     });
@@ -56,8 +55,8 @@ export function DAGCanvas(props) {
 
     // Set up an SVG group so that we can translate the final graph.
 
-    var svg = d3.select(document.getElementById('interface_svg-canvas'));
-    let svgGroup = d3.select(document.getElementById('interface_g-canvas'));
+    var svg = d3.select(document.getElementById(`${id}_svg-canvas`));
+    let svgGroup = d3.select(document.getElementById(`${id}_g-canvas`));
 
     // Run the renderer. This is what draws the final graph.
     render(svgGroup, g);
@@ -99,8 +98,8 @@ export function DAGCanvas(props) {
         ...shadowStyle,
       }}
     >
-      <svg id='interface_svg-canvas' width='800' height='600'>
-        <g id='interface_g-canvas'></g>
+      <svg id={`${id}_svg-canvas`} width='800' height='600'>
+        <g id={`${id}_g-canvas`}></g>
       </svg>
     </Box>
   );
