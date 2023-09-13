@@ -1,11 +1,15 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import { Box, Stack } from '@mui/material';
 
 import { useDispatch, useSelector } from 'react-redux';
 import ClusterTopology from './ClusterTopology';
 import InstanceList from './InstancesList';
 
-import { UPDATE_CLUSTERS, searchAllClusters } from '@/actions/clusterAction';
+import {
+  UPDATE_CLUSTERS,
+  SELECT_SERVER,
+  searchAllClusters,
+} from '@/actions/clusterAction';
 
 const fakeInstancesData = {
   items: [
@@ -172,16 +176,18 @@ const fakeInstancesData = {
 };
 
 export default function ClusterOverview() {
-  const [nodes, setNodes] = useState([]);
-  const [links, setLinks] = useState([]);
   const [clusterData, setClusterData] = useState({});
   const [listOpen, setListOpen] = useState(false);
+  const currentServer = useRef("");
+  
 
   const dispatch = useDispatch();
 
-  const { clusters } = useSelector(state => {
+  const { 
+    clusters
+  } = useSelector(state => {
     return {
-      clusters: state.Cluster.clusters,
+      clusters: state.Cluster.clusters
     };
   });
 
@@ -259,46 +265,40 @@ export default function ClusterOverview() {
       };
     });
     setClusterData(tmpClusterData);
-    let tmpNodes = [];
-    let tmpLinks = [];
-    for (const link of clusters[0].network) {
-      tmpNodes.push({
-        id: link.srcId,
-        label: link.srcId,
-      });
-      tmpNodes.push({
-        id: link.desId,
-        label: link.desId,
-      });
-      tmpLinks.push({
-        source: link.srcId,
-        target: link.desId,
-      });
-    }
-    setNodes(tmpNodes);
-    setLinks(tmpLinks);
   }, [clusters]);
+
+  const handleNodeClick = (id) => {
+    currentServer.current = id;
+    setListOpen(true);
+  };
 
   return (
     <Box>
       <Stack direction='row' justifyContent='space-between' spacing={4}>
-        <Stack direction='column' spacing={2} sx={{minWidth: "50%"}}>
+        <Stack direction='column' spacing={2} sx={{ minWidth: '45%' }}>
           {clusters &&
             clusters.map((item, index) => {
               return (
                 <ClusterTopology
                   clusterId={item.id}
                   graph={item.network}
+                  handleNodeClick={handleNodeClick}
                 />
               );
             })}
         </Stack>
-        <InstanceList 
-          sx={{
-            minWidth: "50%"
-          }}
-          instances={fakeInstancesData.items}
-        />
+        {listOpen ? (
+          <InstanceList
+            sx={{
+              minWidth: '45%',
+            }}
+            handleClose={() => {setListOpen(false)}}
+            instances={fakeInstancesData.items}
+            // instances={clusterData[currentServer]}
+          />
+        ) : (
+          <></>
+        )}
       </Stack>
     </Box>
   );

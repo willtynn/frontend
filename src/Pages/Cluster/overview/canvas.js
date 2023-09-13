@@ -28,9 +28,11 @@ export function ClusterCanvas(props) {
 
     nodes.forEach((item, index) => {
       g.setNode(item.id, {
+        id: item.id,
         labelType: "html",
         label: `${item.label}${digitInCircle(12)}`,
         style: 'fill: #ffd47f',
+        class: `server_node_${id}`
       });
     });
 
@@ -38,7 +40,7 @@ export function ClusterCanvas(props) {
       g.setEdge(item.source, item.target, {
         label: item.label,
         ...normalEdgeStyle,
-        class: 'service_link',
+        class: 'server_link',
       });
     });
 
@@ -61,22 +63,24 @@ export function ClusterCanvas(props) {
     // Run the renderer. This is what draws the final graph.
     render(svgGroup, g);
 
-    const service_nodes = document.getElementsByClassName('service_node');
-    for (const service_node of service_nodes) {
-      service_node.addEventListener('click', () => {
-        handleNodeClick(service_node.id);
-      });
+    const server_nodes = document.getElementsByClassName(`server_node_${id}`);
+    for (const server_node of server_nodes) {
+      // server_node.addEventListener('click', () => {
+        
+      //   console.log("Click from canvas", id, server_node.id)
+      //   handleNodeClick(server_node.id);
+      // });
+      server_node.onclick =() => {
+        console.log("Click from canvas", id, server_node.id)
+        handleNodeClick(server_node.id);
+      }
     }
 
-    const service_links = document.getElementsByClassName('service_link');
-    for (const service_link of service_links) {
-      service_link.addEventListener('click', () => {
-        const service_link_info = JSON.parse(service_link.id);
-        handleLinkClick({
-          source: service_link_info.source,
-          target: service_link_info.target,
-          ...service_link_info.invoke_info,
-        });
+    const server_links = document.getElementsByClassName('server_link');
+    for (const server_link of server_links) {
+      server_link.addEventListener('click', () => {
+        const server_link_info = JSON.parse(server_link.id);
+        handleLinkClick({});
       });
     }
 

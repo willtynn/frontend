@@ -4,6 +4,8 @@ import { SEVERITIES } from '../components/CommonSnackbar';
 
 export const UPDATE_CLUSTERS = 'UPDATE_CLUSTERS';
 
+export const SELECT_SERVER = "SELECT_SERVER";
+
 const baseURLLink = 'http://192.168.1.104:32454';
 
 const axios_instance = axios.create({

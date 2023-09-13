@@ -21,11 +21,14 @@ stroke: #333;
 stroke-width: 3px;
 } */
 
-.service_node,
-.service_link {
+.server_link {
   cursor: pointer;
 }
 
 foreignObject {
   overflow: visible;
+}
+
+[class*="server_node"] {
+  cursor: pointer;
 }

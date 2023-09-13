@@ -4,7 +4,7 @@ import ArrowDown from '@/assets/ArrowDown.svg';
 import ArrowUp from '@/assets/ArrowUp.svg';
 import { useState, useEffect } from 'react';
 export default function ClusterTopology(props) {
-  const { clusterId, graph } = props;
+  const { clusterId, graph, handleNodeClick } = props;
 
   const [open, setOpen] = useState(false);
   const [nodes, setNodes] = useState([]);
@@ -45,7 +45,7 @@ export default function ClusterTopology(props) {
           borderRadius: '4px',
           height: '42px',
           bgcolor: 'red',
-          p: '7px 14px 7px 7px',
+          p: '7px 14px 7px 11px',
         }}
       >
         <Stack
@@ -70,7 +70,7 @@ export default function ClusterTopology(props) {
           {open ? <ArrowUp /> : <ArrowDown />}
         </Stack>
       </Box>
-      {open ? <ClusterCanvas id={clusterId} nodes={nodes} links={links} /> : <></>}
+      {open ? <ClusterCanvas id={clusterId} nodes={nodes} links={links} handleNodeClick={handleNodeClick} /> : <></>}
     </Box>
   );
 }
