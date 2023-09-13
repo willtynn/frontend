@@ -1,7 +1,7 @@
 import { Navigate, Outlet, Route, Routes } from 'react-router-dom';
 import Menu from '../Pages/Menu/index';
 import BasicTable from '../Pages/TestPages';
-import ClusterOverview from '../Pages/Cluster/overview/Overview';
+import ClusterOverview from '../Pages/Cluster/overview';
 import CustomizedTables from '../Pages/TestPages/table2'
 import ServiceQuery from '@/Pages/Service/query';
 import ServiceDependency from '@/Pages/Service/dependency';
