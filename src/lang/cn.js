@@ -1,4 +1,7 @@
 export const messages = {
+  common: {
+    errorMessage: "{msg}",
+  },
   serviceOverview: {
 
   },
@@ -10,6 +13,6 @@ export const messages = {
     queryError: "查询出错，请重试..."
   },
   cluster: {
-
+    clustersSearchError: "集群信息获取失败，请刷新页面重试..."
   }
 };

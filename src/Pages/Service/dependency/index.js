@@ -27,7 +27,8 @@ import {
   UPDATE_SEARCH_SERVICE,
   UPDATE_INTERFACE_DEPENDENCY,
   searchDependenciesByServiceId,
-  searchDependenciesByInterfaceId
+  searchDependenciesByInterfaceId,
+  searchDependencies
 } from "@/actions/serviceAction";
 import ServiceInfoBlock from "../module/ServiceInfoBlock";
 import InvokeInfoBlock from "../module/InvokeInfoBlock";
@@ -219,15 +220,25 @@ function ServiceDependency() {
 
   const {
     queryResult,
+    dependency,
     serviceDependency,
     interfaceDependency
   } = useSelector(state => {
     return {
       queryResult: state.Service.queryResult,
+      dependency: state.Service.dependency,
       serviceDependency: state.Service.serviceDependency,
       interfaceDependency: state.Service.interfaceDependency,
     };
   });
+
+  useEffect(() => {
+    dispatch(searchDependencies());
+  }, []);
+
+  useEffect(() => {
+    console.log("dependency", dependency);
+  }, [dependency]);
 
   useEffect(() => {
     const type = searchParams.get("type");
