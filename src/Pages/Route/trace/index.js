@@ -1,7 +1,7 @@
 // imports
 //#region
 import React from "react";
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { RouteTraceCanvas } from "./DataCanvas";
 import {
@@ -18,15 +18,25 @@ import {
   TableContainer,
   TableHead,
   TableRow,
+  TableFooter,
+  TablePagination,
   Paper,
-  Input,
   Typography
 } from "@mui/material"
+
+import {
+  NewStyledTableCell
+} from '@/components/DisplayTable';
+
+
+
 import styled from "@emotion/styled";
-import { shadowStyle } from "@/utils/commonUtils";
 import {
   SuperLargeBoldFont,
+  LargeBoldFont,
   SmallLightFont,
+  NormalFont,
+  NormalFontBlack,
 } from "@/components/Fonts";
 import { DateTimePicker } from '@mui/x-date-pickers/DateTimePicker';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
@@ -36,10 +46,12 @@ import dayjs from 'dayjs';
 import SendIcon from '@mui/icons-material/Send';
 
 import { DataRow } from "./DataRow";
+import { ServiceRow } from "./ServiceRow";
 
 import {
-  getRouteTraceDetail,
-  getRouteTrace
+  getRouteService,
+  getRouteTrace,
+  clearRouteTrace
 } from "@/actions/routeAction";
 
 //#endregion
@@ -49,6 +61,8 @@ import {
 //Constants
 //#region
 const durationList = [60, 120, 300, 600, 1800, 3600, 10800, 21600, 43200, 86400, 604800];
+const serviceNumPerPage = 4;
+const spanNumPerPage = 5;
 //#endregion
 //Constants
 
@@ -61,28 +75,46 @@ export default function RouteTrace() {
 
   const [startTimeValue, setStartTimeValue] = useState(dayjs().add(-15, 'minute'));
   const [endTimeValue, setEndTimeValue] = useState(dayjs());
-  const [traceIndex, setTraceIndex] = useState(0);
-  const [traceDetail, setTraceDetail] = useState({});
+
+  const [startTime, setStartTime] = useState(0);
+  const [endTime, setEndTime] = useState(0);
 
   const [namespace, setNamespcae] = useState("");
 
-  const [detailID, setDetailID] = useState(-1);
+  //const [detailID, setDetailID] = useState(-1);
+  const [detailSpan, setDetailSpan] = useState(null);
   
-  const [traceElements, setTraceElements] = useState([]);
   const [tableRow, setTableRow] = useState([]);
-  const [selectedIndex, setSelectedIndex] = useState(-1);
+  const [serviceRow, setServiceRow] = useState([]);
+
+  const [servicePage, setServicePage] = useState(0);
+  const [spanPage, setSpanPage] = useState(0);
+  const [selectedServiceIndex, setSelectedServiceIndex] = useState(-1);
+  const [selectedSpanIndex, setSelectedSpanIndex] = useState(-1);
 
   const dispatch = useDispatch();
 
   const {
+    routeService,
     routeTraceDetail,
     routeTrace
   } = useSelector(state => {
     return {
+      routeService: state.Route.routeService,
       routeTraceDetail: state.Route.routeTraceDetail,
       routeTrace: state.Route.routeTrace
     };
   });
+
+  const spanVisibleRows = React.useMemo(() => {
+    const tmp = spanPage * spanNumPerPage;
+    return routeTrace ? routeTrace.slice(tmp, tmp + spanNumPerPage) : [];
+  }, [routeTrace, spanPage]);
+  
+  const serviceVisibleRows = React.useMemo(() => {
+    const tmp = servicePage * serviceNumPerPage;
+    return routeService ? routeService.slice(tmp, tmp + serviceNumPerPage) : [];
+  }, [routeService, servicePage]);
 
   //#endregion
   //定义-结束
@@ -104,12 +136,29 @@ export default function RouteTrace() {
 
   //HOOK-开始
   //#region
+
   useEffect(() => {
-    if (routeTrace) {
-      let row = routeTrace.map((item, index) => {
-        return <DataRow key={item.traceID} color={ index % 2 === 0 ? "#E8F3DE" : "white"} 
-          selected={selectedIndex === index}
+    if (serviceVisibleRows) {
+      let row = serviceVisibleRows.map((item, index) => {
+        return <ServiceRow key={item.id}
+          selected={selectedServiceIndex === index}
+          onRowClick={() => handleServiceClick(index)}
+          rowData={{...item, spanNum: 99}} />;
+      });
+      setServiceRow(row);
+      for(let i = row.length; i < serviceNumPerPage; i++)
+      {
+        row.push(<ServiceRow key={i} onRowClick={() => {}} rowData={null} />);
+      }
+    }
+  }, [routeService, serviceVisibleRows, selectedServiceIndex]);
+
+  useEffect(() => {
+    if (spanVisibleRows) {
+      let row = spanVisibleRows.map((item, index) => {
+        return <DataRow key={item.traceID}
           onRowClick={() => handleSpanClick(index)}
+          selected={selectedSpanIndex === index}
           rowData={{
             service: item.service,
             spanNum: item.trace.spans.length,
@@ -118,13 +167,16 @@ export default function RouteTrace() {
             status: 200
           }} />;
       });
-
+      for(let i = row.length; i < spanNumPerPage; i++)
+      {
+        row.push(<DataRow key={i} onRowClick={() => {}} rowData={null} />);
+      }
       setTableRow(row);
     }
-  }, [routeTrace, selectedIndex]);
+  }, [spanVisibleRows, selectedSpanIndex]);
 
   useEffect(() => {
-    dispatch(getRouteTrace(0,1));//TODO
+    handleSearchClick();
   }, []);
   //#endregion
   //HOOK-结束
@@ -132,60 +184,12 @@ export default function RouteTrace() {
   //自定义函数-开始
   //#region
 
-  function calculateDuration(duration){
-    //要显示小数点后三位
-    if(duration < 1000){
-      return duration + 'μs';
-    }else if(duration < 1000000){
-      return (duration / 1000).toFixed(3) + 'ms';
-    }else{
-      duration /= 1000000;
-    }
-    if(duration < 60){
-      return duration.toFixed(3) + 's';
-    }else if(duration < 3600){
-      return (duration / 60).toFixed(3) + 'min';
-    }else if(duration < 86400){
-      return (duration / 3600).toFixed(3) + 'h';
-    }else{
-      return (duration / 86400).toFixed(3) + 'd';
-    }
-  }
-  
-  const getTraceDetail = (index) => {
-    const detail = {};
-    const item = routeTrace[index];
-    const data = item.trace.spans[0];
-
-    let fullNodeID = "";
-    data.tags.forEach((tag) => {
-      if(tag.key === "node_id")
-      {
-        fullNodeID = tag.value;
-      }
-    });
-    detail.nodeID = fullNodeID.split("~")[2];
-    detail.traceID = item.trace.traceID;
-    detail.spanNum = item.trace.spans.length;
-    detail.timeStamp = data.startTime;
-    detail.duration = data.duration;
-    
-    setTraceDetail(detail);
-  }
-
-  const getNodesAndEdges = (index) => {
-    const id = routeTrace[index].id;
-    setDetailID(id);
-  }
-
   //#endregion
   //自定义函数-结束
 
   //handle-开始
   //#region
-  const handleTraceSearchClick = (e) => {
-    let start = 0;
-    let end = 0;
+  const handleSearchClick = (e) => {
     if(durationSelectIndex !== 11)
     //Duration
     {
@@ -199,16 +203,26 @@ export default function RouteTrace() {
         console.warn("handleTraceSearchClick durationIndex failure");
         return;
       }
-      let now = new Date();
-      start = now.getTime() - duration * 1000;
-      end = now.getTime();
+      let now = dayjs();
+      setStartTime(now - duration * 1000);
+      setEndTime(now.valueOf());
     }
     //Custom
     else
     {
-
+      setStartTime(startTimeValue.valueOf());
+      setEndTime(endTimeValue.valueOf());
     }
-    dispatch(getRouteTrace(0,1));
+
+    setSelectedServiceIndex(-1);
+    setSelectedSpanIndex(-1);
+    setServicePage(0);
+    setSpanPage(0);
+    //setDetailID(-1);
+    setDetailSpan(null);
+
+    dispatch(getRouteService(startTime, endTime));
+    dispatch(clearRouteTrace());
   }
 
 
@@ -228,11 +242,39 @@ export default function RouteTrace() {
     setEndTimeValue(newValue);
   }
 
+  const handleServiceChangePage = (_, newPage) => {
+    if(servicePage !== newPage)
+    {
+      setSelectedServiceIndex(-1);
+      setServicePage(newPage);
+      setSelectedSpanIndex(-1);
+      //setDetailSpan(null);
+      setSpanPage(0);
+    }
+  };
+
+  const handleSpanChangePage = (_, newPage) => {
+    if(spanPage !== newPage)
+    {
+      setSelectedSpanIndex(-1);
+      //setDetailSpan(null);
+      setSpanPage(newPage);
+    }
+  };
+
+  const handleServiceClick = (index) => {
+    dispatch(getRouteTrace(startTime, endTime, routeService[index].service, routeService[index].api));
+    setSelectedServiceIndex(index);
+    setSelectedSpanIndex(-1);
+    setDetailSpan(null);
+    //TODO
+  }
+
   const handleSpanClick = (index)=>{
-    setTraceIndex(index);
-    getTraceDetail(index);
-    getNodesAndEdges(index);
-    setSelectedIndex(index);
+    setSelectedSpanIndex(index);
+    setDetailSpan(routeTrace[index]);
+    //const id = routeTrace[index].id;
+    //setDetailID(id);
   }
 
   //#endregion
@@ -245,25 +287,25 @@ export default function RouteTrace() {
     
     <Box sx={{
         width: '100%',
-        minHeight: "600px",
-        minWidth: "700px"
+        minHeight: "900px",
+        minWidth: "1000px"
       }}>
 
-      {/* 标题 */}
-      <SuperLargeBoldFont sx={{
-          ml: "12px",
-          fontSize: "32px !important",
-          lineHeight: "54px !important"
-        }}>路由链路</SuperLargeBoldFont>
-
-      {/* Main Body */}
-      <Stack sx={{paddingLeft: "30px"}}>
+      <Stack direction="row" spacing={2}>
+        {/* 标题 */}
+        <SuperLargeBoldFont sx={{
+            ml: "12px",
+            fontSize: "32px !important",
+            lineHeight: "54px !important"
+          }}>路由链路</SuperLargeBoldFont>
+        
+        {/* 搜索 */}
         <Stack direction="row" spacing={6} sx={{ mb: "12px" }}>
-          {/* 搜索 */}
           <Stack direction="row" spacing={4} sx={{
               mt: "24px"
             }}>
             { /* Namespace */ }
+            {/*
             <Stack>
               <SmallLightFont>
                 Namespace
@@ -274,7 +316,8 @@ export default function RouteTrace() {
                   onChange={handleInputChange}
                 />
               </FormControl>
-            </Stack>
+            </Stack>*/
+            }
             { /* Duration */ }
             <FormControl variant="standard">
               <InputLabel
@@ -338,7 +381,7 @@ export default function RouteTrace() {
               : <></>
             }
             <Button endIcon={<SendIcon />} variant="contained"
-              onClick={handleTraceSearchClick}
+              onClick={handleSearchClick}
               sx={{
                 mt: "6px !important",
                 width: "110px",
@@ -349,53 +392,138 @@ export default function RouteTrace() {
             
           </Stack>
         </Stack>
+      </Stack>
 
-        
-        
-        <Stack  direction="row" spacing={2} sx={{ width: "100%" }}>
-          {/* Trace 列表 */}
+
+      {/* Main Body */}
+      <Stack sx={{paddingLeft: "10px"}}>
+        <div style={{height: "10px"}}/>
+
+        { /*数据*/ }
+        <Stack  direction="row" spacing={2}>
           <Stack>
-            <div style={{ height: "30px"}}/>
-            <TableContainer component={Paper} sx={
+            {/* Service 列表 */}
+            <Stack>
+              <TableContainer component={Paper} sx={
                 { 
-                  minWidth: "510px", 
-                  boxShadow: "2px 2px 7px 1px #726C6F", 
+                  //minWidth: "750px", 
+                  //maxWidth: "900px",
+                  width: "900px",
+                  boxShadow: "1px 1px 4px 1px #B5B5B8", 
                   border: "solid 1px #959194" 
                 }}>
-              <Table aria-label="collapsible table">
-                <TableHead>
-                  <TableRow sx={{ backgroundColor: "#DAD9DA" }}>
-                    <TableCell>服务</TableCell>
-                    <TableCell align="center" sx={{ borderLeft: "solid 1px #B8B5B7", borderRight: "solid 1px #B8B5B7" }}>链路长度</TableCell>
-                    <TableCell align="center">开始时间</TableCell>
-                    <TableCell align="center">响应时间</TableCell>
-                    <TableCell align="center">请求状态</TableCell>
-                  </TableRow>
-                </TableHead>
-                <TableBody>
-                  {tableRow}
-                </TableBody>
-              </Table>
-            </TableContainer>
+                <Table sx={{tableLayout: 'auto'}}>
+                  <TableHead>
+                    <TableRow sx={{ height: "20px" }}>
+                      <NewStyledTableCell>服务</NewStyledTableCell>
+                      <NewStyledTableCell align="center">接口</NewStyledTableCell>
+                      <NewStyledTableCell align="center">请求<br/>次数</NewStyledTableCell>
+                      <NewStyledTableCell align="center">Low</NewStyledTableCell>
+                      <NewStyledTableCell align="center">0.5</NewStyledTableCell>
+                      <NewStyledTableCell align="center">0.95</NewStyledTableCell>
+                      <NewStyledTableCell align="center">0.99</NewStyledTableCell>
+                      <NewStyledTableCell align="center">High</NewStyledTableCell>
+                    </TableRow>
+                  </TableHead>
+                  <TableBody sx={{ borderBottom: "solid 2px #B8B5B7", borderTop: "solid 2px #B8B5B7" }}>
+                    {serviceRow}
+                  </TableBody>
+                  
+                  <TableFooter sx={{ backgroundColor: "#DFE4E8" }}>
+                    <TablePagination
+                      rowsPerPageOptions={-1}
+                      count={routeService ? routeService.length : 0}
+                      rowsPerPage={serviceNumPerPage}
+                      page={servicePage}
+                      onPageChange={handleServiceChangePage}/>
+                  </TableFooter>
+                </Table>
+              </TableContainer>
+              
+            </Stack>
+
+            <div style={{ height: "10px" }}/>
+
+            {/* Trace 列表 */}
+            <Stack>
+              <LargeBoldFont>请求信息</LargeBoldFont>
+              <TableContainer component={Paper} sx={
+                { 
+                  //minWidth: "510px", 
+                  width: "100%",
+                  boxShadow: "1px 1px 4px 1px #B5B5B8", 
+                  border: "solid 1px #959194" 
+                }}>
+                <Table aria-label="collapsible table">
+                  <TableHead>
+                    <TableRow sx={{ backgroundColor: "#E3E3E3" }}>
+                      <NewStyledTableCell>请求</NewStyledTableCell>
+                      <NewStyledTableCell align="center" sx={{ borderLeft: "solid 1px #B8B5B7", borderRight: "solid 1px #B8B5B7" }}>链路长度</NewStyledTableCell>
+                      <NewStyledTableCell align="center">开始时间</NewStyledTableCell>
+                      <NewStyledTableCell align="center">响应时间</NewStyledTableCell>
+                      <NewStyledTableCell align="center">请求状态</NewStyledTableCell>
+                    </TableRow>
+                  </TableHead>
+                  <TableBody sx={{ borderBottom: "solid 2px #B8B5B7", borderTop: "solid 2px #B8B5B7" }}>
+                    {tableRow}
+                  </TableBody>
+                  <TableFooter sx={{ backgroundColor: "#E3E3E3"}}>
+                    <TableRow>
+                      <TablePagination
+                        rowsPerPageOptions={-1}
+                        count={routeTrace ? routeTrace.length : 0}
+                        rowsPerPage={spanNumPerPage}
+                        page={spanPage}
+                        onPageChange={handleSpanChangePage}/>
+                    </TableRow>
+                  </TableFooter>
+                </Table>
+              </TableContainer>
+            </Stack>
           </Stack>
 
 
-          {/* 依赖图 */}
-          <Stack>
-            <NormalTitleFont>链路信息</NormalTitleFont>
-            <Box sx={shadowStyle}>
-              <Stack direction="row" spacing={1} sx={{ minWidth: "450px", minHeight: "500px"}}>
-                {
-                  (detailID >= 0)
-                    ?
-                    <RouteTraceCanvas id={detailID} />
-                    :
-                    <></>
-                }
-              </Stack>
-            </Box>
-          </Stack>
+          {/* 依赖详细和依赖图 */}
+          {
+            (detailSpan)
+              ?
+              <Box sx={{ boxShadow: "1px 1px 4px 1px #B5B5B8", width: "100%", height: "100%" }}>
+                <Stack sx={{ width: "100%", padding: "15px" }}>
+                  <LargeBoldFont>链路拓扑信息图</LargeBoldFont>
+                  <Stack sx={{ paddingLeft: "10px", paddingTop: "10px" }}>
+                    <Stack>
+                      <Stack spacing={1}>
+                        <Stack direction="row" spacing={20}>
+                          <NormalFont sx={{ width: "60px" }}>服务ID</NormalFont>
+                          <NormalFontBlack>{detailSpan.id}</NormalFontBlack>
+                        </Stack>
+                        <Stack direction="row" spacing={20}>
+                          <NormalFont sx={{ width: "60px" }}>服务名</NormalFont>
+                          <NormalFontBlack>{detailSpan.service}</NormalFontBlack>
+                        </Stack>
+                        <Stack direction="row" spacing={20}>
+                          <NormalFont sx={{ width: "60px" }}>时间</NormalFont>
+                          <NormalFontBlack>{dayjs(detailSpan.time).format('YYYY-MM-DD HH:mm:ss')}</NormalFontBlack>
+                        </Stack>
+                      </Stack>
+                      <div style={{ height: "20px" }} />
+                      {(detailSpan)
+                        ?
+                        <RouteTraceCanvas id={detailSpan.id} sx={{ 
+                          width: "100%" 
+                        }}/>
+                        :
+                        <div/>
+                      }
+                    </Stack>
+                  </Stack>
+                </Stack>
+              </Box>
+              : <></>
+          }
+
         </Stack>
+        
       </Stack>
     </Box>
   );

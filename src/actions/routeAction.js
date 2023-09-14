@@ -1,21 +1,29 @@
-import {test_data, test_detail_data} from "../Pages/Route/trace/test_data.js"
+import { axios_instance } from "../Pages/Route/trace/axios_trace.js";
+
+
+import {test_service_data, test_data, test_detail_data} from "../Pages/Route/trace/test_data.js"
+const data_service = JSON.parse(test_service_data)
 const data_trace = JSON.parse(test_data)
 const data_detail = JSON.parse(test_detail_data)
 
+export const UPDATE_ROUTE_SERVICE = "UPDATE_ROUTE_SERVICE";
 export const UPDATE_ROUTE_TRACE = "UPDATE_ROUTE_TRACE";
 export const UPDATE_ROUTE_TRACE_DETAIL = "UPDATE_ROUTE_TRACE_DETAIL";
 
+export const CLEAR_ROUTE_TRACE = "CLEAR_ROUTE_TRACE";
 
-export function getRouteTrace(start, end) {
-  const url = "/trace";
+
+export function getRouteService(start, end) {
+  const url = "/trace/service";
   return async dispatch => {
-      /*
     try {
-      const res = await axios_instance.post(
+      const res = await axios_instance.get(
         url,
         {
-          namespaces: namespaces,
-          duration: duration
+          params: {
+            start: start,
+            end: end
+          }
         },
         {
           headers: {
@@ -23,52 +31,97 @@ export function getRouteTrace(start, end) {
           }
         }
       )
-      if (res.data.code === 200 || res.data.code === 0) {
-        //dispatch({ type: UPDATE_SEARCH_SERVICE, data: res.data.data });
-      } else if (res.data.code === 1) {
-        // alert(res.data.message)
-        //dispatch({ type: UPDATE_SEARCH_SERVICE, data: [] });
-      }
-      else {
-        //dispatch({ type: UPDATE_SEARCH_SERVICE, data: [] });
+      console.log(res)
+      if (res.status === 200) {
+        console.log(res.data)
+        dispatch({ type: UPDATE_ROUTE_SERVICE, data: res.data });
+      } else{
+        //alert(res.data)
+        console.log(res.data)
+        dispatch({ type: UPDATE_ROUTE_SERVICE, data: [] });
       }
     } catch {
-      //dispatch({ type: UPDATE_SEARCH_SERVICE, data: null });
-    }*/
-    dispatch({ type: UPDATE_ROUTE_TRACE, data: data_trace });
+      dispatch({ type: UPDATE_ROUTE_SERVICE, data: null });
+    }
+    //dispatch({ type: UPDATE_ROUTE_SERVICE, data: data_service });
+  }
+}
+
+export function getRouteTrace(start, end, service, api) {
+  const url = "/trace";
+  return async dispatch => {
+    try {
+      const res = await axios_instance.get(
+        url,
+        {
+          params: {
+            start: start,
+            end: end,
+            service: service,
+            api: api
+          }
+        },
+        {
+          headers: {
+            'Content-Type': 'application/json',
+          }
+        }
+      )
+      console.log(res)
+      if (res.status === 200) {
+        console.log(res.data)
+        dispatch({ type: UPDATE_ROUTE_TRACE, data: res.data });
+      } else{
+        //alert(res.data)
+        console.log(res.data)
+        dispatch({ type: UPDATE_ROUTE_TRACE, data: [] });
+      }
+    } catch {
+      dispatch({ type: UPDATE_ROUTE_TRACE, data: null });
+    }
+    //dispatch({ type: UPDATE_ROUTE_TRACE, data: data_trace });
   }
 }
 
 
 export function getRouteTraceDetail(id) {
-    const url = "/trace/detail";
-    return async dispatch => {
-        /*
-      try {
-        const res = await axios_instance.post(
-          url,
-          {
-            namespaces: namespaces,
-            duration: duration
-          },
-          {
-            headers: {
-              'Content-Type': 'application/json',
-            }
+  const url = "/trace/detail";
+  return async dispatch => {
+    try {
+      const res = await axios_instance.get(
+        url,
+        {
+          params: {
+            id: id
           }
-        )
-        if (res.data.code === 200 || res.data.code === 0) {
-          //dispatch({ type: UPDATE_SEARCH_SERVICE, data: res.data.data });
-        } else if (res.data.code === 1) {
-          // alert(res.data.message)
-          //dispatch({ type: UPDATE_SEARCH_SERVICE, data: [] });
+        },
+        {
+          headers: {
+            'Content-Type': 'application/json',
+          }
         }
-        else {
-          //dispatch({ type: UPDATE_SEARCH_SERVICE, data: [] });
-        }
-      } catch {
-        //dispatch({ type: UPDATE_SEARCH_SERVICE, data: null });
-      }*/
-      dispatch({ type: UPDATE_ROUTE_TRACE_DETAIL, data: data_detail });
+      )
+      console.log(res)
+      if (res.status === 200) {
+        console.log(res.data)
+        dispatch({ type: UPDATE_ROUTE_TRACE_DETAIL, data: res.data });
+      } else{
+        //alert(res.data)
+        console.log(res.data)
+        dispatch({ type: UPDATE_ROUTE_TRACE_DETAIL, data: [] });
+      }
+    } catch {
+      dispatch({ type: UPDATE_ROUTE_TRACE_DETAIL, data: null });
     }
+    //dispatch({ type: UPDATE_ROUTE_TRACE_DETAIL, data: data_detail });
   }
+}
+
+
+
+export function clearRouteTrace(id) {
+  return async dispatch => {
+    dispatch({ type: CLEAR_ROUTE_TRACE, data: null });
+  }
+}
+

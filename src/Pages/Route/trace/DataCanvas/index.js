@@ -18,8 +18,6 @@ export function RouteTraceCanvas(props) {
 
   const dispatch = useDispatch();
 
-  const refSvg = React.useRef(null);
-
   const { id } = props
 
   const {
@@ -42,7 +40,6 @@ export function RouteTraceCanvas(props) {
     
     const nodes = routeTraceDetail.nodes;
     const edges = routeTraceDetail.edges;
-    console.log(nodes);
 
     var g = new dagreD3.graphlib.Graph({ compound: true })
       .setGraph({})
@@ -50,7 +47,6 @@ export function RouteTraceCanvas(props) {
 
     // Here we're setting the nodes
     nodes.forEach((item, index) => {
-      console.log(item);
       g.setNode(
         item.ip, 
         { 
@@ -96,21 +92,22 @@ export function RouteTraceCanvas(props) {
     // console.log(xCenterOffset);
     svg.attr("height", g.graph().height + 50);
     svg.attr("width", g.graph().width + 40);
+    
+    //svg.attr("height", refSvg.current.offsetHeight);
+    //svg.attr("width", refSvg.current.offsetWidth);
 
     var xCenterOffset = 20;
     svgGroup.attr("transform", "translate(" + xCenterOffset + ", 25)");
-
   }, [routeTraceDetail])
 
   return (
     <Box
       sx={{
         fontFamily: 'Open Sans',
-        width: "100%",
-        height: "100%"
+        overflow: "auto"
       }}
     >
-      <svg id="trace_svg-canvas" ref={refSvg}>
+      <svg id="trace_svg-canvas" sx={{ width: "100%", boxShadow: "1px 1px 4px 1px #B5B5B8" }} >
         <g id="trace_g-canvas"></g>
       </svg>
     </Box>
