@@ -137,7 +137,7 @@ export function EdgeCenterCanvas(props) {
           item.target,
           {
             label: item.invoke_info.path,
-            style: "stroke: #f66; stroke-width: 3px; stroke-dasharray: 5, 5; fill: none;",
+            style: "stroke: #f66; stroke-width: 3px; fill: none;",
             arrowheadStyle: "fill: #f66; width: 3px;",
             class: "service_link",
             id: JSON.stringify(item)

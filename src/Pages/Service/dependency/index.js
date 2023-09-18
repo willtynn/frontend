@@ -212,6 +212,7 @@ function ServiceDependency() {
   const [emptyError, setEmptyError] = useState(false);
   const [clickedLink, setClickedLink] = useState(null);
   const [tabValue, setTabValue] = useState(0);
+  const [graph, setGraph] = useState(null);
 
   const [searchParams] = useSearchParams();
   const [paramChange, setParamChange] = useState(0);
@@ -242,7 +243,43 @@ function ServiceDependency() {
   }, []);
 
   useEffect(() => {
-    console.log("dependency", dependency);
+    /**
+     * 构造图
+     */
+    if(!dependency) {
+      return;
+    }
+    let tmpGraph = {};
+    for(const call of dependency) {
+      const callees = call.callees.callee_service;
+      for(const callee of callees) {
+        const caller_service = decodeInterfaceSymbol(callee.caller)[0];
+        const callee_service = decodeInterfaceSymbol(callee.callee)[0];
+        if(!(caller_service in tmpGraph)) {
+          tmpGraph[caller_service] = {
+            invoked: [],
+            invoking: []
+          };
+        }
+        if(!(callee_service in tmpGraph)) {
+          tmpGraph[callee_service] = {
+            invoked: [],
+            invoking: []
+          };
+        }
+        tmpGraph[caller_service].invoking.push([callee_service, true, {
+          caller: callee.caller,
+          callee: callee.callee,
+          ...callee.extraData
+        }]);
+        tmpGraph[callee_service].invoked.push([caller_service, false, {
+          caller: callee.caller,
+          callee: callee.callee,
+          ...callee.extraData
+        }]);
+      }
+    }
+    setGraph(tmpGraph);
   }, [dependency]);
 
   useEffect(() => {
@@ -474,12 +511,83 @@ function ServiceDependency() {
     // dispatch({ type: UPDATE_SERVICE_DEPENDENCY, data: data });
   }
 
+  
+
   const handleInterfaceSearchClick = (e) => {
     if (!queryContent || queryContent === "") {
       setEmptyError(true);
       return;
     }
-    dispatch({ type: UPDATE_INTERFACE_DEPENDENCY, data: interface_data });
+    let nodes = []
+    let links = []
+    let graph_dict = {}
+    let target_up_nodes = [];
+    let target_down_nodes = [];
+    let flag = false;
+    for(const key of Object.keys(graph)) {
+      const invoking_arr = graph[key].invoking;
+      for(const invoking_element of invoking_arr) {
+        const [callee_node, isDown, invoke_info] = invoking_element;
+        if(invoke_info.callee === queryContent) {
+          flag = true;
+          target_up_nodes.push(key);
+          target_down_nodes.push(callee_node);
+          // 此时添加边，因为如果图为DAG，则后续不会再访问到
+          links.push({
+            source: key,
+            target: callee_node,
+            invoke_info: invoke_info,
+            center: true
+          })
+        }
+      }
+    }
+    if(flag === false) {
+      return;
+    }
+    const _recursive_search = (node, isDown) => {
+      graph_dict[node] = {
+        id: node,
+        label: node
+      };
+      let arr;
+      if(isDown) {
+        arr = graph[node].invoking;
+      } else {
+        arr = graph[node].invoked;
+      }
+      for(const element of arr) {
+        const [callee_node, _, invoke_info] = element;
+        
+        if(isDown) {
+          links.push({
+            source: node,
+            target: callee_node,
+            invoke_info: invoke_info
+          });
+        } else {
+          links.push({
+            source: callee_node,
+            target: node,
+            invoke_info: invoke_info
+          });
+        }
+        _recursive_search(callee_node, isDown);
+      }
+    }
+    target_up_nodes = new Set(target_up_nodes);
+    target_down_nodes = new Set(target_down_nodes);
+    for(const up_node of target_up_nodes) {
+      _recursive_search(up_node, false);
+    }
+    for(const down_node of target_down_nodes) {
+      _recursive_search(down_node, true);
+    }
+    for(const node of Object.values(graph_dict)) {
+      nodes.push(node);
+    }
+    setInodes(nodes);
+    setIlinks(links);
   }
 
   const handleNodeClick = (id) => {
@@ -491,7 +599,7 @@ function ServiceDependency() {
   }
 
   const handleInterfaceNodeClick = (id) => {
-    dispatch({ type: UPDATE_SEARCH_SERVICE, data: fakeInfo });
+    dispatch(searchServiceExactlyById(id));
   }
 
   const handleInterfaceLinkClick = (data) => {
@@ -698,9 +806,9 @@ function ServiceDependency() {
             }
             <Stack direction="column" spacing={1}>
               {
-                queryResult !== null
+                exactService !== null
                   ?
-                  <ServiceInfoBlock data={fakeInfo[0]} mode={0} page={INTERFACE_DEPENDENCY} cb={() => { setParamChange(paramChange + 1) }} />
+                  <ServiceInfoBlock data={exactService} mode={0} page={INTERFACE_DEPENDENCY} cb={() => { setParamChange(paramChange + 1) }} />
                   :
                   <></>
               }
