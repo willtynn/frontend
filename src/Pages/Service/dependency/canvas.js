@@ -20,7 +20,8 @@ export function ThreeLayerCanvas(props) {
     var g = new dagreD3.graphlib.Graph({ compound: true })
       .setGraph({})
       .setDefaultEdgeLabel(() => { return {} });
-
+    
+    let top_count = 0, bottom_count = 0;
     g.setNode("top_group", {
       label: "调用当前服务的服务",
       clusterLabelPos: "top",
@@ -31,23 +32,30 @@ export function ThreeLayerCanvas(props) {
       clusterLabelPos: "bottom",
       style: "fill: #5f9488"
     });
-
+    // g.removeNode("bottom_group");
     // Here we're setting the nodes
     nodes.forEach((item, index) => {
       g.setNode(item.id, { label: item.label, class: "service_node", id: item.id });
       if (item.type === "invoked") {
+        ++top_count;
         g.setParent(item.id, "top_group");
       } else if (item.type === "invoking") {
+        ++bottom_count;
         g.setParent(item.id, "bottom_group");
       }
     })
+    if(top_count === 0) {
+      g.removeNode("top_group");
+    }
+    if(bottom_count === 0) {
+      g.removeNode("bottom_group");
+    }
 
     links.forEach((item, index) => {
       g.setEdge(item.source, item.target, { 
-        label: item.invoke_info.path, 
         ...normalEdgeStyle,
         class: "service_link", 
-        id: JSON.stringify(item) 
+        id: JSON.stringify(item.invoke_info) 
       });
     })
 
@@ -79,11 +87,7 @@ export function ThreeLayerCanvas(props) {
     for (const service_link of service_links) {
       service_link.addEventListener("click", () => {
         const service_link_info = JSON.parse(service_link.id)
-        handleLinkClick({
-          source: service_link_info.source,
-          target: service_link_info.target,
-          ...service_link_info.invoke_info
-        });
+        handleLinkClick(service_link_info);
       });
     }
 

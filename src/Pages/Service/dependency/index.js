@@ -25,7 +25,9 @@ import { OutlinedButton } from "@/components/Button";
 import {
   UPDATE_SERVICE_DEPENDENCY,
   UPDATE_SEARCH_SERVICE,
+  UPDATE_EXACT_SERVICE,
   UPDATE_INTERFACE_DEPENDENCY,
+  searchServiceExactlyById,
   searchDependenciesByServiceId,
   searchDependenciesByInterfaceId,
   searchDependencies
@@ -39,6 +41,7 @@ import {
   INTERFACE_DEPENDENCY
 } from "../module/ServiceInfoBlock";
 import { useParams, useSearchParams, useLocation } from "react-router-dom";
+import { decodeInterfaceSymbol } from "@/utils/commonUtils";
 
 
 function CustomTabPanel(props) {
@@ -219,12 +222,14 @@ function ServiceDependency() {
   const interfaceClick = useRef();
 
   const {
+    exactService,
     queryResult,
     dependency,
     serviceDependency,
     interfaceDependency
   } = useSelector(state => {
     return {
+      exactService: state.Service.exactService,
       queryResult: state.Service.queryResult,
       dependency: state.Service.dependency,
       serviceDependency: state.Service.serviceDependency,
@@ -280,7 +285,7 @@ function ServiceDependency() {
   }, [interfaceDependency])
 
   const handleTabChange = (event, newValue) => {
-    dispatch({ type: UPDATE_SEARCH_SERVICE, data: null });
+    dispatch({ type: UPDATE_EXACT_SERVICE, data: null });
     dispatch({ type: UPDATE_SERVICE_DEPENDENCY, data: null });
     dispatch({ type: UPDATE_INTERFACE_DEPENDENCY, data: null });
     setClickedLink(null);
@@ -399,7 +404,73 @@ function ServiceDependency() {
       setEmptyError(true);
       return;
     }
-    dispatch(searchDependenciesByServiceId(queryContent));
+    let nodes = []
+    let links = []
+    let graph_dict = {}
+
+    for(const call of dependency) {
+      const caller = call.caller;
+      const callees = call.callees.callee_service;
+      if(caller === queryContent) {
+        graph_dict[caller] = {
+          id: caller,
+          label: caller,
+          type: "target"
+        };
+        for(const callee of callees) {
+          const callee_service = decodeInterfaceSymbol(callee.callee)[0];
+          graph_dict[callee_service] = {
+            id: callee_service,
+            label: callee_service,
+            type: "invoking"
+          };
+          links.push({
+            source: caller,
+            target: callee_service,
+            invoke_info: {
+              caller: callee.caller,
+              callee: callee.callee,
+              ...callee.extraData
+            }
+          });
+        }
+      } else {
+        for(const callee of callees) {
+          const callee_service = decodeInterfaceSymbol(callee.callee)[0];
+          if(callee_service === queryContent) {
+            if(!(callee_service in graph_dict)) {
+              graph_dict[callee_service] = {
+                id: callee_service,
+                label: callee_service,
+                type: "target"
+              };
+            }
+            graph_dict[caller] = {
+              id: caller,
+              label: caller,
+              type: "invoked"
+            };
+            links.push({
+              source: caller,
+              target: callee_service,
+              invoke_info: {
+                caller: callee.caller,
+                callee: callee.callee,
+                ...callee.extraData
+              }
+            });
+          }
+        }
+      }
+    }
+
+    for(const node of Object.values(graph_dict)) {
+      nodes.push(node);
+    }
+
+    setNodes(nodes)
+    setLinks(links)
+    // dispatch(searchDependenciesByServiceId(queryContent));
     // dispatch({ type: UPDATE_SERVICE_DEPENDENCY, data: data });
   }
 
@@ -412,7 +483,7 @@ function ServiceDependency() {
   }
 
   const handleNodeClick = (id) => {
-    dispatch({ type: UPDATE_SEARCH_SERVICE, data: fakeInfo });
+    dispatch(searchServiceExactlyById(id));
   }
 
   const handleLinkClick = (data) => {
@@ -596,9 +667,9 @@ function ServiceDependency() {
             }
             <Stack direction="column" spacing={1}>
               {
-                queryResult !== null
+                exactService !== null
                   ?
-                  <ServiceInfoBlock data={fakeInfo[0]} mode={mode} page={SERVICE_DEPENDENCY} cb={() => { setParamChange(paramChange + 1) }} />
+                  <ServiceInfoBlock data={exactService} mode={mode} page={SERVICE_DEPENDENCY} cb={() => { setParamChange(paramChange + 1) }} />
                   :
                   <></>
               }

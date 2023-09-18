@@ -54,6 +54,7 @@ export default function ServiceInfoBlock(props) {
   const { data, mode, page, cb = () => { } } = props
   const navigate = useNavigate();
   const [resourceTableWidth, setResourceTableWidth] = useState("650px");
+  const [values, setValues] = useState([]);
   const interfaceTable = useRef();
 
   useEffect(() => {
@@ -68,14 +69,6 @@ export default function ServiceInfoBlock(props) {
     "服务版本"
   ]
 
-  const values = [
-    data.id,
-    data.name,
-    data.repo,
-    data.imageUrl,
-    transformVersion(data.version)
-  ]
-
   const isUrl = [
     false,
     false,
@@ -83,6 +76,22 @@ export default function ServiceInfoBlock(props) {
     false,
     false
   ]
+
+  useEffect(() => {
+    console.log("exact service", data);
+    if(!data) {
+      return;
+    }
+    const tmpValues = [
+      data.id,
+      data.name,
+      data.repo,
+      data.imageUrl,
+      transformVersion(data.version)
+    ];
+    setValues(tmpValues);
+    
+  }, [data]);
 
   function createRow(
     id,
@@ -192,7 +201,7 @@ export default function ServiceInfoBlock(props) {
           }}
         >
           {
-            data.interfaces !== null
+            data && data.interfaces !== null
               ?
               <TableContainer sx={{ maxHeight: '680px', overflow: "auto", width: "100%" }}>
                 <Table
@@ -351,7 +360,7 @@ export default function ServiceInfoBlock(props) {
                   >
                     空闲时占用资源
                   </StyledTableCell>
-                  {
+                  { data &&
                     resourceAndCapabilityHeadRow.map((item, index) =>
                       <StyledTableCell
                         align='center'
@@ -382,7 +391,7 @@ export default function ServiceInfoBlock(props) {
                   >
                     期望资源
                   </StyledTableCell>
-                  {
+                  { data &&
                     resourceAndCapabilityHeadRow.map((item, index) =>
                       <StyledTableCell
                         key={item.id}
@@ -417,7 +426,7 @@ export default function ServiceInfoBlock(props) {
                     align='center'
                     colSpan={5}
                   >
-                    {data.desiredCapability}
+                    {data && data.desiredCapability}
                   </StyledTableCell>
                   {/* {
                     resourceAndCapabilityHeadRow.map((item, index) =>

@@ -2,6 +2,8 @@ import axios from 'axios';
 import { setSnackbarMessageAndOpen } from './snackbarAction';
 import { SEVERITIES } from '../components/CommonSnackbar';
 
+export const UPDATE_EXACT_SERVICE = 'UPDATE_EXACT_SERVICE';
+
 export const UPDATE_SEARCH_SERVICE = 'UPDATE_SEARCH_SERVICE';
 
 export const UPDATE_SERVICE_DEPENDENCY = 'UPDATE_SERVICE_DEPENDENCY';
@@ -18,6 +20,61 @@ const axios_instance = axios.create({
   // withCredentials: isCookie,
   crossDomain: true,
 });
+
+export function searchServiceExactlyById(id) {
+  const url = '/service/getServiceByExactId';
+  return async dispatch => {
+    try {
+      const res = await axios_instance.post(
+        url,
+        {
+          serviceId: id,
+        },
+        {
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        }
+      );
+      if (res.data.code === 200 || res.data.code === 0) {
+        const serviceInfo = res.data.data;
+        if(serviceInfo.length < 1) {
+          dispatch({ type: UPDATE_EXACT_SERVICE, data: null });
+        } else {
+          dispatch({ type: UPDATE_EXACT_SERVICE, data: serviceInfo[0] });
+        }
+      } else if (res.data.code === 1) {
+        // alert(res.data.message)
+        dispatch(
+          setSnackbarMessageAndOpen(
+            'serviceDependency.errorMessage',
+            { msg: res.data.message },
+            SEVERITIES.warning
+          )
+        );
+        dispatch({ type: UPDATE_EXACT_SERVICE, data: null });
+      } else {
+        dispatch(
+          setSnackbarMessageAndOpen(
+            'serviceDependency.searchServiceByIdEmptyError',
+            {},
+            SEVERITIES.warning
+          )
+        );
+        dispatch({ type: UPDATE_EXACT_SERVICE, data: null });
+      }
+    } catch {
+      dispatch(
+        setSnackbarMessageAndOpen(
+          'serviceDependency.queryError',
+          {},
+          SEVERITIES.warning
+        )
+      );
+      dispatch({ type: UPDATE_EXACT_SERVICE, data: null });
+    }
+  };
+}
 
 export function searchServiceById(id) {
   const url = '/service/getById';
@@ -108,7 +165,7 @@ export function searchDependencies() {
         }
       );
       if (res.data.code === 200 || res.data.code === 0) {
-        dispatch({ type: UPDATE_DEPENDENCY, data: [] });
+        dispatch({ type: UPDATE_DEPENDENCY, data: res.data.data });
       } else {
         dispatch({ type: UPDATE_DEPENDENCY, data: null });
       }

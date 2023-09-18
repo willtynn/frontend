@@ -16,6 +16,7 @@ import {
   StyledTableCell
 } from "@/components/DisplayTable"
 import { styled } from '@mui/system';
+import { useState, useEffect } from "react"
 
 export const NewStyledTableCell = styled(TableCell)(() => ({
   [`&.${tableCellClasses.head}`]: {
@@ -39,30 +40,26 @@ export const NewStyledTableCell = styled(TableCell)(() => ({
 export default function InvokeInfoBlock(props) {
 
   const { data } = props
-
-  const labels = [
-    "源服务",
-    "被调用服务",
-    "调用接口ID",
-    "请求路径",
-    "调用时间",
-  ]
-
-  const values = [
-    data.source,
-    data.target,
-    data.interface_id,
-    data.path,
-    data.time,
-  ]
-
-  const isUrl = [
-    false,
-    false,
-    false,
-    false,
-    false
-  ]
+  const [labels, setLabels] = useState([]);
+  const [values, setValues] = useState([]);
+  const [isUrl, setIsUrl] = useState([]);
+  
+  useEffect(() => {
+    if(!data) {
+      return;
+    }
+    let tmpLabels = [];
+    let tmpValues = [];
+    let tmpIsUrl = [];
+    for(const [key, value] of Object.entries(data)) {
+      tmpLabels.push(key);
+      tmpValues.push(value);
+      tmpIsUrl.push(false);
+    }
+    setLabels(tmpLabels);
+    setValues(tmpValues);
+    setIsUrl(tmpIsUrl);
+  }, [data]);
 
   return (
     <Box

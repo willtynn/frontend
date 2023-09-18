@@ -54,3 +54,11 @@ export const digitInCircle = (num, circleSize=30, circleBgColor="#E45C3F", circl
   return `<div style='width:${circleSize}px; height:${circleSize}px; border-radius:${radius}px; background-color:${circleBgColor}; color:${circleFontColor}; text-align:center; position:absolute; top:${top}px; right:${right}px; font-size:${radius}px; line-height:${circleSize}px; font-family:Open Sans;'>${num}</div>`;
 
 }
+
+export const decodeInterfaceSymbol = (symbol) => {
+  const sub_symbol_arr = symbol.split("::");
+  if(sub_symbol_arr.length !== 2) {
+    throw new Error(`Interface symbol: '${symbol}' cannot be decode correctly.`);
+  }
+  return sub_symbol_arr
+}
