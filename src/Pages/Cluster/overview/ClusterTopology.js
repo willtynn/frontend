@@ -44,8 +44,9 @@ export default function ClusterTopology(props) {
           cursor: 'pointer',
           borderRadius: '4px',
           height: '42px',
-          bgcolor: 'red',
-          p: '7px 14px 7px 11px',
+          bgcolor: 'rgba(73,204,144,.1)',
+          border: '1px solid #49cc90',
+          p: '5px 14px 5px 11px',
         }}
       >
         <Stack
@@ -56,13 +57,15 @@ export default function ClusterTopology(props) {
           <Box
             sx={{
               borderRadius: '4px',
-              height: '28px',
+              height: '30px',
               minWidth: '64px',
-              bgcolor: 'green',
-              p: "0px 6px",
+              bgcolor: '#49cc90',
+              p: "0px 12px",
               fontFamily: "Open Sans",
               fontSize: "14px",
-              lineHeight: "26px"
+              lineHeight: "30px",
+              fontWeight: "700",
+              color: "#ffffff"
             }}
           >
             {clusterId}
