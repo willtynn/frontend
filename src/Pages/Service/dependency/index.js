@@ -42,6 +42,8 @@ import {
 } from "../module/ServiceInfoBlock";
 import { useParams, useSearchParams, useLocation } from "react-router-dom";
 import { decodeInterfaceSymbol } from "@/utils/commonUtils";
+import { setSnackbarMessageAndOpen } from "@/actions/snackbarAction";
+import { SEVERITIES } from '@/components/CommonSnackbar';
 
 
 function CustomTabPanel(props) {
@@ -76,121 +78,6 @@ function a11yProps(index) {
     'aria-controls': `simple-tabpanel-${index}`,
   };
 }
-
-const data = {
-  invoked: [
-    {
-      id: "service_a",
-      invoke_info: {
-        interface_id: "interface_a",
-        path: "test_service/interface_1",
-        time: "2023-07-24 16:00:00"
-      }
-    },
-    {
-      id: "service_b",
-      invoke_info: {
-        interface_id: "interface_b",
-        path: "test_service/interface_1",
-        time: "2023-07-24 16:10:00"
-      }
-    }
-  ],
-  invoking: [
-    {
-      id: "service_c",
-      invoke_info: {
-        interface_id: "interface_c",
-        path: "service_c/interface_1",
-        time: "2023-07-24 16:20:00"
-      }
-    },
-    {
-      id: "service_d",
-      invoke_info: {
-        interface_id: "interface_d",
-        path: "service_d/interface_1",
-        time: "2023-07-24 16:30:00"
-      }
-    }
-  ]
-}
-
-const interface_data = [
-  {
-    source: "service_a",
-    target: "service_d",
-    invoke_info: {
-      interface_id: "interface_1",
-      path: "service_c/interface_1",
-      time: "2023-07-24 16:20:00"
-    }
-  },
-  {
-    source: "service_b",
-    target: "service_d",
-    invoke_info: {
-      interface_id: "interface_2",
-      path: "service_c/interface_1",
-      time: "2023-07-24 16:20:00"
-    }
-  },
-  {
-    source: "service_c",
-    target: "service_e",
-    invoke_info: {
-      interface_id: "interface_3",
-      path: "service_c/interface_1",
-      time: "2023-07-24 16:20:00"
-    }
-  },
-  {
-    source: "service_d",
-    target: "service_f",
-    invoke_info: {
-      interface_id: "interface_4",
-      path: "service_c/interface_1",
-      time: "2023-07-24 16:20:00"
-    }
-  },
-  {
-    source: "service_e",
-    target: "service_f",
-    invoke_info: {
-      interface_id: "interface_5",
-      path: "service_c/interface_1",
-      time: "2023-07-24 16:20:00"
-    }
-  },
-  {
-    source: "service_f",
-    target: "service_g",
-    invoke_info: {
-      interface_id: "interface_6",
-      path: "service_c/interface_1",
-      time: "2023-07-24 16:20:00"
-    }
-  },
-  {
-    source: "service_g",
-    target: "service_h",
-    invoke_info: {
-      interface_id: "interface_7",
-      path: "service_c/interface_1",
-      time: "2023-07-24 16:20:00"
-    }
-  },
-  {
-    source: "service_g",
-    target: "service_i",
-    invoke_info: {
-      interface_id: "interface_8",
-      path: "service_c/interface_1",
-      time: "2023-07-24 16:20:00"
-    }
-  },
-]
-
 
 
 function ServiceDependency() {
@@ -251,10 +138,11 @@ function ServiceDependency() {
     }
     let tmpGraph = {};
     for(const call of dependency) {
-      const callees = call.callees.callee_service;
-      for(const callee of callees) {
-        const caller_service = decodeInterfaceSymbol(callee.caller)[0];
-        const callee_service = decodeInterfaceSymbol(callee.callee)[0];
+      const caller_service = call.caller;
+      const callees = call.callees;
+      for(const [callee_service, call_info] of Object.entries(callees)) {
+        // const caller_service = decodeInterfaceSymbol(callee.caller)[0];
+        // const callee_service = decodeInterfaceSymbol(callee.callee)[0];
         if(!(caller_service in tmpGraph)) {
           tmpGraph[caller_service] = {
             invoked: [],
@@ -267,16 +155,18 @@ function ServiceDependency() {
             invoking: []
           };
         }
-        tmpGraph[caller_service].invoking.push([callee_service, true, {
-          caller: callee.caller,
-          callee: callee.callee,
-          ...callee.extraData
-        }]);
-        tmpGraph[callee_service].invoked.push([caller_service, false, {
-          caller: callee.caller,
-          callee: callee.callee,
-          ...callee.extraData
-        }]);
+        for(const single_call_info of call_info) {
+          tmpGraph[caller_service].invoking.push([callee_service, true, {
+            caller: single_call_info.caller,
+            callee: single_call_info.callee,
+            ...single_call_info.extraData
+          }]);
+          tmpGraph[callee_service].invoked.push([caller_service, false, {
+            caller: single_call_info.caller,
+            callee: single_call_info.callee,
+            ...single_call_info.extraData
+          }]);
+        }
       }
     }
     setGraph(tmpGraph);
@@ -286,7 +176,6 @@ function ServiceDependency() {
     const type = searchParams.get("type");
     const by = searchParams.get("by");
     const target_id = searchParams.get("id");
-    // if(!type)
     if (type === "service") {
       setTabValue(0);
       if (Number(by) === 0) {
@@ -309,121 +198,25 @@ function ServiceDependency() {
 
   }, [paramChange]);
 
-  useEffect(() => {
-    if (serviceDependency) {
-      transformServiceData(queryContent, serviceDependency);
-    }
-  }, [serviceDependency]);
-
-  useEffect(() => {
-    if (interfaceDependency) {
-      tranformInterfaceData("interface_6", interfaceDependency);
-    }
-  }, [interfaceDependency])
-
-  const handleTabChange = (event, newValue) => {
+  const clearVarible = () => {
+    /**
+     * 将一些变量置为默认值 
+     */
     dispatch({ type: UPDATE_EXACT_SERVICE, data: null });
-    dispatch({ type: UPDATE_SERVICE_DEPENDENCY, data: null });
-    dispatch({ type: UPDATE_INTERFACE_DEPENDENCY, data: null });
     setClickedLink(null);
     setNodes([]);
     setLinks([]);
     setInodes([]);
     setIlinks([]);
+  };
 
+  const handleTabChange = (event, newValue) => {
+    dispatch({ type: UPDATE_EXACT_SERVICE, data: null });
+    setClickedLink(null);
     setTabValue(newValue);
   };
 
-  const transformServiceData = (id, data) => {
-    if (!data || (data.invoked.length === 0 && data.invoking.length === 0)) {
-      return
-    }
-    let nodes = []
-    let links = []
-    nodes.push(
-      {
-        id: id,
-        label: id,
-        type: "target"
-      }
-    )
-    nodes = nodes.concat(data.invoked.map(
-      (item, index) => {
-        return {
-          id: item.id,
-          label: item.id,
-          type: "invoked"
-        }
-      }
-    ))
-    nodes = nodes.concat(data.invoking.map(
-      (item, index) => {
-        return {
-          id: item.id,
-          label: item.id,
-          type: "invoking"
-        }
-      }
-    ))
-    links = links.concat(data.invoked.map(
-      (item, index) => {
-        return {
-          source: item.id,
-          target: id,
-          invoke_info: item.invoke_info
-        }
-      }
-    ))
-    links = links.concat(data.invoking.map(
-      (item, index) => {
-        return {
-          source: id,
-          target: item.id,
-          invoke_info: item.invoke_info
-        }
-      }
-    ))
-    setNodes(nodes)
-    setLinks(links)
-  }
-
-  const tranformInterfaceData = (id, data) => {
-    let tmpNodes = []
-    let nodes = []
-    let links = []
-    for (const link of data) {
-      tmpNodes.push(link.source);
-      tmpNodes.push(link.target);
-      if (id === link.invoke_info.interface_id) {
-        links.push(
-          {
-            source: link.source,
-            target: link.target,
-            invoke_info: link.invoke_info,
-            center: true
-          }
-        )
-      } else {
-        links.push(
-          {
-            source: link.source,
-            target: link.target,
-            invoke_info: link.invoke_info
-          }
-        )
-      }
-
-    }
-    tmpNodes = new Set(tmpNodes);
-    for (const tmpNode of tmpNodes) {
-      nodes.push({
-        id: tmpNode,
-        label: tmpNode
-      })
-    }
-    setInodes(nodes)
-    setIlinks(links)
-  }
+  
 
   const handleChange = (event) => {
     setMode(event.target.value);
@@ -447,55 +240,55 @@ function ServiceDependency() {
 
     for(const call of dependency) {
       const caller = call.caller;
-      const callees = call.callees.callee_service;
-      if(caller === queryContent) {
-        graph_dict[caller] = {
-          id: caller,
-          label: caller,
-          type: "target"
-        };
-        for(const callee of callees) {
-          const callee_service = decodeInterfaceSymbol(callee.callee)[0];
-          graph_dict[callee_service] = {
-            id: callee_service,
-            label: callee_service,
-            type: "invoking"
+      const callees = call.callees;
+      for(const [callee_service, call_info] of Object.entries(callees)) {
+        if(caller === queryContent) {
+          graph_dict[caller] = {
+            id: caller,
+            label: caller,
+            type: "target"
           };
-          links.push({
-            source: caller,
-            target: callee_service,
-            invoke_info: {
-              caller: callee.caller,
-              callee: callee.callee,
-              ...callee.extraData
-            }
-          });
-        }
-      } else {
-        for(const callee of callees) {
-          const callee_service = decodeInterfaceSymbol(callee.callee)[0];
-          if(callee_service === queryContent) {
-            if(!(callee_service in graph_dict)) {
-              graph_dict[callee_service] = {
-                id: callee_service,
-                label: callee_service,
-                type: "target"
-              };
-            }
-            graph_dict[caller] = {
-              id: caller,
-              label: caller,
-              type: "invoked"
+          for(const single_call_info of call_info) {
+            graph_dict[callee_service] = {
+              id: callee_service,
+              label: callee_service,
+              type: "invoking"
             };
             links.push({
               source: caller,
               target: callee_service,
               invoke_info: {
-                caller: callee.caller,
-                callee: callee.callee,
-                ...callee.extraData
+                caller: single_call_info.caller,
+                callee: single_call_info.callee,
+                ...single_call_info.extraData
               }
             });
+          }
+        } else {
+          for(const single_call_info of call_info) {
+            if(callee_service === queryContent) {
+              if(!(callee_service in graph_dict)) {
+                graph_dict[callee_service] = {
+                  id: callee_service,
+                  label: callee_service,
+                  type: "target"
+                };
+              }
+              graph_dict[caller] = {
+                id: caller,
+                label: caller,
+                type: "invoked"
+              };
+              links.push({
+                source: caller,
+                target: callee_service,
+                invoke_info: {
+                  caller: single_call_info.caller,
+                  callee: single_call_info.callee,
+                  ...single_call_info.extraData
+                }
+              });
+            }
           }
         }
       }
@@ -505,13 +298,20 @@ function ServiceDependency() {
       nodes.push(node);
     }
 
-    setNodes(nodes)
-    setLinks(links)
-    // dispatch(searchDependenciesByServiceId(queryContent));
-    // dispatch({ type: UPDATE_SERVICE_DEPENDENCY, data: data });
+    if(nodes.length === 0 || links.length === 0) {
+      dispatch(
+        setSnackbarMessageAndOpen(
+          'serviceDependency.serviceDependencyNotFound',
+          {},
+          SEVERITIES.warning
+        )
+      );
+      clearVarible();
+    } else {
+      setNodes(nodes)
+      setLinks(links)
+    }
   }
-
-  
 
   const handleInterfaceSearchClick = (e) => {
     if (!queryContent || queryContent === "") {
@@ -543,6 +343,14 @@ function ServiceDependency() {
       }
     }
     if(flag === false) {
+      dispatch(
+        setSnackbarMessageAndOpen(
+          'serviceDependency.interfaceDependencyNotFound',
+          {},
+          SEVERITIES.warning
+        )
+      );
+      clearVarible();
       return;
     }
     const _recursive_search = (node, isDown) => {
@@ -586,8 +394,19 @@ function ServiceDependency() {
     for(const node of Object.values(graph_dict)) {
       nodes.push(node);
     }
-    setInodes(nodes);
-    setIlinks(links);
+    if(nodes.length === 0 || links.length === 0) {
+      dispatch(
+        setSnackbarMessageAndOpen(
+          'serviceDependency.interfaceDependencyNotFound',
+          {},
+          SEVERITIES.warning
+        )
+      );
+      clearVarible();
+    } else {
+      setInodes(nodes);
+      setIlinks(links);
+    }
   }
 
   const handleNodeClick = (id) => {

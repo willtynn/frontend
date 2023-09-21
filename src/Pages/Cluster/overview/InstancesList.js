@@ -8,18 +8,21 @@ import {
   ListItemText,
   Stack,
   IconButton,
+  Tooltip,
 } from '@mui/material';
 import { useEffect, useState } from 'react';
 import LabelAndValue from '@/components/LabelAndValue';
 import { shadowStyle } from '@/utils/commonUtils';
 import { LargeBoldFont, NormalBoldFont } from '../../../components/Fonts';
 import CloseIcon from '@/assets/CloseIcon.svg';
+import PolylineIcon from '@mui/icons-material/Polyline';
+import { useNavigate } from 'react-router-dom';
 
 const InstanceMenuItem = props => {
   const { metadata, status } = props;
 
   const [infoOpen, setInfoOpen] = useState(false);
-
+  const navigate = useNavigate();
   const metadataLabels = [];
   const metadataValues = [];
   const metadataIsUrl = [];
@@ -64,7 +67,28 @@ const InstanceMenuItem = props => {
           spacing={3}
         >
           <Box>
-            <LargeBoldFont sx={{ mb: '8px' }}>Metadata.labels</LargeBoldFont>
+            <LargeBoldFont sx={{ mb: '8px' }}>
+              Metadata.labels
+              {metadata.labels.app ? (
+                <Tooltip title='查看依赖'>
+                  <IconButton
+                    onClick={() => {
+                      navigate(
+                        `/service/dependency?type=service&by=0&id=${metadata.labels.app}`
+                      );
+                    }}
+                    sx={{
+                      p: '0px',
+                      ml: '8px',
+                    }}
+                  >
+                    <PolylineIcon fontSize='small' />
+                  </IconButton>
+                </Tooltip>
+              ) : (
+                <></>
+              )}
+            </LargeBoldFont>
             <LabelAndValue
               id='serviceQueryInfo'
               labels={metadataLabels}
@@ -106,9 +130,9 @@ export default function InstanceList(props) {
             p: '8px 8px 8px 16px',
           }}
         >
-          <Stack direction="row" justifyContent='space-between'>
+          <Stack direction='row' justifyContent='space-between'>
             <NormalBoldFont>实例列表</NormalBoldFont>
-            <span onClick={handleClose} style={{cursor: "pointer"}}>
+            <span onClick={handleClose} style={{ cursor: 'pointer' }}>
               <CloseIcon />
             </span>
           </Stack>
