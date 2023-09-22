@@ -73,49 +73,6 @@ function createRow(
   return { id, label, isOrder, minWidth, maxWidth, show, colSpan, rowSpan };
 }
 
-const servicesInfo = [
-  {
-    id: "aaa",
-    name: "service_a",
-    repo: "https://github.com/aaa/service_a",
-    imageUrl: "https://github.com/aaa/service_a",
-    version: {
-      major: "1",
-      minor: "2",
-      patch: "3"
-    },
-    interfaces: [
-      {
-        id: "interface_1",
-        path: "service_a/interface_1",
-        inputSize: 123,
-        outputSize: "456"
-      }
-    ],
-    idleResource: {
-      cpu: 1,
-      ram: 2,
-      disk: 3,
-      gpuCore: 4,
-      gpuMem: 5
-    },
-    desiredResource: {
-      cpu: 1,
-      ram: 2,
-      disk: 3,
-      gpuCore: 4,
-      gpuMem: 5
-    },
-    desiredCapability: {
-      cpu: 1,
-      ram: 2,
-      disk: 3,
-      gpuCore: 4,
-      gpuMem: 5
-    }
-  }
-]
-
 const headFirstRow = [
   createRow('id', '服务ID', false, '240px', '280px', true, 1, 1),
   createRow('name', '服务名称', false, '190px', '190px', true, 1, 1),
@@ -175,7 +132,7 @@ function descendingComparator(a, b, orderBy) {
 
 export default function ServiceOverview(props) {
 
-  const { data, setIndex } = props
+  const { data, setIndex, selectedIndex } = props
   const [orderType, setOrderType] = useState('version'); //排序的表头
   const [orderAs, setOrderAs] = useState('asc'); //排序的顺序
   const [selected, setSelected] = useState([]);
@@ -283,7 +240,7 @@ export default function ServiceOverview(props) {
                       position: 'sticky',
                       left: 0,
                       zIndex: 6,
-                      backgroundColor: '#F1F3F5 !important',
+                      backgroundColor: index === selectedIndex ? "#E8EDFB !important" : '#F1F3F5 !important',
                     }}
                     selected={false}
                     onClick={() => { setIndex(index) }}
