@@ -173,7 +173,7 @@ export default function MiniDrawer() {
             sx={{
               minHeight: 48,
               justifyContent: open ? 'initial' : 'center',
-              px: 2.5,
+              px: open? 1: 2.5,
               backgroundColor: '#E8EDFB',
             }}
             onClick={handleClick1}
@@ -242,7 +242,7 @@ export default function MiniDrawer() {
             sx={{
               minHeight: 48,
               justifyContent: open ? 'initial' : 'center',
-              px: 2.5,
+              px: open? 1: 2.5,
               backgroundColor: '#E7F6F8',
             }}
             onClick={handleClick2}
@@ -352,7 +352,7 @@ export default function MiniDrawer() {
             sx={{
               minHeight: 48,
               justifyContent: open ? 'initial' : 'center',
-              px: 2.5,
+              px: open? 1: 2.5,
               backgroundColor: '#E8F9E6',
             }}
             onClick={handleClick3}
