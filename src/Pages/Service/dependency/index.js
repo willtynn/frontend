@@ -582,7 +582,7 @@ function ServiceDependency() {
       </Box>
       <CustomTabPanel value={tabValue} index={0}>
         <Box>
-          <Stack direction={direction} spacing={1}>
+          <Stack direction={direction} spacing={2}>
             {nodes.length !== 0 ? (
               <ThreeLayerCanvas
                 nodes={nodes}
@@ -618,7 +618,7 @@ function ServiceDependency() {
       </CustomTabPanel>
       <CustomTabPanel value={tabValue} index={1}>
         <Box>
-          <Stack direction='row' spacing={1}>
+          <Stack direction={direction} spacing={2}>
             {inodes.length !== 0 ? (
               <EdgeCenterCanvas
                 nodes={inodes}
