@@ -39,7 +39,7 @@ export const NewStyledTableCell = styled(TableCell)(() => ({
 
 export default function InvokeInfoBlock(props) {
 
-  const { data } = props
+  const { data, init = ()=>{} } = props
   const [labels, setLabels] = useState([]);
   const [values, setValues] = useState([]);
   const [isUrl, setIsUrl] = useState([]);
@@ -59,6 +59,7 @@ export default function InvokeInfoBlock(props) {
     setLabels(tmpLabels);
     setValues(tmpValues);
     setIsUrl(tmpIsUrl);
+    init();
   }, [data]);
 
   return (

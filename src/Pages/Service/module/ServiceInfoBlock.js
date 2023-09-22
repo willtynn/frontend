@@ -51,15 +51,16 @@ export const INTERFACE_DEPENDENCY = "INTERFACE_DEPENDENCY";
 
 export default function ServiceInfoBlock(props) {
 
-  const { data, mode, page, cb = () => { } } = props
+  const { data, mode, page, cb = () => { }, init = () => {} } = props
   const navigate = useNavigate();
   const [resourceTableWidth, setResourceTableWidth] = useState("650px");
   const [values, setValues] = useState([]);
   const interfaceTable = useRef();
 
   useEffect(() => {
-    setResourceTableWidth(interfaceTable.current.clientWidth + "px")
-  }, [])
+    setResourceTableWidth(interfaceTable.current.clientWidth + "px");
+    init();
+  }, [data])
 
   const labels = [
     "服务ID",
@@ -78,7 +79,6 @@ export default function ServiceInfoBlock(props) {
   ]
 
   useEffect(() => {
-    console.log("exact service", data);
     if(!data) {
       return;
     }
