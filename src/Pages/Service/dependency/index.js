@@ -449,7 +449,7 @@ function ServiceDependency() {
             lineHeight: '54px !important',
           }}
         >
-          服务依赖lailailai
+          服务依赖
         </SuperLargeBoldFont>
         {tabValue == 0 ? (
           <Stack direction='row' spacing={1}>
