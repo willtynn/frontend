@@ -56,14 +56,14 @@ export const digitInCircle = (num, circleSize=30, circleBgColor="#E45C3F", circl
   </div>`;
 }
 
-export const textUnderPolygon = (text, lineHeight=30, fontSize=15, fontColor = "#000000") => {
+export const textUnderPolygon = (text, fontSize=15, fontColor = "#000000", bgcolor=null, top=50) => {
   /**
    * - num: 在圆圈中显示的数字
    * - circleSize: 圆圈的大小，自动使文字适配大小，单位px
    * - circleBgColor: 圆圈背景颜色
    * - circleFontColor: 字体颜色，默认 #FFFFFF
    */
-  return `<div class='polygon_text' style='color:${fontColor}; text-align:center; position:absolute; top:40px; font-size:${fontSize}px; line-height:${lineHeight}px; font-family:Open Sans;'> \
+  return `<div class='polygon_text' style='height:${fontSize}px; color:${fontColor}; ${bgcolor === null ? '' : 'background-color:'+bgcolor+";"} text-align:center; position:absolute; top:${top}px; font-size:${fontSize}px; line-height:${fontSize}px; font-family:Open Sans;'> \
     ${text} \
   </div>`;
 }
