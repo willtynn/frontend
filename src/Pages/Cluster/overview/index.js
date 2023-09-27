@@ -10,7 +10,10 @@ import {
   UPDATE_CLUSTERS,
   SELECT_SERVER,
   searchAllClusters,
+  UPDATE_SELECTED_SERVER,
 } from '@/actions/clusterAction';
+import InstanceInfo from './InstanceInfo';
+import ClusterInfo from './ClusterInfo';
 
 const fakeInstancesData = {
   items: [
@@ -178,17 +181,20 @@ const fakeInstancesData = {
 
 export default function ClusterOverview() {
   const [clusterData, setClusterData] = useState({});
-  const [listOpen, setListOpen] = useState(false);
   const [targetCluster, setTargetCluster] = useState('');
   // cluster id 构成的数组
   const [clusterList, setClusterList] = useState([]);
-  const currentServer = useRef('');
+  // const currentServer = useRef('');
+  const [currentServer, setCurrentServer] = useState(null);
+  const [instancesData, setInstancesData] = useState({});
 
   const dispatch = useDispatch();
 
-  const { clusters } = useSelector(state => {
+  const { selectedInstanceName, clusters, selectedServer } = useSelector(state => {
     return {
+      selectedInstanceName: state.Cluster.selectedInstanceName,
       clusters: state.Cluster.clusters,
+      selectedServer: state.Cluster.selectedServer,
     };
   });
 
@@ -277,9 +283,33 @@ export default function ClusterOverview() {
     }
   }, [clusterList]);
 
+  useEffect(() => {
+    if(selectedServer === null) {
+      return;
+    }
+    const tmpInstancesData = {};
+    selectedServer.items.forEach(instance => {
+      tmpInstancesData[instance.metadata.name] = {
+        metadata: {
+          labels: instance.metadata.labels,
+        },
+        status: instance.status,
+      }
+    })
+    setInstancesData(tmpInstancesData);
+  }, [selectedServer]);
+
+  useEffect(() => {
+    setCurrentServer(null);
+    setInstancesData({});
+    dispatch({ type: 'UPDATE_SELECTED_SERVER', data: null });
+    dispatch({ type: 'SELECT_SERVER', data: null });
+    dispatch({ type: 'SELECT_INSTANCE', data: null });
+  }, [targetCluster]);
+
   const handleNodeClick = id => {
-    currentServer.current = id;
-    setListOpen(true);
+    dispatch({ type: UPDATE_SELECTED_SERVER, data: fakeInstancesData })
+    setCurrentServer(id);
   };
 
   return (
@@ -316,7 +346,7 @@ export default function ClusterOverview() {
         />
       </Stack>
       <Stack direction='row' justifyContent='space-between' spacing={4}>
-        <Box sx={{ width: '48.5%' }}>
+        <Stack sx={{ width: '48.5%' }} direction='column' spacing={2}>
           <ClusterTopologyOnlyCanvas
             clusterId={targetCluster}
             graph={
@@ -324,27 +354,26 @@ export default function ClusterOverview() {
             }
             handleNodeClick={handleNodeClick}
           />
-        </Box>
-        <Box
+          <ClusterInfo />
+        </Stack>
+        <Stack
           sx={{
             width: '48.5%',
           }}
+          direction='column'
+          spacing={2}
         >
-          {listOpen ? (
-            <InstanceList
-              sx={{
-                minWidth: '45%',
-              }}
-              handleClose={() => {
-                setListOpen(false);
-              }}
-              instances={fakeInstancesData.items}
-              // instances={clusterData[currentServer]}
-            />
-          ) : (
-            <></>
-          )}
-        </Box>
+          <InstanceList
+            sx={{
+              minHeight: "400px"
+            }}
+            instances={currentServer === null ? null : fakeInstancesData.items}
+            // instances={clusterData[currentServer]}
+          />
+          <Box>
+            <InstanceInfo instance={instancesData[selectedInstanceName]} />
+          </Box>
+        </Stack>
       </Stack>
 
       {/* <Stack direction='row' justifyContent='space-between' spacing={4}>

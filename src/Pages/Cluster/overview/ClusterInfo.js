@@ -20,70 +20,72 @@ import { useNavigate } from 'react-router-dom';
 import InfoCard from '@/components/InfoCard';
 import { useIntl } from 'react-intl';
 
-export default function InstanceInfo(props) {
-  const { instance } = props;
-  const navigate = useNavigate();
-  const intl = useIntl();
-  const [metadataLabels, setMetadataLabels] = useState([]);
-  const [metadataValues, setMetadataValues] = useState([]);
-  const [metadataIsUrl, setMetadataIsUrl] = useState([]);
+export default function ClusterInfo(props) {
+    const intl = useIntl();
+//   const { server } = props;
+//   let metadata, status;
+//   const navigate = useNavigate();
+//   const [metadataLabels, setMetadataLabels] = useState([]);
+//   const [metadataValues, setMetadataValues] = useState([]);
+//   const [metadataIsUrl, setMetadataIsUrl] = useState([]);
 
-  const [statusLabels, setStatusLabels] = useState([]);
-  const [statusValues, setStatusValues] = useState([]);
-  const [statusIsUrl, setStatusIsUrl] = useState([]);
+//   const [statusLabels, setStatusLabels] = useState([]);
+//   const [statusValues, setStatusValues] = useState([]);
+//   const [statusIsUrl, setStatusIsUrl] = useState([]);
 
-  useEffect(() => {
-    
-    if (instance === null || instance === undefined) {
+//   useEffect(() => {
+//     if (server === null) {
+//       return;
+//     }
+//     metadata = server.metadata;
+//     status = server.status;
 
-      return;
-    }
+//     let tmpMetadataLabels = [];
+//     let tmpMetadataValues = [];
+//     let tmpMetadataIsUrl = [];
+//     let tmpStatusLabels = [];
+//     let tmpStatusValues = [];
+//     let tmpStatusIsUrl = [];
 
-    let tmpMetadataLabels = [];
-    let tmpMetadataValues = [];
-    let tmpMetadataIsUrl = [];
-    let tmpStatusLabels = [];
-    let tmpStatusValues = [];
-    let tmpStatusIsUrl = [];
+//     for (const [key, value] of Object.entries(metadata.labels)) {
+//       tmpMetadataLabels.push(key);
+//       tmpMetadataValues.push(value);
+//       tmpMetadataIsUrl.push(false);
+//     }
 
-    for (const [key, value] of Object.entries(instance.metadata.labels)) {
-      tmpMetadataLabels.push(key);
-      tmpMetadataValues.push(value);
-      tmpMetadataIsUrl.push(false);
-    }
-    for (const [key, value] of Object.entries(instance.status)) {
-      tmpStatusLabels.push(key);
-      tmpStatusValues.push(value);
-      tmpStatusIsUrl.push(false);
-    }
+//     for (const [key, value] of Object.entries(status)) {
+//       tmpStatusLabels.push(key);
+//       tmpStatusValues.push(value);
+//       tmpStatusIsUrl.push(false);
+//     }
 
-    setMetadataLabels(tmpMetadataLabels);
-    setMetadataValues(tmpMetadataValues);
-    setMetadataIsUrl(tmpMetadataIsUrl);
-    setStatusLabels(tmpStatusLabels);
-    setStatusValues(tmpStatusValues);
-    setStatusIsUrl(tmpStatusIsUrl);
-  }, [instance]);
+//     setMetadataLabels(tmpMetadataLabels);
+//     setMetadataValues(tmpMetadataValues);
+//     setMetadataIsUrl(tmpMetadataIsUrl);
+//     setStatusLabels(tmpStatusLabels);
+//     setStatusValues(tmpStatusValues);
+//     setStatusIsUrl(tmpStatusIsUrl);
+//   }, []);
 
   return (
-    <InfoCard title={intl.messages['cluster.instanceInfo']}>
+    <InfoCard title={intl.messages['cluster.clusterInfo']}>
       <Stack
         sx={{
           minHeight: '400px',
         }}
         spacing={3}
       >
-        {((instance !== null && instance !== undefined) && metadataLabels.length !== 0) ? (
+        {/* {server !== null && metadata && status ? (
           <>
             <Box>
               <LargeBoldFont sx={{ mb: '8px' }}>
                 Metadata.labels
-                {instance.metadata.labels.app ? (
+                {metadata.labels.app ? (
                   <Tooltip title='查看依赖'>
                     <IconButton
                       onClick={() => {
                         navigate(
-                          `/service/dependency?type=service&by=0&id=${instance.metadata.labels.app}`
+                          `/service/dependency?type=service&by=0&id=${metadata.labels.app}`
                         );
                       }}
                       sx={{
@@ -120,15 +122,15 @@ export default function InstanceInfo(props) {
               />
             </Box>
           </>
-        ) : (
+        ) : ( */}
 
             <Stack sx={{
               pt: "160px"
             }} direction="row" spacing={2} alignItems="center" justifyContent="center">
               <InfoAlert />
-              <YaHeiLargeFont>{intl.messages['cluster.instanceSelectHint']}</YaHeiLargeFont>
+              <YaHeiLargeFont>{intl.messages['cluster.clusterSelectHint']}</YaHeiLargeFont>
             </Stack>
-        )}
+        {/* )} */}
       </Stack>
     </InfoCard>
   );

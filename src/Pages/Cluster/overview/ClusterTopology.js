@@ -6,6 +6,8 @@ import { useState, useEffect } from 'react';
 import { NormalBoldFont, YaHeiLargeFont } from '@/components/Fonts';
 import { shadowStyle } from '@/utils/commonUtils';
 import InfoCard from '@/components/InfoCard';
+import { useIntl } from 'react-intl';
+import InfoAlert from '@/assets/InfoAlert.svg';
 
 export function ClusterTopology(props) {
   const { clusterId, graph, handleNodeClick } = props;
@@ -93,7 +95,7 @@ export function ClusterTopology(props) {
 
 export function ClusterTopologyOnlyCanvas(props) {
   const { clusterId, graph, handleNodeClick } = props;
-
+  const intl = useIntl();
   const [nodes, setNodes] = useState([]);
   const [links, setLinks] = useState([]);
   const [display, setDisplay] = useState(false);
@@ -126,17 +128,28 @@ export function ClusterTopologyOnlyCanvas(props) {
   }, [graph]);
 
   return (
-    <InfoCard title="集群拓扑结构">
-      {display ? (
-        <ClusterCanvas
-          id={clusterId}
-          nodes={nodes}
-          links={links}
-          handleNodeClick={handleNodeClick}
-        />
-      ) : (
-        <></>
-      )}
+    <InfoCard title={intl.messages['cluster.clusterTopology']}>
+      <Box
+        sx={{
+          minHeight: '400px',
+        }}
+      >
+        {display ? (
+          <ClusterCanvas
+            id={clusterId}
+            nodes={nodes}
+            links={links}
+            handleNodeClick={handleNodeClick}
+          />
+        ) : (
+          <Stack sx={{
+            pt: "160px"
+          }} direction="row" spacing={2} alignItems="center" justifyContent="center">
+            <InfoAlert />
+            <YaHeiLargeFont>{intl.messages['cluster.clusterSelectHint']}</YaHeiLargeFont>
+          </Stack>
+        )}
+      </Box>
     </InfoCard>
   );
 }

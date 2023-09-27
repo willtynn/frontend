@@ -4,7 +4,11 @@ import { SEVERITIES } from '../components/CommonSnackbar';
 
 export const UPDATE_CLUSTERS = 'UPDATE_CLUSTERS';
 
+export const UPDATE_SELECTED_SERVER = "UPDATE_SELECTED_SERVER";
+
 export const SELECT_SERVER = "SELECT_SERVER";
+
+export const SELECT_INSTANCE = "SELECT_INSTANCE";
 
 const baseURLLink = 'http://192.168.1.104:32454';
 

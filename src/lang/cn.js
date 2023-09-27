@@ -13,6 +13,13 @@ export const messages = {
     queryError: "查询出错，请重试..."
   },
   cluster: {
-    clustersSearchError: "集群信息获取失败，请刷新页面重试..."
+    clustersSearchError: "集群信息获取失败，请刷新页面重试...",
+    clusterSelectHint: "请选择一个集群！",
+    instanceSelectHint: "请选择一个服务实例！",
+    serverSelectHint: "请选择一个服务器！",
+    clusterInfo: "集群信息",
+    instanceInfo: "实例信息",
+    instanceList: "实例列表",
+    clusterTopology: "集群拓扑结构"
   }
 };
