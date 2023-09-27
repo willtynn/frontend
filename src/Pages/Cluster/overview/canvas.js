@@ -1,8 +1,8 @@
 import * as d3 from 'd3';
 import dagreD3 from 'dagre-d3';
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import { Box } from '@mui/material';
-import { shadowStyle } from '@/utils/commonUtils';
+
 import { digitInCircle, textUnderPolygon } from '@/utils/commonUtils';
 
 import './canvas.css';
@@ -14,6 +14,7 @@ const normalEdgeStyle = {
 
 export function ClusterCanvas(props) {
   const { id, nodes, links, handleNodeClick, handleLinkClick } = props;
+  const canvasBox = useRef();
 
   useEffect(() => {
     if (!nodes || nodes.length == 0 || !links || links.length == 0) {
@@ -94,13 +95,14 @@ export function ClusterCanvas(props) {
 
     // Center the graph
     // console.log(svg.attr("width"));
-    // var xCenterOffset = 10;
+    var xCenterOffset = 300;
     // console.log(xCenterOffset);
-    var xCenterOffset = (svg.attr('width') - g.graph().width) / 2;
-
+    // var xCenterOffset = (canvasBox.current.clientWidth - g.graph().width) / 2;
+    console.log(canvasBox.current.clientWidth, g.graph().width)
     svgGroup.attr('transform', 'translate(' + xCenterOffset + ', 20)');
 
-    svg.attr('height', g.graph().height + 200);
+    svg.attr('height', g.graph().height + 100);
+    svg.attr('width', canvasBox.current.clientWidth);
 
     const polygon_texts = document.getElementsByClassName("polygon_text")
     for(let i = 0; i < polygon_texts.length; i++) {
@@ -112,10 +114,11 @@ export function ClusterCanvas(props) {
     <Box
       sx={{
         fontFamily: 'Open Sans',
-        ...shadowStyle,
+        minHeight: "400px"
       }}
+      ref={canvasBox}
     >
-      <svg id={`${id}_svg-canvas`} width='800' height='1000'>
+      <svg id={`${id}_svg-canvas`} height='1000'>
         <g id={`${id}_g-canvas`}></g>
       </svg>
     </Box>

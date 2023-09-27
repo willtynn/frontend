@@ -2,10 +2,10 @@ import { useEffect, useState, useRef } from 'react';
 import { Box, Stack, Autocomplete, TextField } from '@mui/material';
 
 import { useDispatch, useSelector } from 'react-redux';
-import ClusterTopology from './ClusterTopology';
+import { ClusterTopology, ClusterTopologyOnlyCanvas } from './ClusterTopology';
 import InstanceList from './InstancesList';
 import { SmallLightFont, SuperLargeBoldFont } from '@/components/Fonts';
-
+import InfoCard from '@/components/InfoCard';
 import {
   UPDATE_CLUSTERS,
   SELECT_SERVER,
@@ -179,7 +179,7 @@ const fakeInstancesData = {
 export default function ClusterOverview() {
   const [clusterData, setClusterData] = useState({});
   const [listOpen, setListOpen] = useState(false);
-  const [targetCluster, setTargetCluster] = useState("");
+  const [targetCluster, setTargetCluster] = useState('');
   // cluster id 构成的数组
   const [clusterList, setClusterList] = useState([]);
   const currentServer = useRef('');
@@ -284,9 +284,13 @@ export default function ClusterOverview() {
 
   return (
     <Box>
-      <Stack direction='row' spacing={2} sx={{
-        mb: "40px"
-      }}>
+      <Stack
+        direction='row'
+        spacing={2}
+        sx={{
+          mb: '40px',
+        }}
+      >
         <SuperLargeBoldFont
           sx={{
             ml: '12px',
@@ -312,6 +316,38 @@ export default function ClusterOverview() {
         />
       </Stack>
       <Stack direction='row' justifyContent='space-between' spacing={4}>
+        <Box sx={{ width: '48.5%' }}>
+          <ClusterTopologyOnlyCanvas
+            clusterId={targetCluster}
+            graph={
+              clusterData[targetCluster] && clusterData[targetCluster].network
+            }
+            handleNodeClick={handleNodeClick}
+          />
+        </Box>
+        <Box
+          sx={{
+            width: '48.5%',
+          }}
+        >
+          {listOpen ? (
+            <InstanceList
+              sx={{
+                minWidth: '45%',
+              }}
+              handleClose={() => {
+                setListOpen(false);
+              }}
+              instances={fakeInstancesData.items}
+              // instances={clusterData[currentServer]}
+            />
+          ) : (
+            <></>
+          )}
+        </Box>
+      </Stack>
+
+      {/* <Stack direction='row' justifyContent='space-between' spacing={4}>
         <Stack direction='column' spacing={2} sx={{ minWidth: '45%' }}>
           {clusters &&
             clusters.map((item, index) => {
@@ -338,7 +374,7 @@ export default function ClusterOverview() {
         ) : (
           <></>
         )}
-      </Stack>
+      </Stack> */}
     </Box>
   );
 }

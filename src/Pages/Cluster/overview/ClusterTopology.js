@@ -3,7 +3,11 @@ import { Box, Stack } from '@mui/material';
 import ArrowDown from '@/assets/ArrowDown.svg';
 import ArrowUp from '@/assets/ArrowUp.svg';
 import { useState, useEffect } from 'react';
-export default function ClusterTopology(props) {
+import { NormalBoldFont, YaHeiLargeFont } from '@/components/Fonts';
+import { shadowStyle } from '@/utils/commonUtils';
+import InfoCard from '@/components/InfoCard';
+
+export function ClusterTopology(props) {
   const { clusterId, graph, handleNodeClick } = props;
 
   const [open, setOpen] = useState(false);
@@ -14,7 +18,7 @@ export default function ClusterTopology(props) {
     let nodeSet = new Set();
     let tmpLinks = [];
     let tmpNodes = [];
-    for(const link of graph) {
+    for (const link of graph) {
       nodeSet.add(link.srcId);
       nodeSet.add(link.desId);
       tmpLinks.push({
@@ -22,7 +26,7 @@ export default function ClusterTopology(props) {
         target: link.desId,
       });
     }
-    for(const node of nodeSet) {
+    for (const node of nodeSet) {
       tmpNodes.push({
         id: node,
         label: node,
@@ -60,12 +64,12 @@ export default function ClusterTopology(props) {
               height: '30px',
               minWidth: '64px',
               bgcolor: '#49cc90',
-              p: "0px 12px",
-              fontFamily: "Open Sans",
-              fontSize: "14px",
-              lineHeight: "30px",
-              fontWeight: "700",
-              color: "#ffffff"
+              p: '0px 12px',
+              fontFamily: 'Open Sans',
+              fontSize: '14px',
+              lineHeight: '30px',
+              fontWeight: '700',
+              color: '#ffffff',
             }}
           >
             {clusterId}
@@ -73,7 +77,66 @@ export default function ClusterTopology(props) {
           {open ? <ArrowUp /> : <ArrowDown />}
         </Stack>
       </Box>
-      {open ? <ClusterCanvas id={clusterId} nodes={nodes} links={links} handleNodeClick={handleNodeClick} /> : <></>}
+      {open ? (
+        <ClusterCanvas
+          id={clusterId}
+          nodes={nodes}
+          links={links}
+          handleNodeClick={handleNodeClick}
+        />
+      ) : (
+        <></>
+      )}
     </Box>
+  );
+}
+
+export function ClusterTopologyOnlyCanvas(props) {
+  const { clusterId, graph, handleNodeClick } = props;
+
+  const [nodes, setNodes] = useState([]);
+  const [links, setLinks] = useState([]);
+  const [display, setDisplay] = useState(false);
+
+  useEffect(() => {
+    if (graph === null || graph === undefined) {
+      setDisplay(false);
+    } else {
+      let nodeSet = new Set();
+      let tmpLinks = [];
+      let tmpNodes = [];
+      for (const link of graph) {
+        nodeSet.add(link.srcId);
+        nodeSet.add(link.desId);
+        tmpLinks.push({
+          source: link.srcId,
+          target: link.desId,
+        });
+      }
+      for (const node of nodeSet) {
+        tmpNodes.push({
+          id: node,
+          label: node,
+        });
+      }
+      setNodes(tmpNodes);
+      setLinks(tmpLinks);
+      setDisplay(true);
+    }
+  }, [graph]);
+
+  return (
+    <InfoCard title="集群拓扑结构">
+      {display ? (
+        <ClusterCanvas
+          id={clusterId}
+          nodes={nodes}
+          links={links}
+          handleNodeClick={handleNodeClick}
+        />
+      ) : (
+        <></>
+      )}
+    </InfoCard>
   );
 }

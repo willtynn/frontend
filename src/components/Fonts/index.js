@@ -37,7 +37,6 @@ export const NormalBoldFont = styled(Typography)({
   lineHeight: '26px',
 });
 
-
 export const NormalLargeFont = styled(Typography)({
   color: '#262E35',
   fontSize: '16px',
@@ -64,3 +63,13 @@ export const SuperLargeBoldFont = styled(Typography)({
   fontWeight: 800,
   lineHeight: '30px',
 });
+
+export const YaHeiLargeFont = styled(Typography)({
+  color: '#262E35',
+  fontSize: '18px',
+  fontFamily: "microsoft yahei",
+  fontStyle: 'normal',
+  fontWeight: 700,
+  lineHeight: '27.5px',
+});
+

@@ -1,9 +1,5 @@
 import { useState } from 'react';
-import PropTypes from 'prop-types';
-import { alpha } from '@mui/material/styles';
 import {
-  MyTableHeader,
-  TableFooter,
   StyledTableCell,
   NewStyledTableCell
 } from '@/components/DisplayTable';
@@ -48,16 +44,6 @@ function TextLabel(props) {
       </Tooltip>
     </Box>
   );
-}
-
-function createData(name, calories, fat, carbs, protein) {
-  return {
-    name,
-    calories,
-    fat,
-    carbs,
-    protein,
-  };
 }
 
 function createRow(
@@ -120,16 +106,6 @@ const resourceKey = [
   "gpuMem"
 ]
 
-function descendingComparator(a, b, orderBy) {
-  if (b[orderBy] < a[orderBy]) {
-    return -1;
-  }
-  if (b[orderBy] > a[orderBy]) {
-    return 1;
-  }
-  return 0;
-}
-
 export default function ServiceOverview(props) {
 
   const { data, setIndex, selectedIndex } = props
@@ -189,12 +165,7 @@ export default function ServiceOverview(props) {
           aria-label='simple table'
           size='small'
           sx={{
-            // tableLayout: 'fixed',
             tableLayout: 'auto',
-            // minWidth: "100%"
-            // width: '100%',
-            // maxWidth: 'none',
-
           }}
         >
           <TableHead>
@@ -210,18 +181,7 @@ export default function ServiceOverview(props) {
                 </NewStyledTableCell>
               )}
             </TableRow>
-            {/* <TableRow>
-              {headSecondRow.map((item, index) =>
-                <NewStyledTableCell
-                  key={item.id}
-                  align="center"
-                  rowSpan={item.rowSpan}
-                  colSpan={item.colSpan}
-                >
-                  {item.label}
-                </NewStyledTableCell>
-              )}
-            </TableRow> */}
+
           </TableHead>
           <TableBody>
             {!loading &&
@@ -278,18 +238,6 @@ export default function ServiceOverview(props) {
                         text={transformVersion(row.version)}
                       />
                     </StyledTableCell>
-
-                    {/* {versionKey.map((key, index) =>
-                      <StyledTableCell
-                        key={key}
-                        align='center'
-                      >
-                        <TextLabel
-                          text={row.version[key]}
-                        />
-                      </StyledTableCell>
-                    )} */}
-
                     <StyledTableCell
                       align='center'
                     >
@@ -297,43 +245,9 @@ export default function ServiceOverview(props) {
                         text={row.interfaces.length}
                       />
                     </StyledTableCell>
-
-                    {/* {resourceKey.map((key, index) =>
-                      <StyledTableCell
-                        key={"idle" + key}
-                        align='center'
-                      >
-                        <TextLabel
-                          text={row.idleResource[key]}
-                        />
-                      </StyledTableCell>
-                    )}
-
-                    {resourceKey.map((key, index) =>
-                      <StyledTableCell
-                        key={"desired" + key}
-                        align='center'
-                      >
-                        <TextLabel
-                          text={row.desiredResource[key]}
-                        />
-                      </StyledTableCell>
-                    )}
-
-                    {resourceKey.map((key, index) =>
-                      <StyledTableCell
-                        key={"desiredCapability" + key}
-                        align='center'
-                      >
-                        <TextLabel
-                          text={row.desiredCapability[key]}
-                        />
-                      </StyledTableCell>
-                    )} */}
                   </TableRow>
                 );
               })
-
             ) : !loading ? (
               <TableRow
                 style={{ height: '120px' }}

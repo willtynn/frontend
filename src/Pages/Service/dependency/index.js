@@ -231,6 +231,16 @@ function ServiceDependency() {
   };
 
   const handleSearchClick = e => {
+    if (dependency === null) {
+      dispatch(
+        setSnackbarMessageAndOpen(
+          'serviceDependency.serviceDependencyNotFound',
+          {},
+          SEVERITIES.warning
+        )
+      );
+      return;
+    }
     if (!queryContent || queryContent === '') {
       setEmptyError(true);
       return;
