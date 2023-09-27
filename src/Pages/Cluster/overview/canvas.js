@@ -36,7 +36,7 @@ export function ClusterCanvas(props) {
         id: item.id,
         labelType: 'html',
         // label: `${digitInCircle(12, 30, "#55AAAA")}${textUnderPolygon(item.label, 15, "#000", null, 45)}${textUnderPolygon(12 !== 1 ? 12 + " service instances": "1 service instance", 8, "#5E5E5E", "#FFF", 65)}`,
-        label: `${textUnderPolygon(item.label, 15, "#000", null, 45)}${textUnderPolygon(12 !== 1 ? 12 + " service instances": "1 service instance", 8, "#5E5E5E", "#FFF", 65)}`,
+        label: `${textUnderPolygon(item.label, 15, "#000", null, 45)}${textUnderPolygon(12 !== 1 ? 12 + " service instances": "1 service instance", 8, "#5E5E5E", "#FAFAFA", 65)}`,
         style: 'fill: #ffd47f',
         class: `server_node_${id}`,
       });

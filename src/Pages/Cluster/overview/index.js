@@ -1,9 +1,10 @@
 import { useEffect, useState, useRef } from 'react';
-import { Box, Stack } from '@mui/material';
+import { Box, Stack, Autocomplete, TextField } from '@mui/material';
 
 import { useDispatch, useSelector } from 'react-redux';
 import ClusterTopology from './ClusterTopology';
 import InstanceList from './InstancesList';
+import { SmallLightFont, SuperLargeBoldFont } from '@/components/Fonts';
 
 import {
   UPDATE_CLUSTERS,
@@ -178,16 +179,16 @@ const fakeInstancesData = {
 export default function ClusterOverview() {
   const [clusterData, setClusterData] = useState({});
   const [listOpen, setListOpen] = useState(false);
-  const currentServer = useRef("");
-  
+  const [targetCluster, setTargetCluster] = useState("");
+  // cluster id 构成的数组
+  const [clusterList, setClusterList] = useState([]);
+  const currentServer = useRef('');
 
   const dispatch = useDispatch();
 
-  const { 
-    clusters
-  } = useSelector(state => {
+  const { clusters } = useSelector(state => {
     return {
-      clusters: state.Cluster.clusters
+      clusters: state.Cluster.clusters,
     };
   });
 
@@ -258,22 +259,58 @@ export default function ClusterOverview() {
   useEffect(() => {
     if (clusters === null) return;
     const tmpClusterData = {};
+    const tmpClusterList = [];
     clusters.forEach(cluster => {
       tmpClusterData[cluster.id] = {
         servers: cluster.servers,
         network: cluster.network,
       };
+      tmpClusterList.push(cluster.id);
     });
     setClusterData(tmpClusterData);
+    setClusterList(tmpClusterList);
   }, [clusters]);
 
-  const handleNodeClick = (id) => {
+  useEffect(() => {
+    if (clusterList && clusterList.length !== 0) {
+      setTargetCluster(clusterList[0]);
+    }
+  }, [clusterList]);
+
+  const handleNodeClick = id => {
     currentServer.current = id;
     setListOpen(true);
   };
 
   return (
     <Box>
+      <Stack direction='row' spacing={2} sx={{
+        mb: "40px"
+      }}>
+        <SuperLargeBoldFont
+          sx={{
+            ml: '12px',
+            fontSize: '32px !important',
+            lineHeight: '54px !important',
+          }}
+        >
+          集群信息
+        </SuperLargeBoldFont>
+        <Autocomplete
+          value={targetCluster}
+          onChange={(event, newValue) => {
+            setTargetCluster(newValue);
+          }}
+          // inputValue={inputValue}
+          // onInputChange={(event, newInputValue) => {
+          //   setInputValue(newInputValue);
+          // }}
+          id='ccp_cluster_list_autocomplete'
+          options={clusterList}
+          sx={{ width: 300 }}
+          renderInput={params => <TextField {...params} label='Cluster ID' />}
+        />
+      </Stack>
       <Stack direction='row' justifyContent='space-between' spacing={4}>
         <Stack direction='column' spacing={2} sx={{ minWidth: '45%' }}>
           {clusters &&
@@ -292,7 +329,9 @@ export default function ClusterOverview() {
             sx={{
               minWidth: '45%',
             }}
-            handleClose={() => {setListOpen(false)}}
+            handleClose={() => {
+              setListOpen(false);
+            }}
             instances={fakeInstancesData.items}
             // instances={clusterData[currentServer]}
           />
