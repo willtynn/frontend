@@ -70,11 +70,14 @@ export default function InstanceInfo(props) {
       <Stack
         sx={{
           minHeight: '400px',
+          p: "16px 8px 16px 24px"
         }}
         spacing={3}
       >
         {((instance !== null && instance !== undefined) && metadataLabels.length !== 0) ? (
           <>
+            
+
             <Box>
               <LargeBoldFont sx={{ mb: '8px' }}>
                 Metadata.labels

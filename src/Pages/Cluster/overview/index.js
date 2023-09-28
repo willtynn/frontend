@@ -289,12 +289,7 @@ export default function ClusterOverview() {
     }
     const tmpInstancesData = {};
     selectedServer.items.forEach(instance => {
-      tmpInstancesData[instance.metadata.name] = {
-        metadata: {
-          labels: instance.metadata.labels,
-        },
-        status: instance.status,
-      }
+      tmpInstancesData[instance.metadata.name] = instance
     })
     setInstancesData(tmpInstancesData);
   }, [selectedServer]);
