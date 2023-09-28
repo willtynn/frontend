@@ -6,10 +6,8 @@ import Stack from '@mui/material/Stack';
 import { handleLinkWithoutProtocol } from '@/utils/commonUtils';
 
 export default function LabelAndValue(props) {
-  const { id, labels, value, open, isUrl, widthList } = props;
+  const { id, labels, value, isUrl } = props;
 
-  const [labelFrameWidth, setLabelFrameWidth] = useState(widthList[0]);
-  const [valueFrameWidth, setValueFrameWidth] = useState(widthList[1]);
 
   const StyledTooltip = styled(({ className, ...props }) => (
     <Tooltip {...props} classes={{ popper: className }} />
@@ -36,16 +34,6 @@ export default function LabelAndValue(props) {
       },
     },
   });
-
-  useEffect(() => {
-    if (open) {
-      setLabelFrameWidth(widthList[0]);
-      setValueFrameWidth(widthList[1]);
-    } else {
-      setLabelFrameWidth(widthList[2]);
-      setValueFrameWidth(widthList[3]);
-    }
-  }, [open]);
 
   const ValueFrameStyle = {
     display: 'flex',
@@ -91,7 +79,7 @@ export default function LabelAndValue(props) {
 
   return (
     <Box id={id}>
-      <Stack direction='row' spacing={2}>
+      <Stack direction='row' spacing={4}>
         <Stack sx={{ ...labelFrameStyle, width: '224px' }}>
           {labels.map((label, index) => {
             return (

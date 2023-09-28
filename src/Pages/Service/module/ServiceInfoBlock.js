@@ -166,9 +166,7 @@ export default function ServiceInfoBlock(props) {
         id='serviceQueryInfo'
         labels={labels}
         value={values}
-        open={false}
         isUrl={isUrl}
-        widthList={['170px', '357px', '192px', '410px']}
       />
 
       <Stack direction='row' spacing={2} sx={{ mt: "8px" }}>

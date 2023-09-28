@@ -105,9 +105,7 @@ export default function InstanceInfo(props) {
                 id='serviceQueryInfo'
                 labels={metadataLabels}
                 value={metadataValues}
-                open={false}
                 isUrl={metadataIsUrl}
-                widthList={['170px', '357px', '192px', '410px']}
               />
             </Box>
 
@@ -117,9 +115,7 @@ export default function InstanceInfo(props) {
                 id='serviceQueryInfo'
                 labels={statusLabels}
                 value={statusValues}
-                open={false}
                 isUrl={statusIsUrl}
-                widthList={['170px', '357px', '192px', '410px']}
               />
             </Box>
           </>
