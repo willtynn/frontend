@@ -19,11 +19,12 @@ import { Button, Collapse } from '@mui/material';
 import MenuIcon from '@mui/icons-material/Menu';
 import AppsIcon from '@mui/icons-material/Apps';
 import CloudIcon from '@mui/icons-material/Cloud';
-import DesktopMacIcon from '@mui/icons-material/DesktopMac';
 import {Outlet} from "react-router-dom";
 import { useNavigate } from 'react-router-dom';
 import PolylineIcon from '@mui/icons-material/Polyline';
 import CommonSnackBar from '../../components/CommonSnackbar';
+import PublishIcon from '@mui/icons-material/Publish';
+import CachedIcon from '@mui/icons-material/Cached';
 
 const drawerWidth = 220;
 const openedMixin = theme => ({
@@ -213,7 +214,7 @@ export default function MiniDrawer() {
                 >
                   <DashboardIcon />
                 </ListItemIcon>
-                {open ? <ListItemText primary='总览' /> : null}
+                {open ? <ListItemText primary='集群总览' /> : null}
               </ListItemButton>
               <ListItemButton
                 sx={{
@@ -230,9 +231,28 @@ export default function MiniDrawer() {
                     justifyContent: 'center',
                   }}
                 >
-                  <DesktopMacIcon />
+                  <CachedIcon />
                 </ListItemIcon>
-                {open ? <ListItemText primary='节点' /> : null}
+                {open ? <ListItemText primary='当前运行服务' /> : null}
+              </ListItemButton>
+              <ListItemButton
+                sx={{
+                  justifyContent: open ? 'initial' : 'center',
+                  px: 2.5,
+                  backgroundColor: '#FFF',
+                }}
+                onClick={() => {navigate('cluster/node');}}
+              >
+                <ListItemIcon
+                  sx={{
+                    minWidth: 0,
+                    mr: open ? 3 : 'auto',
+                    justifyContent: 'center',
+                  }}
+                >
+                  <PublishIcon />
+                </ListItemIcon>
+                {open ? <ListItemText primary='服务部署运行' /> : null}
               </ListItemButton>
             </List>
           </Collapse>
