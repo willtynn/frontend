@@ -241,7 +241,7 @@ export default function MiniDrawer() {
                   px: 2.5,
                   backgroundColor: '#FFF',
                 }}
-                onClick={() => {navigate('cluster/node');}}
+                onClick={() => {navigate('cluster/deploy');}}
               >
                 <ListItemIcon
                   sx={{

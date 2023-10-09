@@ -6,6 +6,7 @@ import CustomizedTables from '../Pages/TestPages/table2'
 import ServiceQuery from '@/Pages/Service/query';
 import ServiceDependency from '@/Pages/Service/dependency';
 import RouteTrace from '../Pages/Route/trace';
+import InstanceDeploy from '../Pages/Cluster/deploy';
 
 export default function newRoute() {
   return (
@@ -16,6 +17,7 @@ export default function newRoute() {
         <Route path='cluster/'>
           <Route path='overview' element={<ClusterOverview />} />
           <Route path='node' element={<CustomizedTables />} />
+          <Route path='deploy' element={<InstanceDeploy />} />
         </Route>
         <Route path='service/'>
           {/* <Route path='overview' element={<ServiceOverview />} /> */}
