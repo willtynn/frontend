@@ -25,7 +25,8 @@ import {
 } from "@mui/material"
 
 import {
-  StyledTableRowCell
+  StyledTableRowCell,
+  StyledTableContainer,
 } from '@/components/DisplayTable';
 
 
@@ -404,7 +405,7 @@ export default function RouteTrace() {
           <Stack>
             {/* Service 列表 */}
             <Stack>
-              <TableContainer component={Paper} sx={
+              <StyledTableContainer component={Paper} sx={
                 { 
                   //minWidth: "750px", 
                   //maxWidth: "900px",
@@ -438,7 +439,7 @@ export default function RouteTrace() {
                       onPageChange={handleServiceChangePage}/>
                   </TableFooter>
                 </Table>
-              </TableContainer>
+              </StyledTableContainer>
               
             </Stack>
 
@@ -447,7 +448,7 @@ export default function RouteTrace() {
             {/* Trace 列表 */}
             <Stack>
               <LargeBoldFont>请求信息</LargeBoldFont>
-              <TableContainer component={Paper} sx={
+              <StyledTableContainer component={Paper} sx={
                 { 
                   //minWidth: "510px", 
                   width: "100%",
@@ -458,7 +459,9 @@ export default function RouteTrace() {
                   <TableHead>
                     <TableRow sx={{ backgroundColor: "#E3E3E3" }}>
                       <StyledTableRowCell>请求</StyledTableRowCell>
-                      <StyledTableRowCell align="center" sx={{ borderLeft: "solid 1px #B8B5B7", borderRight: "solid 1px #B8B5B7" }}>链路长度</StyledTableRowCell>
+                      <StyledTableRowCell align="center" 
+                      // sx={{ borderLeft: "solid 1px #B8B5B7", borderRight: "solid 1px #B8B5B7" }}
+                      >链路长度</StyledTableRowCell>
                       <StyledTableRowCell align="center">开始时间</StyledTableRowCell>
                       <StyledTableRowCell align="center">响应时间</StyledTableRowCell>
                       <StyledTableRowCell align="center">请求状态</StyledTableRowCell>
@@ -478,7 +481,7 @@ export default function RouteTrace() {
                     </TableRow>
                   </TableFooter>
                 </Table>
-              </TableContainer>
+              </StyledTableContainer>
             </Stack>
           </Stack>
 

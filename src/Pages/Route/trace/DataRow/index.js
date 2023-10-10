@@ -38,7 +38,9 @@ export function DataRow(props) {
             backgroundColor: '#FDFDFD',
           }}>
             <StyledTableBodyCell component="th" scope="row">{rowData.service}</StyledTableBodyCell>
-            <StyledTableBodyCell align="center" sx={{ borderLeft: "solid 1px #B8B5B7", borderRight: "solid 1px #B8B5B7" }}>
+            <StyledTableBodyCell align="center" 
+            // sx={{ borderLeft: "solid 1px #B8B5B7", borderRight: "solid 1px #B8B5B7" }}
+            >
               {rowData.spanNum}
             </StyledTableBodyCell>
             <StyledTableBodyCell align="center">{dayjs(rowData.time).format('YYYY-MM-DD HH:mm:ss')}</StyledTableBodyCell>
@@ -52,7 +54,9 @@ export function DataRow(props) {
         <React.Fragment>
           <TableRow onClick={onRowClick} sx={{ backgroundColor: color }}>
             <StyledTableBodyCell component="th" scope="row" sx={{ color: "transparent" }}>-</StyledTableBodyCell>
-            <StyledTableBodyCell align="center" sx={{ borderLeft: "solid 1px #B8B5B7", borderRight: "solid 1px #B8B5B7", color: "transparent" }}>-</StyledTableBodyCell>
+            <StyledTableBodyCell align="center" 
+            sx={{ color: "transparent" }}
+            >-</StyledTableBodyCell>
             <StyledTableBodyCell align="center" sx={{ color: "transparent" }}>-</StyledTableBodyCell>
             <StyledTableBodyCell align="center" sx={{ color: "transparent" }}>-</StyledTableBodyCell>
             <StyledTableBodyCell align="center" sx={{ color: "transparent" }}>-</StyledTableBodyCell>
