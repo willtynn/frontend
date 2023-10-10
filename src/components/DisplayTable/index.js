@@ -10,7 +10,23 @@ import { styled } from '@mui/system';
 import { visuallyHidden } from '@mui/utils';
 import { useDispatch, useSelector } from 'react-redux';
 
-export const StyledTableCell = styled(TableCell)(() => ({
+export const StyledTableRowCell = styled(TableCell)(() => ({
+  [`&.${tableCellClasses.head}`]: {
+    backgroundColor: "#F1F3F5",
+    color: "#596A7C",
+    fontWeight: 600,
+    fontSize: '12px',
+    lineHeight: '18px',
+    textTransform: 'uppercase',
+    letterSpacing: '0.08em',
+  },
+  [`&.${tableCellClasses.root}`]: {
+    maxWidth: '260px',
+    // border: "1px solid white"
+  },
+}));
+
+export const StyledTableBodyCell = styled(TableCell)(() => ({
   [`&.${tableCellClasses.head}`]: {
     backgroundColor: '#f1f3f5',
     color: '#505050',
@@ -27,20 +43,6 @@ export const StyledTableCell = styled(TableCell)(() => ({
   },
 }));
 
-export const NewStyledTableCell = styled(TableCell)(() => ({
-  [`&.${tableCellClasses.head}`]: {
-    backgroundColor: "#DFE4E8",
-    color: "#596A7C",
-    fontWeight: 600,
-    fontSize: '12px',
-    lineHeight: '18px',
-    textTransform: 'uppercase',
-    letterSpacing: '0.08em',
-  },
-  [`&.${tableCellClasses.root}`]: {
-    maxWidth: '260px',
-    border: "1px solid white"
-  },
-}));
+
 
 

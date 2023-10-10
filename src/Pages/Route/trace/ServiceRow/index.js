@@ -5,7 +5,7 @@ import {
   TableRow,
 } from "@mui/material";
 import {
-  StyledTableCell
+  StyledTableBodyCell
 } from '@/components/DisplayTable';
 
 export function ServiceRow(props) {
@@ -42,37 +42,37 @@ export function ServiceRow(props) {
           {
             rowData ? 
               <>
-                <StyledTableCell component="th" scope="row" sx={{ borderRight: "solid 1px white" }}>
+                <StyledTableBodyCell component="th" scope="row" sx={{ borderRight: "solid 1px white" }}>
                   {rowData.service}
-                </StyledTableCell>
-                <StyledTableCell align="center" sx={{ borderRight: "solid 1px white" }}>
+                </StyledTableBodyCell>
+                <StyledTableBodyCell align="center" sx={{ borderRight: "solid 1px white" }}>
                   {rowData.api}
-                </StyledTableCell>
-                <StyledTableCell align="center" sx={{ borderRight: "solid 1px white" }}>
+                </StyledTableBodyCell>
+                <StyledTableBodyCell align="center" sx={{ borderRight: "solid 1px white" }}>
                   {rowData.count}
-                </StyledTableCell>
-                <StyledTableCell align="center">{calculateDuration(rowData.low)}</StyledTableCell>
-                <StyledTableCell align="center">{calculateDuration(rowData.percentile50)}</StyledTableCell>
-                <StyledTableCell align="center">{calculateDuration(rowData.percentile95)}</StyledTableCell>
-                <StyledTableCell align="center">{calculateDuration(rowData.percentile99)}</StyledTableCell>
-                <StyledTableCell align="center">{calculateDuration(rowData.high)}</StyledTableCell>
+                </StyledTableBodyCell>
+                <StyledTableBodyCell align="center">{calculateDuration(rowData.low)}</StyledTableBodyCell>
+                <StyledTableBodyCell align="center">{calculateDuration(rowData.percentile50)}</StyledTableBodyCell>
+                <StyledTableBodyCell align="center">{calculateDuration(rowData.percentile95)}</StyledTableBodyCell>
+                <StyledTableBodyCell align="center">{calculateDuration(rowData.percentile99)}</StyledTableBodyCell>
+                <StyledTableBodyCell align="center">{calculateDuration(rowData.high)}</StyledTableBodyCell>
               </>
              : 
               <>
-                <StyledTableCell component="th" scope="row" sx={{ borderRight: "solid 1px white", color: "transparent" }}>
+                <StyledTableBodyCell component="th" scope="row" sx={{ borderRight: "solid 1px white", color: "transparent" }}>
                   -
-                </StyledTableCell>
-                <StyledTableCell align="center" sx={{ borderRight: "solid 1px white", color: "transparent" }}>
+                </StyledTableBodyCell>
+                <StyledTableBodyCell align="center" sx={{ borderRight: "solid 1px white", color: "transparent" }}>
                   -
-                </StyledTableCell>
-                <StyledTableCell align="center" sx={{ borderRight: "solid 1px white", color: "transparent" }}>
+                </StyledTableBodyCell>
+                <StyledTableBodyCell align="center" sx={{ borderRight: "solid 1px white", color: "transparent" }}>
                   -
-                </StyledTableCell>
-                <StyledTableCell align="center" sx={{ color: "transparent" }}>-</StyledTableCell>
-                <StyledTableCell align="center" sx={{ color: "transparent" }}>-</StyledTableCell>
-                <StyledTableCell align="center" sx={{ color: "transparent" }}>-</StyledTableCell>
-                <StyledTableCell align="center" sx={{ color: "transparent" }}>-</StyledTableCell>
-                <StyledTableCell align="center" sx={{ color: "transparent" }}>-</StyledTableCell>
+                </StyledTableBodyCell>
+                <StyledTableBodyCell align="center" sx={{ color: "transparent" }}>-</StyledTableBodyCell>
+                <StyledTableBodyCell align="center" sx={{ color: "transparent" }}>-</StyledTableBodyCell>
+                <StyledTableBodyCell align="center" sx={{ color: "transparent" }}>-</StyledTableBodyCell>
+                <StyledTableBodyCell align="center" sx={{ color: "transparent" }}>-</StyledTableBodyCell>
+                <StyledTableBodyCell align="center" sx={{ color: "transparent" }}>-</StyledTableBodyCell>
               </>
           }
           </TableRow>

@@ -5,7 +5,7 @@ import {
   TableRow,
 } from "@mui/material";
 import {
-  StyledTableCell
+  StyledTableBodyCell
 } from '@/components/DisplayTable';
 
 export function DataRow(props) {
@@ -37,13 +37,13 @@ export function DataRow(props) {
             position: 'sticky',
             backgroundColor: '#FDFDFD',
           }}>
-            <StyledTableCell component="th" scope="row">{rowData.service}</StyledTableCell>
-            <StyledTableCell align="center" sx={{ borderLeft: "solid 1px #B8B5B7", borderRight: "solid 1px #B8B5B7" }}>
+            <StyledTableBodyCell component="th" scope="row">{rowData.service}</StyledTableBodyCell>
+            <StyledTableBodyCell align="center" sx={{ borderLeft: "solid 1px #B8B5B7", borderRight: "solid 1px #B8B5B7" }}>
               {rowData.spanNum}
-            </StyledTableCell>
-            <StyledTableCell align="center">{dayjs(rowData.time).format('YYYY-MM-DD HH:mm:ss')}</StyledTableCell>
-            <StyledTableCell align="center">{calculateDuration(rowData.duration)}</StyledTableCell>
-            <StyledTableCell align="center">{rowData.status}</StyledTableCell>
+            </StyledTableBodyCell>
+            <StyledTableBodyCell align="center">{dayjs(rowData.time).format('YYYY-MM-DD HH:mm:ss')}</StyledTableBodyCell>
+            <StyledTableBodyCell align="center">{calculateDuration(rowData.duration)}</StyledTableBodyCell>
+            <StyledTableBodyCell align="center">{rowData.status}</StyledTableBodyCell>
           </TableRow>
         </React.Fragment>
       );
@@ -51,11 +51,11 @@ export function DataRow(props) {
       return (
         <React.Fragment>
           <TableRow onClick={onRowClick} sx={{ backgroundColor: color }}>
-            <StyledTableCell component="th" scope="row" sx={{ color: "transparent" }}>-</StyledTableCell>
-            <StyledTableCell align="center" sx={{ borderLeft: "solid 1px #B8B5B7", borderRight: "solid 1px #B8B5B7", color: "transparent" }}>-</StyledTableCell>
-            <StyledTableCell align="center" sx={{ color: "transparent" }}>-</StyledTableCell>
-            <StyledTableCell align="center" sx={{ color: "transparent" }}>-</StyledTableCell>
-            <StyledTableCell align="center" sx={{ color: "transparent" }}>-</StyledTableCell>
+            <StyledTableBodyCell component="th" scope="row" sx={{ color: "transparent" }}>-</StyledTableBodyCell>
+            <StyledTableBodyCell align="center" sx={{ borderLeft: "solid 1px #B8B5B7", borderRight: "solid 1px #B8B5B7", color: "transparent" }}>-</StyledTableBodyCell>
+            <StyledTableBodyCell align="center" sx={{ color: "transparent" }}>-</StyledTableBodyCell>
+            <StyledTableBodyCell align="center" sx={{ color: "transparent" }}>-</StyledTableBodyCell>
+            <StyledTableBodyCell align="center" sx={{ color: "transparent" }}>-</StyledTableBodyCell>
           </TableRow>
         </React.Fragment>
       );

@@ -25,7 +25,7 @@ import {
 } from "@mui/material"
 
 import {
-  NewStyledTableCell
+  StyledTableRowCell
 } from '@/components/DisplayTable';
 
 
@@ -415,14 +415,14 @@ export default function RouteTrace() {
                 <Table sx={{tableLayout: 'auto'}}>
                   <TableHead>
                     <TableRow sx={{ height: "20px" }}>
-                      <NewStyledTableCell>服务</NewStyledTableCell>
-                      <NewStyledTableCell align="center">接口</NewStyledTableCell>
-                      <NewStyledTableCell align="center">请求<br/>次数</NewStyledTableCell>
-                      <NewStyledTableCell align="center">Low</NewStyledTableCell>
-                      <NewStyledTableCell align="center">0.5</NewStyledTableCell>
-                      <NewStyledTableCell align="center">0.95</NewStyledTableCell>
-                      <NewStyledTableCell align="center">0.99</NewStyledTableCell>
-                      <NewStyledTableCell align="center">High</NewStyledTableCell>
+                      <StyledTableRowCell>服务</StyledTableRowCell>
+                      <StyledTableRowCell align="center">接口</StyledTableRowCell>
+                      <StyledTableRowCell align="center">请求<br/>次数</StyledTableRowCell>
+                      <StyledTableRowCell align="center">Low</StyledTableRowCell>
+                      <StyledTableRowCell align="center">0.5</StyledTableRowCell>
+                      <StyledTableRowCell align="center">0.95</StyledTableRowCell>
+                      <StyledTableRowCell align="center">0.99</StyledTableRowCell>
+                      <StyledTableRowCell align="center">High</StyledTableRowCell>
                     </TableRow>
                   </TableHead>
                   <TableBody sx={{ borderBottom: "solid 2px #B8B5B7", borderTop: "solid 2px #B8B5B7" }}>
@@ -457,11 +457,11 @@ export default function RouteTrace() {
                 <Table aria-label="collapsible table">
                   <TableHead>
                     <TableRow sx={{ backgroundColor: "#E3E3E3" }}>
-                      <NewStyledTableCell>请求</NewStyledTableCell>
-                      <NewStyledTableCell align="center" sx={{ borderLeft: "solid 1px #B8B5B7", borderRight: "solid 1px #B8B5B7" }}>链路长度</NewStyledTableCell>
-                      <NewStyledTableCell align="center">开始时间</NewStyledTableCell>
-                      <NewStyledTableCell align="center">响应时间</NewStyledTableCell>
-                      <NewStyledTableCell align="center">请求状态</NewStyledTableCell>
+                      <StyledTableRowCell>请求</StyledTableRowCell>
+                      <StyledTableRowCell align="center" sx={{ borderLeft: "solid 1px #B8B5B7", borderRight: "solid 1px #B8B5B7" }}>链路长度</StyledTableRowCell>
+                      <StyledTableRowCell align="center">开始时间</StyledTableRowCell>
+                      <StyledTableRowCell align="center">响应时间</StyledTableRowCell>
+                      <StyledTableRowCell align="center">请求状态</StyledTableRowCell>
                     </TableRow>
                   </TableHead>
                   <TableBody sx={{ borderBottom: "solid 2px #B8B5B7", borderTop: "solid 2px #B8B5B7" }}>

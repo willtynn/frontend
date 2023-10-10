@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import {
-  StyledTableCell,
-  NewStyledTableCell
+  StyledTableBodyCell,
+  StyledTableRowCell
 } from '@/components/DisplayTable';
 import {
   CircularProgress,
@@ -162,7 +162,6 @@ export default function ServiceOverview(props) {
       >
         <Table
           stickyHeader
-          aria-label='simple table'
           size='small'
           sx={{
             tableLayout: 'auto',
@@ -171,14 +170,14 @@ export default function ServiceOverview(props) {
           <TableHead>
             <TableRow>
               {headFirstRow.map((item, index) =>
-                <NewStyledTableCell
+                <StyledTableRowCell
                   key={item.id}
                   align="center"
                   rowSpan={item.rowSpan}
                   colSpan={item.colSpan}
                 >
                   {item.label}
-                </NewStyledTableCell>
+                </StyledTableRowCell>
               )}
             </TableRow>
 
@@ -205,46 +204,46 @@ export default function ServiceOverview(props) {
                     selected={false}
                     onClick={() => { setIndex(index) }}
                   >
-                    <StyledTableCell
+                    <StyledTableBodyCell
                       align='center'
                     >
                       {row.id}
-                    </StyledTableCell>
-                    <StyledTableCell
+                    </StyledTableBodyCell>
+                    <StyledTableBodyCell
                       align='center'
                     >
                       <TextLabel
                         text={row.name}
                       />
-                    </StyledTableCell>
-                    <StyledTableCell
+                    </StyledTableBodyCell>
+                    <StyledTableBodyCell
                       align='center'
                     >
                       <TextLabel
                         text={row.repo}
                       />
-                    </StyledTableCell>
-                    <StyledTableCell
+                    </StyledTableBodyCell>
+                    <StyledTableBodyCell
                       align='center'
                     >
                       <TextLabel
                         text={row.imageUrl}
                       />
-                    </StyledTableCell>
-                    <StyledTableCell
+                    </StyledTableBodyCell>
+                    <StyledTableBodyCell
                       align='center'
                     >
                       <TextLabel
                         text={transformVersion(row.version)}
                       />
-                    </StyledTableCell>
-                    <StyledTableCell
+                    </StyledTableBodyCell>
+                    <StyledTableBodyCell
                       align='center'
                     >
                       <TextLabel
                         text={row.interfaces.length}
                       />
-                    </StyledTableCell>
+                    </StyledTableBodyCell>
                   </TableRow>
                 );
               })

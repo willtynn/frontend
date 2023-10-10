@@ -20,30 +20,12 @@ import {
 import { LargeBoldFont } from "@/components/Fonts"
 import { transformVersion, shadowStyle } from "@/utils/commonUtils"
 import {
-  StyledTableCell
+  StyledTableBodyCell,
+  StyledTableRowCell
 } from "@/components/DisplayTable"
 import { styled } from '@mui/system';
 import PolylineIcon from '@mui/icons-material/Polyline';
 import { useNavigate } from "react-router-dom"
-
-export const NewStyledTableCell = styled(TableCell)(() => ({
-  [`&.${tableCellClasses.head}`]: {
-    backgroundColor: "#DFE4E8",
-    color: "#596A7C",
-    fontWeight: 600,
-    fontSize: '12px',
-    lineHeight: '18px',
-    textTransform: 'uppercase',
-    letterSpacing: '0.08em',
-  },
-  [`&.${tableCellClasses.root}`]: {
-    // paddingTop: 0,
-    // paddingBottom: 0,
-    // paddingLeft: "24px",
-    // paddingRight: '24px',
-    maxWidth: '260px',
-  },
-}));
 
 export const QUERY = "QUERY";
 export const SERVICE_DEPENDENCY = "SERVICE_DEPENDENCY";
@@ -213,12 +195,12 @@ export default function ServiceInfoBlock(props) {
                     <TableRow>
 
                       {headRow.map((item, index) =>
-                        <NewStyledTableCell
+                        <StyledTableRowCell
                           key={item.id}
                           align="center"
                         >
                           {item.label}
-                        </NewStyledTableCell>
+                        </StyledTableRowCell>
                       )}
                     </TableRow>
                   </TableHead>
@@ -240,27 +222,27 @@ export default function ServiceInfoBlock(props) {
                         }}
                         selected={false}
                       >
-                        <StyledTableCell
+                        <StyledTableBodyCell
                           align='center'
                         >
                           {row.id}
-                        </StyledTableCell>
-                        <StyledTableCell
+                        </StyledTableBodyCell>
+                        <StyledTableBodyCell
                           align='center'
                         >
                           {row.path}
-                        </StyledTableCell>
-                        <StyledTableCell
+                        </StyledTableBodyCell>
+                        <StyledTableBodyCell
                           align='center'
                         >
                           {row.inputSize}
-                        </StyledTableCell>
-                        <StyledTableCell
+                        </StyledTableBodyCell>
+                        <StyledTableBodyCell
                           align='center'
                         >
                           {row.outputSize}
-                        </StyledTableCell>
-                        <StyledTableCell
+                        </StyledTableBodyCell>
+                        <StyledTableBodyCell
                           align='center'
                         >
                           <Tooltip title="查看依赖">
@@ -270,7 +252,7 @@ export default function ServiceInfoBlock(props) {
                               <PolylineIcon />
                             </IconButton>
                           </Tooltip>
-                        </StyledTableCell>
+                        </StyledTableBodyCell>
                       </TableRow>
                     )}
                   </TableBody>
@@ -320,18 +302,18 @@ export default function ServiceInfoBlock(props) {
             >
               <TableHead>
                 <TableRow>
-                  <NewStyledTableCell
+                  <StyledTableRowCell
                     align="center"
                   >
                     Type
-                  </NewStyledTableCell>
+                  </StyledTableRowCell>
                   {resourceAndCapabilityHeadRow.map((item, index) =>
-                    <NewStyledTableCell
+                    <StyledTableRowCell
                       key={item.id}
                       align="center"
                     >
                       {item.label}
-                    </NewStyledTableCell>
+                    </StyledTableRowCell>
                   )}
                 </TableRow>
               </TableHead>
@@ -351,18 +333,18 @@ export default function ServiceInfoBlock(props) {
                   }}
                   selected={false}
                 >
-                  <StyledTableCell
+                  <StyledTableBodyCell
                     align='center'
                   >
                     空闲时占用资源
-                  </StyledTableCell>
+                  </StyledTableBodyCell>
                   { data &&
                     resourceAndCapabilityHeadRow.map((item, index) =>
-                      <StyledTableCell
+                      <StyledTableBodyCell
                         align='center'
                       >
                         {data.idleResource[item.id]}
-                      </StyledTableCell>
+                      </StyledTableBodyCell>
                     )
                   }
                 </TableRow>
@@ -381,20 +363,20 @@ export default function ServiceInfoBlock(props) {
                   }}
                   selected={false}
                 >
-                  <StyledTableCell
+                  <StyledTableBodyCell
                     align='center'
                     
                   >
                     期望资源
-                  </StyledTableCell>
+                  </StyledTableBodyCell>
                   { data &&
                     resourceAndCapabilityHeadRow.map((item, index) =>
-                      <StyledTableCell
+                      <StyledTableBodyCell
                         key={item.id}
                         align='center'
                       >
                         {data.desiredResource[item.id]}
-                      </StyledTableCell>
+                      </StyledTableBodyCell>
                     )
                   }
                 </TableRow>
@@ -413,17 +395,17 @@ export default function ServiceInfoBlock(props) {
                   }}
                   selected={false}
                 >
-                  <StyledTableCell
+                  <StyledTableBodyCell
                     align='center'
                   >
                     处理能力
-                  </StyledTableCell>
-                  <StyledTableCell
+                  </StyledTableBodyCell>
+                  <StyledTableBodyCell
                     align='center'
                     colSpan={5}
                   >
                     {data && data.desiredCapability}
-                  </StyledTableCell>
+                  </StyledTableBodyCell>
                   {/* {
                     resourceAndCapabilityHeadRow.map((item, index) =>
                       <StyledTableCell
