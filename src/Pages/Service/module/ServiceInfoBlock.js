@@ -21,7 +21,9 @@ import { LargeBoldFont } from "@/components/Fonts"
 import { transformVersion, shadowStyle } from "@/utils/commonUtils"
 import {
   StyledTableBodyCell,
-  StyledTableRowCell
+  StyledTableRowCell,
+  StyledTableBox,
+  StyledTableContainer
 } from "@/components/DisplayTable"
 import { styled } from '@mui/system';
 import PolylineIcon from '@mui/icons-material/Polyline';
@@ -181,7 +183,7 @@ export default function ServiceInfoBlock(props) {
           {
             data && data.interfaces !== null
               ?
-              <TableContainer sx={{ maxHeight: '680px', overflow: "auto", width: "100%" }}>
+              <StyledTableContainer sx={{ maxHeight: '680px'}}>
                 <Table
                   stickyHeader
                   aria-label='simple table'
@@ -218,7 +220,7 @@ export default function ServiceInfoBlock(props) {
                           position: 'sticky',
                           left: 0,
                           zIndex: 6,
-                          backgroundColor: '#F1F3F5 !important',
+                          backgroundColor: '#FFF !important',
                         }}
                         selected={false}
                       >
@@ -258,7 +260,7 @@ export default function ServiceInfoBlock(props) {
                   </TableBody>
                 </Table>
 
-              </TableContainer>
+              </StyledTableContainer>
               :
               <></>
           }
@@ -290,7 +292,7 @@ export default function ServiceInfoBlock(props) {
         <Box sx={{
           width: resourceTableWidth
         }}>
-          <TableContainer sx={{ maxHeight: '680px', overflow: "auto", width: "100%" }}>
+          <StyledTableContainer sx={{ maxHeight: '680px', overflow: "auto", width: "100%" }}>
             <Table
               stickyHeader
               aria-label='simple table'
@@ -329,7 +331,7 @@ export default function ServiceInfoBlock(props) {
                     position: 'sticky',
                     left: 0,
                     zIndex: 6,
-                    backgroundColor: '#F1F3F5 !important',
+                    backgroundColor: '#FFF !important',
                   }}
                   selected={false}
                 >
@@ -359,7 +361,7 @@ export default function ServiceInfoBlock(props) {
                     position: 'sticky',
                     left: 0,
                     zIndex: 6,
-                    backgroundColor: '#F1F3F5 !important',
+                    backgroundColor: '#FFF !important',
                   }}
                   selected={false}
                 >
@@ -391,7 +393,7 @@ export default function ServiceInfoBlock(props) {
                     position: 'sticky',
                     left: 0,
                     zIndex: 6,
-                    backgroundColor: '#F1F3F5 !important',
+                    backgroundColor: '#FFF !important',
                   }}
                   selected={false}
                 >
@@ -420,7 +422,7 @@ export default function ServiceInfoBlock(props) {
               </TableBody>
             </Table>
 
-          </TableContainer>
+          </StyledTableContainer>
 
         </Box>
       </Stack>

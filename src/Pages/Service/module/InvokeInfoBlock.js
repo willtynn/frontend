@@ -12,30 +12,9 @@ import {
 } from "@mui/material"
 import { LargeBoldFont } from "@/components/Fonts"
 import { transformVersion, shadowStyle } from "@/utils/commonUtils"
-import {
-  StyledTableCell
-} from "@/components/DisplayTable"
 import { styled } from '@mui/system';
 import { useState, useEffect } from "react"
 
-export const NewStyledTableCell = styled(TableCell)(() => ({
-  [`&.${tableCellClasses.head}`]: {
-    backgroundColor: "#DFE4E8",
-    color: "#596A7C",
-    fontWeight: 600,
-    fontSize: '12px',
-    lineHeight: '18px',
-    textTransform: 'uppercase',
-    letterSpacing: '0.08em',
-  },
-  [`&.${tableCellClasses.root}`]: {
-    // paddingTop: 0,
-    // paddingBottom: 0,
-    // paddingLeft: "24px",
-    // paddingRight: '24px',
-    maxWidth: '260px',
-  },
-}));
 
 export default function InvokeInfoBlock(props) {
 

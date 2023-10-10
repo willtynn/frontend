@@ -1,7 +1,9 @@
 import { useState } from 'react';
 import {
   StyledTableBodyCell,
-  StyledTableRowCell
+  StyledTableRowCell,
+  StyledTableBox,
+  StyledTableContainer,
 } from '@/components/DisplayTable';
 import {
   CircularProgress,
@@ -19,18 +21,13 @@ import {
   tableCellClasses,
 } from '@mui/material';
 import { styled } from '@mui/system';
-import { 
-  transformVersion,
-  shadowStyle
-} from "@/utils/commonUtils"
+import { transformVersion, shadowStyle } from '@/utils/commonUtils';
 
 function TextLabel(props) {
   const { text } = props;
   return (
     <Box>
-      <Tooltip
-        title={text}
-      >
+      <Tooltip title={text}>
         <Box
           component='div'
           sx={{
@@ -63,7 +60,16 @@ const headFirstRow = [
   createRow('id', '服务ID', false, '240px', '280px', true, 1, 1),
   createRow('name', '服务名称', false, '190px', '190px', true, 1, 1),
   createRow('repo', '代码仓库地址', false, '200px', '240px', true, 1, 1),
-  createRow('imageUrl', '镜像仓库地址&Tag', false, '150px', '150px', true, 1, 1),
+  createRow(
+    'imageUrl',
+    '镜像仓库地址&Tag',
+    false,
+    '150px',
+    '150px',
+    true,
+    1,
+    1
+  ),
   createRow('version', '服务版本', false, '170px', '200px', true, 1, 1),
   createRow('interfaces', '接口集合', false, '170px', '200px', true, 1, 1),
   // createRow('idleResource', '空闲时占用资源', false, '170px', '200px', true, 5, 1),
@@ -92,23 +98,12 @@ const headSecondRow = [
   // createRow('desiredCapabilityMem', 'gpu内存资源', false, '170px', '200px', true),
 ];
 
-const versionKey = [
-  "major",
-  "minor",
-  "patch"
-]
+const versionKey = ['major', 'minor', 'patch'];
 
-const resourceKey = [
-  "cpu",
-  "ram",
-  "disk",
-  "gpuCore",
-  "gpuMem"
-]
+const resourceKey = ['cpu', 'ram', 'disk', 'gpuCore', 'gpuMem'];
 
 export default function ServiceOverview(props) {
-
-  const { data, setIndex, selectedIndex } = props
+  const { data, setIndex, selectedIndex } = props;
   const [orderType, setOrderType] = useState('version'); //排序的表头
   const [orderAs, setOrderAs] = useState('asc'); //排序的顺序
   const [selected, setSelected] = useState([]);
@@ -116,7 +111,6 @@ export default function ServiceOverview(props) {
   const [dense, setDense] = useState(false);
   const [rowsPerPage, setRowsPerPage] = useState(5);
   const [loading, setLoading] = useState(false);
-
 
   const handleRequestSort = (_event, property) => {
     const isAsc = orderType === property && orderAs === 'asc';
@@ -128,36 +122,22 @@ export default function ServiceOverview(props) {
     setPage(newPage);
   };
 
-  const handleChangeRowsPerPage = (event) => {
+  const handleChangeRowsPerPage = event => {
     setRowsPerPage(parseInt(event.target.value, 10));
     setPage(0);
   };
 
-  const handleChangeDense = (event) => {
+  const handleChangeDense = event => {
     setDense(event.target.checked);
   };
 
-  const isSelected = (name) => selected.indexOf(name) !== -1;
-
+  const isSelected = name => selected.indexOf(name) !== -1;
 
   return (
-    <Box
-      id='BasicTableBox'
-      sx={{
-        width: "100%",
-        overflow: "hidden",
-        boxShadow: "0px 0px 12px 0px rgba(38, 46, 53, 0.12)",
-      }}
-    >
-      <TableContainer
+    <StyledTableBox id='BasicTableBox'>
+      <StyledTableContainer
         sx={{
           maxHeight: '680px',
-          overflow: "auto",
-          width: "100%",
-          borderColor: "#DFDEE8",
-          borderWidth: "1px",
-          borderStyle: "solid",
-          borderRadius: "5px"
         }}
       >
         <Table
@@ -169,22 +149,20 @@ export default function ServiceOverview(props) {
         >
           <TableHead>
             <TableRow>
-              {headFirstRow.map((item, index) =>
+              {headFirstRow.map((item, index) => (
                 <StyledTableRowCell
                   key={item.id}
-                  align="center"
+                  align='center'
                   rowSpan={item.rowSpan}
                   colSpan={item.colSpan}
                 >
                   {item.label}
                 </StyledTableRowCell>
-              )}
+              ))}
             </TableRow>
-
           </TableHead>
           <TableBody>
-            {!loading &&
-              data !== null && data.length !== 0 ? (
+            {!loading && data !== null && data.length !== 0 ? (
               data.map((row, index) => {
                 return (
                   <TableRow
@@ -192,65 +170,46 @@ export default function ServiceOverview(props) {
                     aria-checked={false}
                     sx={{
                       '&:last-child td, &:last-child th': {
-                        border: 0
+                        border: 0,
                       },
                       fontWeight: 600,
                       maxWidth: '110px',
                       position: 'sticky',
                       left: 0,
                       zIndex: 6,
-                      backgroundColor: index === selectedIndex ? "#E8EDFB !important" : '#F1F3F5 !important',
+                      backgroundColor:
+                        index === selectedIndex
+                          ? '#E8EDFB !important'
+                          : '#F1F3F5 !important',
                     }}
                     selected={false}
-                    onClick={() => { setIndex(index) }}
+                    onClick={() => {
+                      setIndex(index);
+                    }}
                   >
-                    <StyledTableBodyCell
-                      align='center'
-                    >
+                    <StyledTableBodyCell align='center'>
                       {row.id}
                     </StyledTableBodyCell>
-                    <StyledTableBodyCell
-                      align='center'
-                    >
-                      <TextLabel
-                        text={row.name}
-                      />
+                    <StyledTableBodyCell align='center'>
+                      <TextLabel text={row.name} />
                     </StyledTableBodyCell>
-                    <StyledTableBodyCell
-                      align='center'
-                    >
-                      <TextLabel
-                        text={row.repo}
-                      />
+                    <StyledTableBodyCell align='center'>
+                      <TextLabel text={row.repo} />
                     </StyledTableBodyCell>
-                    <StyledTableBodyCell
-                      align='center'
-                    >
-                      <TextLabel
-                        text={row.imageUrl}
-                      />
+                    <StyledTableBodyCell align='center'>
+                      <TextLabel text={row.imageUrl} />
                     </StyledTableBodyCell>
-                    <StyledTableBodyCell
-                      align='center'
-                    >
-                      <TextLabel
-                        text={transformVersion(row.version)}
-                      />
+                    <StyledTableBodyCell align='center'>
+                      <TextLabel text={transformVersion(row.version)} />
                     </StyledTableBodyCell>
-                    <StyledTableBodyCell
-                      align='center'
-                    >
-                      <TextLabel
-                        text={row.interfaces.length}
-                      />
+                    <StyledTableBodyCell align='center'>
+                      <TextLabel text={row.interfaces.length} />
                     </StyledTableBodyCell>
                   </TableRow>
                 );
               })
             ) : !loading ? (
-              <TableRow
-                style={{ height: '120px' }}
-              >
+              <TableRow style={{ height: '120px' }}>
                 <TableCell
                   colSpan={6}
                   sx={{
@@ -265,8 +224,7 @@ export default function ServiceOverview(props) {
               </TableRow>
             ) : (
               <div></div>
-            )
-            }
+            )}
           </TableBody>
         </Table>
         {loading && (
@@ -280,7 +238,7 @@ export default function ServiceOverview(props) {
             <CircularProgress />
           </Box>
         )}
-      </TableContainer>
-    </Box >
+      </StyledTableContainer>
+    </StyledTableBox>
   );
 }
