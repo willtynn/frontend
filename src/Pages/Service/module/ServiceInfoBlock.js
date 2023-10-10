@@ -151,9 +151,10 @@ export default function ServiceInfoBlock(props) {
         labels={labels}
         value={values}
         isUrl={isUrl}
+        rowSpacing={0}
       />
 
-      <Stack direction='row' spacing={2} sx={{ mt: "8px" }}>
+      <Stack direction='row' spacing={0} sx={{ mt: "8px" }}>
         <Box
           sx={{
             width: '224px',
@@ -177,7 +178,7 @@ export default function ServiceInfoBlock(props) {
         <Box
           ref={interfaceTable}
           sx={{
-            minWidth: "650px"
+            width: "calc(100% - 224px)"
           }}
         >
           {
@@ -267,7 +268,7 @@ export default function ServiceInfoBlock(props) {
         </Box>
       </Stack>
 
-      <Stack direction='row' spacing={2} sx={{ mt: "8px" }}>
+      <Stack direction='row' spacing={0} sx={{ mt: "8px" }}>
         <Box
           sx={{
             width: '224px',
@@ -290,7 +291,7 @@ export default function ServiceInfoBlock(props) {
         </Box>
 
         <Box sx={{
-          width: resourceTableWidth
+          width: "calc(100% - 224px)"
         }}>
           <StyledTableContainer sx={{ maxHeight: '680px', overflow: "auto", width: "100%" }}>
             <Table

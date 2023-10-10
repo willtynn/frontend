@@ -235,7 +235,7 @@ export default function ServiceQuery() {
         ) : (
           <Box
             sx={{
-              maxWidth: queryResult === null ? '100%' : '50%',
+              maxWidth: queryResult === null ? '100%' : '47.5%',
             }}
           >
             <ServiceOverview data={queryResult} setIndex={setSelectedIndex} selectedIndex={selectedIndex}/>
@@ -246,11 +246,15 @@ export default function ServiceQuery() {
         selectedIndex === -1 ? (
           <></>
         ) : (
+          <Box sx={{
+            maxWidth: '47.5%',
+          }}>
           <ServiceInfoBlock
             data={queryResult[selectedIndex]}
             mode={mode}
             page={QUERY}
           />
+          </Box>
         )}
       </Stack>
     </Box>
