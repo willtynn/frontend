@@ -56,5 +56,8 @@ export const StyledTableBodyCell = styled(TableCell)(() => ({
     paddingTop: 0,
     paddingBottom: 0,
     paddingLeft: '24px',
+    overflow: 'hidden',
+    textOverflow: 'ellipsis',
+    whiteSpace: 'nowrap',
   },
 }));

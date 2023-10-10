@@ -88,19 +88,19 @@ export default function ServiceInfoBlock(props) {
   }
 
   const headRow = [
-    createRow('id', '接口ID', false, '240px', '280px', true),
-    createRow('path', '请求的路径', false, '190px', '190px', true),
-    createRow('inputSize', '输入数据大小', false, '200px', '240px', true),
-    createRow('outputSize', '输出数据大小', false, '150px', '150px', true),
-    createRow('dependency', '接口依赖', false, '150px', '150px', true)
+    createRow('id', '接口ID', false, '60px', '70px', true),
+    createRow('path', '请求的路径', false, '70px', '80px', true),
+    createRow('inputSize', '输入数据大小', false, '80px', '140px', true),
+    createRow('outputSize', '输出数据大小', false, '60px', '70px', true),
+    createRow('dependency', '接口依赖', false, '60px', '70px', true)
   ];
 
   const resourceAndCapabilityHeadRow = [
-    createRow('cpu', 'cpu资源', false, '150px', '150px', true),
-    createRow('ram', 'ram资源', false, '170px', '200px', true),
-    createRow('disk', '硬盘资源', false, '170px', '200px', true),
-    createRow('gpuCore', 'gpu-core资源', false, '170px', '200px', true),
-    createRow('gpuMem', 'gpu内存资源', false, '170px', '200px', true),
+    createRow('cpu', 'cpu资源', false, '70px', '120px', true),
+    createRow('ram', 'ram资源', false, '70px', '120px', true),
+    createRow('disk', '硬盘资源', false, '70px', '120px', true),
+    createRow('gpuCore', 'gpu-core资源', false, '70px', '120px', true),
+    createRow('gpuMem', 'gpu内存资源', false, '70px', '120px', true),
   ];
 
   const handleServiceDependencyClick = (id) => {
@@ -201,6 +201,10 @@ export default function ServiceInfoBlock(props) {
                         <StyledTableRowCell
                           key={item.id}
                           align="center"
+                          sx={{
+                            maxWidth: item.maxWidth,
+                            minWidth: item.minWidth,
+                          }}
                         >
                           {item.label}
                         </StyledTableRowCell>
@@ -314,6 +318,10 @@ export default function ServiceInfoBlock(props) {
                     <StyledTableRowCell
                       key={item.id}
                       align="center"
+                      sx={{
+                        maxWidth: item.maxWidth,
+                        minWidth: item.minWidth,
+                      }}
                     >
                       {item.label}
                     </StyledTableRowCell>
@@ -345,6 +353,10 @@ export default function ServiceInfoBlock(props) {
                     resourceAndCapabilityHeadRow.map((item, index) =>
                       <StyledTableBodyCell
                         align='center'
+                        sx={{
+                          maxWidth: item.maxWidth,
+                          minWidth: item.minWidth,
+                        }}
                       >
                         {data.idleResource[item.id]}
                       </StyledTableBodyCell>
@@ -377,6 +389,10 @@ export default function ServiceInfoBlock(props) {
                       <StyledTableBodyCell
                         key={item.id}
                         align='center'
+                        sx={{
+                          maxWidth: item.maxWidth,
+                          minWidth: item.minWidth,
+                        }}
                       >
                         {data.desiredResource[item.id]}
                       </StyledTableBodyCell>
