@@ -6,7 +6,7 @@ import Stack from '@mui/material/Stack';
 import { handleLinkWithoutProtocol } from '@/utils/commonUtils';
 
 export default function LabelAndValue(props) {
-  const { id, labels, value, isUrl } = props;
+  const { id, labels, value, isUrl, colSpacing=4, rowSpacing=1 } = props;
 
 
   const StyledTooltip = styled(({ className, ...props }) => (
@@ -35,7 +35,7 @@ export default function LabelAndValue(props) {
     },
   });
 
-  const ValueFrameStyle = {
+  const valueFrameStyle = {
     display: 'flex',
     flexDirection: 'column',
     alignItems: 'flex-start',
@@ -79,8 +79,8 @@ export default function LabelAndValue(props) {
 
   return (
     <Box id={id}>
-      <Stack direction='row' spacing={4}>
-        <Stack sx={{ ...labelFrameStyle, width: '224px' }}>
+      <Stack direction='row' spacing={colSpacing}>
+        <Stack sx={{ ...labelFrameStyle, width: '224px' }} spacing={rowSpacing}>
           {labels.map((label, index) => {
             return (
               <Box
@@ -108,7 +108,7 @@ export default function LabelAndValue(props) {
           })}
         </Stack>
 
-        <Stack sx={{ ...ValueFrameStyle, width: '286px' }}>
+        <Stack sx={{ ...valueFrameStyle, width: '286px' }} spacing={rowSpacing}>
           {value.map((v, index) => {
             if (isUrl && v && index < isUrl.length && isUrl[index]) {
               return (
