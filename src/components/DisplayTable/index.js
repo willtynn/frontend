@@ -1,4 +1,4 @@
-import React from 'react';
+import { useState, useEffect } from 'react';
 import {
   Box,
   TableCell,
@@ -13,7 +13,8 @@ import {
   Stack,
   Select,
   MenuItem,
-  PaginationItem
+  PaginationItem,
+  Popper
 } from '@mui/material';
 import { styled } from '@mui/system';
 import { visuallyHidden } from '@mui/utils';
@@ -133,7 +134,15 @@ export function StyledTableFooter(props) {
                 >
                   <FormattedMessage id='table.rowsPerPage' />
                 </span>
-                <FormControl
+
+                <PageSizePopper 
+                  id='pageSelectPopper'
+                  pageSize = {pageSize}
+                  handlePageSizeChange = {handlePerPageChange}
+                  pageSizeList = {perPageList}
+                />
+                
+                {/* <FormControl
                   id='tableFooterPageSelectFormControl'
                   sx={{ minWidth: 50 }}
                 >
@@ -154,7 +163,7 @@ export function StyledTableFooter(props) {
                       </MenuItem>
                     ))}
                   </Select>
-                </FormControl>
+                </FormControl> */}
               </Stack>
             )
               : <Box> </Box>
@@ -162,6 +171,69 @@ export function StyledTableFooter(props) {
         </Grid>
       </Stack>
     </Box>
+  );
+}
+
+function PageSizePopper(props) {
+
+  const {id, pageSize, handlePageSizeChange, pageSizeList} = props;
+  const [anchorEl, setAnchorEl] = useState(null);
+  const [buttonOver, setButtonOver] = useState(false);
+  const [popperOver, setPopperOver] = useState(false);
+
+
+
+  const handleButtonOver = (event) => {
+    setButtonOver(true);
+    setAnchorEl(anchorEl ? null : event.currentTarget);
+  };
+
+  const handleButtonLeave = () => {
+    setButtonOver(false);
+  }
+
+  const handlePoppernOver = (event) => {
+    setPopperOver(true);
+  };
+
+  const handlePopperLeave = () => {
+    setPopperOver(false);
+  }
+  
+
+  const open = Boolean(anchorEl);
+
+  return (
+    <div>
+      <button aria-describedby={id} type="button" onMouseOver={handleButtonOver} onMouseLeave={handleButtonLeave}>
+        Toggle Popper
+      </button>
+      <Popper id={id} open={open} anchorEl={anchorEl}>
+        
+          <Stack 
+          direction="column" 
+          sx={{
+            border: "1px solid #FAFAFA"
+          }}
+          onMouseOver={handlePoppernOver}
+          onMouseLeave={handlePopperLeave}
+          >
+            {pageSizeList.map((value, index) => {
+              return (
+                <Box sx={{
+                  "&:hover": {
+                    bgcolor: "red"
+                  },
+                  cursor: "pointer"
+                }}>
+                  {value}
+                </Box>
+              )
+            })}
+          </Stack>
+
+      </Popper>
+    </div>
   );
 }
 
