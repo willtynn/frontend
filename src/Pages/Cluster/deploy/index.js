@@ -11,6 +11,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import LabelAndValue from '../../../components/LabelAndValue';
 import InfoCard from '../../../components/InfoCard';
 import { ContainedButton, OutlinedButton } from '../../../components/Button';
+import { StyledTextFiled } from '../../../components/Input';
 
 const style = {
   position: 'absolute',
@@ -69,23 +70,22 @@ export default function InstanceDeploy() {
   ];
 
   const deployValues = [
-    <TextField
-      sx={formControlStyle}
+    <StyledTextFiled
       id='deploy-service-id'
       variant='outlined'
     />,
-    <TextField
-      sx={formControlStyle}
+    <StyledTextFiled
+      
       id='deploy-service-id'
       variant='outlined'
     />,
-    <TextField
-      sx={formControlStyle}
+    <StyledTextFiled
+    
       id='deploy-service-id'
       variant='outlined'
     />,
-    <TextField
-      sx={formControlStyle}
+    <StyledTextFiled
+      
       id='deploy-service-id'
       variant='outlined'
     />,
