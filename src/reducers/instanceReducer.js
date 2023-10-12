@@ -1,16 +1,16 @@
 import * as actions from "../actions/instanceAction";
 
 const initState = {
-  
+  gottenInstances: []
 }
 
-export default function ClusterReducer(state = initState, action) {
+export default function InstanceReducer(state = initState, action) {
   const { type, data } = action
   switch (type) {
-    case actions.UPDATE_CLUSTERS:
+    case actions.GET_INSTANCES:
       return {
         ...state,
-        clusters: data
+        gottenInstances: data
       }
     default:
       return state

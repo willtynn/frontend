@@ -36,7 +36,7 @@ export function searchAllClusters(serviceId, serviceName, imageUrl, serverId) {
         dispatch(
           setSnackbarMessageAndOpen(
             'instance.deploySuccess',
-            { msg: res.data.message },
+            {},
             SEVERITIES.success
           )
         );
@@ -44,7 +44,7 @@ export function searchAllClusters(serviceId, serviceName, imageUrl, serverId) {
         dispatch(
           setSnackbarMessageAndOpen(
             'instance.deployFailed',
-            { msg: res.data.message },
+            { },
             SEVERITIES.warning
           )
         );
@@ -52,7 +52,7 @@ export function searchAllClusters(serviceId, serviceName, imageUrl, serverId) {
         dispatch(
           setSnackbarMessageAndOpen(
             'instance.deployFailed',
-            { msg: res.data.message },
+            {  },
             SEVERITIES.warning
           )
         );
@@ -61,7 +61,7 @@ export function searchAllClusters(serviceId, serviceName, imageUrl, serverId) {
       dispatch(
         setSnackbarMessageAndOpen(
           'instance.deployFailed',
-          { msg: res.data.message },
+          { },
           SEVERITIES.warning
         )
       );

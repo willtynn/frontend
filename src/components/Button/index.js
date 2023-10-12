@@ -30,3 +30,16 @@ export const ContainedButton = styled(Button)({
   }
 });
 
+export const EclipseContainedButton = styled(Button)({
+  color: '#FFF',
+  backgroundColor: "#FAFAFA",
+  borderRadius: "20px",
+  fontFamily: 'Inter',
+  fontStyle: 'normal',
+  fontWeight: 600,
+  lineHeight: '18px',
+  "&:hover":{
+    color: "#6D98EE",
+  }
+});
+

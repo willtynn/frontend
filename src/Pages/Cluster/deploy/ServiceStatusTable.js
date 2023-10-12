@@ -1,4 +1,21 @@
+import { useEffect, useState, useRef } from 'react';
+import { Box, Stack, Autocomplete, TextField } from '@mui/material';
 
+import { useDispatch, useSelector } from 'react-redux';
+import { GET_INSTANCES } from '../../../actions/instanceAction';
+
+import {
+  StyledTableBox,
+  StyledTableContainer,
+  StyledTableRowCell,
+  StyledTableBodyCell,
+} from '../../../components/DisplayTable';
+import {
+  StyledAutocomplete,
+  StyledTextFiled,
+  ChipTextField,
+} from '../../../components/Input';
+import { EclipseContainedButton } from '../../../components/Button';
 
 const data = {
   items: [
@@ -162,3 +179,61 @@ const data = {
   ],
   totalItems: 18,
 };
+
+export default function ServiceStatusTable(props) {
+  const { embeddingButton } = props;
+  const [project, setProject] = useState(null);
+  const [projectList, setProjectList] = useState(['neilchao', 'yzq']);
+  const [searchList, setSearchList] = useState([]);
+
+  const dispatch = useDispatch();
+
+  const { gottenInstances } = useSelector(state => {
+    return {
+      gottenInstances: state.Instance.gottenInstances,
+    };
+  });
+
+  useEffect(() => {
+    dispatch({ type: GET_INSTANCES, data: data });
+  }, []);
+
+  useEffect(() => {
+    if (projectList.length < 1) {
+      return;
+    }
+    // setProject(projectList[0]);
+  }, [projectList]);
+
+  const isDuplicate = () => {
+    return false;
+  };
+
+  return (
+    <Box>
+      <Stack direction='row' spacing={2}>
+        <StyledAutocomplete
+          height='40px'
+          padding='7.5px 5px 7.5px 12px'
+          value={project}
+          onChange={(event, newValue) => {
+            setProject(newValue);
+          }}
+          id='instance_status_table_autocomplete'
+          options={projectList}
+          sx={{ width: 300 }}
+          renderInput={params => (
+            <TextField {...params} sx={{}} placeholder='全部项目' />
+          )}
+        />
+        <ChipTextField
+          contentList={searchList}
+          setContentList={setSearchList}
+          isDuplicate={isDuplicate}
+        />
+        <EclipseContainedButton>hah</EclipseContainedButton>
+        {embeddingButton}
+      </Stack>
+    </Box>
+  );
+}

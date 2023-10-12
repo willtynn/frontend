@@ -12,6 +12,7 @@ import LabelAndValue from '../../../components/LabelAndValue';
 import InfoCard from '../../../components/InfoCard';
 import { ContainedButton, OutlinedButton } from '../../../components/Button';
 import { StyledTextFiled } from '../../../components/Input';
+import ServiceStatusTable from './ServiceStatusTable';
 
 const style = {
   position: 'absolute',
@@ -92,8 +93,14 @@ export default function InstanceDeploy() {
   ];
 
   return (
-    <div>
-      <OutlinedButton onClick={handleOpen}>部署</OutlinedButton>
+    <Box>
+
+      <ServiceStatusTable embeddingButton={<OutlinedButton onClick={handleOpen}>部署</OutlinedButton>}/>
+
+        
+
+      
+      
       <Modal open={open} onClose={handleClose}>
         <Box sx={style}>
           <InfoCard title='服务部署'>
@@ -169,6 +176,6 @@ export default function InstanceDeploy() {
           </InfoCard>
         </Box>
       </Modal>
-    </div>
+    </Box>
   );
 }
