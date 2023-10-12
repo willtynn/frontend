@@ -21,5 +21,9 @@ export const messages = {
     instanceInfo: "实例信息",
     instanceList: "实例列表",
     clusterTopology: "集群拓扑结构"
+  },
+  instance: {
+    deploySuccess: "实例部署成功！",
+    deployFailed: "实例部署失败，请重试..."
   }
 };
