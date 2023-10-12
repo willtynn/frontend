@@ -25,5 +25,8 @@ export const messages = {
   instance: {
     deploySuccess: "实例部署成功！",
     deployFailed: "实例部署失败，请重试..."
+  },
+  table: {
+    rowsPerPage: "每行显示"
   }
 };

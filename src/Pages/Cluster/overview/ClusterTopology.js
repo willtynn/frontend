@@ -8,6 +8,7 @@ import { shadowStyle } from '@/utils/commonUtils';
 import InfoCard from '@/components/InfoCard';
 import { useIntl } from 'react-intl';
 import InfoAlert from '@/assets/InfoAlert.svg';
+import { fontFamily } from "@/utils/commonUtils";
 
 export function ClusterTopology(props) {
   const { clusterId, graph, handleNodeClick } = props;
@@ -67,7 +68,7 @@ export function ClusterTopology(props) {
               minWidth: '64px',
               bgcolor: '#49cc90',
               p: '0px 12px',
-              fontFamily: 'Open Sans',
+              fontFamily: fontFamily,
               fontSize: '14px',
               lineHeight: '30px',
               fontWeight: '700',

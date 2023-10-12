@@ -36,6 +36,7 @@ import { useParams, useSearchParams, useLocation } from 'react-router-dom';
 import { decodeInterfaceSymbol } from '@/utils/commonUtils';
 import { setSnackbarMessageAndOpen } from '@/actions/snackbarAction';
 import { SEVERITIES } from '@/components/CommonSnackbar';
+import { fontFamily } from "@/utils/commonUtils";
 
 function CustomTabPanel(props) {
   const { children, value, index, ...other } = props;
@@ -503,7 +504,7 @@ function ServiceDependency() {
                 id='service_search_mode_label'
                 sx={{
                   color: 'var(--gray-500, #596A7C)',
-                  fontFamily: 'Open Sans',
+                  fontFamily: fontFamily,
                   fontStyle: 'normal',
                 }}
               >

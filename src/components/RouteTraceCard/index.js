@@ -1,6 +1,6 @@
 import React from 'react';
 import styled from "@emotion/styled"
-
+import { fontFamily } from "@/utils/commonUtils";
 import './index.css';
 
 import {
@@ -128,7 +128,7 @@ export function RouteTraceCard(props) {
   const NormalFontGreen = styled(Typography)({
     color: 'var(--gray-500, #14A1A6)',
     fontSize: '14px',
-    fontFamily: 'Open Sans',
+    fontFamily: fontFamily,
     fontStyle: 'normal',
     fontWeight: 400,
     lineHeight: '16px',
@@ -137,7 +137,7 @@ export function RouteTraceCard(props) {
   const SmallLightFontGreen = styled(Typography)({
     color: 'var(--gray-500, #14A1A6)',
     fontSize: '12px',
-    fontFamily: 'Open Sans',
+    fontFamily: fontFamily,
     fontStyle: 'normal',
     fontWeight: 400,
     lineHeight: '16px',

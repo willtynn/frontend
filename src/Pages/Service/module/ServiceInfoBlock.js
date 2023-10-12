@@ -28,7 +28,7 @@ import {
 import { styled } from '@mui/system';
 import PolylineIcon from '@mui/icons-material/Polyline';
 import { useNavigate } from "react-router-dom"
-
+import { fontFamily } from "@/utils/commonUtils";
 export const QUERY = "QUERY";
 export const SERVICE_DEPENDENCY = "SERVICE_DEPENDENCY";
 export const INTERFACE_DEPENDENCY = "INTERFACE_DEPENDENCY";
@@ -159,7 +159,7 @@ export default function ServiceInfoBlock(props) {
           sx={{
             width: '224px',
             height: '20px',
-            fontFamily: 'Open Sans',
+            fontFamily: fontFamily,
             fontStyle: 'normal',
             fontWeight: 400,
             fontSize: '14px',
@@ -277,7 +277,7 @@ export default function ServiceInfoBlock(props) {
           sx={{
             width: '224px',
             height: '20px',
-            fontFamily: 'Open Sans',
+            fontFamily: fontFamily,
             fontStyle: 'normal',
             fontWeight: 400,
             fontSize: '14px',

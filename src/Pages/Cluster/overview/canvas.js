@@ -4,6 +4,7 @@ import { useEffect, useState, useRef } from 'react';
 import { Box } from '@mui/material';
 
 import { digitInCircle, textUnderPolygon } from '@/utils/commonUtils';
+import { fontFamily } from "@/utils/commonUtils";
 
 import './canvas.css';
 
@@ -113,7 +114,7 @@ export function ClusterCanvas(props) {
   return (
     <Box
       sx={{
-        fontFamily: 'Open Sans',
+        fontFamily: fontFamily,
         minHeight: "400px"
       }}
       ref={canvasBox}

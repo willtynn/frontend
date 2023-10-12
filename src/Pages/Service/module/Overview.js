@@ -22,6 +22,7 @@ import {
 } from '@mui/material';
 import { styled } from '@mui/system';
 import { transformVersion, shadowStyle } from '@/utils/commonUtils';
+import { fontFamily } from "@/utils/commonUtils";
 
 function TextLabel(props) {
   const { text } = props;
@@ -215,7 +216,7 @@ export default function ServiceOverview(props) {
                   sx={{
                     textAlign: 'center',
                     fontSize: '20px',
-                    fontFamily: 'Open Sans',
+                    fontFamily: fontFamily,
                     fontStyle: 'normal',
                   }}
                 >

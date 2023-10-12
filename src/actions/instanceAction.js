@@ -4,7 +4,9 @@ import { SEVERITIES } from '../components/CommonSnackbar';
 
 export const DEPLOY_INSTANCE = 'DEPLOY_INSTANCE';
 export const GET_INSTANCES = 'GET_INSTANCES';
-
+export const CHANGE_PAGE_SIZE = 'CHANGE_INSTANCE_STATUS_PAGE_SIZE';
+export const CHANGE_PAGE_NUM = 'CHANGE_INSTANCE_STATUS_PAGE_NUM';
+;
 const baseURLLink = 'http://192.168.1.104:31931';
 
 const axios_instance = axios.create({

@@ -28,7 +28,7 @@ import {
   StyledTableRowCell,
   StyledTableContainer,
 } from '@/components/DisplayTable';
-
+import { fontFamily } from "@/utils/commonUtils";
 
 
 import styled from "@emotion/styled";
@@ -126,7 +126,7 @@ export default function RouteTrace() {
   const NormalTitleFont = styled(Typography)({
     color: '#262E35',
     fontSize: '18px',
-    fontFamily: 'Open Sans',
+    fontFamily: fontFamily,
     fontStyle: 'normal',
     fontWeight: 500,
     lineHeight: '27.5px',
@@ -325,7 +325,7 @@ export default function RouteTrace() {
                 id="service_search_mode_label"
                 sx={{
                   color: 'var(--gray-500, #596A7C)',
-                  fontFamily: 'Open Sans',
+                  fontFamily: fontFamily,
                   fontStyle: 'normal',
                 }}
               >

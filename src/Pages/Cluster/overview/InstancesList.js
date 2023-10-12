@@ -22,11 +22,12 @@ import { styled } from '@mui/material/styles';
 import { useDispatch, useSelector } from 'react-redux';
 import { SELECT_INSTANCE } from '@/actions/clusterAction';
 import InfoAlert from '@/assets/InfoAlert.svg';
+import { fontFamily } from "@/utils/commonUtils";
 
 const BoxForItem = styled(Box)(({ selected }) => ({
   color: '#262E35',
   fontSize: '15px',
-  fontFamily: 'Open Sans',
+  fontFamily: fontFamily,
   fontStyle: 'normal',
   fontWeight: 400,
   lineHeight: '36px',

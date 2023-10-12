@@ -358,7 +358,7 @@ export default function RouteTrace() {
               id="service_search_mode_label"
               sx={{
                 color: 'var(--gray-500, #596A7C)',
-                fontFamily: 'Open Sans',
+                fontFamily: fontFamily,
                 fontStyle: 'normal',
               }}
             >

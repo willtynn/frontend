@@ -4,6 +4,7 @@ import { Link, Tooltip, styled, tooltipClasses } from '@mui/material';
 import { Box } from '@mui/system';
 import Stack from '@mui/material/Stack';
 import { handleLinkWithoutProtocol } from '@/utils/commonUtils';
+import { fontFamily } from "@/utils/commonUtils";
 
 export default function LabelAndValue(props) {
   const { id, labels, value, isUrl, colSpacing=1, rowSpacing=4 } = props;
@@ -15,7 +16,7 @@ export default function LabelAndValue(props) {
     [`& .${tooltipClasses.tooltip}`]: {
       background: '#596A7C',
       fontWeight: 400,
-      fontFamily: 'Open Sans',
+      fontFamily: fontFamily,
       fontStyle: 'normal',
       maxWidth: '385px',
       lineHeight: '20px',
@@ -53,7 +54,7 @@ export default function LabelAndValue(props) {
 
   const labelStyle = {
     height: '20px',
-    fontFamily: 'Open Sans',
+    fontFamily: fontFamily,
     fontStyle: 'normal',
     fontWeight: '400',
     fontSize: '14px',
@@ -65,7 +66,7 @@ export default function LabelAndValue(props) {
 
   const valueStyle = {
     height: '20px',
-    fontFamily: 'Open Sans',
+    fontFamily: fontFamily,
     fontStyle: 'normal',
     fontWeight: 400,
     fontSize: '14px',
@@ -87,7 +88,7 @@ export default function LabelAndValue(props) {
                 sx={{
                   width: '224px',
                   height: '20px',
-                  fontFamily: 'Open Sans',
+                  fontFamily: fontFamily,
                   fontStyle: 'normal',
                   fontWeight: 400,
                   fontSize: '14px',
@@ -140,7 +141,7 @@ export default function LabelAndValue(props) {
                       ...valueStyle,
                       width: '286px',
                       height: '20px',
-                      fontFamily: 'Open Sans',
+                      fontFamily: fontFamily,
                       fontStyle: 'normal',
                       fontWeight: 400,
                       fontSize: '14px',
@@ -173,7 +174,7 @@ export default function LabelAndValue(props) {
                 sx={{
                   width: '286px',
                   height: '20px',
-                  fontFamily: 'Open Sans',
+                  fontFamily: fontFamily,
                   fontStyle: 'normal',
                   fontWeight: 400,
                   fontSize: '14px',

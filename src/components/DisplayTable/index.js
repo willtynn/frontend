@@ -6,10 +6,19 @@ import {
   TableContainer,
   TableHead,
   TableRow,
+  Pagination,
+  Grid,
+  Input,
+  FormControl,
+  Stack,
+  Select,
+  MenuItem,
+  PaginationItem
 } from '@mui/material';
 import { styled } from '@mui/system';
 import { visuallyHidden } from '@mui/utils';
 import { useDispatch, useSelector } from 'react-redux';
+import { FormattedMessage } from 'react-intl';
 
 export const StyledTableBox = styled(TableContainer)(() => ({
   width: '100%',
@@ -61,3 +70,158 @@ export const StyledTableBodyCell = styled(TableCell)(() => ({
     whiteSpace: 'nowrap',
   },
 }));
+
+export function StyledTableFooter(props) {
+  const {
+    pageNum,
+    pageSize,
+    perPageList,
+    count,
+    handlePerPageChange,
+    handlePageChange,
+    width = '100%',
+    backgroundColor = '#f1f3f5',
+    sx,
+    ...others
+  } = props;
+
+  return (
+    <Box
+      display='flex'
+      sx={{
+        background: backgroundColor,
+        pl: 0,
+        pr: 0,
+        width: width,
+        borderRadius: '0px 0px 8px 8px',
+        border: '1px solid #DFE4E8',
+        borderTop: 'none',
+        ...sx,
+      }}
+      paddingY='3px'
+      {...others}
+    >
+      <Stack
+        // container
+        direction='row'
+        spacing={2}
+        sx={{ width: '100%' }}
+        justifyContent='center'
+        alignItems='center'
+      >
+        <Grid item container md={6} justifyContent='center' alignItems='center'>
+          <GlobalPagination
+            id='tableFooterPagination'
+            count={Math.ceil(count / pageSize)}
+            handlePageChange={handlePageChange}
+            page={pageNum}
+          />
+        </Grid>
+        <Grid item md={3} alignItems='center' justifyContent='center'>
+
+          {
+            perPageList ? (
+              <Stack
+                direction='row'
+                justifyContent='flex-start'
+                alignItems='center'
+                spacing={1}
+              >
+                <span
+                  id='tableFooterRowsPerPageText'
+                  style={{ fontSize: 'small', fontWeight: '600', color: '#262E35' }}
+                >
+                  <FormattedMessage id='table.rowsPerPage' />
+                </span>
+                <FormControl
+                  id='tableFooterPageSelectFormControl'
+                  sx={{ minWidth: 50 }}
+                >
+                  <Select
+                    id='tableFooterRowsPerPageSelect'
+                    sx={{ fontSize: 'small', fontWeight: '600', color: '#262E35' }}
+                    value={pageSize}
+                    onChange={handlePerPageChange}
+                    input={<Input disableUnderline={true} />}
+                  >
+                    {perPageList.map(num => (
+                      <MenuItem
+                        id={`tableFooterRowsPerPagePageSize${num}`}
+                        key={'pageSize-' + num}
+                        value={num}
+                      >
+                        {num}
+                      </MenuItem>
+                    ))}
+                  </Select>
+                </FormControl>
+              </Stack>
+            )
+              : <Box> </Box>
+          }
+        </Grid>
+      </Stack>
+    </Box>
+  );
+}
+
+function defaultColorFunc(item) {
+  if (item.selected && item.type === 'page') {
+    return '#F4F5F7';
+  } else if (item.type === 'previous' || item.type === 'next') {
+    if (item.disabled) {
+      return '#DFE4E8';
+    } else {
+      return '#113D95';
+    }
+  } else {
+    return '#596A7C';
+  }
+}
+
+function defaultBgColorFunc(item) {
+  if (item.selected && item.type === 'page') {
+    return '#113D95';
+  }
+  return 'transparent';
+}
+
+export function GlobalPagination(props) {
+
+  const { sx, id, page, count, handlePageChange, colorFunc = defaultColorFunc, bgColorFunc = defaultBgColorFunc } = props;
+
+  return (
+    <Pagination
+      sx={sx}
+      id={id}
+      count={count}
+      shape='rounded'
+      onChange={handlePageChange}
+      page={page}
+      variant='text'
+      renderItem={item => {
+        return (
+          <PaginationItem
+            {...item}
+            disableRipple
+            id={`${id}-${item.page}`}
+            selected={false}
+            sx={{
+              margin: "0 0.6px",
+              backgroundColor: bgColorFunc(item),
+              color: colorFunc(item),
+              fontWeight: item.type !== 'page' ? 'bold' : 'regular',
+              '&.Mui-disabled': {
+                opacity: 1,
+              },
+              '&:hover': {
+                color: '#596A7C',
+              },
+            }}
+          />
+        );
+      }
+      }
+    />
+  );
+}

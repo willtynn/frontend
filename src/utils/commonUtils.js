@@ -1,3 +1,10 @@
+import moment from 'moment/moment';
+
+export const formatDateString = x => (x ? moment(x).format('yyyy-MM-DD') : '');
+export const formatDatetimeString = x =>
+  x ? moment(x).utc().format('yyyy-MM-DD HH:mm:ss') : '';
+
+export const fontFamily = 'PingFang SC,Lantinghei SC,Helvetica Neue,Helvetica,Arial,Microsoft YaHei,微软雅黑,STHeitiSC-Light,simsun,宋体,WenQuanYi Zen Hei,WenQuanYi Micro Hei,sans-serif;';
 
 export function handleLinkWithoutProtocol(link) {
   if (typeof link != 'string') {

@@ -23,6 +23,7 @@ import {
   searchServiceByVersion,
 } from '@/actions/serviceAction';
 import { checkVersionFormat } from '@/utils/commonUtils';
+import { fontFamily } from "@/utils/commonUtils";
 
 export const fakeInfo = [
   {
@@ -192,7 +193,7 @@ export default function ServiceQuery() {
               id='service_search_mode_label'
               sx={{
                 color: 'var(--gray-500, #596A7C)',
-                fontFamily: 'Open Sans',
+                fontFamily: fontFamily,
                 fontStyle: 'normal',
               }}
             >

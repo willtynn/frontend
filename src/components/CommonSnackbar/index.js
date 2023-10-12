@@ -18,6 +18,7 @@ import {
   import ErrorIcon from '../../assets/popup/error.svg';
   import Slide from '@mui/material/Slide';
   import { handleLinkWithoutProtocol } from '../../utils/commonUtils';
+  import { fontFamily } from "@/utils/commonUtils";
   
   function TransitionRight(props) {
     return <Slide {...props} direction='left' />;

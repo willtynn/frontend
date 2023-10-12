@@ -4,7 +4,7 @@ import dagreD3 from "dagre-d3";
 import { useEffect, useState } from "react";
 import { Box } from "@mui/material";
 import { shadowStyle } from "@/utils/commonUtils";
-
+import { fontFamily } from "@/utils/commonUtils";
 import "./styles.css";
 
 const normalEdgeStyle = {
@@ -104,7 +104,7 @@ export function ThreeLayerCanvas(props) {
   return (
     <Box
       sx={{
-        fontFamily: 'Open Sans',
+        fontFamily: fontFamily,
         ...shadowStyle
       }}
     >
@@ -209,7 +209,7 @@ export function EdgeCenterCanvas(props) {
   return (
     <Box
       sx={{
-        fontFamily: 'Open Sans',
+        fontFamily: fontFamily,
         ...shadowStyle
       }}
     >

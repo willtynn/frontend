@@ -1,5 +1,16 @@
 import { useEffect, useState, useRef } from 'react';
-import { Box, Stack, Autocomplete, TextField } from '@mui/material';
+import {
+  Box,
+  Stack,
+  Autocomplete,
+  TextField,
+  Table,
+  TableHead,
+  TableRow,
+  Checkbox,
+  TableBody,
+  TableCell,
+} from '@mui/material';
 
 import { useDispatch, useSelector } from 'react-redux';
 import { GET_INSTANCES } from '../../../actions/instanceAction';
@@ -9,13 +20,20 @@ import {
   StyledTableContainer,
   StyledTableRowCell,
   StyledTableBodyCell,
+  StyledTableFooter
 } from '../../../components/DisplayTable';
 import {
   StyledAutocomplete,
   StyledTextFiled,
   ChipTextField,
 } from '../../../components/Input';
-import { EclipseContainedButton } from '../../../components/Button';
+import { EclipseTransparentButton } from '../../../components/Button';
+import SearchIcon from '@mui/icons-material/Search';
+import RefreshIcon from '@mui/icons-material/Refresh';
+import VisibilityIcon from '@mui/icons-material/Visibility';
+import { formatDatetimeString } from '../../../utils/commonUtils';
+import { CHANGE_PAGE_NUM, CHANGE_PAGE_SIZE } from '../../../actions/instanceAction';
+import { fontFamily } from "@/utils/commonUtils";
 
 const data = {
   items: [
@@ -185,12 +203,17 @@ export default function ServiceStatusTable(props) {
   const [project, setProject] = useState(null);
   const [projectList, setProjectList] = useState(['neilchao', 'yzq']);
   const [searchList, setSearchList] = useState([]);
+  const [loading, setLoading] = useState(false);
+  const [tableData, setTableData] = useState([]);
+  const [count, setCount] = useState(0);
 
   const dispatch = useDispatch();
 
-  const { gottenInstances } = useSelector(state => {
+  const { gottenInstances, pageSize, pageNum } = useSelector(state => {
     return {
       gottenInstances: state.Instance.gottenInstances,
+      pageSize: state.Instance.pageSize,
+      pageNum: state.Instance.pageNum,
     };
   });
 
@@ -205,35 +228,253 @@ export default function ServiceStatusTable(props) {
     // setProject(projectList[0]);
   }, [projectList]);
 
+  useEffect(() => {
+    if (gottenInstances === null) {
+      return;
+    }
+    const items = gottenInstances.items;
+    const tmpData = items.map((value, index) => {
+      return {
+        name: value.metadata.name,
+        phase: value.status.phase,
+        hostIP: value.status.hostIP,
+        podIP: value.status.podIP,
+        startTime: value.status.startTime,
+      };
+    });
+    setCount(tmpData.length);
+    setTableData(tmpData);
+  }, [gottenInstances]);
+
+  function createRow(
+    id,
+    label,
+    isOrder = true,
+    minWidth = '110px',
+    maxWidth = '220px',
+    show = true,
+    align,
+    colSpan = 1,
+    rowSpan = 1
+  ) {
+    return {
+      id,
+      label,
+      isOrder,
+      minWidth,
+      maxWidth,
+      show,
+      align,
+      colSpan,
+      rowSpan,
+    };
+  }
+
+  const headRow = [
+    createRow('name', '名称', false, '100px', '100px', true, 'left'),
+    createRow('phase', '状态', false, '100px', '100px', true, 'center'),
+    createRow('hostIP', 'Host IP', false, '120px', '130px', true, 'center'),
+    createRow('podIP', 'Pod IP', false, '120px', '130px', true, 'center'),
+    createRow('startTime', '启动时间', false, '120px', '130px', true, 'center'),
+  ];
+
   const isDuplicate = () => {
     return false;
   };
 
+  //改变每页的数量
+  const handlePerPageChange = e => {
+    dispatch({ type: CHANGE_PAGE_SIZE, data: e.target.value });
+  };
+
+  //改变页码
+  const handlePageChange = (_event, newPage) => {
+    dispatch({ type: CHANGE_PAGE_NUM, data: newPage });
+  };
+
   return (
     <Box>
-      <Stack direction='row' spacing={2}>
-        <StyledAutocomplete
-          height='40px'
-          padding='7.5px 5px 7.5px 12px'
-          value={project}
-          onChange={(event, newValue) => {
-            setProject(newValue);
+      <Box
+        sx={{
+          height: '60px',
+          padding: '10px 30px 10px 30px',
+          bgcolor: '#F5F5F5',
+        }}
+      >
+        <Stack direction='row' spacing={2}>
+          <StyledAutocomplete
+            height='40px'
+            padding='7.5px 5px 7.5px 12px'
+            value={project}
+            onChange={(event, newValue) => {
+              setProject(newValue);
+            }}
+            id='instance_status_table_autocomplete'
+            options={projectList}
+            sx={{ width: 300 }}
+            renderInput={params => (
+              <TextField {...params} sx={{}} placeholder='全部项目' />
+            )}
+          />
+          <ChipTextField
+            contentList={searchList}
+            setContentList={setSearchList}
+            isDuplicate={isDuplicate}
+            startAdornment={<SearchIcon />}
+          />
+          <EclipseTransparentButton
+            sx={{
+              bgcolor: '#F5F5F5 !important',
+              '&:hover': {
+                bgcolor: '#FFFFFF !important',
+              },
+              '& svg': {
+                color: '#3d3b4f',
+              },
+            }}
+          >
+            <RefreshIcon />
+          </EclipseTransparentButton>
+
+          <EclipseTransparentButton
+            sx={{
+              bgcolor: '#F5F5F5 !important',
+              '&:hover': {
+                bgcolor: '#FFFFFF !important',
+              },
+              '& svg': {
+                color: '#3d3b4f',
+              },
+            }}
+          >
+            <VisibilityIcon />
+          </EclipseTransparentButton>
+          {embeddingButton}
+        </Stack>
+      </Box>
+
+      {/* <StyledTableBox> */}
+      <StyledTableContainer>
+        <Table
+          stickyHeader
+          size='small'
+          sx={{
+            tableLayout: 'auto',
           }}
-          id='instance_status_table_autocomplete'
-          options={projectList}
-          sx={{ width: 300 }}
-          renderInput={params => (
-            <TextField {...params} sx={{}} placeholder='全部项目' />
-          )}
-        />
-        <ChipTextField
-          contentList={searchList}
-          setContentList={setSearchList}
-          isDuplicate={isDuplicate}
-        />
-        <EclipseContainedButton>hah</EclipseContainedButton>
-        {embeddingButton}
-      </Stack>
+        >
+          <TableHead>
+            <TableRow>
+              <StyledTableRowCell
+                align='center'
+                sx={{
+                  width: '80px',
+                }}
+              >
+                <Checkbox
+                  sx={{
+                    bgcolor: 'transparent !important',
+                  }}
+                  disableRipple
+                />
+              </StyledTableRowCell>
+              {headRow.map((item, index) => (
+                <StyledTableRowCell
+                  key={item.id}
+                  align={item.align}
+                  sx={{
+                    maxWidth: item.maxWidth,
+                    minWidth: item.minWidth,
+                  }}
+                >
+                  {item.label}
+                </StyledTableRowCell>
+              ))}
+            </TableRow>
+          </TableHead>
+          <TableBody>
+            {!loading && tableData !== null && tableData.length !== 0 ? (
+              tableData.map((row, index) => {
+                return (
+                  <TableRow
+                    key={row.id + '' + index}
+                    aria-checked={false}
+                    sx={{
+                      '&:last-child td, &:last-child th': {
+                        border: 0,
+                      },
+                      fontWeight: 600,
+                      maxWidth: '110px',
+                      position: 'sticky',
+                      left: 0,
+                      zIndex: 6,
+                    }}
+                    selected={false}
+                  >
+                    <StyledTableBodyCell
+                      align='center'
+                      sx={{
+                        p: '0px 16px !important',
+                      }}
+                    >
+                      <Checkbox
+                        sx={{
+                          bgcolor: 'transparent !important',
+                        }}
+                        disableRipple
+                      />
+                    </StyledTableBodyCell>
+
+                    {headRow.map((item, colIndex) => {
+                      if (item.id === 'startTime')
+                        return (
+                          <StyledTableRowCell
+                            key={row.id + '-' + index + '-' + colIndex}
+                            align={item.align}
+                          >
+                            {formatDatetimeString(row[item.id])}
+                          </StyledTableRowCell>
+                        );
+                      return (
+                        <StyledTableRowCell
+                          key={row.id + '-' + index + '-' + colIndex}
+                          align={item.align}
+                        >
+                          {row[item.id]}
+                        </StyledTableRowCell>
+                      );
+                    })}
+                  </TableRow>
+                );
+              })
+            ) : !loading ? (
+              <TableRow style={{ height: '120px' }}>
+                <TableCell
+                  colSpan={6}
+                  sx={{
+                    textAlign: 'center',
+                    fontSize: '20px',
+                    fontFamily: fontFamily,
+                    fontStyle: 'normal',
+                  }}
+                >
+                  There are no results
+                </TableCell>
+              </TableRow>
+            ) : (
+              <div></div>
+            )}
+          </TableBody>
+        </Table>
+      </StyledTableContainer>
+      <StyledTableFooter
+        pageNum={pageNum}
+        pageSize={pageSize}
+        perPageList={[5, 20, 50, 100]}
+        count={count}
+        handlePerPageChange={handlePerPageChange}
+        handlePageChange={handlePageChange}
+      />
+      {/* </StyledTableBox> */}
     </Box>
   );
 }

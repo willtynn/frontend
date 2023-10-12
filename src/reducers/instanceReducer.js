@@ -1,7 +1,9 @@
 import * as actions from "../actions/instanceAction";
 
 const initState = {
-  gottenInstances: []
+  gottenInstances: null,
+  pageSize: 5,
+  pageNum: 1
 }
 
 export default function InstanceReducer(state = initState, action) {
@@ -11,6 +13,16 @@ export default function InstanceReducer(state = initState, action) {
       return {
         ...state,
         gottenInstances: data
+      }
+    case actions.CHANGE_PAGE_NUM:
+      return {
+        ...state,
+        pageNum: data
+      }
+    case actions.CHANGE_PAGE_SIZE:
+      return {
+        ...state,
+        pageSize: data
       }
     default:
       return state

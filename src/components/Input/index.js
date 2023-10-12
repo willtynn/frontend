@@ -1,8 +1,9 @@
 import { useState } from 'react';
-import { TextField, Autocomplete } from '@mui/material';
+import { TextField, Autocomplete, InputAdornment } from '@mui/material';
 import { styled } from '@mui/system';
 import { CustomDefaultChip } from '../Chip';
 import ChipDeleteIcon from '@/assets/ChipDeleteIcon.svg';
+import { fontFamily } from "@/utils/commonUtils";
 
 export const StyledTextFiled = styled(TextField)(() => ({
   legend: {
@@ -31,32 +32,18 @@ export const StyledTextFiled = styled(TextField)(() => ({
 const CustomTextField = styled(TextField)(({ theme }) => ({
   '& .MuiOutlinedInput-root': {
     background: '#FFFFFF',
+    borderRadius: '20px',
     boxSizing: 'border-box',
     height: '40px',
-    // fontFamily: 'Open Sans',
-    // fontStyle: 'normal',
-    // fontWeight: '400',
-    // fontSize: '16px',
-    // lineHeight: '24px',
+    fontFamily: fontFamily,
     color: '#262E35',
-    // padding: "0px",
-    paddingLeft: '14px',
-    // paddingRight: '14px',
-    padding: '0px 0px 0px 0px !important',
+    padding: '0px 0px 0px 15px !important',
     '& fieldset': {
       border: '1px solid rgba(0, 0, 0, 0.23)',
-      borderRadius: "20px"
+      borderRadius: '20px',
     },
     '& .MuiOutlinedInput-input.MuiInputBase-input': {
-      // '&:hover': {
-      //   border: '1px solid #000',
-      // },
-      // '&:focus': {
-      //   border: '2px solid #0072E5',
-      // },
-      // border: '1px solid rgba(0, 0, 0, 0.23)',
-      borderRadius: '10px',
-      padding: '11px 15px !important',
+      padding: '11px 12px 11px 0px !important',
     },
     '& input': {
       height: '18px',
@@ -78,7 +65,13 @@ export const StyledAutocomplete = styled(Autocomplete)(
 );
 
 export function ChipTextField(props) {
-  const { contentList, setContentList, isDuplicate } = props;
+  const {
+    contentList,
+    setContentList,
+    isDuplicate,
+    startAdornment = null,
+    endAdornment = null,
+  } = props;
   const [value, setValue] = useState('');
 
   const onDelete = deleteItemIndex => {
@@ -134,22 +127,27 @@ export function ChipTextField(props) {
             },
           },
       }}
-      InputProps={{
-        startAdornment: contentList.map((value, index) => {
-          return (
-            <CustomDefaultChip
-              sx={{
-                marginY: '4px',
-              }}
-              label={value}
-              index={index}
-              onDelete={onDelete.bind(this, index)}
-              key={index}
-              deleteIcon={<ChipDeleteIcon />}
-            />
-          );
-        }),
-      }}
+      InputProps={
+        {
+        startAdornment: (startAdornment !== null ? [<InputAdornment position="start">{startAdornment}</InputAdornment>] : []).concat(
+          contentList.map((value, index) => {
+            return (
+              <CustomDefaultChip
+                sx={{
+                  marginY: '6px',
+                }}
+                label={value}
+                index={index}
+                onDelete={onDelete.bind(this, index)}
+                key={index}
+                deleteIcon={<ChipDeleteIcon />}
+              />
+            );
+          })
+        ),
+        endAdornment: endAdornment !== null ? (<InputAdornment position="end">{endAdornment}</InputAdornment>) : null
+      }
+    }
     />
   );
 }

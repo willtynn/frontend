@@ -13,6 +13,7 @@ import InfoCard from '../../../components/InfoCard';
 import { ContainedButton, OutlinedButton } from '../../../components/Button';
 import { StyledTextFiled } from '../../../components/Input';
 import ServiceStatusTable from './ServiceStatusTable';
+import { fontFamily } from "@/utils/commonUtils";
 
 const style = {
   position: 'absolute',
@@ -71,36 +72,22 @@ export default function InstanceDeploy() {
   ];
 
   const deployValues = [
-    <StyledTextFiled
-      id='deploy-service-id'
-      variant='outlined'
-    />,
-    <StyledTextFiled
-      
-      id='deploy-service-id'
-      variant='outlined'
-    />,
-    <StyledTextFiled
-    
-      id='deploy-service-id'
-      variant='outlined'
-    />,
-    <StyledTextFiled
-      
-      id='deploy-service-id'
-      variant='outlined'
-    />,
+    <StyledTextFiled id='deploy-service-id' variant='outlined' />,
+    <StyledTextFiled id='deploy-service-id' variant='outlined' />,
+    <StyledTextFiled id='deploy-service-id' variant='outlined' />,
+    <StyledTextFiled id='deploy-service-id' variant='outlined' />,
   ];
 
   return (
     <Box>
-
-      <ServiceStatusTable embeddingButton={<OutlinedButton onClick={handleOpen}>部署</OutlinedButton>}/>
-
-        
-
-      
-      
+      <ServiceStatusTable
+        embeddingButton={
+          <OutlinedButton onClick={handleOpen} sx={{
+            borderRadius: "20px !important",
+            width: "120px"
+          }}>部署</OutlinedButton>
+        }
+      />
       <Modal open={open} onClose={handleClose}>
         <Box sx={style}>
           <InfoCard title='服务部署'>
@@ -113,7 +100,7 @@ export default function InstanceDeploy() {
                         sx={{
                           width: '224px',
                           height: '50px',
-                          fontFamily: 'Open Sans',
+                          fontFamily: fontFamily,
                           fontStyle: 'normal',
                           fontWeight: 400,
                           fontSize: '20px',
@@ -135,7 +122,7 @@ export default function InstanceDeploy() {
                         sx={{
                           width: '100%',
                           height: '50px',
-                          fontFamily: 'Open Sans',
+                          fontFamily: fontFamily,
                           fontStyle: 'normal',
                           fontWeight: 400,
                           color: '#262E35',

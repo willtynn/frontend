@@ -4,7 +4,7 @@ import dagreD3 from "dagre-d3";
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Box } from "@mui/material";
-
+import { fontFamily } from "@/utils/commonUtils";
 import "./styles.css";
 import { getRouteTraceDetail } from "@/actions/routeAction";
 
@@ -103,7 +103,7 @@ export function RouteTraceCanvas(props) {
   return (
     <Box
       sx={{
-        fontFamily: 'Open Sans',
+        fontFamily: fontFamily,
         overflow: "auto"
       }}
     >
