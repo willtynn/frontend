@@ -123,16 +123,17 @@ export default function MiniDrawer() {
           <Grid xs={6}>
             <Stack
               direction='row'
-              spacing={2}
+              spacing={6}
               justifyContent='center'
               alignItems='center'
             >
-              <img src={ICES} alt="ICES" />
+              <img style={{height: "40px"}} src={ICES} alt="ICES" />
               <Box
                 sx={{
                   fontWeight: 600,
                   fontSize: '30px',
                   color: '#242e42',
+                  fontFamily: "Segoe Print"
                 }}
               >
                 Cloud Edge Platform
