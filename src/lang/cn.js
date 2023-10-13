@@ -28,5 +28,10 @@ export const messages = {
   },
   table: {
     rowsPerPage: "每页显示"
+  },
+  instruction: {
+    waiting: "未设置",
+    now: "当前",
+    finished: "已设置"
   }
 };

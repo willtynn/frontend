@@ -1,8 +1,16 @@
-import React from 'react';
+import { useState, useEffect } from 'react';
 import { Box, Stack } from '@mui/material';
 import { KubeDeploymentCard } from '@/components/InfoCard';
 import { ContainedButton, OutlinedButton } from '../../../../components/Button';
 import { fontFamily } from '../../../../utils/commonUtils';
+import InfoFinished from '@/assets/InfoFinished.svg'
+import InfoWaiting from '@/assets/InfoWaiting.svg'
+import InfoNow from '@/assets/InfoNow.svg'
+import DockerFinished from '@/assets/DockerFinished.svg'
+import DockerWaiting from '@/assets/DockerWaiting.svg'
+import DockerNow from '@/assets/DockerNow.svg'
+import ProgressIndicator from './ProgressIndicator';
+
 
 import { StyledTextFiled } from '../../../../components/Input';
 const style = {
@@ -12,7 +20,8 @@ const style = {
   transform: 'translate(-50%, -50%)',
   width: "960px",
   boxShadow: 24,
-  height: "calc(100% - 120px)"
+  height: "calc(100% - 120px)",
+  fontFamily: fontFamily
 };
 
 const deployLabels = ['服务ID', '服务名称', '镜像路径（URL）', '目标服务器ID'];
@@ -27,10 +36,25 @@ const deployValues = [
 export default function DeployProgress(props) {
 
   const { handleConfirmClick, handleCancelClick } = props;
+  const [currentState, setCurrentState] = useState(1);
 
   return (
     <Box sx={style}>
       <KubeDeploymentCard title='创建Deployment' handleClose={handleCancelClick}>
+        <Stack direction="row" spacing={0} sx={{ bgcolor: "#eff4f9", p: "0px 20px"}}>
+          <ProgressIndicator
+            title="基本信息"
+            adornments={[<InfoWaiting />, <InfoNow />, <InfoFinished />]}
+            stage={1}
+            currentState={currentState}
+          />
+          <ProgressIndicator
+            title="容器组设置"
+            adornments={[<DockerWaiting />, <DockerNow />, <DockerFinished />]}
+            stage={2}
+            currentState={currentState}
+          />
+        </Stack>
         <Box sx={{ p: '64px 32px 32px 128px' }}>
           <Stack direction='row' spacing={4}>
             <Stack spacing={3}>
