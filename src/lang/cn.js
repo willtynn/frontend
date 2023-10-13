@@ -29,8 +29,11 @@ export const messages = {
     namePatternErrorMsg: "名称无效。名称只能包含小写字母、数字和连字符（-），必须以小写字母或数字开头和结尾，最长 63 个字符。",
     nameEmptyErrorMsg: "请设置一个名称。",
     nameDescription: "名称只能包含小写字母、数字和连字符（-），必须以小写字母或数字开头和结尾，最长 253 个字符。",
-    namespaceDescription: "选择将要创建资源的命名空间。"
-
+    namespaceDescription: "选择将要创建资源的命名空间。",
+    containerAddDescription: "自定义容器的设置以创建容器。",
+    containerConfigDescription: "设置容器的镜像、名称、类型和计算资源。",
+    containerInputPlaceHolder: "镜像路径，例如 192.168.0.1:5000/namespace/jenkins:latest",
+    containerResourceConfigDescription: "设置容器的资源限制与资源预留，以将容器调度到合适的节点上。",
   },
   table: {
     rowsPerPage: "每页显示"

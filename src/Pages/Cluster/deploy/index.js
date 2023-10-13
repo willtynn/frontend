@@ -13,11 +13,10 @@ import InfoCard from '../../../components/InfoCard';
 import { ContainedButton, OutlinedButton } from '../../../components/Button';
 import { StyledTextFiled } from '../../../components/Input';
 import ServiceStatusTable from './ServiceStatusTable';
-import { fontFamily } from "@/utils/commonUtils";
+import { fontFamily } from '@/utils/commonUtils';
 import DeployProgress from './DeployProgress';
 import BasicInfo from './DeployProgress/BasicInfo';
 import ContainerConfig from './DeployProgress/ContainerConfig';
-
 
 
 const formControlStyle = {
@@ -56,26 +55,38 @@ export default function InstanceDeploy() {
     setOpen(false);
   };
 
-  const currentPage = (stage) => {
-    if(stage === 1) {
-      return <BasicInfo />
+  const currentPage = stage => {
+    if (stage === 1) {
+      return (
+        <Box sx={{ p: '64px 64px 32px 64px', bgcolor: "#FFFFFF" }}>
+          <BasicInfo />
+        </Box>
+      );
     }
-    return <ContainerConfig />
-  }
-  
+    return (
+      <Box sx={{ p: '20px 64px 32px 64px', bgcolor: "#FFFFFF" }}>
+        <ContainerConfig />
+      </Box>
+    );
+  };
 
   return (
     <Box>
       <ServiceStatusTable
         embeddingButton={
-          <OutlinedButton onClick={handleOpen} sx={{
-            borderRadius: "20px !important",
-            width: "120px"
-          }}>部署</OutlinedButton>
+          <OutlinedButton
+            onClick={handleOpen}
+            sx={{
+              borderRadius: '20px !important',
+              width: '120px',
+            }}
+          >
+            部署
+          </OutlinedButton>
         }
       />
       <Modal open={open} onClose={handleClose}>
-        <DeployProgress 
+        <DeployProgress
           handleConfirmClick={handleConfirmClick}
           handleCancelClick={handleCancelClick}
           totalStage={2}

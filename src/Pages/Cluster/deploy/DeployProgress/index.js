@@ -31,7 +31,8 @@ const style = {
 };
 
 export default function DeployProgress(props) {
-  const { handleConfirmClick, handleCancelClick, totalStage, currentPage } = props;
+  const { handleConfirmClick, handleCancelClick, totalStage, currentPage } =
+    props;
   const [currentStage, setCurrentStage] = useState(1);
   const intl = useIntl();
 
@@ -67,11 +68,9 @@ export default function DeployProgress(props) {
             currentStage={currentStage}
           />
         </Stack>
-        <Box sx={{ p: '64px 64px 32px 64px' }}>
-          {currentPage(currentStage)}
-          
-        </Box>
+        {currentPage(currentStage)}
 
+        {/* 按钮组 */}
         <Stack
           sx={{
             mt: '80px',

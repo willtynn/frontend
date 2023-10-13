@@ -58,7 +58,7 @@ const CustomTextField = styled(TextField)(({ theme }) => ({
   },
 }));
 
-const KubeTextField = styled(TextField)(({ theme }) => ({
+export const KubeTextField = styled(TextField)(({ theme }) => ({
   legend: {
     display: 'none',
   },

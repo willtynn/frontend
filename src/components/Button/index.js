@@ -79,3 +79,16 @@ export const KubeConfirmButton = styled(Button)({
   }
 });
 
+export const KubeTransparentButton = styled(Button)({
+  color: '#FFF',
+  // backgroundColor: "#FAFAFA",
+  borderRadius: "16px",
+  fontFamily: fontFamily,
+  fontStyle: 'normal',
+  fontWeight: 600,
+  lineHeight: '18px',
+  "&:hover":{
+    color: "#e3e9ef",
+  }
+});
+
