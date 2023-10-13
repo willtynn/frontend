@@ -11,6 +11,7 @@ import {Outlet} from "react-router-dom";
 import { useNavigate } from 'react-router-dom';
 import CommonSnackBar from '../../components/CommonSnackbar';
 import {useEffect} from "react";
+import { fontFamily } from '../../utils/commonUtils';
 
 
 export default function MiniDrawer() {
@@ -112,7 +113,7 @@ export default function MiniDrawer() {
           textAlign: 'center',
           justifyContent:'center',
           backgroundColor: '#eff4f9',
-          fontFamily: 'PingFang SC',
+          fontFamily: fontFamily
         }}
       >
         <Grid container spacing={0}>

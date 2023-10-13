@@ -27,6 +27,6 @@ export const messages = {
     deployFailed: "实例部署失败，请重试..."
   },
   table: {
-    rowsPerPage: "每行显示"
+    rowsPerPage: "每页显示"
   }
 };

@@ -283,8 +283,8 @@ export default function ServiceStatusTable(props) {
   };
 
   //改变每页的数量
-  const handlePerPageChange = e => {
-    dispatch({ type: CHANGE_PAGE_SIZE, data: e.target.value });
+  const handlePerPageChange = pageSize => {
+    dispatch({ type: CHANGE_PAGE_SIZE, data: pageSize });
   };
 
   //改变页码

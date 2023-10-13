@@ -14,12 +14,14 @@ import {
   Select,
   MenuItem,
   PaginationItem,
-  Popper
+  Popper,
 } from '@mui/material';
 import { styled } from '@mui/system';
 import { visuallyHidden } from '@mui/utils';
 import { useDispatch, useSelector } from 'react-redux';
 import { FormattedMessage } from 'react-intl';
+import Triangle from '@/assets/Triangle.svg';
+import { fontFamily } from '../../utils/commonUtils';
 
 export const StyledTableBox = styled(TableContainer)(() => ({
   width: '100%',
@@ -110,7 +112,7 @@ export function StyledTableFooter(props) {
         justifyContent='center'
         alignItems='center'
       >
-        <Grid item container md={6} justifyContent='center' alignItems='center'>
+        <Grid item container md={9} justifyContent='center' alignItems='center'>
           <GlobalPagination
             id='tableFooterPagination'
             count={Math.ceil(count / pageSize)}
@@ -119,55 +121,16 @@ export function StyledTableFooter(props) {
           />
         </Grid>
         <Grid item md={3} alignItems='center' justifyContent='center'>
-
-          {
-            perPageList ? (
-              <Stack
-                direction='row'
-                justifyContent='flex-start'
-                alignItems='center'
-                spacing={1}
-              >
-                <span
-                  id='tableFooterRowsPerPageText'
-                  style={{ fontSize: 'small', fontWeight: '600', color: '#262E35' }}
-                >
-                  <FormattedMessage id='table.rowsPerPage' />
-                </span>
-
-                <PageSizePopper 
-                  id='pageSelectPopper'
-                  pageSize = {pageSize}
-                  handlePageSizeChange = {handlePerPageChange}
-                  pageSizeList = {perPageList}
-                />
-                
-                {/* <FormControl
-                  id='tableFooterPageSelectFormControl'
-                  sx={{ minWidth: 50 }}
-                >
-                  <Select
-                    id='tableFooterRowsPerPageSelect'
-                    sx={{ fontSize: 'small', fontWeight: '600', color: '#262E35' }}
-                    value={pageSize}
-                    onChange={handlePerPageChange}
-                    input={<Input disableUnderline={true} />}
-                  >
-                    {perPageList.map(num => (
-                      <MenuItem
-                        id={`tableFooterRowsPerPagePageSize${num}`}
-                        key={'pageSize-' + num}
-                        value={num}
-                      >
-                        {num}
-                      </MenuItem>
-                    ))}
-                  </Select>
-                </FormControl> */}
-              </Stack>
-            )
-              : <Box> </Box>
-          }
+          {perPageList ? (
+            <PageSizePopper
+              id='pageSelectPopper'
+              pageSize={pageSize}
+              handlePageSizeChange={handlePerPageChange}
+              pageSizeList={perPageList}
+            />
+          ) : (
+            <Box> </Box>
+          )}
         </Grid>
       </Stack>
     </Box>
@@ -175,65 +138,112 @@ export function StyledTableFooter(props) {
 }
 
 function PageSizePopper(props) {
-
-  const {id, pageSize, handlePageSizeChange, pageSizeList} = props;
+  const { id, pageSize, handlePageSizeChange, pageSizeList } = props;
   const [anchorEl, setAnchorEl] = useState(null);
   const [buttonOver, setButtonOver] = useState(false);
   const [popperOver, setPopperOver] = useState(false);
 
-
-
-  const handleButtonOver = (event) => {
+  const handleButtonOver = event => {
     setButtonOver(true);
-    setAnchorEl(anchorEl ? null : event.currentTarget);
+    setAnchorEl(event.currentTarget);
+    // setAnchorEl(anchorEl ? null : event.currentTarget);
   };
 
   const handleButtonLeave = () => {
-    setButtonOver(false);
-  }
+    setTimeout(() => {
+      setButtonOver(false);
+    }, 300);
+  };
 
-  const handlePoppernOver = (event) => {
+  const handlePoppernOver = event => {
     setPopperOver(true);
   };
 
   const handlePopperLeave = () => {
-    setPopperOver(false);
-  }
-  
+    setTimeout(() => {
+      setPopperOver(false);
+    }, 300);
+  };
+
+  useEffect(() => {
+    if (buttonOver === false && popperOver === false) {
+      setAnchorEl(null);
+    }
+  }, [buttonOver, popperOver]);
 
   const open = Boolean(anchorEl);
 
   return (
-    <div>
-      <button aria-describedby={id} type="button" onMouseOver={handleButtonOver} onMouseLeave={handleButtonLeave}>
-        Toggle Popper
-      </button>
-      <Popper id={id} open={open} anchorEl={anchorEl}>
-        
-          <Stack 
-          direction="column" 
+    <Box>
+      <Box
+        aria-describedby={id}
+        sx={{ cursor: 'pointer', display: "inline-block" }}
+      >
+        <Stack
+          onMouseOver={handleButtonOver}
+          onMouseLeave={handleButtonLeave}
+          direction='row'
+          justifyContent='center'
+          alignItems='center'
+          spacing={1}
           sx={{
-            border: "1px solid #FAFAFA"
+            fontFamily: fontFamily,
+          }}
+        >
+          <span
+            id='tableFooterRowsPerPageText'
+            style={{
+              fontSize: 'small',
+              fontWeight: '600',
+              color: '#262E35',
+              lineHeight: '16px',
+            }}
+          >
+            <FormattedMessage id='table.rowsPerPage' />
+          </span>
+          <Stack direction='row' spacing={1}>
+            <Box sx={{ lineHeight: '22px' }}>{pageSize}</Box>
+            <Box>
+              <Triangle />
+            </Box>
+          </Stack>
+        </Stack>
+      </Box>
+      <Popper id={id} open={open} anchorEl={anchorEl} sx={{ zIndex: 1000 }}>
+        <Stack
+          direction='column'
+          sx={{
+            border: '1px solid #FAFAFA',
+            width: '90px',
+            borderRadius: '5px',
+            padding: '8px',
+            bgcolor: '#FFF',
+            fontFamily: fontFamily,
           }}
           onMouseOver={handlePoppernOver}
           onMouseLeave={handlePopperLeave}
-          >
-            {pageSizeList.map((value, index) => {
-              return (
-                <Box sx={{
-                  "&:hover": {
-                    bgcolor: "red"
+        >
+          {pageSizeList.map((value, index) => {
+            return (
+              <Box
+                sx={{
+                  '&:hover': {
+                    bgcolor: '#eff4f9',
                   },
-                  cursor: "pointer"
-                }}>
-                  {value}
-                </Box>
-              )
-            })}
-          </Stack>
-
+                  cursor: 'pointer',
+                  textAlign: 'center',
+                  height: '30px',
+                  lineHeight: '30px',
+                }}
+                onClick={handlePageSizeChange.bind(this, value)}
+              >
+                {value}
+              </Box>
+            );
+          })}
+        </Stack>
       </Popper>
-    </div>
+    </Box>
   );
 }
 
@@ -259,8 +269,15 @@ function defaultBgColorFunc(item) {
 }
 
 export function GlobalPagination(props) {
-
-  const { sx, id, page, count, handlePageChange, colorFunc = defaultColorFunc, bgColorFunc = defaultBgColorFunc } = props;
+  const {
+    sx,
+    id,
+    page,
+    count,
+    handlePageChange,
+    colorFunc = defaultColorFunc,
+    bgColorFunc = defaultBgColorFunc,
+  } = props;
 
   return (
     <Pagination
@@ -279,7 +296,7 @@ export function GlobalPagination(props) {
             id={`${id}-${item.page}`}
             selected={false}
             sx={{
-              margin: "0 0.6px",
+              margin: '0 0.6px',
               backgroundColor: bgColorFunc(item),
               color: colorFunc(item),
               fontWeight: item.type !== 'page' ? 'bold' : 'regular',
@@ -292,8 +309,7 @@ export function GlobalPagination(props) {
             }}
           />
         );
-      }
-      }
+      }}
     />
   );
 }
