@@ -15,6 +15,8 @@ import { StyledTextFiled } from '../../../components/Input';
 import ServiceStatusTable from './ServiceStatusTable';
 import { fontFamily } from "@/utils/commonUtils";
 import DeployProgress from './DeployProgress';
+import BasicInfo from './DeployProgress/BasicInfo';
+import ContainerConfig from './DeployProgress/ContainerConfig';
 
 
 
@@ -54,6 +56,12 @@ export default function InstanceDeploy() {
     setOpen(false);
   };
 
+  const currentPage = (stage) => {
+    if(stage === 1) {
+      return <BasicInfo />
+    }
+    return <ContainerConfig />
+  }
   
 
   return (
@@ -70,6 +78,8 @@ export default function InstanceDeploy() {
         <DeployProgress 
           handleConfirmClick={handleConfirmClick}
           handleCancelClick={handleCancelClick}
+          totalStage={2}
+          currentPage={currentPage}
         />
       </Modal>
     </Box>

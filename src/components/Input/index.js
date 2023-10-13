@@ -1,9 +1,16 @@
 import { useState } from 'react';
-import { TextField, Autocomplete, InputAdornment } from '@mui/material';
+import {
+  TextField,
+  Autocomplete,
+  InputAdornment,
+  Box,
+  Stack,
+  Typography,
+} from '@mui/material';
 import { styled } from '@mui/system';
 import { CustomDefaultChip } from '../Chip';
 import ChipDeleteIcon from '@/assets/ChipDeleteIcon.svg';
-import { fontFamily } from "@/utils/commonUtils";
+import { fontFamily } from '@/utils/commonUtils';
 
 export const StyledTextFiled = styled(TextField)(() => ({
   legend: {
@@ -47,6 +54,38 @@ const CustomTextField = styled(TextField)(({ theme }) => ({
     },
     '& input': {
       height: '18px',
+    },
+  },
+}));
+
+const KubeTextField = styled(TextField)(({ theme }) => ({
+  legend: {
+    display: 'none',
+  },
+  width: '100%',
+  '& .MuiOutlinedInput-root.MuiInputBase-root': {
+    background: '#FFFFFF',
+    '& .MuiOutlinedInput-input.MuiInputBase-input': {
+      '&:hover': {
+        border: '1px solid #000',
+      },
+      '&:focus': {
+        border: '1px solid #55bc8a',
+        boxShadow: '0 4px 8px 0 rgba(85,188,138,.2)',
+      },
+      border: '1px solid rgba(0, 0, 0, 0.23)',
+      borderRadius: '4px',
+      padding: '6px 12px !important',
+      fontSize: '12px',
+      fontWeight: 600,
+      fontStyle: 'normal',
+      fontStretch: 'normal',
+      lineHeight: 1.67,
+      letterSpacing: 'normal',
+      color: '#36435c',
+    },
+    '& fieldset': {
+      border: 'none',
     },
   },
 }));
@@ -127,9 +166,11 @@ export function ChipTextField(props) {
             },
           },
       }}
-      InputProps={
-        {
-        startAdornment: (startAdornment !== null ? [<InputAdornment position="start">{startAdornment}</InputAdornment>] : []).concat(
+      InputProps={{
+        startAdornment: (startAdornment !== null
+          ? [<InputAdornment position='start'>{startAdornment}</InputAdornment>]
+          : []
+        ).concat(
           contentList.map((value, index) => {
             return (
               <CustomDefaultChip
@@ -145,9 +186,58 @@ export function ChipTextField(props) {
             );
           })
         ),
-        endAdornment: endAdornment !== null ? (<InputAdornment position="end">{endAdornment}</InputAdornment>) : null
-      }
-    }
+        endAdornment:
+          endAdornment !== null ? (
+            <InputAdornment position='end'>{endAdornment}</InputAdornment>
+          ) : null,
+      }}
     />
+  );
+}
+
+export function KubeInput(props) {
+  const { label, decription, requried, ...others } = props;
+
+  return (
+    <Box>
+      <Stack direction='column' spacing={0.5}>
+        <Stack direction='row' spacing={1}>
+          <Typography
+            sx={{
+              color: '#36435c',
+              fontSize: '12px',
+              lineHeight: 1.67,
+              fontWeight: 400,
+            }}
+          >
+            {label}
+          </Typography>
+          <Typography
+            sx={{
+              color: '#ca2621',
+              fontSize: '12px',
+              lineHeight: 1.67,
+              fontWeight: 400,
+            }}
+          >
+            *
+          </Typography>
+        </Stack>
+        <KubeTextField others />
+        <Box
+          sx={{
+            fontSize: '12px',
+            fontWeight: 400,
+            fontStyle: 'normal',
+            fontStretch: 'normal',
+            lineHeight: 1.67,
+            letterSpacing: 'normal',
+            color: '#79879c',
+          }}
+        >
+          {decription}
+        </Box>
+      </Stack>
+    </Box>
   );
 }

@@ -44,3 +44,38 @@ export const EclipseTransparentButton = styled(Button)({
   }
 });
 
+export const KubeCancelButton = styled(Button)({
+  color: '#36435c',
+  border: '1px solid #ccd3db',
+  backgroundColor: "#eff4f9",
+  borderRadius: "18px",
+  fontFamily: fontFamily,
+  fontSize: '12px',
+  fontWeight: 600,
+  fontStyle: 'normal',
+  fontStretch: 'normal',
+  lineHeight: 1.67,
+  letterSpacing: 'normal',
+  "&:hover":{
+    backgroundColor: "#e3e9ef"
+  }
+});
+
+export const KubeConfirmButton = styled(Button)({
+  color: '#FFF',
+  backgroundColor: "#242e42",
+  borderRadius: "18px",
+  fontFamily: fontFamily,
+  fontSize: '12px',
+  fontWeight: 600,
+  fontStyle: 'normal',
+  fontStretch: 'normal',
+  lineHeight: 1.67,
+  letterSpacing: 'normal',
+  boxShadow: "0 8px 16px 0 rgba(35,45,65,.28)",
+  "&:hover":{
+    boxShadow: 'none',
+    backgroundColor: "#242e42",
+  }
+});
+

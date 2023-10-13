@@ -3,127 +3,120 @@ import { Box, Stack } from '@mui/material';
 import { KubeDeploymentCard } from '@/components/InfoCard';
 import { ContainedButton, OutlinedButton } from '../../../../components/Button';
 import { fontFamily } from '../../../../utils/commonUtils';
-import InfoFinished from '@/assets/InfoFinished.svg'
-import InfoWaiting from '@/assets/InfoWaiting.svg'
-import InfoNow from '@/assets/InfoNow.svg'
-import DockerFinished from '@/assets/DockerFinished.svg'
-import DockerWaiting from '@/assets/DockerWaiting.svg'
-import DockerNow from '@/assets/DockerNow.svg'
+import InfoFinished from '@/assets/InfoFinished.svg';
+import InfoWaiting from '@/assets/InfoWaiting.svg';
+import InfoNow from '@/assets/InfoNow.svg';
+import DockerFinished from '@/assets/DockerFinished.svg';
+import DockerWaiting from '@/assets/DockerWaiting.svg';
+import DockerNow from '@/assets/DockerNow.svg';
 import ProgressIndicator from './ProgressIndicator';
-
+import { KubeInput } from '../../../../components/Input';
+import { useIntl } from 'react-intl';
+import {
+  KubeCancelButton,
+  KubeConfirmButton,
+} from '../../../../components/Button';
 
 import { StyledTextFiled } from '../../../../components/Input';
+import BasicInfo from './BasicInfo';
 const style = {
   position: 'absolute',
   top: '50%',
   left: '50%',
   transform: 'translate(-50%, -50%)',
-  width: "960px",
+  width: '960px',
   boxShadow: 24,
-  height: "calc(100% - 120px)",
-  fontFamily: fontFamily
+  height: 'calc(100% - 120px)',
+  fontFamily: fontFamily,
 };
 
-const deployLabels = ['服务ID', '服务名称', '镜像路径（URL）', '目标服务器ID'];
-
-const deployValues = [
-  <StyledTextFiled id='deploy-service-id' variant='outlined' />,
-  <StyledTextFiled id='deploy-service-id' variant='outlined' />,
-  <StyledTextFiled id='deploy-service-id' variant='outlined' />,
-  <StyledTextFiled id='deploy-service-id' variant='outlined' />,
-];
-
 export default function DeployProgress(props) {
+  const { handleConfirmClick, handleCancelClick, totalStage, currentPage } = props;
+  const [currentStage, setCurrentStage] = useState(1);
+  const intl = useIntl();
 
-  const { handleConfirmClick, handleCancelClick } = props;
-  const [currentState, setCurrentState] = useState(1);
+  const previousStep = () => {
+    setCurrentStage(prevStage => prevStage - 1);
+  };
+
+  const nextStep = () => {
+    setCurrentStage(prevStage => prevStage + 1);
+  };
 
   return (
     <Box sx={style}>
-      <KubeDeploymentCard title='创建Deployment' handleClose={handleCancelClick}>
-        <Stack direction="row" spacing={0} sx={{ bgcolor: "#eff4f9", p: "0px 20px"}}>
+      <KubeDeploymentCard
+        title='创建Deployment'
+        handleClose={handleCancelClick}
+      >
+        <Stack
+          direction='row'
+          spacing={0}
+          sx={{ bgcolor: '#eff4f9', p: '0px 20px' }}
+        >
           <ProgressIndicator
-            title="基本信息"
+            title='基本信息'
             adornments={[<InfoWaiting />, <InfoNow />, <InfoFinished />]}
             stage={1}
-            currentState={currentState}
+            currentStage={currentStage}
           />
           <ProgressIndicator
-            title="容器组设置"
+            title='容器组设置'
             adornments={[<DockerWaiting />, <DockerNow />, <DockerFinished />]}
             stage={2}
-            currentState={currentState}
+            currentStage={currentStage}
           />
         </Stack>
-        <Box sx={{ p: '64px 32px 32px 128px' }}>
-          <Stack direction='row' spacing={4}>
-            <Stack spacing={3}>
-              {deployLabels.map((value, index) => {
-                return (
-                  <Box
-                    sx={{
-                      width: '224px',
-                      height: '50px',
-                      fontFamily: fontFamily,
-                      fontStyle: 'normal',
-                      fontWeight: 400,
-                      fontSize: '20px',
-                      lineHeight: '36px',
-                      color: '#596A7C',
-                    }}
-                    key={index}
-                  >
-                    {value}
-                  </Box>
-                );
-              })}
-            </Stack>
+        <Box sx={{ p: '64px 64px 32px 64px' }}>
+          {currentPage(currentStage)}
+          
+        </Box>
 
-            <Stack sx={{ width: '500px' }} spacing={3}>
-              {deployValues.map((value, index) => {
-                return (
-                  <Box
-                    sx={{
-                      width: '100%',
-                      height: '50px',
-                      fontFamily: fontFamily,
-                      fontStyle: 'normal',
-                      fontWeight: 400,
-                      color: '#262E35',
-                      flex: 'none',
-                      alignSelf: 'stretch',
-                      flexGrow: 0,
-                    }}
-                    key={index}
-                  >
-                    {value}
-                  </Box>
-                );
-              })}
-            </Stack>
-          </Stack>
-
-          <Stack
-            sx={{
-              mt: '80px',
-            }}
-            direction='row'
-            spacing={3}
+        <Stack
+          sx={{
+            mt: '80px',
+            position: 'absolute',
+            bottom: '12px',
+            width: 'calc(100% - 64px)',
+            bgcolor: '#f9fbfd',
+          }}
+          direction='row'
+          spacing={3}
+          justifyContent='flex-end'
+          alignItems='flex-end'
+        >
+          <KubeCancelButton
+            sx={{ height: '32px', p: '5px 23px' }}
+            onClick={handleCancelClick}
           >
-            <ContainedButton
-              sx={{ height: '40px', width: '114px' }}
+            取消
+          </KubeCancelButton>
+          {currentStage > 1 ? (
+            <KubeCancelButton
+              sx={{ height: '32px', p: '5px 23px' }}
+              onClick={previousStep}
+            >
+              上一步
+            </KubeCancelButton>
+          ) : (
+            <></>
+          )}
+          {currentStage < totalStage ? (
+            <KubeConfirmButton
+              sx={{ height: '32px', p: '5px 23px' }}
+              onClick={nextStep}
+            >
+              下一步
+            </KubeConfirmButton>
+          ) : (
+            <KubeConfirmButton
+              sx={{ height: '32px', p: '5px 23px' }}
               onClick={handleConfirmClick}
             >
-              确认
-            </ContainedButton>
-            <OutlinedButton
-              sx={{ height: '40px', width: '114px' }}
-              onClick={handleCancelClick}
-            >
-              取消
-            </OutlinedButton>
-          </Stack>
-        </Box>
+              创建
+            </KubeConfirmButton>
+          )}
+        </Stack>
       </KubeDeploymentCard>
     </Box>
   );

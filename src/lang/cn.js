@@ -24,7 +24,13 @@ export const messages = {
   },
   instance: {
     deploySuccess: "实例部署成功！",
-    deployFailed: "实例部署失败，请重试..."
+    deployFailed: "实例部署失败，请重试...",
+    serverIdDescription: "服务的唯一标识,一个服务ID对应一个服务。",
+    namePatternErrorMsg: "名称无效。名称只能包含小写字母、数字和连字符（-），必须以小写字母或数字开头和结尾，最长 63 个字符。",
+    nameEmptyErrorMsg: "请设置一个名称。",
+    nameDescription: "名称只能包含小写字母、数字和连字符（-），必须以小写字母或数字开头和结尾，最长 253 个字符。",
+    namespaceDescription: "选择将要创建资源的命名空间。"
+
   },
   table: {
     rowsPerPage: "每页显示"
