@@ -148,6 +148,7 @@ export function ChipTextField(props) {
     contentList,
     setContentList,
     isDuplicate,
+    sx,
     startAdornment = null,
     endAdornment = null,
   } = props;
@@ -204,7 +205,13 @@ export function ChipTextField(props) {
               flexGrow: 1,
               width: '10%',
             },
+            bgcolor: '#EFF4F9',
           },
+        '& .Mui-focused': {
+          bgcolor: '#FFFFFF !important',
+        },
+
+        ...sx,
       }}
       InputProps={{
         startAdornment: (startAdornment !== null
@@ -303,6 +310,6 @@ export const KubeSelect = styled(Select)({
     alignItems: 'center',
     boxSizing: 'border-box',
     borderRadius: '0px 4px 4px 0px',
-    backgroundColor: "#FFFFFF"
+    backgroundColor: '#FFFFFF',
   },
 });

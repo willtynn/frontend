@@ -17,7 +17,8 @@ import { fontFamily } from '@/utils/commonUtils';
 import DeployProgress from './DeployProgress';
 import BasicInfo from './DeployProgress/BasicInfo';
 import ContainerConfig from './DeployProgress/ContainerConfig';
-
+import TaskIcon from '@/assets/TaskIcon.svg';
+import { useIntl } from 'react-intl';
 
 const formControlStyle = {
   // height: "45px",
@@ -46,6 +47,8 @@ const formControlStyle = {
 export default function InstanceDeploy() {
   const [open, setOpen] = useState(false);
 
+  const intl = useIntl();
+
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
   const handleConfirmClick = () => {
@@ -72,6 +75,39 @@ export default function InstanceDeploy() {
 
   return (
     <Box>
+      <Box sx={{
+        borderRadius: '4px',
+        backgroundColor: '#FFFFFF',
+        padding: "24px 20px",
+        width: 'calc(100% - 40px)',
+        height: '58px',
+        mb: "12px"
+      }}>
+        <Stack direction="row" spacing={1}>
+          <TaskIcon />
+          <Box>
+            <Typography sx={{
+              fontWeight: 600,
+              fontStyle: 'normal',
+              color: '#242e42',
+              textShadow: '0 4px 8px rgba(36,46,66,.1)',
+              fontSize: "24px",
+              lineHeight: "32px"
+            }}>
+              服务实例
+            </Typography>
+            <Typography sx={{
+              fontWeight: 400,
+              fontStyle: 'normal',
+              color: '#79879c',
+              fontSize: "12px",
+              lineHeight: 1.67
+            }}>
+              {intl.messages["instance.instanceDescription"]}
+            </Typography>
+          </Box>
+        </Stack>
+      </Box>
       <ServiceStatusTable
         embeddingButton={
           <OutlinedButton

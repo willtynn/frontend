@@ -10,6 +10,7 @@ import {
   Checkbox,
   TableBody,
   TableCell,
+  Typography,
 } from '@mui/material';
 
 import { useDispatch, useSelector } from 'react-redux';
@@ -20,7 +21,7 @@ import {
   StyledTableContainer,
   StyledTableRowCell,
   StyledTableBodyCell,
-  StyledTableFooter
+  StyledTableFooter,
 } from '../../../components/DisplayTable';
 import {
   StyledAutocomplete,
@@ -32,8 +33,16 @@ import SearchIcon from '@mui/icons-material/Search';
 import RefreshIcon from '@mui/icons-material/Refresh';
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import { formatDatetimeString } from '../../../utils/commonUtils';
-import { CHANGE_PAGE_NUM, CHANGE_PAGE_SIZE } from '../../../actions/instanceAction';
-import { fontFamily } from "@/utils/commonUtils";
+import {
+  CHANGE_PAGE_NUM,
+  CHANGE_PAGE_SIZE,
+} from '../../../actions/instanceAction';
+import { fontFamily } from '@/utils/commonUtils';
+import Task from '@/assets/Task.svg';
+import RunningIcon from '@/assets/RunningIcon.svg';
+import PendingIcon from '@/assets/PendingIcon.svg';
+import FailedIcon from '@/assets/FailedIcon.svg';
+import SucceededIcon from '@/assets/SucceededIcon.svg';
 
 const data = {
   items: [
@@ -103,7 +112,7 @@ const data = {
         },
       },
       status: {
-        phase: 'Running',
+        phase: 'Failed',
         hostIP: '192.168.1.173',
         podIP: '10.244.6.174',
         startTime: '2023-08-14T07:42:47.000+00:00',
@@ -118,7 +127,7 @@ const data = {
         },
       },
       status: {
-        phase: 'Running',
+        phase: 'Pending',
         hostIP: '192.168.1.173',
         podIP: '10.244.6.181',
         startTime: '2023-08-08T06:17:16.000+00:00',
@@ -196,6 +205,37 @@ const data = {
     },
   ],
   totalItems: 18,
+};
+
+export const RUNNING = 'Running';
+export const PENDING = 'Pending';
+export const FAILED = 'Failed';
+export const SUCCEEDED = 'Succeeded';
+
+const StatusIcon = phase => {
+  if (phase === RUNNING) {
+    return <RunningIcon />;
+  }
+  if (phase === PENDING) {
+    return <PendingIcon />;
+  }
+  if (phase === FAILED) {
+    return <FailedIcon />;
+  }
+  return <SucceededIcon />;
+};
+
+const StatusText = phase => {
+  if (phase === RUNNING) {
+    return "运行中";
+  }
+  if (phase === PENDING) {
+    return "等待中";
+  }
+  if (phase === FAILED) {
+    return <span>错误&nbsp;&nbsp;&nbsp;</span>;
+  }
+  return "已完成";
 };
 
 export default function ServiceStatusTable(props) {
@@ -294,11 +334,12 @@ export default function ServiceStatusTable(props) {
 
   return (
     <Box>
+      {/*  */}
       <Box
         sx={{
-          height: '60px',
+          height: '40px',
           padding: '10px 30px 10px 30px',
-          bgcolor: '#F5F5F5',
+          bgcolor: '#f9fbfd',
         }}
       >
         <Stack direction='row' spacing={2}>
@@ -321,10 +362,11 @@ export default function ServiceStatusTable(props) {
             setContentList={setSearchList}
             isDuplicate={isDuplicate}
             startAdornment={<SearchIcon />}
+            sx={{ width: 'calc(100% - 600px)' }}
           />
           <EclipseTransparentButton
             sx={{
-              bgcolor: '#F5F5F5 !important',
+              bgcolor: '#f9fbfd !important',
               '&:hover': {
                 bgcolor: '#FFFFFF !important',
               },
@@ -338,7 +380,7 @@ export default function ServiceStatusTable(props) {
 
           <EclipseTransparentButton
             sx={{
-              bgcolor: '#F5F5F5 !important',
+              bgcolor: '#f9fbfd !important',
               '&:hover': {
                 bgcolor: '#FFFFFF !important',
               },
@@ -354,7 +396,7 @@ export default function ServiceStatusTable(props) {
       </Box>
 
       {/* <StyledTableBox> */}
-      <StyledTableContainer>
+      <StyledTableContainer sx={{ bgcolor: '#FFF' }}>
         <Table
           stickyHeader
           size='small'
@@ -424,25 +466,47 @@ export default function ServiceStatusTable(props) {
                       />
                     </StyledTableBodyCell>
 
-                    {headRow.map((item, colIndex) => {
-                      if (item.id === 'startTime')
-                        return (
-                          <StyledTableRowCell
-                            key={row.id + '-' + index + '-' + colIndex}
-                            align={item.align}
-                          >
-                            {formatDatetimeString(row[item.id])}
-                          </StyledTableRowCell>
-                        );
-                      return (
-                        <StyledTableRowCell
-                          key={row.id + '-' + index + '-' + colIndex}
-                          align={item.align}
+                    <StyledTableBodyCell
+                      align={'left'}
+                      sx={{
+                        padding: '12px 16px !important',
+                      }}
+                    >
+                      <Stack alignItems='center' direction='row' spacing={2}>
+                        <Task />
+                        <span
+                          style={{
+                            height: '30px',
+                            lineHeight: '30px',
+                          }}
                         >
-                          {row[item.id]}
-                        </StyledTableRowCell>
-                      );
-                    })}
+                          {row.name}
+                        </span>
+                      </Stack>
+                    </StyledTableBodyCell>
+                    <StyledTableBodyCell align={'center'}>
+                      <Stack alignItems='center' direction='row' justifyContent="center" spacing={2}>
+                        {StatusIcon(row.phase)}
+                        <span
+                          style={{
+                            height: '30px',
+                            lineHeight: '30px',
+                          }}
+                        >
+                          {StatusText(row.phase)}
+                        </span>
+                      </Stack>
+                    </StyledTableBodyCell>
+                    <StyledTableBodyCell align={'center'}>
+                      {row.hostIP}
+                    </StyledTableBodyCell>
+                    <StyledTableBodyCell align={'center'}>
+                      {row.podIP}
+                    </StyledTableBodyCell>
+
+                    <StyledTableBodyCell align={'center'}>
+                      {formatDatetimeString(row.startTime)}
+                    </StyledTableBodyCell>
                   </TableRow>
                 );
               })

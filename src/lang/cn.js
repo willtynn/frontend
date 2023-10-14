@@ -36,6 +36,7 @@ export const messages = {
     containerResourceConfigDescription: "设置容器的资源限制与资源预留，以将容器调度到合适的节点上。",
     portConfigDescription: "设置用于访问容器的端口。",
     protocalTip: "选择服务实际使用的协议以充分利用应用治理功能。例如，为 HTTP 服务选择 HTTP 协议。",
+    instanceDescription: "服务实例（Pod），是服务实例运行的对象，通过服务来配置和管理。在实例列表，可以看到实例的状态、所在的主机IP、实例的IP、创建时间。"
   },
   table: {
     rowsPerPage: "每页显示"
