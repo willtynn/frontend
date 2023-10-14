@@ -210,11 +210,12 @@ function PageSizePopper(props) {
           </Stack>
         </Stack>
       </Box>
-      <Popper id={id} open={open} anchorEl={anchorEl} sx={{ zIndex: 1000 }}>
+      <Popper id={id} open={open} anchorEl={anchorEl} sx={{ zIndex: 1000, boxShadow: '0 4px 16px 0 rgba(39,50,71,.28)', borderRadius: "4px", }}>
         <Stack
           direction='column'
           sx={{
             border: '1px solid #FAFAFA',
+            
             width: '90px',
             borderRadius: '5px',
             padding: '8px',
@@ -255,7 +256,7 @@ function defaultColorFunc(item) {
     if (item.disabled) {
       return '#DFE4E8';
     } else {
-      return '#113D95';
+      return '#2E2E42';
     }
   } else {
     return '#596A7C';
@@ -264,7 +265,7 @@ function defaultColorFunc(item) {
 
 function defaultBgColorFunc(item) {
   if (item.selected && item.type === 'page') {
-    return '#113D95';
+    return '#2E2E42';
   }
   return 'transparent';
 }

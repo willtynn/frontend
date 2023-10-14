@@ -13,6 +13,9 @@ import CommonSnackBar from '../../components/CommonSnackbar';
 import { useEffect } from 'react';
 import { fontFamily } from '../../utils/commonUtils';
 import ICES from '@/assets/ICES.png';
+import Workbench from '@/assets/Workbench.svg';
+import Gear from '@/assets/Gear.svg';
+import { KubeTransparentButton } from '../../components/Button';
 
 export default function MiniDrawer() {
   const [open, setOpen] = React.useState(true);
@@ -98,8 +101,8 @@ export default function MiniDrawer() {
   const styledButton = {
     borderRadius: '100px',
     backgroundColor: 'transparent',
-    color: 'rgb(54, 67, 92)',
-    fontFamily: 'Arial',
+    color: '#36435C !important',
+    fontFamily: fontFamily,
   };
 
   return (
@@ -118,8 +121,36 @@ export default function MiniDrawer() {
       >
         <Grid container spacing={0}>
           <Grid xs={3}>
-            <Button sx={styledButton}>平台管理</Button>
+            <Stack direction="row" spacing={2} 
+  alignItems="center" sx={{height: "100%", ml: "20px"}}>
+              <KubeTransparentButton sx={styledButton}>
+              <Gear />
+                <span
+                  style={{
+                    marginLeft: '12px',
+                    fontStyle: 'normal',
+                    fontSize: '12px',
+                    lineHeight: 1.67,
+                  }}
+                >
+                  平台管理
+                </span></KubeTransparentButton>
+              <KubeTransparentButton sx={styledButton}>
+                <Workbench />
+                <span
+                  style={{
+                    marginLeft: '12px',
+                    fontStyle: 'normal',
+                    fontSize: '12px',
+                    lineHeight: 1.67,
+                  }}
+                >
+                  工作台
+                </span>
+              </KubeTransparentButton>
+            </Stack>
           </Grid>
+
           <Grid xs={6}>
             <Stack
               direction='row'
@@ -127,28 +158,26 @@ export default function MiniDrawer() {
               justifyContent='center'
               alignItems='center'
             >
-              <img style={{height: "40px"}} src={ICES} alt="ICES" />
+              <img style={{ height: '40px' }} src={ICES} alt='ICES' />
               <Box
                 sx={{
                   fontWeight: 600,
                   fontSize: '30px',
                   color: '#242e42',
-                  fontFamily: "Segoe Print"
+                  fontFamily: 'Segoe Print',
                 }}
               >
                 Cloud Edge Platform
               </Box>
             </Stack>
           </Grid>
-          <Grid xs={3}>
-            <Button sx={styledButton}>工作台</Button>
-          </Grid>
+          <Grid xs={3}></Grid>
         </Grid>
       </Box>
 
       <Divider />
 
-      <Grid container spacing={0} >
+      <Grid container spacing={0}>
         <Grid
           xs={1.8}
           sx={{
@@ -223,7 +252,7 @@ export default function MiniDrawer() {
                       集群总览
                     </Box>
                   </ListItemButton>
-                  
+
                   <ListItemButton
                     sx={styleListButton}
                     onClick={() => {

@@ -537,6 +537,10 @@ export default function ServiceStatusTable(props) {
         count={count}
         handlePerPageChange={handlePerPageChange}
         handlePageChange={handlePageChange}
+        sx={{
+          pt: "12px",
+          pb: "12px"
+        }}
       />
       {/* </StyledTableBox> */}
     </Box>
