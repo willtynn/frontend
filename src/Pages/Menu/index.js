@@ -125,10 +125,14 @@ export default function MiniDrawer() {
       >
         <Grid container spacing={0}>
           <Grid xs={3}>
-            <Stack direction="row" spacing={2} 
-  alignItems="center" sx={{height: "100%", ml: "20px"}}>
+            <Stack
+              direction='row'
+              spacing={2}
+              alignItems='center'
+              sx={{ height: '100%', ml: '20px' }}
+            >
               <KubeTransparentButton sx={styledButton}>
-              <Gear />
+                <Gear />
                 <span
                   style={{
                     marginLeft: '12px',
@@ -138,7 +142,8 @@ export default function MiniDrawer() {
                   }}
                 >
                   平台管理
-                </span></KubeTransparentButton>
+                </span>
+              </KubeTransparentButton>
               <KubeTransparentButton sx={styledButton}>
                 <Workbench />
                 <span
@@ -181,12 +186,11 @@ export default function MiniDrawer() {
 
       <Divider />
 
-      <Grid container spacing={0}>
-        <Grid
-          xs={1.8}
+      <Stack direction='row' spacing={0} justifyContent='space-between'>
+        <Box
           sx={{
             paddingLeft: '20px',
-            minWidth: '220px',
+            width: '230px',
             backgroundColor: '#eff4f9',
           }}
         >
@@ -221,10 +225,14 @@ export default function MiniDrawer() {
                 spacing={1}
               >
                 <Box>集群管理</Box>
-                <Box sx={{
-                  color: "#d8dee5",
-                  fontWeight: 400,
-                }}>{intl.messages["menu.clusterMangementDescription"]}</Box>
+                <Box
+                  sx={{
+                    color: '#d8dee5',
+                    fontWeight: 400,
+                  }}
+                >
+                  {intl.messages['menu.clusterMangementDescription']}
+                </Box>
               </Stack>
             </Stack>
             {/* 导航列表 */}
@@ -363,16 +371,16 @@ export default function MiniDrawer() {
               </Collapse>
             </List>
           </Box>
-        </Grid>
-        <Grid xs={10.2} sx={{ backgroundColor: '#eff4f9' }}>
+        </Box>
+        <Box sx={{ backgroundColor: '#eff4f9', width: 'calc(100% - 230px)' }}>
           <Box sx={{ display: 'block' }}>
             <Box sx={{ padding: '20px' }}>
               <Outlet />
             </Box>
             <CommonSnackBar />
           </Box>
-        </Grid>
-      </Grid>
+        </Box>
+      </Stack>
     </>
   );
 }
