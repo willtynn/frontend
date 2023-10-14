@@ -15,7 +15,9 @@ import { fontFamily } from '../../utils/commonUtils';
 import ICES from '@/assets/ICES.png';
 import Workbench from '@/assets/Workbench.svg';
 import Gear from '@/assets/Gear.svg';
+import ClusterManagement from '@/assets/ClusterManagement.svg';
 import { KubeTransparentButton } from '../../components/Button';
+import { useIntl } from 'react-intl';
 
 export default function MiniDrawer() {
   const [open, setOpen] = React.useState(true);
@@ -34,6 +36,8 @@ export default function MiniDrawer() {
 
   const [l3, setl3] = React.useState(false);
   const [l31, setl31] = React.useState(false);
+
+  const intl = useIntl();
 
   const navigate = useNavigate();
 
@@ -191,11 +195,11 @@ export default function MiniDrawer() {
             <Stack
               direction='row'
               sx={{
-                height: '40px',
+                height: '120px',
                 maxWidth: '186px',
                 backgroundColor: 'rgb(36, 46, 66)',
                 boxShadow: 'rgba(36, 46, 66, 0.2) 0px 8px 16px 0px',
-                padding: '12px',
+                padding: '12px 14px 12px 10px',
                 marginTop: '20px',
                 marginBottom: '20px',
                 borderRadius: '4px',
@@ -203,7 +207,7 @@ export default function MiniDrawer() {
               }}
             >
               <Box sx={{ paddingRight: '20px' }}>
-                <DeviceHubIcon />
+                <ClusterManagement />
               </Box>
               <Stack
                 sx={{
@@ -214,9 +218,13 @@ export default function MiniDrawer() {
                   fontFamily:
                     'Roboto,PingFang SC,Lantinghei SC,Helvetica Neue,Helvetica,Arial,Microsoft YaHei,微软雅黑,STHeitiSC-Light,simsun,宋体,WenQuanYi Zen Hei,WenQuanYi Micro Hei,sans-serif',
                 }}
+                spacing={1}
               >
-                <Box>ices104</Box>
-                <Box>集群</Box>
+                <Box>集群管理</Box>
+                <Box sx={{
+                  color: "#d8dee5",
+                  fontWeight: 400,
+                }}>{intl.messages["menu.clusterMangementDescription"]}</Box>
               </Stack>
             </Stack>
             {/* 导航列表 */}
