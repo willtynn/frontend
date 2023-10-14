@@ -58,7 +58,12 @@ export const KubeCancelButton = styled(Button)({
   letterSpacing: 'normal',
   "&:hover":{
     backgroundColor: "#e3e9ef"
-  }
+  },
+  "&:disabled": {
+    opacity: .6,
+    pointerEvents: 'none',
+    cursor: 'not-allowed'
+}
 });
 
 export const KubeConfirmButton = styled(Button)({

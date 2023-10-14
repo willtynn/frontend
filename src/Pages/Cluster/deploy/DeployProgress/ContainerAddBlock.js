@@ -21,6 +21,7 @@ import {
 import './ContainerAddBlock.css';
 import HelpOutlineIcon from '@mui/icons-material/HelpOutline';
 import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline';
+import { KubeCancelButton } from '../../../../components/Button';
 
 const protocals = [
   'GRPC',
@@ -94,7 +95,7 @@ export function PortConfigRow(props) {
           </Box>
           <KubeSelect
             sx={{
-              width: "140px",
+              width: "150px",
               height: '32.36px',
               fontSize: '12px',
               lineHeight: '1.67',
@@ -130,7 +131,7 @@ export function PortConfigRow(props) {
             名称
           </Box>
           <KubeTextField sx={{
-            width: "140px",
+            width: "150px",
             height: "33.36px",
             '& .MuiOutlinedInput-input.MuiInputBase-input': {
               height: "19.67px",
@@ -158,7 +159,7 @@ export function PortConfigRow(props) {
           </Box>
           <KubeTextField sx={{
             height: "33.36px",
-            width: "140px",
+            width: "150px",
             '& .MuiOutlinedInput-input.MuiInputBase-input': {
               height: "19.67px",
               borderRadius: '0px 4px 4px 0px !important',
@@ -537,6 +538,17 @@ export default function ContainerAddBlock(props) {
           <Stack direction='column' spacing={0.5}>
             <PortConfigRow protocals={protocals} />
           </Stack>
+          <Box sx={{
+            mt: "12px"
+          }} display="flex" justifyContent="flex-end">
+            <KubeCancelButton sx={{
+              border: "1px solid #ccd3db",
+              backgroundColor: "#eff4f9",
+              width: "96px"
+            }}>
+              添加端口
+            </KubeCancelButton>
+          </Box>
         </Box>
       </Box>
     </Box>
