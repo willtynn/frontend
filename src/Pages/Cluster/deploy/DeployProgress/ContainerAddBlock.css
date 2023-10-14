@@ -1,0 +1,25 @@
+.PortProtocals-List .MuiList-root {
+    max-height: 232px;
+    margin-top: 4px;
+    padding: 4px 0;
+    border-radius: 4px;
+    background-color: #242e42;
+    -webkit-box-shadow: 0 4px 8px 0 rgba(36,46,66,.16);
+    box-shadow: 0 4px 8px 0 rgba(36,46,66,.16);
+    overflow-y: auto;
+    z-index: 1000;
+}
+
+li.PortProtocals-Item {
+    display: flex;
+    padding: 6px 12px;
+    font-family: PingFang SC,Lantinghei SC,Helvetica Neue,Helvetica,Arial,Microsoft YaHei,微软雅黑,STHeitiSC-Light,simsun,宋体,WenQuanYi Zen Hei,WenQuanYi Micro Hei,sans-serif;
+    font-size: 12px;
+    font-weight: 400;
+    font-style: normal;
+    font-stretch: normal;
+    line-height: 1.67;
+    letter-spacing: normal;
+    color: #fff;
+    cursor: pointer;
+}

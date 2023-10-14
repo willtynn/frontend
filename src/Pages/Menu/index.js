@@ -148,9 +148,9 @@ export default function MiniDrawer() {
 
       <Divider />
 
-      <Grid container spacing={0}>
+      <Grid container spacing={0} >
         <Grid
-          xs={2.5}
+          xs={1.8}
           sx={{
             paddingLeft: '20px',
             minWidth: '220px',
@@ -223,20 +223,7 @@ export default function MiniDrawer() {
                       集群总览
                     </Box>
                   </ListItemButton>
-                  <ListItemButton
-                    sx={styleListButton}
-                    onClick={() => {
-                      setAllFalse();
-                      setl12(true);
-                      navigate('cluster/node');
-                    }}
-                  >
-                    <Box
-                      sx={{ ...styledFont, color: l12 ? '#55bc8a' : '#242e42' }}
-                    >
-                      当前运行服务
-                    </Box>
-                  </ListItemButton>
+                  
                   <ListItemButton
                     sx={styleListButton}
                     onClick={() => {
@@ -248,7 +235,7 @@ export default function MiniDrawer() {
                     <Box
                       sx={{ ...styledFont, color: l13 ? '#55bc8a' : '#242e42' }}
                     >
-                      服务部署运行
+                      服务实例
                     </Box>
                   </ListItemButton>
                 </List>
@@ -340,7 +327,7 @@ export default function MiniDrawer() {
             </List>
           </Box>
         </Grid>
-        <Grid xs={9.5} sx={{ backgroundColor: '#eff4f9' }}>
+        <Grid xs={10.2} sx={{ backgroundColor: '#eff4f9' }}>
           <Box sx={{ display: 'block' }}>
             <Box sx={{ padding: '20px' }}>
               <Outlet />

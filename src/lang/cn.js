@@ -34,6 +34,8 @@ export const messages = {
     containerConfigDescription: "设置容器的镜像、名称、类型和计算资源。",
     containerInputPlaceHolder: "镜像路径，例如 192.168.0.1:5000/namespace/jenkins:latest",
     containerResourceConfigDescription: "设置容器的资源限制与资源预留，以将容器调度到合适的节点上。",
+    portConfigDescription: "设置用于访问容器的端口。",
+    protocalTip: "选择服务实际使用的协议以充分利用应用治理功能。例如，为 HTTP 服务选择 HTTP 协议。",
   },
   table: {
     rowsPerPage: "每页显示"

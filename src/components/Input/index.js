@@ -6,6 +6,7 @@ import {
   Box,
   Stack,
   Typography,
+  Select,
 } from '@mui/material';
 import { styled } from '@mui/system';
 import { CustomDefaultChip } from '../Chip';
@@ -102,6 +103,45 @@ export const StyledAutocomplete = styled(Autocomplete)(
     },
   })
 );
+
+export const KubeEndAdornmentTextField = styled(TextField)(({}) => ({
+  '& input:placeholder-shown': {
+    fontWeight: 400,
+    color: '#79879c',
+    fontSize: '12px',
+    lineHeight: 1.67,
+  },
+  '& .MuiOutlinedInput-root': {
+    background: '#FFFFFF',
+    boxSizing: 'border-box',
+    fontFamily: fontFamily,
+    fontSize: '12px',
+    fontWeight: 600,
+    fontStyle: 'normal',
+    fontStretch: 'normal',
+    lineHeight: 1.67,
+    letterSpacing: 'normal',
+    color: '#262E35',
+    height: '32px',
+    '& .MuiOutlinedInput-input.MuiInputBase-input': {
+      padding: '6px 12px !important',
+    },
+  },
+  '& .MuiOutlinedInput-notchedOutline': {
+    border: '1px solid rgba(0, 0, 0, 0.23)',
+  },
+  '& :hover': {
+    '& .MuiOutlinedInput-notchedOutline': {
+      border: '1px solid #000',
+    },
+  },
+  '& .Mui-focused': {
+    '& .MuiOutlinedInput-notchedOutline': {
+      border: '1px solid #55bc8a !important',
+      boxShadow: '0 4px 8px 0 rgba(85,188,138,.2)',
+    },
+  },
+}));
 
 export function ChipTextField(props) {
   const {
@@ -241,3 +281,28 @@ export function KubeInput(props) {
     </Box>
   );
 }
+
+export const KubeSelect = styled(Select)({
+  '& .MuiSelect-select': {
+    border: '1px solid rgba(0, 0, 0, 0.23) !important',
+  },
+  '& fieldset': {
+    display: 'none',
+  },
+  '& .MuiSelect-select.MuiSelect-outlined.MuiOutlinedInput-input': {
+    fontWeight: 600,
+    fontStyle: 'normal',
+    fontStretch: 'normal',
+    letterSpacing: 'normal',
+    color: '#36435c',
+    fontSize: '12px',
+    lineHeight: '1.67',
+    padding: '0 14px',
+    height: '33px',
+    display: 'flex',
+    alignItems: 'center',
+    boxSizing: 'border-box',
+    borderRadius: '0px 4px 4px 0px',
+    backgroundColor: "#FFFFFF"
+  },
+});
