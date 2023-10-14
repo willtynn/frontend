@@ -8,6 +8,7 @@ import {
   Typography,
   Select,
 } from '@mui/material';
+import { DateTimePicker } from '@mui/x-date-pickers/DateTimePicker';
 import { styled } from '@mui/system';
 import { CustomDefaultChip } from '../Chip';
 import ChipDeleteIcon from '@/assets/ChipDeleteIcon.svg';
@@ -101,6 +102,24 @@ export const StyledAutocomplete = styled(Autocomplete)(
         padding: padding,
       },
     },
+  })
+);
+
+export const StyledSelect = styled(Select)(
+  ({width}) => ({
+    borderRadius: '35px',
+    height: '50px',
+    width: width,
+    background: '#FFFFFF',
+  })
+);
+
+//DateTimePicker 在未来可能merge一个修改，支持圆角
+export const StyledDateTimePicker = styled(DateTimePicker)(
+  ({ width }) => ({
+    height: '50px',
+    width: width,
+    background: '#FFFFFF',
   })
 );
 

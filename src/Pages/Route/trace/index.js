@@ -6,40 +6,37 @@ import { useDispatch, useSelector } from "react-redux";
 import { RouteTraceCanvas } from "./DataCanvas";
 import {
   FormControl,
-  InputLabel,
-  Select,
   MenuItem,
   Box,
   Stack,
-  Button,
   Table,
   TableBody,
-  TableCell,
-  TableContainer,
   TableHead,
   TableRow,
   TableFooter,
   TablePagination,
   Paper,
-  Typography
 } from "@mui/material"
+
+import {
+  KubeConfirmButton
+} from "@/components/Button";
+import {
+  StyledDateTimePicker
+} from "@/components/Input";
 
 import {
   StyledTableRowCell,
   StyledTableContainer,
+  StyledTableFooter
 } from '@/components/DisplayTable';
-import { fontFamily } from "@/utils/commonUtils";
 
-
-import styled from "@emotion/styled";
 import {
   SuperLargeBoldFont,
   LargeBoldFont,
-  SmallLightFont,
   NormalFont,
   NormalFontBlack,
 } from "@/components/Fonts";
-import { DateTimePicker } from '@mui/x-date-pickers/DateTimePicker';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import dayjs from 'dayjs';
@@ -54,6 +51,7 @@ import {
   getRouteTrace,
   clearRouteTrace
 } from "@/actions/routeAction";
+import { StyledSelect } from "../../../components/Input";
 
 //#endregion
 //import
@@ -61,11 +59,34 @@ import {
 
 //Constants
 //#region
+const selectMenuItems = 
+  ["last 1 min", "last 2 min", "last 5 min", "last 10 min", 
+  "last 30 min", "last 1 hour", "last 3 hours", "last 6 hours", 
+  "last 12 hours", "last 1 day", "last 7 days", "Custom"];
 const durationList = [60, 120, 300, 600, 1800, 3600, 10800, 21600, 43200, 86400, 604800];
+
+const serviceTableHeaders = [
+  { key: 'service', align: 'left', text: '服务', minWidth: 200, maxWidth: 200 },
+  { key: 'api', align: 'center', text: '接口', minWidth: 150, maxWidth: 150 },
+  { key: 'count', align: 'center', text: <>请求<br/>次数</>, minWidth: 30, maxWidth: 30 },
+  { key: 'low', align: 'center', text: 'Low', minWidth: 60, maxWidth: 60 },
+  { key: 'percentile50', align: 'center', text: '0.5', minWidth: 60, maxWidth: 60 },
+  { key: 'percentile95', align: 'center', text: '0.95', minWidth: 60, maxWidth: 60 },
+  { key: 'percentile99', align: 'center', text: '0.99', minWidth: 60, maxWidth: 60 },
+  { key: 'high', align: 'center', text: 'High', minWidth: 60, maxWidth: 60 },
+];
+
 const serviceNumPerPage = 4;
 const spanNumPerPage = 5;
 //#endregion
 //Constants
+
+
+//自定义函数-开始
+//#region
+
+//#endregion
+//自定义函数-结束
 
 
 export default function RouteTrace() {
@@ -97,7 +118,6 @@ export default function RouteTrace() {
 
   const {
     routeService,
-    routeTraceDetail,
     routeTrace
   } = useSelector(state => {
     return {
@@ -123,15 +143,6 @@ export default function RouteTrace() {
   //style-开始
   //#region
 
-  const NormalTitleFont = styled(Typography)({
-    color: '#262E35',
-    fontSize: '18px',
-    fontFamily: fontFamily,
-    fontStyle: 'normal',
-    fontWeight: 500,
-    lineHeight: '27.5px',
-  });
-
   //#endregion
   //style-结束
 
@@ -140,11 +151,13 @@ export default function RouteTrace() {
 
   useEffect(() => {
     if (serviceVisibleRows) {
+      let maxWidths = serviceTableHeaders.map((item) => item.maxWidth);
       let row = serviceVisibleRows.map((item, index) => {
         return <ServiceRow key={item.id}
           selected={selectedServiceIndex === index}
           onRowClick={() => handleServiceClick(index)}
-          rowData={{...item, spanNum: 99}} />;
+          rowData={{...item, spanNum: 99}} 
+          maxWidth={maxWidths}/>;
       });
       setServiceRow(row);
       for(let i = row.length; i < serviceNumPerPage; i++)
@@ -181,12 +194,6 @@ export default function RouteTrace() {
   }, []);
   //#endregion
   //HOOK-结束
-
-  //自定义函数-开始
-  //#region
-
-  //#endregion
-  //自定义函数-结束
 
   //handle-开始
   //#region
@@ -301,26 +308,29 @@ export default function RouteTrace() {
           }}>路由链路</SuperLargeBoldFont>
         
         {/* 搜索 */}
-        <Stack direction="row" spacing={6} sx={{ mb: "12px" }}>
-          <Stack direction="row" spacing={4} sx={{
-              mt: "24px"
+        <Stack direction="row" spacing={6}>
+          
+            
+          <FormControl>
+            <Stack direction="row" spacing={4} sx={{
+              mb: "0px"
             }}>
-            { /* Namespace */ }
-            {/*
-            <Stack>
-              <SmallLightFont>
-                Namespace
-              </SmallLightFont>
-              <FormControl>
-                <Input
-                  value={namespace}
-                  onChange={handleInputChange}
-                />
-              </FormControl>
-            </Stack>*/
-            }
-            { /* Duration */ }
-            <FormControl variant="standard">
+              { /* Namespace */ }
+              {/*
+              <Stack>
+                <SmallLightFont>
+                  Namespace
+                </SmallLightFont>
+                <FormControl>
+                  <Input
+                    value={namespace}
+                    onChange={handleInputChange}
+                  />
+                </FormControl>
+              </Stack>*/
+              }
+              { /* Duration */ }
+              {/*
               <InputLabel
                 id="service_search_mode_label"
                 sx={{
@@ -331,43 +341,33 @@ export default function RouteTrace() {
               >
                 Duration
               </InputLabel>
-              <Select
+              */}
+              <StyledSelect
                 value={durationSelectIndex}
                 onChange={handleDurationSelectChange}
-                sx={{
-                  minWidth: "120px"
-                }}
-              >
-                <MenuItem value={0}>last 1 min</MenuItem>
-                <MenuItem value={1}>last 2 min</MenuItem>
-                <MenuItem value={2}>last 5 min</MenuItem>
-                <MenuItem value={3}>last 10 min</MenuItem>
-                <MenuItem value={4}>last 30 min</MenuItem>
-                <MenuItem value={5}>last 1 hour</MenuItem>
-                <MenuItem value={6}>last 3 hours</MenuItem>
-                <MenuItem value={7}>last 6 hours</MenuItem>
-                <MenuItem value={8}>last 12 hours</MenuItem>
-                <MenuItem value={9}>last 1 day</MenuItem>
-                <MenuItem value={10}>last 7 days</MenuItem>
-                <MenuItem value={11}>Custom</MenuItem>
-              </Select>
-            </FormControl>
-            {
-              durationSelectIndex === 11 ? 
-              <LocalizationProvider dateAdapter={AdapterDayjs}>
-                <DateTimePicker
-                  sx={{width: "200px"}}
-                  label="Start Time"
-                  ampm={false}
-                  displayWeekNumber={true}
-                  minDate={dayjs("2020-01-01")}
-                  maxDate={dayjs().add(1, 'day')}
-                  timeSteps={{ hours: 1, minutes: 1, seconds: 10 }}
-                  value={startTimeValue}
-                  onChange={handleStartTimeChange}
-                  />
-                  <DateTimePicker
-                    sx={{width: "200px"}}
+                width="150px">
+                {selectMenuItems.map((item, index) => {
+                  return <MenuItem key={index} value={index}>{item}</MenuItem>;
+                })}
+              </StyledSelect>
+              {
+                durationSelectIndex === 11 ? 
+                <LocalizationProvider dateAdapter={AdapterDayjs}>
+                  <StyledDateTimePicker
+                    round= "20px"
+                    width= "200px"
+                    label="Start Time"
+                    ampm={false}
+                    displayWeekNumber={true}
+                    minDate={dayjs("2020-01-01")}
+                    maxDate={dayjs().add(1, 'day')}
+                    timeSteps={{ hours: 1, minutes: 1, seconds: 10 }}
+                    value={startTimeValue}
+                    onChange={handleStartTimeChange}
+                    />
+                  <StyledDateTimePicker
+                    round= "20px"
+                    width= "200px"
                     label="End Time"
                     ampm={false}
                     displayWeekNumber={true}
@@ -377,21 +377,22 @@ export default function RouteTrace() {
                     value={endTimeValue}
                     onChange={handleEndTimeChange}
                     />
-                    
-              </LocalizationProvider>
-              : <></>
-            }
-            <Button endIcon={<SendIcon />} variant="contained"
-              onClick={handleSearchClick}
-              sx={{
-                mt: "6px !important",
-                width: "110px",
-                height: "40px"
-              }}>
-              Search
-            </Button>
-            
-          </Stack>
+                      
+                </LocalizationProvider>
+                : <></>
+              }
+              <KubeConfirmButton endIcon={<SendIcon />} 
+                onClick={handleSearchClick}
+                sx={{
+                  mt: "6px !important",
+                  width: "110px",
+                  height: "40px"
+                }}>
+                Search
+              </KubeConfirmButton>
+            </Stack>
+          </FormControl>
+          
         </Stack>
       </Stack>
 
@@ -405,42 +406,37 @@ export default function RouteTrace() {
           <Stack>
             {/* Service 列表 */}
             <Stack>
-              <StyledTableContainer component={Paper} sx={
-                { 
-                  //minWidth: "750px", 
-                  //maxWidth: "900px",
-                  width: "900px",
-                  boxShadow: "1px 1px 4px 1px #B5B5B8", 
-                  border: "solid 1px #959194" 
-                }}>
-                <Table sx={{tableLayout: 'auto'}}>
+              <StyledTableContainer sx={{ width: "950px" }}>
+                <Table 
+                  stickyHeader
+                  size='small'
+                  sx={{tableLayout: 'auto'}}>
                   <TableHead>
-                    <TableRow sx={{ height: "20px" }}>
-                      <StyledTableRowCell>服务</StyledTableRowCell>
-                      <StyledTableRowCell align="center">接口</StyledTableRowCell>
-                      <StyledTableRowCell align="center">请求<br/>次数</StyledTableRowCell>
-                      <StyledTableRowCell align="center">Low</StyledTableRowCell>
-                      <StyledTableRowCell align="center">0.5</StyledTableRowCell>
-                      <StyledTableRowCell align="center">0.95</StyledTableRowCell>
-                      <StyledTableRowCell align="center">0.99</StyledTableRowCell>
-                      <StyledTableRowCell align="center">High</StyledTableRowCell>
+                    <TableRow>
+                      {
+                        serviceTableHeaders.map((item) => {
+                          return <StyledTableRowCell key={item.key} align={item.align} sx={{ minWidth: item.minWidth, maxWidth: item.maxWidth }}>{item.text}</StyledTableRowCell>;
+                        })
+                      }
                     </TableRow>
                   </TableHead>
-                  <TableBody sx={{ borderBottom: "solid 2px #B8B5B7", borderTop: "solid 2px #B8B5B7" }}>
+                  <TableBody>
                     {serviceRow}
                   </TableBody>
                   
-                  <TableFooter sx={{ backgroundColor: "#DFE4E8" }}>
-                    <TablePagination
-                      rowsPerPageOptions={-1}
-                      count={routeService ? routeService.length : 0}
-                      rowsPerPage={serviceNumPerPage}
-                      page={servicePage}
-                      onPageChange={handleServiceChangePage}/>
-                  </TableFooter>
                 </Table>
               </StyledTableContainer>
-              
+              <StyledTableFooter
+                rowsPerPageOptions={-1}
+                page={servicePage}
+                count={routeService ? routeService.length : 0}
+                handlePageChange={handleServiceChangePage}
+                sx={{
+                  width: "100%",
+                  pt: "10px",
+                  pb: "10px"
+                }}
+              />
             </Stack>
 
             <div style={{ height: "10px" }}/>
@@ -448,20 +444,15 @@ export default function RouteTrace() {
             {/* Trace 列表 */}
             <Stack>
               <LargeBoldFont>请求信息</LargeBoldFont>
-              <StyledTableContainer component={Paper} sx={
-                { 
-                  //minWidth: "510px", 
-                  width: "100%",
-                  boxShadow: "1px 1px 4px 1px #B5B5B8", 
-                  border: "solid 1px #959194" 
-                }}>
-                <Table aria-label="collapsible table">
+              <StyledTableContainer sx={{ width: "100%" }}>
+                <Table 
+                  stickyHeader
+                  size='small'
+                  sx={{tableLayout: 'auto'}}>
                   <TableHead>
                     <TableRow sx={{ backgroundColor: "#E3E3E3" }}>
                       <StyledTableRowCell>请求</StyledTableRowCell>
-                      <StyledTableRowCell align="center" 
-                      // sx={{ borderLeft: "solid 1px #B8B5B7", borderRight: "solid 1px #B8B5B7" }}
-                      >链路长度</StyledTableRowCell>
+                      <StyledTableRowCell align="center">链路长度</StyledTableRowCell>
                       <StyledTableRowCell align="center">开始时间</StyledTableRowCell>
                       <StyledTableRowCell align="center">响应时间</StyledTableRowCell>
                       <StyledTableRowCell align="center">请求状态</StyledTableRowCell>
