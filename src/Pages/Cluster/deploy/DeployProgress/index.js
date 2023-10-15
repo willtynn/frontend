@@ -41,12 +41,11 @@ export default function DeployProgress(props) {
   };
 
   const nextStep = () => {
-    setShowError(true);
     if(basicInfoError === true && currentStage === 1) {
+      setShowError(true);
       return;
     }
     setCurrentStage(prevStage => prevStage + 1);
-    
   };
 
   return (

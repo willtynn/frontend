@@ -21,8 +21,10 @@ import {
 import './ContainerAddBlock.css';
 import HelpOutlineIcon from '@mui/icons-material/HelpOutline';
 import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline';
-import { KubeCancelButton } from '../../../../components/Button';
-import { set } from 'date-fns';
+import {
+  KubeCancelButton,
+  KubeTransparentButton,
+} from '../../../../components/Button';
 
 const protocals = [
   'GRPC',
@@ -42,7 +44,7 @@ export function PortConfigRow(props) {
   return (
     <Box
       sx={{
-        padding: '6px 17px 6px 17px',
+        padding: '6px 8px 6px 17px',
         borderRadius: '60px',
         backgroundColor: '#eff4f9',
         border: '1px solid #ccd3db',
@@ -103,6 +105,7 @@ export function PortConfigRow(props) {
               color: '#242e42',
             }}
             MenuProps={{ className: 'PortProtocals-List' }}
+            // value={}
           >
             {protocals.map((value, item) => {
               return (
@@ -176,10 +179,19 @@ export function PortConfigRow(props) {
         sx={{
           float: 'right',
           position: 'relative',
-          top: '-29px',
+          top: '-35px',
         }}
       >
-        <DeleteOutlineIcon></DeleteOutlineIcon>
+        <KubeTransparentButton
+          sx={{
+            color: '#b6c2cd !important',
+            '&:hover': {
+              color: '#324558 !important',
+            },
+          }}
+        >
+          <DeleteOutlineIcon />
+        </KubeTransparentButton>
       </Box>
     </Box>
   );
@@ -200,79 +212,88 @@ export default function ContainerAddBlock(props) {
     setPortsError,
     resourcesError,
     setResourcesError,
+    showError,
   } = props;
   const [returnHover, setReturnHover] = useState(false);
-  const [cpuReserved, setCpuReserved] = useState("");
-  const [cpuLimit, setCpuLimit] = useState("");
-  const [memoryReserved, setMemoryReserved] = useState("");
-  const [memoryLimit, setMemoryLimit] = useState("");
+  const [cpuReserved, setCpuReserved] = useState('');
+  const [cpuLimit, setCpuLimit] = useState('');
+  const [memoryReserved, setMemoryReserved] = useState('');
+  const [memoryLimit, setMemoryLimit] = useState('');
   const intl = useIntl();
 
   const [cpuError, setCpuError] = useState(false);
   const [memoryError, setMemoryError] = useState(false);
 
+  const [currentPortAlive, setCurrentPortAlive] = useState([true]);
+
   useEffect(() => {
     setResourcesError(cpuError || memoryError);
   }, [cpuError, memoryError]);
 
-  const handleImageUrlChange = (e) => {
-    if(e.target.value === "") {
+  const handleImageUrlChange = e => {
+    if (e.target.value === '') {
       setImageUrlError(true);
     } else {
       setImageUrlError(false);
     }
     setImageUrl(e.target.value);
-  }
+  };
 
-  const handleCpuReservedChange = (e) => {
+  const handleCpuReservedChange = e => {
     const currentReserved = Number(e.target.value);
-    if(!isNaN(currentReserved)) {
+    if (!isNaN(currentReserved)) {
       setCpuReserved(e.target.value);
-      if(currentReserved > Number(cpuLimit)) {
+      if (cpuLimit === '' || e.target.value === '') {
+        setCpuError(false);
+      } else if (currentReserved > Number(cpuLimit)) {
         setCpuError(true);
       } else {
         setCpuError(false);
       }
     }
-  }
+  };
 
-  const handleCpuLimitChange = (e) => {
+  const handleCpuLimitChange = e => {
     const currentLimit = Number(e.target.value);
-    if(!isNaN(currentLimit)) {
+    if (!isNaN(currentLimit)) {
       setCpuLimit(e.target.value);
-      if(currentLimit < Number(cpuReserved)) {
+      if (cpuReserved === '' || e.target.value === '') {
+        setCpuError(false);
+      } else if (currentLimit < Number(cpuReserved)) {
         setCpuError(true);
       } else {
         setCpuError(false);
       }
     }
-  }
+  };
 
-  const handleMemoryReservedChange = (e) => {
+  const handleMemoryReservedChange = e => {
     const currentReserved = Number(e.target.value);
-    if(!isNaN(Number(currentReserved))) {
+    if (!isNaN(Number(currentReserved))) {
       setMemoryReserved(e.target.value);
-      if(currentReserved > Number(memoryLimit)) {
+      if (memoryLimit === '' || e.target.value === '') {
+        setMemoryError(false);
+      } else if (currentReserved > Number(memoryLimit)) {
         setMemoryError(true);
       } else {
         setMemoryError(false);
       }
     }
-  }
+  };
 
-  const handleMemoryLimitChange = (e) => {
+  const handleMemoryLimitChange = e => {
     const currentLimit = Number(e.target.value);
-    if(!isNaN(Number(currentLimit))) {
+    if (!isNaN(Number(currentLimit))) {
       setMemoryLimit(e.target.value);
-      if(currentLimit < Number(memoryReserved)) {
+      if (memoryReserved === '' || e.target.value === '') {
+        setMemoryError(false);
+      } else if (currentLimit < Number(memoryReserved)) {
         setMemoryError(true);
       } else {
         setMemoryError(false);
       }
     }
-  }
-  
-  
+  };
 
   return (
     <Box
@@ -366,7 +387,27 @@ export default function ContainerAddBlock(props) {
           placeholder={intl.messages['instance.containerInputPlaceHolder']}
           value={imageUrl}
           onChange={handleImageUrlChange}
+          error={imageUrlError && showError}
         />
+        {imageUrlError && showError ? (
+          <Box
+            sx={{
+              fontSize: '12px',
+              fontWeight: 400,
+              fontStyle: 'normal',
+              fontStretch: 'normal',
+              lineHeight: 1.67,
+              letterSpacing: 'normal',
+              color: '#CA2621',
+              mt: '4px',
+            }}
+          >
+            {intl.messages['instance.imageUrlEmptyError']}
+          </Box>
+        ) : (
+          <></>
+        )}
+
         <Box
           sx={{
             padding: '12px',
@@ -376,7 +417,7 @@ export default function ContainerAddBlock(props) {
             color: '#3385b0',
             fontSize: '12px',
             lineHeight: 1.67,
-            mt: '24px',
+            mt: '18px',
             mb: '12px',
           }}
         >
@@ -445,6 +486,7 @@ export default function ContainerAddBlock(props) {
                     }}
                     onChange={handleCpuReservedChange}
                     value={cpuReserved}
+                    error={resourcesError && showError}
                   />
                 </Stack>
                 <Stack direction='row' spacing={1} alignItems='center'>
@@ -488,6 +530,7 @@ export default function ContainerAddBlock(props) {
                     }}
                     value={cpuLimit}
                     onChange={handleCpuLimitChange}
+                    error={resourcesError && showError}
                   />
                 </Stack>
               </Stack>
@@ -540,6 +583,7 @@ export default function ContainerAddBlock(props) {
                     }}
                     value={memoryReserved}
                     onChange={handleMemoryReservedChange}
+                    error={resourcesError && showError}
                   />
                 </Stack>
                 <Stack direction='row' spacing={1} alignItems='center'>
@@ -583,12 +627,31 @@ export default function ContainerAddBlock(props) {
                     }}
                     value={memoryLimit}
                     onChange={handleMemoryLimitChange}
+                    error={resourcesError && showError}
                   />
                 </Stack>
               </Stack>
             </Stack>
           </Grid>
         </Grid>
+        {resourcesError && showError ? (
+          <Box
+            sx={{
+              padding: '12px',
+              borderRadius: '4px',
+              backgroundColor: '#FAE5E7',
+              fontWeight: 400,
+              color: '#8C3231',
+              fontSize: '12px',
+              lineHeight: 1.67,
+              mt: '12px',
+            }}
+          >
+            {intl.messages['instance.resourceConflictError']}
+          </Box>
+        ) : (
+          <></>
+        )}
       </Box>
 
       {/* 端口设置模块 */}
@@ -635,7 +698,20 @@ export default function ContainerAddBlock(props) {
           }}
         >
           <Stack direction='column' spacing={0.5}>
-            <PortConfigRow protocals={protocals} />
+            {currentPortAlive.map((value, index) => {
+              if (value === true) {
+                return (
+                  <PortConfigRow
+                    protocals={protocals}
+                    resources={resources}
+                    setResources={setResources}
+                    index={index}
+                  />
+                );
+              } else {
+                return <></>;
+              }
+            })}
           </Stack>
           <Box
             sx={{

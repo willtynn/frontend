@@ -168,6 +168,12 @@ export const KubeEndAdornmentTextField = styled(TextField)(({}) => ({
       boxShadow: '0 4px 8px 0 rgba(85,188,138,.2)',
     },
   },
+  '& .Mui-error': {
+    '& .MuiOutlinedInput-notchedOutline': {
+      border: '1px solid #CA2621 !important',
+      boxShadow: 'none',
+    },
+  },
 }));
 
 export function ChipTextField(props) {

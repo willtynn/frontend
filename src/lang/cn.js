@@ -42,7 +42,9 @@ export const messages = {
     instanceDescription: "服务实例（Pod），是服务实例运行的对象，通过服务来配置和管理。在实例列表，可以看到实例的状态、所在的主机IP、实例的IP、创建时间。",
     serviceIdEmptyError: "请填写服务对应的ID。",
     namespaceEmptyErrorMsg: "请选择一个命名空间",
+    containerEmptyError: "请对容器进行设置。",
     imageUrlEmptyError: "请设置容器镜像路径。",
+    resourceConflictError: "资源预留不能超过资源限制。",
   },
   table: {
     rowsPerPage: "每页显示"

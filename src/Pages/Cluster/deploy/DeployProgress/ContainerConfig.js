@@ -24,8 +24,8 @@ export default function ContainerConfig(props) {
 
   const [isConfig, setIsConfig] = useState(false);
   const intl = useIntl();
-  const [imageUrlError, setImageUrlError] = useState(false);
-  const [portsError, setPortsError] = useState(false);
+  const [imageUrlError, setImageUrlError] = useState(true);
+  const [portsError, setPortsError] = useState(true);
   const [resourcesError, setResourcesError] = useState(false);
 
   const handleReplicasInputChange = e => {
@@ -66,6 +66,7 @@ export default function ContainerConfig(props) {
           setPortsError={setPortsError}
           resourcesError={resourcesError}
           setResourcesError={setResourcesError}
+          showError={showError}
         />
       ) : (
         <Stack spacing={1}>
@@ -218,7 +219,7 @@ export default function ContainerConfig(props) {
                 mt: '4px',
               }}
             >
-              {intl.messages['instance.imageUrlEmptyError']}
+              {intl.messages['instance.containerEmptyError']}
             </Box>
           </Box>
         </Stack>
