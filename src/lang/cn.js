@@ -29,7 +29,7 @@ export const messages = {
     deploySuccess: "实例部署成功！",
     deployFailed: "实例部署失败，请重试...",
     serverIdDescription: "服务的唯一标识,一个服务ID对应一个服务。",
-    namePatternErrorMsg: "名称无效。名称只能包含小写字母、数字和连字符（-），必须以小写字母或数字开头和结尾，最长 63 个字符。",
+    namePatternErrorMsg: "名称无效。名称只能包含小写字母、数字和连字符（-），必须以小写字母或数字开头和结尾，最长 253 个字符。",
     nameEmptyErrorMsg: "请设置一个名称。",
     nameDescription: "名称只能包含小写字母、数字和连字符（-），必须以小写字母或数字开头和结尾，最长 253 个字符。",
     namespaceDescription: "选择将要创建资源的命名空间。",
@@ -40,6 +40,9 @@ export const messages = {
     portConfigDescription: "设置用于访问容器的端口。",
     protocalTip: "选择服务实际使用的协议以充分利用应用治理功能。例如，为 HTTP 服务选择 HTTP 协议。",
     instanceDescription: "服务实例（Pod），是服务实例运行的对象，通过服务来配置和管理。在实例列表，可以看到实例的状态、所在的主机IP、实例的IP、创建时间。",
+    serviceIdEmptyError: "请填写服务对应的ID。",
+    namespaceEmptyErrorMsg: "请选择一个命名空间",
+    imageUrlEmptyError: "请设置容器镜像路径。",
   },
   table: {
     rowsPerPage: "每页显示"

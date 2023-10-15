@@ -31,7 +31,7 @@ const style = {
 };
 
 export default function DeployProgress(props) {
-  const { handleConfirmClick, handleCancelClick, totalStage, currentPage } =
+  const { handleConfirmClick, handleCancelClick, totalStage, currentPage, basicInfoError, setShowError } =
     props;
   const [currentStage, setCurrentStage] = useState(1);
   const intl = useIntl();
@@ -41,7 +41,12 @@ export default function DeployProgress(props) {
   };
 
   const nextStep = () => {
+    setShowError(true);
+    if(basicInfoError === true && currentStage === 1) {
+      return;
+    }
     setCurrentStage(prevStage => prevStage + 1);
+    
   };
 
   return (

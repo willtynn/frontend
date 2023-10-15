@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import KubeNormalReturn from '@/assets/KubeNormalReturn.svg';
 import KubeHoverReturn from '@/assets/KubeHoverReturn.svg';
 import {
@@ -22,6 +22,7 @@ import './ContainerAddBlock.css';
 import HelpOutlineIcon from '@mui/icons-material/HelpOutline';
 import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline';
 import { KubeCancelButton } from '../../../../components/Button';
+import { set } from 'date-fns';
 
 const protocals = [
   'GRPC',
@@ -45,7 +46,7 @@ export function PortConfigRow(props) {
         borderRadius: '60px',
         backgroundColor: '#eff4f9',
         border: '1px solid #ccd3db',
-        height: "34px"
+        height: '34px',
       }}
     >
       <Stack direction='row' spacing={0.75}>
@@ -95,7 +96,7 @@ export function PortConfigRow(props) {
           </Box>
           <KubeSelect
             sx={{
-              width: "150px",
+              width: '150px',
               height: '32.36px',
               fontSize: '12px',
               lineHeight: '1.67',
@@ -125,19 +126,21 @@ export function PortConfigRow(props) {
               backgroundColor: '#eff4f9 !important',
               borderRadius: '4px 0px 0px 4px',
               borderRight: '0px',
-              width: "45px",
+              width: '45px',
             }}
           >
             名称
           </Box>
-          <KubeTextField sx={{
-            width: "150px",
-            height: "33.36px",
-            '& .MuiOutlinedInput-input.MuiInputBase-input': {
-              height: "19.67px",
-              borderRadius: '0px 4px 4px 0px !important',
-            }
-          }}/>
+          <KubeTextField
+            sx={{
+              width: '150px',
+              height: '33.36px',
+              '& .MuiOutlinedInput-input.MuiInputBase-input': {
+                height: '19.67px',
+                borderRadius: '0px 4px 4px 0px !important',
+              },
+            }}
+          />
         </Stack>
 
         <Stack direction='row'>
@@ -152,27 +155,29 @@ export function PortConfigRow(props) {
               backgroundColor: '#eff4f9 !important',
               borderRadius: '4px 0px 0px 4px',
               borderRight: '0px',
-              width: "50px",
+              width: '50px',
             }}
           >
             容器端口
           </Box>
-          <KubeTextField sx={{
-            height: "33.36px",
-            width: "150px",
-            '& .MuiOutlinedInput-input.MuiInputBase-input': {
-              height: "19.67px",
-              borderRadius: '0px 4px 4px 0px !important',
-            }
-          }}/>
+          <KubeTextField
+            sx={{
+              height: '33.36px',
+              width: '150px',
+              '& .MuiOutlinedInput-input.MuiInputBase-input': {
+                height: '19.67px',
+                borderRadius: '0px 4px 4px 0px !important',
+              },
+            }}
+          />
         </Stack>
       </Stack>
-      <Box sx={{
-        float: "right",
-        position: "relative",
-        top: "-29px"
-      }}
-      
+      <Box
+        sx={{
+          float: 'right',
+          position: 'relative',
+          top: '-29px',
+        }}
       >
         <DeleteOutlineIcon></DeleteOutlineIcon>
       </Box>
@@ -181,9 +186,93 @@ export function PortConfigRow(props) {
 }
 
 export default function ContainerAddBlock(props) {
-  const { handleReturn } = props;
+  const {
+    handleReturn,
+    imageUrl,
+    setImageUrl,
+    ports,
+    setPorts,
+    resources,
+    setResources,
+    imageUrlError,
+    setImageUrlError,
+    portsError,
+    setPortsError,
+    resourcesError,
+    setResourcesError,
+  } = props;
   const [returnHover, setReturnHover] = useState(false);
+  const [cpuReserved, setCpuReserved] = useState("");
+  const [cpuLimit, setCpuLimit] = useState("");
+  const [memoryReserved, setMemoryReserved] = useState("");
+  const [memoryLimit, setMemoryLimit] = useState("");
   const intl = useIntl();
+
+  const [cpuError, setCpuError] = useState(false);
+  const [memoryError, setMemoryError] = useState(false);
+
+  useEffect(() => {
+    setResourcesError(cpuError || memoryError);
+  }, [cpuError, memoryError]);
+
+  const handleImageUrlChange = (e) => {
+    if(e.target.value === "") {
+      setImageUrlError(true);
+    } else {
+      setImageUrlError(false);
+    }
+    setImageUrl(e.target.value);
+  }
+
+  const handleCpuReservedChange = (e) => {
+    const currentReserved = Number(e.target.value);
+    if(!isNaN(currentReserved)) {
+      setCpuReserved(e.target.value);
+      if(currentReserved > Number(cpuLimit)) {
+        setCpuError(true);
+      } else {
+        setCpuError(false);
+      }
+    }
+  }
+
+  const handleCpuLimitChange = (e) => {
+    const currentLimit = Number(e.target.value);
+    if(!isNaN(currentLimit)) {
+      setCpuLimit(e.target.value);
+      if(currentLimit < Number(cpuReserved)) {
+        setCpuError(true);
+      } else {
+        setCpuError(false);
+      }
+    }
+  }
+
+  const handleMemoryReservedChange = (e) => {
+    const currentReserved = Number(e.target.value);
+    if(!isNaN(Number(currentReserved))) {
+      setMemoryReserved(e.target.value);
+      if(currentReserved > Number(memoryLimit)) {
+        setMemoryError(true);
+      } else {
+        setMemoryError(false);
+      }
+    }
+  }
+
+  const handleMemoryLimitChange = (e) => {
+    const currentLimit = Number(e.target.value);
+    if(!isNaN(Number(currentLimit))) {
+      setMemoryLimit(e.target.value);
+      if(currentLimit < Number(memoryReserved)) {
+        setMemoryError(true);
+      } else {
+        setMemoryError(false);
+      }
+    }
+  }
+  
+  
 
   return (
     <Box
@@ -275,6 +364,8 @@ export default function ContainerAddBlock(props) {
         </Stack>
         <KubeTextField
           placeholder={intl.messages['instance.containerInputPlaceHolder']}
+          value={imageUrl}
+          onChange={handleImageUrlChange}
         />
         <Box
           sx={{
@@ -352,6 +443,8 @@ export default function ContainerAddBlock(props) {
                         </InputAdornment>
                       ),
                     }}
+                    onChange={handleCpuReservedChange}
+                    value={cpuReserved}
                   />
                 </Stack>
                 <Stack direction='row' spacing={1} alignItems='center'>
@@ -393,6 +486,8 @@ export default function ContainerAddBlock(props) {
                         </InputAdornment>
                       ),
                     }}
+                    value={cpuLimit}
+                    onChange={handleCpuLimitChange}
                   />
                 </Stack>
               </Stack>
@@ -443,6 +538,8 @@ export default function ContainerAddBlock(props) {
                         </InputAdornment>
                       ),
                     }}
+                    value={memoryReserved}
+                    onChange={handleMemoryReservedChange}
                   />
                 </Stack>
                 <Stack direction='row' spacing={1} alignItems='center'>
@@ -484,6 +581,8 @@ export default function ContainerAddBlock(props) {
                         </InputAdornment>
                       ),
                     }}
+                    value={memoryLimit}
+                    onChange={handleMemoryLimitChange}
                   />
                 </Stack>
               </Stack>
@@ -538,14 +637,20 @@ export default function ContainerAddBlock(props) {
           <Stack direction='column' spacing={0.5}>
             <PortConfigRow protocals={protocals} />
           </Stack>
-          <Box sx={{
-            mt: "12px"
-          }} display="flex" justifyContent="flex-end">
-            <KubeCancelButton sx={{
-              border: "1px solid #ccd3db",
-              backgroundColor: "#eff4f9",
-              width: "96px"
-            }}>
+          <Box
+            sx={{
+              mt: '12px',
+            }}
+            display='flex'
+            justifyContent='flex-end'
+          >
+            <KubeCancelButton
+              sx={{
+                border: '1px solid #ccd3db',
+                backgroundColor: '#eff4f9',
+                width: '96px',
+              }}
+            >
               添加端口
             </KubeCancelButton>
           </Box>

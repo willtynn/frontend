@@ -89,6 +89,14 @@ export const KubeTextField = styled(TextField)(({ theme }) => ({
       border: 'none',
     },
   },
+  '& .Mui-error': {
+    '& .MuiOutlinedInput-input.MuiInputBase-input': {
+      border: '1px solid #CA2621 !important',
+      '&:focus': {
+        boxShadow: 'none !important',
+      },
+    },
+  },
 }));
 
 export const StyledAutocomplete = styled(Autocomplete)(
@@ -243,7 +251,7 @@ export function ChipTextField(props) {
 }
 
 export function KubeInput(props) {
-  const { label, decription, requried, ...others } = props;
+  const { label, decription, requried, errorMessage, ...others } = props;
 
   return (
     <Box>
@@ -270,20 +278,36 @@ export function KubeInput(props) {
             *
           </Typography>
         </Stack>
-        <KubeTextField others />
-        <Box
-          sx={{
-            fontSize: '12px',
-            fontWeight: 400,
-            fontStyle: 'normal',
-            fontStretch: 'normal',
-            lineHeight: 1.67,
-            letterSpacing: 'normal',
-            color: '#79879c',
-          }}
-        >
-          {decription}
-        </Box>
+        <KubeTextField {...others} />
+        {others.error === true ? (
+          <Box
+            sx={{
+              fontSize: '12px',
+              fontWeight: 400,
+              fontStyle: 'normal',
+              fontStretch: 'normal',
+              lineHeight: 1.67,
+              letterSpacing: 'normal',
+              color: '#CA2621',
+            }}
+          >
+            {errorMessage}
+          </Box>
+        ) : (
+          <Box
+            sx={{
+              fontSize: '12px',
+              fontWeight: 400,
+              fontStyle: 'normal',
+              fontStretch: 'normal',
+              lineHeight: 1.67,
+              letterSpacing: 'normal',
+              color: '#79879c',
+            }}
+          >
+            {decription}
+          </Box>
+        )}
       </Stack>
     </Box>
   );

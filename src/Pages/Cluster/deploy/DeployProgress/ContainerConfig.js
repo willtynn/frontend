@@ -8,10 +8,25 @@ import Docker from '@/assets/Docker.svg';
 import { useIntl } from 'react-intl';
 import ContainerAddBlock from './ContainerAddBlock';
 
-export default function ContainerConfig() {
-  const [replicas, setReplicas] = useState(1);
+export default function ContainerConfig(props) {
+  const {
+    imageUrl,
+    setImageUrl,
+    replicas,
+    setReplicas,
+    ports,
+    setPorts,
+    resources,
+    setResources,
+    showError,
+    setContainerAddError,
+  } = props;
+
   const [isConfig, setIsConfig] = useState(false);
   const intl = useIntl();
+  const [imageUrlError, setImageUrlError] = useState(false);
+  const [portsError, setPortsError] = useState(false);
+  const [resourcesError, setResourcesError] = useState(false);
 
   const handleReplicasInputChange = e => {
     setReplicas(e.target.value);
@@ -35,7 +50,23 @@ export default function ContainerConfig() {
   return (
     <>
       {isConfig ? (
-        <ContainerAddBlock handleReturn={() => {setIsConfig(false)}} />
+        <ContainerAddBlock
+          handleReturn={() => {
+            setIsConfig(false);
+          }}
+          imageUrl={imageUrl}
+          setImageUrl={setImageUrl}
+          ports={ports}
+          setPorts={setPorts}
+          resources={resources}
+          setResources={setResources}
+          imageUrlError={imageUrlError}
+          setImageUrlError={setImageUrlError}
+          portsError={portsError}
+          setPortsError={setPortsError}
+          resourcesError={resourcesError}
+          setResourcesError={setResourcesError}
+        />
       ) : (
         <Stack spacing={1}>
           <Box
@@ -174,6 +205,20 @@ export default function ContainerConfig() {
                   </Typography>
                 </Stack>
               </Box>
+            </Box>
+            <Box
+              sx={{
+                fontSize: '12px',
+                fontWeight: 400,
+                fontStyle: 'normal',
+                fontStretch: 'normal',
+                lineHeight: 1.67,
+                letterSpacing: 'normal',
+                color: '#CA2621',
+                mt: '4px',
+              }}
+            >
+              {intl.messages['instance.imageUrlEmptyError']}
             </Box>
           </Box>
         </Stack>
