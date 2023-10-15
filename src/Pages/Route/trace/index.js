@@ -15,7 +15,7 @@ import {
   TableRow,
   TableFooter,
   TablePagination,
-  Paper,
+  Typography,
 } from "@mui/material"
 
 import {
@@ -32,7 +32,6 @@ import {
 } from '@/components/DisplayTable';
 
 import {
-  SuperLargeBoldFont,
   LargeBoldFont,
   NormalFont,
   NormalFontBlack,
@@ -42,6 +41,7 @@ import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import dayjs from 'dayjs';
 
 import SendIcon from '@mui/icons-material/Send';
+import TaskIcon from '@/assets/TaskIcon.svg';
 
 import { DataRow } from "./DataRow";
 import { ServiceRow } from "./ServiceRow";
@@ -74,6 +74,14 @@ const serviceTableHeaders = [
   { key: 'percentile95', align: 'center', text: '0.95', minWidth: 60, maxWidth: 60 },
   { key: 'percentile99', align: 'center', text: '0.99', minWidth: 60, maxWidth: 60 },
   { key: 'high', align: 'center', text: 'High', minWidth: 60, maxWidth: 60 },
+];
+
+const traceTableHeaders = [
+  { key: 'service', align: 'left', text: '请求', minWidth: 350, maxWidth: 350 },
+  { key: 'spanNum', align: 'center', text: <>链路<br/>长度</>, minWidth: 30, maxWidth: 30 },
+  { key: 'time', align: 'center', text: '开始时间', minWidth: 150, maxWidth: 150 },
+  { key: 'duration', align: 'center', text: '响应时间', minWidth: 80, maxWidth: 80 },
+  { key: 'status', align: 'center', text: '请求状态', minWidth: 40, maxWidth: 40 },
 ];
 
 const serviceNumPerPage = 4;
@@ -128,12 +136,12 @@ export default function RouteTrace() {
   });
 
   const spanVisibleRows = React.useMemo(() => {
-    const tmp = spanPage * spanNumPerPage;
+    const tmp = (spanPage - 1) * spanNumPerPage;
     return routeTrace ? routeTrace.slice(tmp, tmp + spanNumPerPage) : [];
   }, [routeTrace, spanPage]);
   
   const serviceVisibleRows = React.useMemo(() => {
-    const tmp = servicePage * serviceNumPerPage;
+    const tmp = (servicePage - 1) * serviceNumPerPage;
     return routeService ? routeService.slice(tmp, tmp + serviceNumPerPage) : [];
   }, [routeService, servicePage]);
 
@@ -224,7 +232,7 @@ export default function RouteTrace() {
 
     setSelectedServiceIndex(-1);
     setSelectedSpanIndex(-1);
-    setServicePage(0);
+    setServicePage(1);
     setSpanPage(0);
     //setDetailID(-1);
     setDetailSpan(null);
@@ -256,7 +264,6 @@ export default function RouteTrace() {
       setSelectedServiceIndex(-1);
       setServicePage(newPage);
       setSelectedSpanIndex(-1);
-      //setDetailSpan(null);
       setSpanPage(0);
     }
   };
@@ -265,24 +272,21 @@ export default function RouteTrace() {
     if(spanPage !== newPage)
     {
       setSelectedSpanIndex(-1);
-      //setDetailSpan(null);
       setSpanPage(newPage);
     }
   };
 
   const handleServiceClick = (index) => {
-    dispatch(getRouteTrace(startTime, endTime, routeService[index].service, routeService[index].api));
+    dispatch(getRouteTrace(startTime, endTime, serviceVisibleRows[index].service, serviceVisibleRows[index].api));
     setSelectedServiceIndex(index);
     setSelectedSpanIndex(-1);
+    setSpanPage(1);
     setDetailSpan(null);
-    //TODO
   }
 
   const handleSpanClick = (index)=>{
     setSelectedSpanIndex(index);
-    setDetailSpan(routeTrace[index]);
-    //const id = routeTrace[index].id;
-    //setDetailID(id);
+    setDetailSpan(spanVisibleRows[index]);
   }
 
   //#endregion
@@ -295,26 +299,53 @@ export default function RouteTrace() {
     
     <Box sx={{
         width: '100%',
-        minHeight: "900px",
-        minWidth: "1000px"
+        minWidth: "600px"
       }}>
-
-      <Stack direction="row" spacing={2}>
-        {/* 标题 */}
-        <SuperLargeBoldFont sx={{
-            ml: "12px",
-            fontSize: "32px !important",
-            lineHeight: "54px !important"
-          }}>路由链路</SuperLargeBoldFont>
-        
-        {/* 搜索 */}
-        <Stack direction="row" spacing={6}>
-          
-            
-          <FormControl>
-            <Stack direction="row" spacing={4} sx={{
-              mb: "0px"
+      <Box sx={{
+        borderRadius: '4px',
+        backgroundColor: '#FFFFFF',
+        padding: "24px 20px",
+        width: 'calc(100% - 40px)',
+        height: '58px',
+        mb: "12px"
+        }}>
+        <Stack direction="row" spacing={1}>
+          <TaskIcon />
+          <Box>
+            <Typography sx={{
+              fontWeight: 600,
+              fontStyle: 'normal',
+              color: '#242e42',
+              textShadow: '0 4px 8px rgba(36,46,66,.1)',
+              fontSize: "24px",
+              lineHeight: "32px"
             }}>
+              服务实例
+            </Typography>
+            <Typography sx={{
+              fontWeight: 400,
+              fontStyle: 'normal',
+              color: '#79879c',
+              fontSize: "12px",
+              lineHeight: 1.67
+            }}>
+              ABC
+            </Typography>
+          </Box>
+        </Stack>
+      </Box>
+
+      {/* Main Body */}
+      <Stack sx={{ width: "100%" }}>
+        <div style={{height: "10px"}}/>
+
+        {/* 搜索 */}
+        <Box sx={{
+            height: '55px',
+            padding: '10px 30px 10px 30px',
+            bgcolor: '#f9fbfd',
+          }}>
+          <Stack direction="row" spacing={2} style={{ width: "100%" }}>
               { /* Namespace */ }
               {/*
               <Stack>
@@ -329,23 +360,10 @@ export default function RouteTrace() {
                 </FormControl>
               </Stack>*/
               }
-              { /* Duration */ }
-              {/*
-              <InputLabel
-                id="service_search_mode_label"
-                sx={{
-                  color: 'var(--gray-500, #596A7C)',
-                  fontFamily: fontFamily,
-                  fontStyle: 'normal',
-                }}
-              >
-                Duration
-              </InputLabel>
-              */}
               <StyledSelect
                 value={durationSelectIndex}
                 onChange={handleDurationSelectChange}
-                width="150px">
+                width="150px" style={{ top: "3px"}}>
                 {selectMenuItems.map((item, index) => {
                   return <MenuItem key={index} value={index}>{item}</MenuItem>;
                 })}
@@ -387,26 +405,18 @@ export default function RouteTrace() {
                   mt: "6px !important",
                   width: "110px",
                   height: "40px"
-                }}>
+                }}
+                style={{ top: "3px", left: "0px"}}>
                 Search
               </KubeConfirmButton>
             </Stack>
-          </FormControl>
-          
-        </Stack>
-      </Stack>
-
-
-      {/* Main Body */}
-      <Stack sx={{paddingLeft: "10px"}}>
-        <div style={{height: "10px"}}/>
-
+        </Box>
         { /*数据*/ }
-        <Stack  direction="row" spacing={2}>
-          <Stack>
+        <Stack  direction="row" spacing={2} sx={{ maxWidth: "100%" }}>
+          <Stack sx={{ width: "99%" }}>
             {/* Service 列表 */}
             <Stack>
-              <StyledTableContainer sx={{ width: "950px" }}>
+              <StyledTableContainer sx={{ width: "100%" }}>
                 <Table 
                   stickyHeader
                   size='small'
@@ -415,7 +425,11 @@ export default function RouteTrace() {
                     <TableRow>
                       {
                         serviceTableHeaders.map((item) => {
-                          return <StyledTableRowCell key={item.key} align={item.align} sx={{ minWidth: item.minWidth, maxWidth: item.maxWidth }}>{item.text}</StyledTableRowCell>;
+                          return (
+                            <StyledTableRowCell key={item.key} align={item.align} 
+                              sx={{ width: item.minWidth, minWidth: item.minWidth, maxWidth: item.maxWidth }}>
+                                {item.text}
+                            </StyledTableRowCell>);
                         })
                       }
                     </TableRow>
@@ -423,12 +437,11 @@ export default function RouteTrace() {
                   <TableBody>
                     {serviceRow}
                   </TableBody>
-                  
                 </Table>
               </StyledTableContainer>
               <StyledTableFooter
-                rowsPerPageOptions={-1}
-                page={servicePage}
+                pageSize={serviceNumPerPage}
+                pageNum={servicePage}
                 count={routeService ? routeService.length : 0}
                 handlePageChange={handleServiceChangePage}
                 sx={{
@@ -443,6 +456,7 @@ export default function RouteTrace() {
 
             {/* Trace 列表 */}
             <Stack>
+              
               <LargeBoldFont>请求信息</LargeBoldFont>
               <StyledTableContainer sx={{ width: "100%" }}>
                 <Table 
@@ -450,29 +464,34 @@ export default function RouteTrace() {
                   size='small'
                   sx={{tableLayout: 'auto'}}>
                   <TableHead>
-                    <TableRow sx={{ backgroundColor: "#E3E3E3" }}>
-                      <StyledTableRowCell>请求</StyledTableRowCell>
-                      <StyledTableRowCell align="center">链路长度</StyledTableRowCell>
-                      <StyledTableRowCell align="center">开始时间</StyledTableRowCell>
-                      <StyledTableRowCell align="center">响应时间</StyledTableRowCell>
-                      <StyledTableRowCell align="center">请求状态</StyledTableRowCell>
+                    <TableRow>
+                      {
+                        traceTableHeaders.map((item) => {
+                          return (
+                            <StyledTableRowCell key={item.key} align={item.align} 
+                              sx={{ width: item.minWidth, minWidth: item.minWidth, maxWidth: item.maxWidth }}>
+                                {item.text}
+                            </StyledTableRowCell>);
+                        })
+                      }
                     </TableRow>
                   </TableHead>
                   <TableBody sx={{ borderBottom: "solid 2px #B8B5B7", borderTop: "solid 2px #B8B5B7" }}>
                     {tableRow}
                   </TableBody>
-                  <TableFooter sx={{ backgroundColor: "#E3E3E3"}}>
-                    <TableRow>
-                      <TablePagination
-                        rowsPerPageOptions={-1}
-                        count={routeTrace ? routeTrace.length : 0}
-                        rowsPerPage={spanNumPerPage}
-                        page={spanPage}
-                        onPageChange={handleSpanChangePage}/>
-                    </TableRow>
-                  </TableFooter>
                 </Table>
               </StyledTableContainer>
+              <StyledTableFooter
+                pageSize={spanNumPerPage}
+                pageNum={spanPage}
+                count={routeTrace ? routeTrace.length : 0}
+                handlePageChange={handleSpanChangePage}
+                sx={{
+                  width: "100%",
+                  pt: "10px",
+                  pb: "10px"
+                }}
+              />
             </Stack>
           </Stack>
 
