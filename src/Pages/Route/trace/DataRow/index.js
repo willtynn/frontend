@@ -1,66 +1,78 @@
 import React from "react";
 import dayjs from "dayjs";
 import {
-  TableCell,
   TableRow,
+  Tooltip,
 } from "@mui/material";
 import {
   StyledTableBodyCell
 } from '@/components/DisplayTable';
 
-export function DataRow(props) {
-    const { rowData, color, onRowClick, selected } = props;
+import {calculateDuration} from '../functions/func.js'
 
-    function calculateDuration(duration){
-      if(duration < 1000){
-        return duration + 'μs';
-      }else if(duration < 1000000){
-        return (duration / 1000).toFixed(2) + 'ms';
-      }else{
-        duration /= 1000000;
-      }
-      if(duration < 60){
-        return duration.toFixed(3) + 's';
-      }else if(duration < 3600){
-        return (duration / 60).toFixed(2) + 'min';
-      }else if(duration < 86400){
-        return (duration / 3600).toFixed(2) + 'h';
-      }else{
-        return (duration / 86400).toFixed(2) + 'd';
-      }
-    }
-    if(rowData)
-      return (
-        <React.Fragment>
-          <TableRow onClick={onRowClick} hover selected={selected} sx={{
-            maxWidth: '110px',
-            position: 'sticky',
-            backgroundColor: '#FDFDFD',
-          }}>
-            <StyledTableBodyCell component="th" scope="row">{rowData.service}</StyledTableBodyCell>
-            <StyledTableBodyCell align="center" 
-            // sx={{ borderLeft: "solid 1px #B8B5B7", borderRight: "solid 1px #B8B5B7" }}
-            >
-              {rowData.spanNum}
-            </StyledTableBodyCell>
-            <StyledTableBodyCell align="center">{dayjs(rowData.time).format('YYYY-MM-DD HH:mm:ss')}</StyledTableBodyCell>
-            <StyledTableBodyCell align="center">{calculateDuration(rowData.duration)}</StyledTableBodyCell>
-            <StyledTableBodyCell align="center">{rowData.status}</StyledTableBodyCell>
-          </TableRow>
-        </React.Fragment>
-      );
-    else
-      return (
-        <React.Fragment>
-          <TableRow onClick={onRowClick} sx={{ backgroundColor: color }}>
-            <StyledTableBodyCell component="th" scope="row" sx={{ color: "transparent" }}>-</StyledTableBodyCell>
-            <StyledTableBodyCell align="center" 
-            sx={{ color: "transparent" }}
-            >-</StyledTableBodyCell>
-            <StyledTableBodyCell align="center" sx={{ color: "transparent" }}>-</StyledTableBodyCell>
-            <StyledTableBodyCell align="center" sx={{ color: "transparent" }}>-</StyledTableBodyCell>
-            <StyledTableBodyCell align="center" sx={{ color: "transparent" }}>-</StyledTableBodyCell>
-          </TableRow>
-        </React.Fragment>
-      );
+const defaultMaxWidth = ['350px', '30px', '150px', '80px', '40px'];
+
+export function DataRow(props) {
+  const { rowData, onRowClick, selected, maxWidth } = props;
+  
+  let _maxWidth = maxWidth;
+  if (!maxWidth) {
+    _maxWidth = defaultMaxWidth;
   }
+
+  if(rowData)
+  {
+    let time = dayjs(rowData.time).format('YYYY-MM-DD HH:mm:ss')
+    let duration = calculateDuration(rowData.duration)
+
+    return (
+      <React.Fragment>
+        <TableRow onClick={onRowClick} hover selected={selected} sx={{
+          maxWidth: '110px',
+          position: 'sticky',
+          backgroundColor: '#FFFFFF',
+        }}>
+          <StyledTableBodyCell component="th" scope="row" sx={{ maxWidth: _maxWidth[0] }}>
+            <Tooltip title={rowData.service} placement="top-end">
+              {rowData.service}
+            </Tooltip>
+          </StyledTableBodyCell>
+          <StyledTableBodyCell align="center" sx={{ maxWidth: _maxWidth[1] }}>
+            <Tooltip title={rowData.spanNum} placement="top-end">
+              {rowData.spanNum}
+            </Tooltip>
+          </StyledTableBodyCell>
+          <StyledTableBodyCell align="center" sx={{ maxWidth: _maxWidth[2] }}>
+            <Tooltip title={time} placement="top-end">
+              {time}
+            </Tooltip>
+          </StyledTableBodyCell>
+          <StyledTableBodyCell align="center" sx={{ maxWidth: _maxWidth[3] }}>
+            <Tooltip title={duration} placement="top-end">
+              {duration}
+            </Tooltip>
+          </StyledTableBodyCell>
+          <StyledTableBodyCell align="center" sx={{ maxWidth: _maxWidth[4] }}>
+            <Tooltip title={rowData.status} placement="top-end">
+              {rowData.status}
+            </Tooltip>
+          </StyledTableBodyCell>
+        </TableRow>
+      </React.Fragment>
+    );
+  }
+  else
+    return (
+      <React.Fragment>
+        <TableRow onClick={onRowClick} sx={{ backgroundColor: '#FFFFFF' }}>
+          <StyledTableBodyCell component="th" scope="row" sx={{ color: "transparent" }}>-</StyledTableBodyCell>
+          <StyledTableBodyCell align="center" 
+          sx={{ color: "transparent" }}
+          >-</StyledTableBodyCell>
+          <StyledTableBodyCell align="center" sx={{ color: "transparent" }}>-</StyledTableBodyCell>
+          <StyledTableBodyCell align="center" sx={{ color: "transparent" }}>-</StyledTableBodyCell>
+          <StyledTableBodyCell align="center" sx={{ color: "transparent" }}>-</StyledTableBodyCell>
+        </TableRow>
+      </React.Fragment>
+    );
+}

@@ -1,4 +1,4 @@
-import { axios_instance } from "../Pages/Route/trace/axios_trace.js";
+import { axios_instance } from "@/Pages/Route/trace/functions/axios_trace.js";
 
 
 import {test_service_data, test_data, test_detail_data} from "../Pages/Route/trace/test_data.js"
