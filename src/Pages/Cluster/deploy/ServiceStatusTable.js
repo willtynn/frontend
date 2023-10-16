@@ -11,6 +11,7 @@ import {
   TableBody,
   TableCell,
   Typography,
+  Popper,
 } from '@mui/material';
 
 import { useDispatch, useSelector } from 'react-redux';
@@ -260,16 +261,43 @@ const StatusIcon = phase => {
 
 const StatusText = phase => {
   if (phase === RUNNING) {
-    return '运行中';
+    return 'Running';
   }
   if (phase === PENDING) {
-    return '等待中';
+    return 'Pending';
   }
   if (phase === FAILED) {
-    return <span>错误&nbsp;&nbsp;&nbsp;</span>;
+    return <span>Failed&nbsp;&nbsp;&nbsp;</span>;
   }
-  return '已完成';
+  return 'Succeeded';
 };
+
+function createRow(
+  id,
+  label,
+  isOrder = true,
+  minWidth = '110px',
+  maxWidth = '220px',
+  show = true,
+  align,
+  colSpan = 1,
+  rowSpan = 1
+) {
+  return {
+    id,
+    label,
+    isOrder,
+    minWidth,
+    maxWidth,
+    show,
+    align,
+    colSpan,
+    rowSpan,
+  };
+}
+
+const statusPattern = new RegExp(/^状态:/);
+const namePattern = new RegExp(/^名称:/);
 
 export default function ServiceStatusTable(props) {
   const { embeddingButton } = props;
@@ -281,6 +309,10 @@ export default function ServiceStatusTable(props) {
   const [count, setCount] = useState(0);
   const [order, setOrder] = useState('asc');
   const [orderBy, setOrderBy] = useState('name');
+  const [searchValue, setSearchValue] = useState('');
+  const [searchSelectAnchorEl, setSearchSelectAnchorEl] = useState(null);
+  const searchSelectOpen = Boolean(searchSelectAnchorEl);
+  const [searchBy, setSearchBy] = useState(['名称', '状态']);
 
   const dispatch = useDispatch();
 
@@ -304,6 +336,22 @@ export default function ServiceStatusTable(props) {
   }, [projectList]);
 
   useEffect(() => {
+    if(searchList.length == 2) {
+      setSearchBy([]);
+      return;
+    }
+    if(searchList.length == 0) {
+      setSearchBy(['名称', '状态']);
+      return;
+    }
+    if(searchList[0].startsWith("状态:")) {
+      setSearchBy(['名称']);
+    } else {
+      setSearchBy(['状态']);
+    }
+  }, [searchList]);
+
+  useEffect(() => {
     if (gottenInstances === null) {
       return;
     }
@@ -321,30 +369,6 @@ export default function ServiceStatusTable(props) {
     setTableData(tmpData);
   }, [gottenInstances]);
 
-  function createRow(
-    id,
-    label,
-    isOrder = true,
-    minWidth = '110px',
-    maxWidth = '220px',
-    show = true,
-    align,
-    colSpan = 1,
-    rowSpan = 1
-  ) {
-    return {
-      id,
-      label,
-      isOrder,
-      minWidth,
-      maxWidth,
-      show,
-      align,
-      colSpan,
-      rowSpan,
-    };
-  }
-
   const headRow = [
     createRow('name', '名称', true, '100px', '100px', true, 'left'),
     createRow('phase', '状态', false, '100px', '100px', true, 'center'),
@@ -359,14 +383,34 @@ export default function ServiceStatusTable(props) {
     setOrderBy(property);
   };
 
-  const visibleRows = useMemo(
-    () =>
-      stableSort(tableData, getComparator(order, orderBy)).slice(
-        (pageNum - 1) * pageSize,
-        (pageNum - 1) * pageSize + pageSize
-      ),
-    [order, orderBy, pageNum, pageSize]
-  );
+  const filtering = () => {
+    let tmpData = JSON.parse(JSON.stringify(tableData));
+    searchList.forEach((value, _) => {
+      if (value.startsWith('状态:')) {
+        tmpData = tmpData.filter((tableRow, _) => {
+          console.log(tableRow.phase)
+          return tableRow.phase.includes(value.replace(statusPattern, ''));
+        });
+      } else if (value.startsWith('名称:')) {
+        tmpData = tmpData.filter((tableRow, _) => {
+          return tableRow.name.includes(value.replace(namePattern, ''));
+        });
+      } else {
+        tmpData = tmpData.filter((tableRow, _) => {
+          return tableRow.name.includes(value);
+        });
+      }
+    });
+    return tmpData;
+  };
+
+  const visibleRows = useMemo(() => {
+    const tmpData = filtering();
+    return stableSort(tmpData, getComparator(order, orderBy)).slice(
+      (pageNum - 1) * pageSize,
+      (pageNum - 1) * pageSize + pageSize
+    );
+  }, [order, orderBy, pageNum, pageSize, tableData, searchList]);
 
   const isDuplicate = () => {
     return false;
@@ -382,9 +426,75 @@ export default function ServiceStatusTable(props) {
     dispatch({ type: CHANGE_PAGE_NUM, data: newPage });
   };
 
+  const handleSearchByClick = by => {
+    setSearchValue(by + ':');
+    var text = document.getElementById('instance-status-search-input');
+    text.focus();
+  };
+
+  const handleSearchFocus = event => {
+    if(searchBy.length === 0) {
+      return;
+    }
+    if (searchValue === '') {
+      setSearchSelectAnchorEl(event.currentTarget);
+    }
+  };
+
+  const handleSearchBlur = () => {
+    setTimeout(() => {
+      setSearchSelectAnchorEl(null);
+    }, 300);
+  };
+
   return (
     <Box>
-      {/*  */}
+      <Popper
+        id='instance-status-table-search-popper'
+        open={searchSelectOpen}
+        anchorEl={searchSelectAnchorEl}
+        placement='bottom-start'
+        sx={{
+          zIndex: 1000,
+          boxShadow: '0 4px 16px 0 rgba(39,50,71,.28)',
+          borderRadius: '4px',
+          mt: '2px !important',
+        }}
+      >
+        <Stack
+          direction='column'
+          sx={{
+            border: '1px solid #FAFAFA',
+            width: '90px',
+            borderRadius: '5px',
+            padding: '8px',
+            bgcolor: '#242e42',
+            fontSize: '12px',
+            fontFamily: fontFamily,
+          }}
+        >
+          {searchBy.map((value, index) => {
+            return (
+              <Box
+                sx={{
+                  '&:hover': {
+                    bgcolor: '#36435c',
+                  },
+                  color: '#FFFFFF',
+                  cursor: 'pointer',
+                  textAlign: 'center',
+                  height: '30px',
+                  lineHeight: '30px',
+                  fontWeight: 600,
+                }}
+                onClick={handleSearchByClick.bind(this, value)}
+              >
+                {value}
+              </Box>
+            );
+          })}
+        </Stack>
+      </Popper>
       <Box
         sx={{
           height: '40px',
@@ -408,11 +518,29 @@ export default function ServiceStatusTable(props) {
             )}
           />
           <ChipTextField
+            value={searchValue}
+            setValue={setSearchValue}
             contentList={searchList}
             setContentList={setSearchList}
             isDuplicate={isDuplicate}
             startAdornment={<SearchIcon />}
-            sx={{ width: 'calc(100% - 600px)' }}
+            sx={{
+              width: 'calc(100% - 600px)',
+              '& .MuiOutlinedInput-input.MuiInputBase-input': {
+                // padding: '6px 12px !important',
+                fontSize: '12px',
+                fontWeight: 600,
+                fontStyle: 'normal',
+                fontStretch: 'normal',
+                lineHeight: 1.67,
+                letterSpacing: 'normal',
+                color: '#36435c',
+              },
+            }}
+            onFocus={handleSearchFocus}
+            onBlur={handleSearchBlur}
+            enterBlur={true}
+            id='instance-status-search-input'
           />
           <EclipseTransparentButton
             sx={{
