@@ -30,6 +30,7 @@ export default function ContainerConfig(props) {
   const [imageUrlError, setImageUrlError] = useState(true);
   const [portsError, setPortsError] = useState([true]);
   const [resourcesError, setResourcesError] = useState(false);
+  const [exist, setExist] = useState(false);
 
   useEffect(() => {
     setContainerAddError(imageUrlError || portsError.includes(true) || resourcesError);
@@ -59,6 +60,7 @@ export default function ContainerConfig(props) {
       {isConfig ? (
         <ContainerAddBlock
           handleReturn={() => {
+            setShowError(false);
             setIsConfig(false);
           }}
           imageUrl={imageUrl}

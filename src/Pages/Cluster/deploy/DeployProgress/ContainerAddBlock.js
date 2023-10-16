@@ -312,7 +312,56 @@ export default function ContainerAddBlock(props) {
   const [cpuError, setCpuError] = useState(false);
   const [memoryError, setMemoryError] = useState(false);
 
-  const [currentPortAlive, setCurrentPortAlive] = useState([true]);
+  const [currentPortAlive, setCurrentPortAlive] = useState(
+    ports.map(() => true)
+  );
+
+  const [tmpImageUrl, setTmpImageUrl] = useState(imageUrl);
+  const [tmpPorts, setTmpPorts] = useState(ports);
+
+  useEffect(() => {
+    setCpuReserved(resources.requests.cpu);
+    setCpuLimit(resources.limits.cpu);
+    setMemoryReserved(resources.requests.memory);
+    setMemoryLimit(resources.limits.memory);
+
+    if (imageUrl === '') {
+      setImageUrlError(true);
+    } else {
+      setImageUrlError(false);
+    }
+    const currentCpuReserved = Number(resources.requests.cpu);
+    const currentCpuLimit = Number(resources.limits.cpu);
+    const currentMemoryReserved = Number(resources.requests.memory);
+    const currentMemoryLimit = Number(resources.limits.memory);
+    if (
+      resources.limits.cpu !== '' &&
+      resources.requests.cpu !== '' &&
+      currentCpuReserved > currentCpuLimit
+    ) {
+      setCpuError(true);
+    } else {
+      setCpuError(false);
+    }
+    if (
+      resources.limits.memory !== '' &&
+      resources.requests.memory !== '' &&
+      currentMemoryReserved > currentMemoryLimit
+    ) {
+      setMemoryError(true);
+    } else {
+      setMemoryError(false);
+    }
+    setPortsError(
+      ports.map((value, index) => {
+        if (value.name === '' || value.containerPort === '') {
+          return true;
+        } else {
+          return false;
+        }
+      })
+    );
+  }, []);
 
   useEffect(() => {
     setResourcesError(cpuError || memoryError);
@@ -322,6 +371,8 @@ export default function ContainerAddBlock(props) {
     if (imageUrlError || portsError.includes(true) || resourcesError) {
       setShowError(true);
     } else {
+      setImageUrl(tmpImageUrl);
+      setPorts(tmpPorts.filter((value, index) => currentPortAlive[index]));
       setResources({
         requests: {
           cpu: cpuReserved,
@@ -343,7 +394,7 @@ export default function ContainerAddBlock(props) {
     } else {
       setImageUrlError(false);
     }
-    setImageUrl(e.target.value);
+    setTmpImageUrl(e.target.value);
   };
 
   const handleCpuReservedChange = e => {
@@ -406,7 +457,7 @@ export default function ContainerAddBlock(props) {
     setCurrentPortAlive(prevAlive => {
       return [...prevAlive, true];
     });
-    setPorts(prevPorts => {
+    setTmpPorts(prevPorts => {
       return [
         ...prevPorts,
         {
@@ -511,7 +562,7 @@ export default function ContainerAddBlock(props) {
         </Stack>
         <KubeTextField
           placeholder={intl.messages['instance.containerInputPlaceHolder']}
-          value={imageUrl}
+          value={tmpImageUrl}
           onChange={handleImageUrlChange}
           error={imageUrlError && showError}
         />
@@ -830,8 +881,8 @@ export default function ContainerAddBlock(props) {
                 return (
                   <PortConfigRow
                     protocols={protocols}
-                    ports={ports}
-                    setPorts={setPorts}
+                    ports={tmpPorts}
+                    setPorts={setTmpPorts}
                     index={index}
                     setAlive={setCurrentPortAlive}
                     setError={setPortsError}
