@@ -13,7 +13,7 @@ import {calculateDuration} from '../functions/func.js'
 const defaultMaxWidth = ['350px', '30px', '150px', '80px', '40px'];
 
 export function DataRow(props) {
-  const { rowData, onRowClick, selected, maxWidth } = props;
+  const { key, rowData, onRowClick, selected, maxWidth } = props;
   
   let _maxWidth = maxWidth;
   if (!maxWidth) {
@@ -27,34 +27,35 @@ export function DataRow(props) {
 
     return (
       <React.Fragment>
-        <TableRow onClick={onRowClick} hover selected={selected} sx={{
+        <TableRow onClick={onRowClick} hover selected={selected} key={key}
+        sx={{
           maxWidth: '110px',
           position: 'sticky',
           backgroundColor: '#FFFFFF',
         }}>
           <StyledTableBodyCell component="th" scope="row" sx={{ maxWidth: _maxWidth[0] }}>
             <Tooltip title={rowData.service} placement="top-end">
-              {rowData.service}
+              <>{rowData.service}</>
             </Tooltip>
           </StyledTableBodyCell>
           <StyledTableBodyCell align="center" sx={{ maxWidth: _maxWidth[1] }}>
             <Tooltip title={rowData.spanNum} placement="top-end">
-              {rowData.spanNum}
+              <>{rowData.spanNum}</>
             </Tooltip>
           </StyledTableBodyCell>
           <StyledTableBodyCell align="center" sx={{ maxWidth: _maxWidth[2] }}>
             <Tooltip title={time} placement="top-end">
-              {time}
+              <>{time}</>
             </Tooltip>
           </StyledTableBodyCell>
           <StyledTableBodyCell align="center" sx={{ maxWidth: _maxWidth[3] }}>
             <Tooltip title={duration} placement="top-end">
-              {duration}
+              <>{duration}</>
             </Tooltip>
           </StyledTableBodyCell>
           <StyledTableBodyCell align="center" sx={{ maxWidth: _maxWidth[4] }}>
             <Tooltip title={rowData.status} placement="top-end">
-              {rowData.status}
+              <>{rowData.status}</>
             </Tooltip>
           </StyledTableBodyCell>
         </TableRow>

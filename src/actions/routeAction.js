@@ -31,19 +31,14 @@ export function getRouteService(start, end) {
           }
         }
       )
-      console.log(res)
       if (res.status === 200) {
-        console.log(res.data)
         dispatch({ type: UPDATE_ROUTE_SERVICE, data: res.data });
       } else{
-        //alert(res.data)
-        console.log(res.data)
         dispatch({ type: UPDATE_ROUTE_SERVICE, data: [] });
       }
     } catch {
       dispatch({ type: UPDATE_ROUTE_SERVICE, data: null });
     }
-    //dispatch({ type: UPDATE_ROUTE_SERVICE, data: data_service });
   }
 }
 
@@ -69,17 +64,13 @@ export function getRouteTrace(start, end, service, api) {
       )
       console.log(res)
       if (res.status === 200) {
-        console.log(res.data)
         dispatch({ type: UPDATE_ROUTE_TRACE, data: res.data });
       } else{
-        //alert(res.data)
-        console.log(res.data)
         dispatch({ type: UPDATE_ROUTE_TRACE, data: [] });
       }
     } catch {
       dispatch({ type: UPDATE_ROUTE_TRACE, data: null });
     }
-    //dispatch({ type: UPDATE_ROUTE_TRACE, data: data_trace });
   }
 }
 
@@ -103,17 +94,14 @@ export function getRouteTraceDetail(id) {
       )
       console.log(res)
       if (res.status === 200) {
-        console.log(res.data)
         dispatch({ type: UPDATE_ROUTE_TRACE_DETAIL, data: res.data });
       } else{
-        //alert(res.data)
         console.log(res.data)
         dispatch({ type: UPDATE_ROUTE_TRACE_DETAIL, data: [] });
       }
     } catch {
       dispatch({ type: UPDATE_ROUTE_TRACE_DETAIL, data: null });
     }
-    //dispatch({ type: UPDATE_ROUTE_TRACE_DETAIL, data: data_detail });
   }
 }
 
