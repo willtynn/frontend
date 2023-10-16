@@ -14,7 +14,11 @@ import {
   TableHead,
   TableRow,
   Typography,
+  Modal,
+  Slide,
+  IconButton
 } from "@mui/material"
+import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 
 import {
   KubeConfirmButton
@@ -95,7 +99,7 @@ export default function RouteTrace() {
   //#region
   const [durationSelectIndex, setDurationSelectIndex] = useState(5);
 
-  const [startTimeValue, setStartTimeValue] = useState(dayjs().add(-15, 'minute'));
+  const [startTimeValue, setStartTimeValue] = useState(dayjs().add(-1, 'hour'));
   const [endTimeValue, setEndTimeValue] = useState(dayjs());
 
   const [startTime, setStartTime] = useState(0);
@@ -112,6 +116,12 @@ export default function RouteTrace() {
   const [tracePage, setTracePage] = useState(0);
   const [selectedServiceIndex, setSelectedServiceIndex] = useState(-1);
   const [selectedTraceIndex, setSelectedTraceIndex] = useState(-1);
+
+
+  const [openModal, setOpenModal] = useState(false);
+
+
+
 
   const dispatch = useDispatch();
 
@@ -147,6 +157,7 @@ export default function RouteTrace() {
     setServicePage(1);
     setTracePage(0);
     setDetailSpan(null);
+    setOpenModal(false);
   }
 
   //#endregion
@@ -261,6 +272,7 @@ export default function RouteTrace() {
       setServicePage(newPage);
       setSelectedTraceIndex(-1);
       setTracePage(0);
+      setOpenModal(false);
     }
   };
 
@@ -269,6 +281,7 @@ export default function RouteTrace() {
     {
       setSelectedTraceIndex(-1);
       setTracePage(newPage);
+      setOpenModal(false);
     }
   };
 
@@ -278,20 +291,82 @@ export default function RouteTrace() {
     setSelectedTraceIndex(-1);
     setTracePage(1);
     setDetailSpan(null);
+    setOpenModal(false);
   }
 
   const handleSpanClick = (index)=>{
     setSelectedTraceIndex(index);
     setDetailSpan(spanVisibleRows[index]);
+    setOpenModal(true);
   }
+
+  const handleCloseModal = () => setOpenModal(false);
 
   //#endregion
   //handle-结束
+
+  const styleModal = {
+    position: 'absolute',
+    left: "40%",
+    transform: 'translate(-100%, -50%)',
+    minWidth: "650px",
+    maxWidth: "1150px",
+    width: '60%',
+    height: '100%',
+    bgcolor: 'background.paper',
+    border: '2px solid #596A7C',
+    boxShadow: 'inset -15px 0px  15px -15px #444444',
+    p: 4,
+  };
 
 
   //return
   //#region
   return (
+    <>
+    <Modal
+        aria-labelledby="transition-modal-title"
+        aria-describedby="transition-modal-description"
+        open={openModal}
+        onClose={handleCloseModal}
+        closeAfterTransition
+      >
+        <Slide direction="left" in={openModal} mountOnEnter unmountOnExit>
+          <Box sx={styleModal}>
+            <IconButton aria-label="back" color="black" onClick={handleCloseModal}>
+              <ArrowBackIcon />
+            </IconButton>
+            {/* 依赖图 */}
+            <Stack>
+              <div style={{ height: "20px" }} />
+              {(detailSpan)
+                ?
+                <>
+                  <Stack spacing={1}>
+                    <Stack direction="row" spacing={20}>
+                      <NormalFont sx={{ width: "60px" }}>服务ID</NormalFont>
+                      <NormalFontBlack>{detailSpan.id}</NormalFontBlack>
+                    </Stack>
+                    <Stack direction="row" spacing={20}>
+                      <NormalFont sx={{ width: "60px" }}>服务名</NormalFont>
+                      <NormalFontBlack>{detailSpan.service}</NormalFontBlack>
+                    </Stack>
+                    <Stack direction="row" spacing={20}>
+                      <NormalFont sx={{ width: "60px" }}>时间</NormalFont>
+                      <NormalFontBlack>{dayjs(detailSpan.time).format('YYYY-MM-DD HH:mm:ss')}</NormalFontBlack>
+                    </Stack>
+                  </Stack>
+                  <RouteTraceCanvas id={detailSpan.id} sx={{ 
+                    width: "100%" 
+                  }}/>
+                </>
+                :
+                <></>
+              }
+            </Stack>
+          </Box>
+        </Slide>
+      </Modal>
     
     <Box sx={{
         width: '100%',
@@ -332,7 +407,7 @@ export default function RouteTrace() {
       </Box>
 
       {/* Main Body */}
-      <Stack sx={{ width: "99%" }}>
+      <Stack sx={{ width: "100%" }}>
         <div style={{height: "10px"}}/>
 
         {/* 搜索 */}
@@ -493,7 +568,7 @@ export default function RouteTrace() {
           </Stack>
 
 
-          {/* 依赖详细和依赖图 */}
+          {/* 依赖详细和依赖图 
           {
             (detailSpan)
               ?
@@ -530,12 +605,13 @@ export default function RouteTrace() {
                 </Stack>
               </Box>
               : <></>
-          }
+          }*/}
 
         </Stack>
         
       </Stack>
     </Box>
+    </>
   );
   //#endregion
 }
