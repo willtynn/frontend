@@ -360,6 +360,7 @@ export function StyledTableHead(props) {
               <StyledTableRowCell
                 key={item.id}
                 align={item.align}
+                style={{display: item.show ? 'table-cell' : 'none'}}
                 sortDirection={orderBy === item.id ? order : false}
               >
                 <TableSortLabel
@@ -383,6 +384,7 @@ export function StyledTableHead(props) {
             <StyledTableRowCell
               key={item.id}
               align={item.align}
+              style={{display: item.show ? 'table-cell' : 'none'}}
               sx={{
                 maxWidth: item.maxWidth,
                 minWidth: item.minWidth,
