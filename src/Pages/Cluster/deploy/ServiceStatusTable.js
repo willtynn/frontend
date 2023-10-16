@@ -11,6 +11,8 @@ import {
   TableBody,
   TableCell,
   Typography,
+  Popper,
+  Popover,
 } from '@mui/material';
 
 import { useDispatch, useSelector } from 'react-redux';
@@ -32,7 +34,6 @@ import {
 import { EclipseTransparentButton } from '../../../components/Button';
 import SearchIcon from '@mui/icons-material/Search';
 import RefreshIcon from '@mui/icons-material/Refresh';
-import VisibilityIcon from '@mui/icons-material/Visibility';
 import { formatDatetimeString } from '../../../utils/commonUtils';
 import {
   CHANGE_PAGE_NUM,
@@ -44,6 +45,8 @@ import RunningIcon from '@/assets/RunningIcon.svg';
 import PendingIcon from '@/assets/PendingIcon.svg';
 import FailedIcon from '@/assets/FailedIcon.svg';
 import SucceededIcon from '@/assets/SucceededIcon.svg';
+import VisibilityIcon from '@mui/icons-material/Visibility';
+import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
 
 const data = {
   items: [
@@ -260,16 +263,45 @@ const StatusIcon = phase => {
 
 const StatusText = phase => {
   if (phase === RUNNING) {
-    return '运行中';
+    return <span>Running&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>;
   }
   if (phase === PENDING) {
-    return '等待中';
+    return <span>Pending&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>;
   }
   if (phase === FAILED) {
-    return <span>错误&nbsp;&nbsp;&nbsp;</span>;
+    return (
+      <span>Failed&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
+    );
   }
-  return '已完成';
+  return <span>Succeeded</span>;
 };
+
+function createRow(
+  id,
+  label,
+  isOrder = true,
+  minWidth = '110px',
+  maxWidth = '220px',
+  show = true,
+  align,
+  colSpan = 1,
+  rowSpan = 1
+) {
+  return {
+    id,
+    label,
+    isOrder,
+    minWidth,
+    maxWidth,
+    show,
+    align,
+    colSpan,
+    rowSpan,
+  };
+}
+
+const statusPattern = new RegExp(/^状态:/);
+const namePattern = new RegExp(/^名称:/);
 
 export default function ServiceStatusTable(props) {
   const { embeddingButton } = props;
@@ -281,6 +313,15 @@ export default function ServiceStatusTable(props) {
   const [count, setCount] = useState(0);
   const [order, setOrder] = useState('asc');
   const [orderBy, setOrderBy] = useState('name');
+
+  const [searchValue, setSearchValue] = useState('');
+  const [searchSelectAnchorEl, setSearchSelectAnchorEl] = useState(null);
+  const searchSelectOpen = Boolean(searchSelectAnchorEl);
+  const [searchBy, setSearchBy] = useState(['名称', '状态']);
+
+  const [colDisplay, setColDisplay] = useState([true, true, true, true]);
+  const [customContentAnchorEl, setCustomContentAnchorEl] = useState(null);
+  const customContentOpen = Boolean(customContentAnchorEl);
 
   const dispatch = useDispatch();
 
@@ -304,6 +345,22 @@ export default function ServiceStatusTable(props) {
   }, [projectList]);
 
   useEffect(() => {
+    if (searchList.length == 2) {
+      setSearchBy([]);
+      return;
+    }
+    if (searchList.length == 0) {
+      setSearchBy(['名称', '状态']);
+      return;
+    }
+    if (searchList[0].startsWith('状态:')) {
+      setSearchBy(['名称']);
+    } else {
+      setSearchBy(['状态']);
+    }
+  }, [searchList]);
+
+  useEffect(() => {
     if (gottenInstances === null) {
       return;
     }
@@ -321,36 +378,44 @@ export default function ServiceStatusTable(props) {
     setTableData(tmpData);
   }, [gottenInstances]);
 
-  function createRow(
-    id,
-    label,
-    isOrder = true,
-    minWidth = '110px',
-    maxWidth = '220px',
-    show = true,
-    align,
-    colSpan = 1,
-    rowSpan = 1
-  ) {
-    return {
-      id,
-      label,
-      isOrder,
-      minWidth,
-      maxWidth,
-      show,
-      align,
-      colSpan,
-      rowSpan,
-    };
-  }
-
   const headRow = [
     createRow('name', '名称', true, '100px', '100px', true, 'left'),
-    createRow('phase', '状态', false, '100px', '100px', true, 'center'),
-    createRow('hostIP', 'Host IP', false, '120px', '130px', true, 'center'),
-    createRow('podIP', 'Pod IP', false, '120px', '130px', true, 'center'),
-    createRow('startTime', '启动时间', true, '120px', '130px', true, 'center'),
+    createRow(
+      'phase',
+      '状态',
+      false,
+      '100px',
+      '100px',
+      colDisplay[0],
+      'center'
+    ),
+    createRow(
+      'hostIP',
+      'Host IP',
+      false,
+      '120px',
+      '130px',
+      colDisplay[1],
+      'center'
+    ),
+    createRow(
+      'podIP',
+      'Pod IP',
+      false,
+      '120px',
+      '130px',
+      colDisplay[2],
+      'center'
+    ),
+    createRow(
+      'startTime',
+      '启动时间',
+      true,
+      '120px',
+      '130px',
+      colDisplay[3],
+      'center'
+    ),
   ];
 
   const handleRequestSort = (event, property) => {
@@ -359,14 +424,34 @@ export default function ServiceStatusTable(props) {
     setOrderBy(property);
   };
 
-  const visibleRows = useMemo(
-    () =>
-      stableSort(tableData, getComparator(order, orderBy)).slice(
-        (pageNum - 1) * pageSize,
-        (pageNum - 1) * pageSize + pageSize
-      ),
-    [order, orderBy, pageNum, pageSize]
-  );
+  const filtering = () => {
+    let tmpData = JSON.parse(JSON.stringify(tableData));
+    searchList.forEach((value, _) => {
+      if (value.startsWith('状态:')) {
+        tmpData = tmpData.filter((tableRow, _) => {
+          console.log(tableRow.phase);
+          return tableRow.phase.includes(value.replace(statusPattern, ''));
+        });
+      } else if (value.startsWith('名称:')) {
+        tmpData = tmpData.filter((tableRow, _) => {
+          return tableRow.name.includes(value.replace(namePattern, ''));
+        });
+      } else {
+        tmpData = tmpData.filter((tableRow, _) => {
+          return tableRow.name.includes(value);
+        });
+      }
+    });
+    return tmpData;
+  };
+
+  const visibleRows = useMemo(() => {
+    const tmpData = filtering();
+    return stableSort(tmpData, getComparator(order, orderBy)).slice(
+      (pageNum - 1) * pageSize,
+      (pageNum - 1) * pageSize + pageSize
+    );
+  }, [order, orderBy, pageNum, pageSize, tableData, searchList]);
 
   const isDuplicate = () => {
     return false;
@@ -382,9 +467,161 @@ export default function ServiceStatusTable(props) {
     dispatch({ type: CHANGE_PAGE_NUM, data: newPage });
   };
 
+  const handleSearchByClick = by => {
+    setSearchValue(by + ':');
+    var text = document.getElementById('instance-status-search-input');
+    text.focus();
+  };
+
+  const handleSearchFocus = event => {
+    if (searchBy.length === 0) {
+      return;
+    }
+    if (searchValue === '') {
+      setSearchSelectAnchorEl(event.currentTarget);
+    }
+  };
+
+  const handleSearchBlur = () => {
+    setTimeout(() => {
+      setSearchSelectAnchorEl(null);
+    }, 300);
+  };
+
+  const handleEyeClick = event => {
+    setCustomContentAnchorEl(event.currentTarget);
+  };
+
+  const handleEyeClose = () => {
+    setCustomContentAnchorEl(null);
+  };
+
+  const handleColEyeClick = index => {
+    setColDisplay(prevDisplay => {
+      let tmpDisplay = JSON.parse(JSON.stringify(prevDisplay));
+      tmpDisplay[index] = !tmpDisplay[index];
+      return tmpDisplay;
+    });
+  };
+
   return (
     <Box>
-      {/*  */}
+      {/* 条件过滤悬浮框 */}
+      <Popper
+        id='instance-status-table-search-popper'
+        open={searchSelectOpen}
+        anchorEl={searchSelectAnchorEl}
+        placement='bottom-start'
+        sx={{
+          zIndex: 1000,
+          boxShadow: '0 4px 16px 0 rgba(39,50,71,.28)',
+          borderRadius: '4px',
+          mt: '2px !important',
+        }}
+      >
+        <Stack
+          direction='column'
+          sx={{
+            border: '1px solid #FAFAFA',
+            width: '90px',
+            borderRadius: '5px',
+            padding: '8px',
+            bgcolor: '#242e42',
+            fontSize: '12px',
+            fontFamily: fontFamily,
+          }}
+        >
+          {searchBy.map((value, index) => {
+            return (
+              <Box
+                sx={{
+                  '&:hover': {
+                    bgcolor: '#36435c',
+                  },
+                  color: '#FFFFFF',
+                  cursor: 'pointer',
+                  textAlign: 'center',
+                  height: '30px',
+                  lineHeight: '30px',
+                  fontWeight: 600,
+                }}
+                onClick={handleSearchByClick.bind(this, value)}
+              >
+                {value}
+              </Box>
+            );
+          })}
+        </Stack>
+      </Popper>
+
+      {/* 定制内容悬浮框 */}
+      <Popover
+        id='instance-status-table-custom-content-popover'
+        open={customContentOpen}
+        anchorEl={customContentAnchorEl}
+        onClose={handleEyeClose}
+        anchorOrigin={{
+          vertical: 'bottom',
+          horizontal: 'left',
+        }}
+        sx={{
+          zIndex: 1000,
+          boxShadow: '0 4px 16px 0 rgba(39,50,71,.28)',
+          borderRadius: '4px',
+          mt: '2px !important',
+        }}
+      >
+        <Stack
+          direction='column'
+          sx={{
+            border: '1px solid #FAFAFA',
+            width: '100px',
+            borderRadius: '5px',
+            padding: '8px',
+            bgcolor: '#242e42',
+            fontSize: '12px',
+            fontFamily: fontFamily,
+          }}
+        >
+          {colDisplay.map((value, index) => {
+            return (
+              <Stack
+                direction='row'
+                onClick={handleColEyeClick.bind(this, index)}
+                sx={{
+                  color: '#FFFFFF',
+                  '&:hover': {
+                    bgcolor: '#36435c',
+                  },
+                  p: '0px 8px',
+                }}
+                justifyContent='flex-start'
+                alignItems='center'
+                spacing={1}
+              >
+                {value === true ? (
+                  <VisibilityIcon fontSize='small' />
+                ) : (
+                  <VisibilityOffIcon fontSize='small' />
+                )}
+                <Box
+                  sx={{
+                    color: '#FFFFFF',
+                    cursor: 'pointer',
+                    // textAlign: 'center',
+                    height: '30px',
+                    lineHeight: '30px',
+                    fontWeight: 600,
+                    letterSpacing: '0.04em',
+                  }}
+                >
+                  {headRow[index + 1].label}
+                </Box>
+              </Stack>
+            );
+          })}
+        </Stack>
+      </Popover>
       <Box
         sx={{
           height: '40px',
@@ -408,11 +645,29 @@ export default function ServiceStatusTable(props) {
             )}
           />
           <ChipTextField
+            value={searchValue}
+            setValue={setSearchValue}
             contentList={searchList}
             setContentList={setSearchList}
             isDuplicate={isDuplicate}
             startAdornment={<SearchIcon />}
-            sx={{ width: 'calc(100% - 600px)' }}
+            sx={{
+              width: 'calc(100% - 600px)',
+              '& .MuiOutlinedInput-input.MuiInputBase-input': {
+                // padding: '6px 12px !important',
+                fontSize: '12px',
+                fontWeight: 600,
+                fontStyle: 'normal',
+                fontStretch: 'normal',
+                lineHeight: 1.67,
+                letterSpacing: 'normal',
+                color: '#36435c',
+              },
+            }}
+            onFocus={handleSearchFocus}
+            onBlur={handleSearchBlur}
+            enterBlur={true}
+            id='instance-status-search-input'
           />
           <EclipseTransparentButton
             sx={{
@@ -438,6 +693,7 @@ export default function ServiceStatusTable(props) {
                 color: '#3d3b4f',
               },
             }}
+            onClick={handleEyeClick}
           >
             <VisibilityIcon />
           </EclipseTransparentButton>
@@ -513,7 +769,11 @@ export default function ServiceStatusTable(props) {
                         </span>
                       </Stack>
                     </StyledTableBodyCell>
-                    <StyledTableBodyCell align={'center'}>
+
+                    <StyledTableBodyCell
+                      align={'center'}
+                      sx={{ display: headRow[1].show ? 'table-cell' : 'none' }}
+                    >
                       <Stack
                         alignItems='center'
                         direction='row'
@@ -531,14 +791,25 @@ export default function ServiceStatusTable(props) {
                         </span>
                       </Stack>
                     </StyledTableBodyCell>
-                    <StyledTableBodyCell align={'center'}>
+
+                    <StyledTableBodyCell
+                      align={'center'}
+                      sx={{ display: headRow[2].show ? 'table-cell' : 'none' }}
+                    >
                       {row.hostIP}
                     </StyledTableBodyCell>
-                    <StyledTableBodyCell align={'center'}>
+
+                    <StyledTableBodyCell
+                      align={'center'}
+                      sx={{ display: headRow[3].show ? 'table-cell' : 'none' }}
+                    >
                       {row.podIP}
                     </StyledTableBodyCell>
 
-                    <StyledTableBodyCell align={'center'}>
+                    <StyledTableBodyCell
+                      align={'center'}
+                      sx={{ display: headRow[4].show ? 'table-cell' : 'none' }}
+                    >
                       {formatDatetimeString(row.startTime)}
                     </StyledTableBodyCell>
                   </TableRow>

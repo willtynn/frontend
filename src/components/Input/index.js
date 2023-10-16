@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useRef } from 'react';
 import {
   TextField,
   Autocomplete,
@@ -178,14 +178,19 @@ export const KubeEndAdornmentTextField = styled(TextField)(({}) => ({
 
 export function ChipTextField(props) {
   const {
+    value,
+    setValue,
     contentList,
     setContentList,
     isDuplicate,
     sx,
     startAdornment = null,
     endAdornment = null,
+    enterBlur = false,
+    ...others
   } = props;
-  const [value, setValue] = useState('');
+
+  const input = useRef();
 
   const onDelete = deleteItemIndex => {
     setContentList(
@@ -213,7 +218,11 @@ export function ChipTextField(props) {
       if (!isDuplicate(realValue)) {
         setContentList([...contentList, realValue]);
       }
+      
       setValue('');
+      if(enterBlur) {
+        input.current.blur();
+      }
     }
   };
 
@@ -239,12 +248,19 @@ export function ChipTextField(props) {
               width: '10%',
             },
             bgcolor: '#EFF4F9',
+              
           },
+        '& fieldset': {
+          border: '1px solid rgba(0, 0, 0, 0.23) !important',
+        },
         '& .Mui-focused': {
           bgcolor: '#FFFFFF !important',
         },
 
         ...sx,
+      }}
+      inputProps={{
+        ref: input
       }}
       InputProps={{
         startAdornment: (startAdornment !== null
@@ -271,6 +287,7 @@ export function ChipTextField(props) {
             <InputAdornment position='end'>{endAdornment}</InputAdornment>
           ) : null,
       }}
+      {...others}
     />
   );
 }
