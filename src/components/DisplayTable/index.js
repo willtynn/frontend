@@ -15,6 +15,8 @@ import {
   MenuItem,
   PaginationItem,
   Popper,
+  Checkbox,
+  TableSortLabel,
 } from '@mui/material';
 import { styled } from '@mui/system';
 import { visuallyHidden } from '@mui/utils';
@@ -71,7 +73,6 @@ export const StyledTableBodyCell = styled(TableCell)(() => ({
     overflow: 'hidden',
     textOverflow: 'ellipsis',
     whiteSpace: 'nowrap',
-    
   },
 }));
 
@@ -178,7 +179,7 @@ function PageSizePopper(props) {
     <Box>
       <Box
         aria-describedby={id}
-        sx={{ cursor: 'pointer', display: "inline-block" }}
+        sx={{ cursor: 'pointer', display: 'inline-block' }}
       >
         <Stack
           onMouseOver={handleButtonOver}
@@ -210,12 +211,21 @@ function PageSizePopper(props) {
           </Stack>
         </Stack>
       </Box>
-      <Popper id={id} open={open} anchorEl={anchorEl} sx={{ zIndex: 1000, boxShadow: '0 4px 16px 0 rgba(39,50,71,.28)', borderRadius: "4px", }}>
+      <Popper
+        id={id}
+        open={open}
+        anchorEl={anchorEl}
+        sx={{
+          zIndex: 1000,
+          boxShadow: '0 4px 16px 0 rgba(39,50,71,.28)',
+          borderRadius: '4px',
+        }}
+      >
         <Stack
           direction='column'
           sx={{
             border: '1px solid #FAFAFA',
-            
+
             width: '90px',
             borderRadius: '5px',
             padding: '8px',
@@ -313,5 +323,76 @@ export function GlobalPagination(props) {
         );
       }}
     />
+  );
+}
+
+export function StyledTableHead(props) {
+  const { headRow, selectAll, order, orderBy, onRequestSort } = props;
+
+  const createSortHandler = property => event => {
+    onRequestSort(event, property);
+  };
+
+  return (
+    <TableHead>
+      <TableRow>
+        {selectAll === true ? (
+          <StyledTableRowCell
+            align='center'
+            sx={{
+              width: '80px',
+            }}
+          >
+            <Checkbox
+              sx={{
+                bgcolor: 'transparent !important',
+              }}
+              disableRipple
+            />
+          </StyledTableRowCell>
+        ) : (
+          <></>
+        )}
+
+        {headRow.map((item, index) => {
+          if (item.isOrder) {
+            return (
+              <StyledTableRowCell
+                key={item.id}
+                align={item.align}
+                sortDirection={orderBy === item.id ? order : false}
+              >
+                <TableSortLabel
+                  active={orderBy === item.id}
+                  direction={orderBy === item.id ? order : 'asc'}
+                  onClick={createSortHandler(item.id)}
+                >
+                  {item.label}
+                  {orderBy === item.id ? (
+                    <Box component='span' sx={visuallyHidden}>
+                      {order === 'desc'
+                        ? 'sorted descending'
+                        : 'sorted ascending'}
+                    </Box>
+                  ) : null}
+                </TableSortLabel>
+              </StyledTableRowCell>
+            );
+          }
+          return (
+            <StyledTableRowCell
+              key={item.id}
+              align={item.align}
+              sx={{
+                maxWidth: item.maxWidth,
+                minWidth: item.minWidth,
+              }}
+            >
+              {item.label}
+            </StyledTableRowCell>
+          );
+        })}
+      </TableRow>
+    </TableHead>
   );
 }

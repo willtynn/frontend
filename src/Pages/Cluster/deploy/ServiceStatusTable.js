@@ -1,4 +1,4 @@
-import { useEffect, useState, useRef } from 'react';
+import { useEffect, useState, useRef, useMemo } from 'react';
 import {
   Box,
   Stack,
@@ -22,6 +22,7 @@ import {
   StyledTableRowCell,
   StyledTableBodyCell,
   StyledTableFooter,
+  StyledTableHead,
 } from '../../../components/DisplayTable';
 import {
   StyledAutocomplete,
@@ -207,6 +208,38 @@ const data = {
   totalItems: 18,
 };
 
+function descendingComparator(a, b, orderBy) {
+  if (b[orderBy] < a[orderBy]) {
+    return -1;
+  }
+  if (b[orderBy] > a[orderBy]) {
+    return 1;
+  }
+  return 0;
+}
+
+function getComparator(order, orderBy) {
+  return order === 'desc'
+    ? (a, b) => descendingComparator(a, b, orderBy)
+    : (a, b) => -descendingComparator(a, b, orderBy);
+}
+
+// Since 2020 all major browsers ensure sort stability with Array.prototype.sort().
+// stableSort() brings sort stability to non-modern browsers (notably IE11). If you
+// only support modern browsers you can replace stableSort(exampleArray, exampleComparator)
+// with exampleArray.slice().sort(exampleComparator)
+function stableSort(array, comparator) {
+  const stabilizedThis = array.map((el, index) => [el, index]);
+  stabilizedThis.sort((a, b) => {
+    const order = comparator(a[0], b[0]);
+    if (order !== 0) {
+      return order;
+    }
+    return a[1] - b[1];
+  });
+  return stabilizedThis.map(el => el[0]);
+}
+
 export const RUNNING = 'Running';
 export const PENDING = 'Pending';
 export const FAILED = 'Failed';
@@ -227,15 +260,15 @@ const StatusIcon = phase => {
 
 const StatusText = phase => {
   if (phase === RUNNING) {
-    return "运行中";
+    return '运行中';
   }
   if (phase === PENDING) {
-    return "等待中";
+    return '等待中';
   }
   if (phase === FAILED) {
     return <span>错误&nbsp;&nbsp;&nbsp;</span>;
   }
-  return "已完成";
+  return '已完成';
 };
 
 export default function ServiceStatusTable(props) {
@@ -246,6 +279,8 @@ export default function ServiceStatusTable(props) {
   const [loading, setLoading] = useState(false);
   const [tableData, setTableData] = useState([]);
   const [count, setCount] = useState(0);
+  const [order, setOrder] = useState('asc');
+  const [orderBy, setOrderBy] = useState('name');
 
   const dispatch = useDispatch();
 
@@ -311,12 +346,27 @@ export default function ServiceStatusTable(props) {
   }
 
   const headRow = [
-    createRow('name', '名称', false, '100px', '100px', true, 'left'),
+    createRow('name', '名称', true, '100px', '100px', true, 'left'),
     createRow('phase', '状态', false, '100px', '100px', true, 'center'),
     createRow('hostIP', 'Host IP', false, '120px', '130px', true, 'center'),
     createRow('podIP', 'Pod IP', false, '120px', '130px', true, 'center'),
-    createRow('startTime', '启动时间', false, '120px', '130px', true, 'center'),
+    createRow('startTime', '启动时间', true, '120px', '130px', true, 'center'),
   ];
+
+  const handleRequestSort = (event, property) => {
+    const isAsc = orderBy === property && order === 'asc';
+    setOrder(isAsc ? 'desc' : 'asc');
+    setOrderBy(property);
+  };
+
+  const visibleRows = useMemo(
+    () =>
+      stableSort(tableData, getComparator(order, orderBy)).slice(
+        (pageNum - 1) * pageSize,
+        (pageNum - 1) * pageSize + pageSize
+      ),
+    [order, orderBy, pageNum, pageSize]
+  );
 
   const isDuplicate = () => {
     return false;
@@ -404,38 +454,17 @@ export default function ServiceStatusTable(props) {
             tableLayout: 'auto',
           }}
         >
-          <TableHead>
-            <TableRow>
-              <StyledTableRowCell
-                align='center'
-                sx={{
-                  width: '80px',
-                }}
-              >
-                <Checkbox
-                  sx={{
-                    bgcolor: 'transparent !important',
-                  }}
-                  disableRipple
-                />
-              </StyledTableRowCell>
-              {headRow.map((item, index) => (
-                <StyledTableRowCell
-                  key={item.id}
-                  align={item.align}
-                  sx={{
-                    maxWidth: item.maxWidth,
-                    minWidth: item.minWidth,
-                  }}
-                >
-                  {item.label}
-                </StyledTableRowCell>
-              ))}
-            </TableRow>
-          </TableHead>
+          <StyledTableHead
+            headRow={headRow}
+            selectAll={true}
+            order={order}
+            orderBy={orderBy}
+            onRequestSort={handleRequestSort}
+          />
+
           <TableBody>
-            {!loading && tableData !== null && tableData.length !== 0 ? (
-              tableData.map((row, index) => {
+            {!loading && visibleRows !== null && visibleRows.length !== 0 ? (
+              visibleRows.map((row, index) => {
                 return (
                   <TableRow
                     key={row.id + '' + index}
@@ -485,7 +514,12 @@ export default function ServiceStatusTable(props) {
                       </Stack>
                     </StyledTableBodyCell>
                     <StyledTableBodyCell align={'center'}>
-                      <Stack alignItems='center' direction='row' justifyContent="center" spacing={2}>
+                      <Stack
+                        alignItems='center'
+                        direction='row'
+                        justifyContent='center'
+                        spacing={2}
+                      >
                         {StatusIcon(row.phase)}
                         <span
                           style={{
@@ -538,8 +572,8 @@ export default function ServiceStatusTable(props) {
         handlePerPageChange={handlePerPageChange}
         handlePageChange={handlePageChange}
         sx={{
-          pt: "12px",
-          pb: "12px"
+          pt: '12px',
+          pb: '12px',
         }}
       />
       {/* </StyledTableBox> */}
