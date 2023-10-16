@@ -6,7 +6,6 @@ export const DEPLOY_INSTANCE = 'DEPLOY_INSTANCE';
 export const GET_INSTANCES = 'GET_INSTANCES';
 export const CHANGE_PAGE_SIZE = 'CHANGE_INSTANCE_STATUS_PAGE_SIZE';
 export const CHANGE_PAGE_NUM = 'CHANGE_INSTANCE_STATUS_PAGE_NUM';
-;
 const baseURLLink = 'http://192.168.1.104:31931';
 
 const axios_instance = axios.create({
@@ -16,7 +15,15 @@ const axios_instance = axios.create({
   crossDomain: true,
 });
 
-export function searchAllClusters(serviceId, serviceName, imageUrl, serverId) {
+export function deploy(
+  serviceId,
+  serviceName,
+  namespace,
+  imageUrl,
+  replicas,
+  ports,
+  resources
+) {
   const url = '/instance/deploy';
   return async dispatch => {
     try {
@@ -25,8 +32,11 @@ export function searchAllClusters(serviceId, serviceName, imageUrl, serverId) {
         {
           serviceId: serviceId,
           serviceName: serviceName,
+          namespace: namespace,
           imageUrl: imageUrl,
-          serverId: serverId,
+          replicas: replicas,
+          ports: ports,
+          resources: resources,
         },
         {
           headers: {
@@ -46,7 +56,7 @@ export function searchAllClusters(serviceId, serviceName, imageUrl, serverId) {
         dispatch(
           setSnackbarMessageAndOpen(
             'instance.deployFailed',
-            { },
+            {},
             SEVERITIES.warning
           )
         );
@@ -54,7 +64,7 @@ export function searchAllClusters(serviceId, serviceName, imageUrl, serverId) {
         dispatch(
           setSnackbarMessageAndOpen(
             'instance.deployFailed',
-            {  },
+            {},
             SEVERITIES.warning
           )
         );
@@ -63,7 +73,7 @@ export function searchAllClusters(serviceId, serviceName, imageUrl, serverId) {
       dispatch(
         setSnackbarMessageAndOpen(
           'instance.deployFailed',
-          { },
+          {},
           SEVERITIES.warning
         )
       );

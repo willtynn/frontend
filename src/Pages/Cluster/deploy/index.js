@@ -19,6 +19,7 @@ import BasicInfo from './DeployProgress/BasicInfo';
 import ContainerConfig from './DeployProgress/ContainerConfig';
 import TaskIcon from '@/assets/TaskIcon.svg';
 import { useIntl } from 'react-intl';
+import { deploy } from '../../../actions/instanceAction';
 
 const formControlStyle = {
   // height: "45px",
@@ -73,6 +74,7 @@ export default function InstanceDeploy() {
   const [configFinish, setConfigFinish] = useState(false);
 
   const intl = useIntl();
+  const dispatch = useDispatch();
 
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
@@ -94,11 +96,62 @@ export default function InstanceDeploy() {
         memory: '',
       },
     });
+    setConfigFinish(false);
   };
 
   const handleConfirmClick = () => {
     if (configFinish === true) {
-      
+      // //等待后端接口的部署
+      // dispatch(
+      //   deploy(
+      //     (serviceId = serviceId),
+      //     (serviceName = serviceName),
+      //     (namespace = namespace),
+      //     (imageUrl = imageUrl),
+      //     (replicas = replicas),
+      //     (ports = ports),
+      //     (resources = {
+      //       requests: {
+      //         cpu: resources.requests.cpu + '',
+      //         memory:
+      //           resources.requests.memory === ''
+      //             ? ''
+      //             : resources.requests.memory + 'Mi',
+      //       },
+      //       limits: {
+      //         cpu: resources.limits.cpu + '',
+      //         memory:
+      //           resources.limits.memory === ''
+      //             ? ''
+      //             : resources.limits.memory + 'Mi',
+      //       },
+      //     })
+      //   )
+      // );
+      console.log({
+        serviceId: serviceId,
+        serviceName: serviceName,
+        namespace: namespace,
+        imageUrl: imageUrl,
+        replicas: replicas,
+        ports: ports,
+        resources: {
+          requests: {
+            cpu: resources.requests.cpu + '',
+            memory:
+              resources.requests.memory === ''
+                ? ''
+                : resources.requests.memory + 'Mi',
+          },
+          limits: {
+            cpu: resources.limits.cpu + '',
+            memory:
+              resources.limits.memory === ''
+                ? ''
+                : resources.limits.memory + 'Mi',
+          },
+        },
+      });
       setOpen(false);
       setShowError(false);
       resetParam();

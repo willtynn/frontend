@@ -113,7 +113,7 @@ export function PortConfigRow(props) {
       } else if (e.target.value !== '' && currentPort < 1) {
         tmpPorts[index].containerPort = 1;
       } else {
-        tmpPorts[index].containerPort = e.target.value;
+        tmpPorts[index].containerPort = currentPort;
       }
       return tmpPorts;
     });
@@ -889,6 +889,7 @@ export default function ContainerAddBlock(props) {
                     setAlive={setCurrentPortAlive}
                     setError={setPortsError}
                     error={portsError.includes(true) && showError}
+                    key={index}
                   />
                 );
               } else {
