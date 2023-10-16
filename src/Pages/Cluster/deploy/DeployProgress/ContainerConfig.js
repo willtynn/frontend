@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Box, Stack, Typography } from '@mui/material';
 import { KubeTransparentButton } from '@/components/Button';
 import KubeAdd from '@/assets/KubeAdd.svg';
@@ -20,13 +20,20 @@ export default function ContainerConfig(props) {
     setResources,
     showError,
     setContainerAddError,
+    isConfig,
+    setIsConfig,
+    setShowError
   } = props;
 
-  const [isConfig, setIsConfig] = useState(false);
+  
   const intl = useIntl();
   const [imageUrlError, setImageUrlError] = useState(true);
-  const [portsError, setPortsError] = useState(true);
+  const [portsError, setPortsError] = useState([true]);
   const [resourcesError, setResourcesError] = useState(false);
+
+  useEffect(() => {
+    setContainerAddError(imageUrlError || portsError.includes(true) || resourcesError);
+  }, [imageUrlError, portsError, resourcesError])
 
   const handleReplicasInputChange = e => {
     setReplicas(e.target.value);
@@ -67,6 +74,7 @@ export default function ContainerConfig(props) {
           resourcesError={resourcesError}
           setResourcesError={setResourcesError}
           showError={showError}
+          setShowError={setShowError}
         />
       ) : (
         <Stack spacing={1}>

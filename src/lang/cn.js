@@ -38,7 +38,7 @@ export const messages = {
     containerInputPlaceHolder: "镜像路径，例如 192.168.0.1:5000/namespace/jenkins:latest",
     containerResourceConfigDescription: "设置容器的资源限制与资源预留，以将容器调度到合适的节点上。",
     portConfigDescription: "设置用于访问容器的端口。",
-    protocalTip: "选择服务实际使用的协议以充分利用应用治理功能。例如，为 HTTP 服务选择 HTTP 协议。",
+    protocolTip: "选择服务实际使用的协议以充分利用应用治理功能。例如，为 HTTP 服务选择 HTTP 协议。",
     instanceDescription: "服务实例（Pod），是服务实例运行的对象，通过服务来配置和管理。在实例列表，可以看到实例的状态、所在的主机IP、实例的IP、创建时间。",
     serviceIdEmptyError: "请填写服务对应的ID。",
     namespaceEmptyErrorMsg: "请选择一个命名空间",

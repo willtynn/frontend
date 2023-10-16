@@ -81,6 +81,9 @@ export const KubeConfirmButton = styled(Button)({
   "&:hover":{
     boxShadow: 'none',
     backgroundColor: "#242e42",
+  },
+  "&.Mui-disabled": {
+    backgroundColor: "#454450 !important"
   }
 });
 
@@ -94,6 +97,18 @@ export const KubeTransparentButton = styled(Button)({
   lineHeight: '18px',
   "&:hover":{
     color: "#e3e9ef",
+  }
+});
+
+export const KubeRectTransparentButton = styled(Button)({
+  color: '#FFF',
+  borderRadius: "0px",
+  fontFamily: fontFamily,
+  fontStyle: 'normal',
+  fontWeight: 600,
+  lineHeight: '18px',
+  "&:hover":{
+    backgroundColor: "#36435c",
   }
 });
 

@@ -31,9 +31,10 @@ const style = {
 };
 
 export default function DeployProgress(props) {
-  const { handleConfirmClick, handleCancelClick, totalStage, currentPage, basicInfoError, setShowError } =
+  const { handleConfirmClick, handleCancelClick, totalStage, currentPage, basicInfoError, setShowError, isConfig } =
     props;
   const [currentStage, setCurrentStage] = useState(1);
+  
   const intl = useIntl();
 
   const previousStep = () => {
@@ -41,9 +42,14 @@ export default function DeployProgress(props) {
   };
 
   const nextStep = () => {
-    if(basicInfoError === true && currentStage === 1) {
-      setShowError(true);
-      return;
+    if(currentStage === 1) {
+      if(basicInfoError === true) {
+        setShowError(true);
+        return;
+      } else {
+        setShowError(false);
+      }
+      
     }
     setCurrentStage(prevStage => prevStage + 1);
   };
@@ -115,6 +121,7 @@ export default function DeployProgress(props) {
             <KubeConfirmButton
               sx={{ height: '32px', p: '5px 23px' }}
               onClick={handleConfirmClick}
+              disabled={isConfig}
             >
               创建
             </KubeConfirmButton>

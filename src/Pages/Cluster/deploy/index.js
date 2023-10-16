@@ -51,7 +51,9 @@ export default function InstanceDeploy() {
   const [namespace, setNamespace] = useState('');
   const [imageUrl, setImageUrl] = useState('');
   const [replicas, setReplicas] = useState(1);
-  const [ports, setPorts] = useState([]);
+  const [ports, setPorts] = useState([
+    { name: 'http-0', protocol: 'HTTP', containerPort: '' },
+  ]);
 
   const [showError, setShowError] = useState(false);
   const [resources, setResources] = useState({
@@ -67,6 +69,7 @@ export default function InstanceDeploy() {
 
   const [basicInfoError, setBasicInfoError] = useState(false);
   const [containerAddError, setContainerAddError] = useState(false);
+  const [isConfig, setIsConfig] = useState(false);
 
   const intl = useIntl();
 
@@ -111,6 +114,9 @@ export default function InstanceDeploy() {
           setResources={setResources}
           showError={showError}
           setContainerAddError={setContainerAddError}
+          isConfig={isConfig}
+          setIsConfig={setIsConfig}
+          setShowError={setShowError}
         />
       </Box>
     );
@@ -178,7 +184,7 @@ export default function InstanceDeploy() {
           currentPage={currentPage}
           basicInfoError={basicInfoError}
           setShowError={setShowError}
-          
+          isConfig={isConfig}
         />
       </Modal>
     </Box>

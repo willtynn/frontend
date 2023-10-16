@@ -339,6 +339,7 @@ export function KubeInput(props) {
 }
 
 export const KubeSelect = styled(Select)({
+  
   '& .MuiSelect-select': {
     border: '1px solid rgba(0, 0, 0, 0.23) !important',
   },
@@ -360,5 +361,8 @@ export const KubeSelect = styled(Select)({
     boxSizing: 'border-box',
     borderRadius: '0px 4px 4px 0px',
     backgroundColor: '#FFFFFF',
+  },
+  '& .Mui-error': {
+    border: '1px solid #CA2621 !important',
   },
 });

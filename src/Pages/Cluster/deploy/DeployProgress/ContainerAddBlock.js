@@ -24,9 +24,12 @@ import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline';
 import {
   KubeCancelButton,
   KubeTransparentButton,
+  KubeRectTransparentButton,
 } from '../../../../components/Button';
+import CheckIcon from '@mui/icons-material/Check';
+import CloseIcon from '@mui/icons-material/Close';
 
-const protocals = [
+const protocols = [
   'GRPC',
   'HTTP',
   'HTTP2',
@@ -39,8 +42,83 @@ const protocals = [
 ];
 
 export function PortConfigRow(props) {
-  const { protocals } = props;
+  const { protocols, ports, setPorts, index, setAlive, setError, error } =
+    props;
   const intl = useIntl();
+
+  const handlePortDelete = () => {
+    setAlive(prevAlive => {
+      let currAlive = JSON.parse(JSON.stringify(prevAlive));
+      currAlive[index] = false;
+      return currAlive;
+    });
+    setError(prevError => {
+      let currError = JSON.parse(JSON.stringify(prevError));
+      currError[index] = false;
+      return currError;
+    });
+  };
+
+  const handleProtocolChange = e => {
+    setPorts(prevPorts => {
+      let tmpPorts = JSON.parse(JSON.stringify(prevPorts));
+      tmpPorts[index].protocol = e.target.value;
+      return tmpPorts;
+    });
+  };
+
+  const handleNameChange = e => {
+    if (e.target.value === '') {
+      setError(prevError => {
+        let tmpError = JSON.parse(JSON.stringify(prevError));
+        tmpError[index] = true;
+        return tmpError;
+      });
+    } else {
+      setError(prevError => {
+        let tmpError = JSON.parse(JSON.stringify(prevError));
+        tmpError[index] = false;
+        return tmpError;
+      });
+    }
+    setPorts(prevPorts => {
+      let tmpPorts = JSON.parse(JSON.stringify(prevPorts));
+      tmpPorts[index].name = e.target.value;
+      return tmpPorts;
+    });
+  };
+
+  const handleContainerPortChange = e => {
+    const currentPort = Number(e.target.value);
+    if (isNaN(currentPort)) {
+      return;
+    }
+    if (e.target.value === '') {
+      setError(prevError => {
+        let tmpError = JSON.parse(JSON.stringify(prevError));
+        tmpError[index] = true;
+        return tmpError;
+      });
+    } else {
+      setError(prevError => {
+        let tmpError = JSON.parse(JSON.stringify(prevError));
+        tmpError[index] = false;
+        return tmpError;
+      });
+    }
+    setPorts(prevPorts => {
+      let tmpPorts = JSON.parse(JSON.stringify(prevPorts));
+      if (currentPort > 65535) {
+        tmpPorts[index].containerPort = 65535;
+      } else if (e.target.value !== '' && currentPort < 1) {
+        tmpPorts[index].containerPort = 1;
+      } else {
+        tmpPorts[index].containerPort = e.target.value;
+      }
+      return tmpPorts;
+    });
+  };
+
   return (
     <Box
       sx={{
@@ -80,7 +158,7 @@ export function PortConfigRow(props) {
                   },
                 },
               }}
-              title={intl.messages['instance.protocalTip']}
+              title={intl.messages['instance.protocolTip']}
               placement='top'
               arrow
             >
@@ -104,12 +182,14 @@ export function PortConfigRow(props) {
               lineHeight: '1.67',
               color: '#242e42',
             }}
-            MenuProps={{ className: 'PortProtocals-List' }}
-            // value={}
+            MenuProps={{ className: 'PortProtocols-List' }}
+            value={ports[index].protocol}
+            onChange={handleProtocolChange}
+            error={error}
           >
-            {protocals.map((value, item) => {
+            {protocols.map((value, item) => {
               return (
-                <MenuItem className='PortProtocals-Item' sx={{}} value={value}>
+                <MenuItem className='PortProtocols-Item' value={value}>
                   {value}
                 </MenuItem>
               );
@@ -143,6 +223,9 @@ export function PortConfigRow(props) {
                 borderRadius: '0px 4px 4px 0px !important',
               },
             }}
+            value={ports[index].name}
+            onChange={handleNameChange}
+            error={error}
           />
         </Stack>
 
@@ -172,6 +255,9 @@ export function PortConfigRow(props) {
                 borderRadius: '0px 4px 4px 0px !important',
               },
             }}
+            value={ports[index].containerPort}
+            onChange={handleContainerPortChange}
+            error={error}
           />
         </Stack>
       </Stack>
@@ -189,6 +275,7 @@ export function PortConfigRow(props) {
               color: '#324558 !important',
             },
           }}
+          onClick={handlePortDelete}
         >
           <DeleteOutlineIcon />
         </KubeTransparentButton>
@@ -213,6 +300,7 @@ export default function ContainerAddBlock(props) {
     resourcesError,
     setResourcesError,
     showError,
+    setShowError,
   } = props;
   const [returnHover, setReturnHover] = useState(false);
   const [cpuReserved, setCpuReserved] = useState('');
@@ -229,6 +317,25 @@ export default function ContainerAddBlock(props) {
   useEffect(() => {
     setResourcesError(cpuError || memoryError);
   }, [cpuError, memoryError]);
+
+  const handleCheck = () => {
+    if (imageUrlError || portsError.includes(true) || resourcesError) {
+      setShowError(true);
+    } else {
+      setResources({
+        requests: {
+          cpu: cpuReserved,
+          memory: memoryReserved,
+        },
+        limits: {
+          cpu: cpuLimit,
+          memory: memoryLimit,
+        },
+      });
+      setShowError(false);
+      handleReturn();
+    }
+  };
 
   const handleImageUrlChange = e => {
     if (e.target.value === '') {
@@ -293,6 +400,25 @@ export default function ContainerAddBlock(props) {
         setMemoryError(false);
       }
     }
+  };
+
+  const handlePortAdd = () => {
+    setCurrentPortAlive(prevAlive => {
+      return [...prevAlive, true];
+    });
+    setPorts(prevPorts => {
+      return [
+        ...prevPorts,
+        {
+          name: `http-${prevPorts.length}`,
+          protocol: 'HTTP',
+          containerPort: '',
+        },
+      ];
+    });
+    setPortsError(prevError => {
+      return [...prevError, true];
+    });
   };
 
   return (
@@ -662,6 +788,7 @@ export default function ContainerAddBlock(props) {
           backgroundColor: '#fff',
           border: '1px solid #ccd3db',
           p: '11px 16px',
+          mb: '50px',
         }}
       >
         <Typography
@@ -702,10 +829,13 @@ export default function ContainerAddBlock(props) {
               if (value === true) {
                 return (
                   <PortConfigRow
-                    protocals={protocals}
-                    resources={resources}
-                    setResources={setResources}
+                    protocols={protocols}
+                    ports={ports}
+                    setPorts={setPorts}
                     index={index}
+                    setAlive={setCurrentPortAlive}
+                    setError={setPortsError}
+                    error={portsError.includes(true) && showError}
                   />
                 );
               } else {
@@ -726,11 +856,42 @@ export default function ContainerAddBlock(props) {
                 backgroundColor: '#eff4f9',
                 width: '96px',
               }}
+              onClick={handlePortAdd}
+              disabled={portsError.includes(true)}
             >
               添加端口
             </KubeCancelButton>
           </Box>
         </Box>
+      </Box>
+
+      <Box
+        sx={{
+          position: 'fixed',
+          bottom: '80px',
+          padding: '0px 12px',
+          borderRadius: '4px',
+          backgroundColor: '#242E42',
+          fontWeight: 400,
+          color: '#FFFFFF',
+          fontSize: '12px',
+          lineHeight: 1.67,
+          width: 'calc(100% - 168px)',
+        }}
+      >
+        <Stack
+          direction='row'
+          sx={{ width: '100%' }}
+          spacing={1}
+          justifyContent='flex-end'
+        >
+          <KubeRectTransparentButton sx={{ height: '36px' }}>
+            <CloseIcon fontSize='small' onClick={handleReturn} />
+          </KubeRectTransparentButton>
+          <KubeRectTransparentButton sx={{ height: '36px' }}>
+            <CheckIcon fontSize='small' onClick={handleCheck} />
+          </KubeRectTransparentButton>
+        </Stack>
       </Box>
     </Box>
   );

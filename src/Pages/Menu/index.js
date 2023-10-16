@@ -197,44 +197,51 @@ export default function MiniDrawer() {
           <Box sx={{ maxWidth: '220px' }}>
             {/* 深色块标签 */}
             <Stack
-              direction='row'
+              spacing={1}
               sx={{
                 height: '120px',
-                maxWidth: '186px',
+                maxWidth: '182px',
                 backgroundColor: 'rgb(36, 46, 66)',
                 boxShadow: 'rgba(36, 46, 66, 0.2) 0px 8px 16px 0px',
-                padding: '12px 14px 12px 10px',
+                padding: '12px 14px 12px 14px',
                 marginTop: '20px',
                 marginBottom: '20px',
                 borderRadius: '4px',
-                alignItems: 'center',
               }}
             >
-              <Box sx={{ paddingRight: '20px' }}>
-                <ClusterManagement />
-              </Box>
-              <Stack
+              <Stack direction='row' justifyContent="flex-start"
+  alignItems="center">
+                <Box sx={{ paddingRight: '20px' }}>
+                  <ClusterManagement />
+                </Box>
+                <Box
+                  sx={{
+                    color: '#FFF',
+                    fontSize: '14px',
+                    fontWeight: 600,
+                    fontStyle: 'normal',
+                    fontFamily:
+                      'Roboto,PingFang SC,Lantinghei SC,Helvetica Neue,Helvetica,Arial,Microsoft YaHei,微软雅黑,STHeitiSC-Light,simsun,宋体,WenQuanYi Zen Hei,WenQuanYi Micro Hei,sans-serif',
+                  }}
+                >
+                  集群管理
+                </Box>
+              </Stack>
+
+              <Box
                 sx={{
-                  color: '#FFF',
+                  color: '#d8dee5',
+                  fontWeight: 400,
                   fontSize: '14px',
-                  fontWeight: 600,
                   fontStyle: 'normal',
                   fontFamily:
                     'Roboto,PingFang SC,Lantinghei SC,Helvetica Neue,Helvetica,Arial,Microsoft YaHei,微软雅黑,STHeitiSC-Light,simsun,宋体,WenQuanYi Zen Hei,WenQuanYi Micro Hei,sans-serif',
                 }}
-                spacing={1}
               >
-                <Box>集群管理</Box>
-                <Box
-                  sx={{
-                    color: '#d8dee5',
-                    fontWeight: 400,
-                  }}
-                >
-                  {intl.messages['menu.clusterMangementDescription']}
-                </Box>
-              </Stack>
+                {intl.messages['menu.clusterMangementDescription']}
+              </Box>
             </Stack>
+
             {/* 导航列表 */}
             <List sx={{ paddingTop: '0px', paddingBottom: '0px' }}>
               <ListItemButton
