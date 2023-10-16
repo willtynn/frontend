@@ -199,16 +199,16 @@ export function ChipTextField(props) {
 
   const handleKeyDown = e => {
     // Backspace
-    if (value == '' && e.keyCode == 8) {
-      if (contentList.length == 0) return;
+    if (value === '' && e.keyCode === 8) {
+      if (contentList.length === 0) return;
       e.preventDefault();
       let list = JSON.parse(JSON.stringify(contentList));
       list.pop();
       setContentList(list);
       setValue('');
     }
-    if (typeof e.target.value == 'string' && e.keyCode == 13) {
-      if (e.target.value.length == 0) return;
+    if (typeof e.target.value === 'string' && e.keyCode === 13) {
+      if (e.target.value.length === 0) return;
       const realValue = e.target.value;
       if (!isDuplicate(realValue)) {
         setContentList([...contentList, realValue]);
@@ -221,7 +221,7 @@ export function ChipTextField(props) {
     <CustomTextField
       onChange={handleInputChange}
       onBlur={e => {
-        if (e.target.value.length == 0) return;
+        if (e.target.value.length === 0) return;
         if (!isDuplicate(e.target.value)) {
           setContentList([...contentList, e.target.value]);
         }

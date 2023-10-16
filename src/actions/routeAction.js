@@ -1,10 +1,11 @@
 import { axios_instance } from "@/Pages/Route/trace/functions/axios_trace.js";
 
-
+/*
 import {test_service_data, test_data, test_detail_data} from "../Pages/Route/trace/test_data.js"
+
 const data_service = JSON.parse(test_service_data)
 const data_trace = JSON.parse(test_data)
-const data_detail = JSON.parse(test_detail_data)
+const data_detail = JSON.parse(test_detail_data)*/
 
 export const UPDATE_ROUTE_SERVICE = "UPDATE_ROUTE_SERVICE";
 export const UPDATE_ROUTE_TRACE = "UPDATE_ROUTE_TRACE";

@@ -40,7 +40,6 @@ import {
 
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
-import SendIcon from '@mui/icons-material/Send';
 import TaskIcon from '@/assets/TaskIcon.svg';
 
 import { DataRow } from "./DataRow";
@@ -105,7 +104,7 @@ export default function RouteTrace() {
   const [startTime, setStartTime] = useState(0);
   const [endTime, setEndTime] = useState(0);
 
-  const [namespace, setNamespcae] = useState("");
+  //const [namespace, setNamespcae] = useState("");
 
   const [detailSpan, setDetailSpan] = useState(null);
   
@@ -182,6 +181,7 @@ export default function RouteTrace() {
         row.push(<ServiceRow key={i} onRowClick={() => {}} rowData={null} />);
       }
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [routeService, serviceVisibleRows, selectedServiceIndex]);
 
   useEffect(() => {
@@ -204,6 +204,7 @@ export default function RouteTrace() {
       }
       setTraceRow(row);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [spanVisibleRows, selectedTraceIndex]);
 
   useEffect(() => {
@@ -213,6 +214,7 @@ export default function RouteTrace() {
     clearPage();
     dispatch(getRouteService(startTime, endTime));
     dispatch(clearRouteTrace());
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
   //#endregion
   //HOOK-结束
@@ -248,10 +250,10 @@ export default function RouteTrace() {
     dispatch(clearRouteTrace());
   }
 
-
+  /*
   const handleInputChange = (e) => {
     setNamespcae(e.target.value);
-  }
+  }*/
 
   const handleDurationSelectChange = (e) => {
     setDurationSelectIndex(e.target.value);
@@ -305,18 +307,17 @@ export default function RouteTrace() {
   //#endregion
   //handle-结束
 
-  const styleModal = {
+  const styleModalBox = {
     position: 'absolute',
-    left: "40%",
+    left: "50%",
     transform: 'translate(-100%, -50%)',
-    minWidth: "650px",
+    minWidth: "500px",
     maxWidth: "1150px",
-    width: '60%',
+    width: '50%',
     height: '100%',
     bgcolor: 'background.paper',
-    border: '2px solid #596A7C',
     boxShadow: 'inset -15px 0px  15px -15px #444444',
-    p: 4,
+    p: 2,
   };
 
 
@@ -325,23 +326,21 @@ export default function RouteTrace() {
   return (
     <>
     <Modal
-        aria-labelledby="transition-modal-title"
-        aria-describedby="transition-modal-description"
         open={openModal}
         onClose={handleCloseModal}
         closeAfterTransition
       >
         <Slide direction="left" in={openModal} mountOnEnter unmountOnExit>
-          <Box sx={styleModal}>
+          <Box sx={styleModalBox}>
             <IconButton aria-label="back" color="black" onClick={handleCloseModal}>
               <ArrowBackIcon />
             </IconButton>
             {/* 依赖图 */}
-            <Stack>
+            <Stack sx={{ justifyContent: "center"}}>
               <div style={{ height: "20px" }} />
               {(detailSpan)
                 ?
-                <>
+                <div style={{ justifyContent: "center" }}>
                   <Stack spacing={1}>
                     <Stack direction="row" spacing={20}>
                       <NormalFont sx={{ width: "60px" }}>服务ID</NormalFont>
@@ -359,7 +358,7 @@ export default function RouteTrace() {
                   <RouteTraceCanvas id={detailSpan.id} sx={{ 
                     width: "100%" 
                   }}/>
-                </>
+                </div>
                 :
                 <></>
               }

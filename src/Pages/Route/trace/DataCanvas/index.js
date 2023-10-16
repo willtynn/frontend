@@ -1,5 +1,6 @@
 import React from "react";
 import * as d3 from "d3";
+import tooltip from "./tip.js";
 import dagreD3 from "dagre-d3";
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
@@ -8,10 +9,6 @@ import { fontFamily } from "@/utils/commonUtils";
 import "./styles.css";
 import { getRouteTraceDetail } from "@/actions/routeAction";
 
-const normalEdgeStyle = {
-  style: "stroke: #333; stroke-width: 3px; fill: none;",
-  arrowheadStyle: "fill: #333; width: 3px;",
-}
 
 export function RouteTraceCanvas(props) {
 
@@ -56,20 +53,32 @@ export function RouteTraceCanvas(props) {
         });
     })
 
+    /*
+    let d3Tip = tooltip()
+
+    var tip = tooltip.tip()
+      //类名可以自己设置；假如另有一个矩阵图，也需要添加d3-tip，则应创建2个tip，类名可分别设置为d3-tip_bar，d3-tip_matrix，方便分别控制。
+      .attr('class', 'd3-tip')
+      .offset([-10, 0])
+      .html(function(d) {
+      //d是数据集中的一条数据，它和一个矩形条绑定在一起。
+      return "<strong>Frequency:</strong> <span style='color:red'>uhafj</span>";
+      })*/
+    
     edges.forEach((item, index) => {
       g.setEdge(
         item.start,
         item.end,
         {
-          label: item.info,
+          label: "<div style=\"width: 100px; white-space: nowrap; text-overflow: ellipsis; overflow: hidden; word-break: break-all;\">" + item.info + "</div>",
+          labelType: "html",
           style: "stroke: #74C67A; stroke-width: 2px; stroke-dasharray: 5, 5; fill: none;",
           arrowheadStyle: "fill: #74C67A; width: 2px;",
           class: "trace_link",
-          id: JSON.stringify(item)
+          id: JSON.stringify(item),
         }
-      );
+      ).on("mouseover", tip.show());
     })
-    
     g.nodes().forEach(function (v) {
       var node = g.node(v);
       // Round the corners of the nodes
