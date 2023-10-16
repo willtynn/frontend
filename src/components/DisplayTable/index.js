@@ -42,7 +42,7 @@ export const StyledTableContainer = styled(TableContainer)(() => ({
 
 export const StyledTableRowCell = styled(TableCell)(() => ({
   [`&.${tableCellClasses.head}`]: {
-    backgroundColor: '#F1F3F5',
+    backgroundColor: '#ffffff',
     color: '#596A7C',
     fontWeight: 600,
     fontSize: '12px',
@@ -85,7 +85,7 @@ export function StyledTableFooter(props) {
     handlePerPageChange,
     handlePageChange,
     width = '100%',
-    backgroundColor = '#f1f3f5',
+    backgroundColor = '#f9fbfd',
     sx,
     ...others
   } = props;

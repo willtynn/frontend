@@ -116,7 +116,7 @@ export const StyledAutocomplete = styled(Autocomplete)(
 export const StyledSelect = styled(Select)(
   ({width}) => ({
     borderRadius: '35px',
-    height: '50px',
+    height: '40px',
     width: width,
     background: '#FFFFFF',
   })
@@ -125,7 +125,7 @@ export const StyledSelect = styled(Select)(
 //DateTimePicker 在未来可能merge一个修改，支持圆角
 export const StyledDateTimePicker = styled(DateTimePicker)(
   ({ width }) => ({
-    height: '50px',
+    height: '40px',
     width: width,
     background: '#FFFFFF',
   })

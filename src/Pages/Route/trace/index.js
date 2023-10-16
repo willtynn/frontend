@@ -66,8 +66,8 @@ const durationList = [60, 120, 300, 600, 1800, 3600, 10800, 21600, 43200, 86400,
 
 const serviceTableHeaders = [
   { key: 'service', align: 'left', text: '服务', minWidth: 200, maxWidth: 200 },
-  { key: 'api', align: 'center', text: '接口', minWidth: 150, maxWidth: 150 },
-  { key: 'count', align: 'center', text: <>请求<br/>次数</>, minWidth: 30, maxWidth: 30 },
+  { key: 'api', align: 'center', text: '接口', minWidth: 100, maxWidth: 150 },
+  { key: 'count', align: 'center', text: '请求次数', minWidth: 85, maxWidth: 85 },
   { key: 'low', align: 'center', text: 'Low', minWidth: 60, maxWidth: 60 },
   { key: 'percentile50', align: 'center', text: '0.5', minWidth: 60, maxWidth: 60 },
   { key: 'percentile95', align: 'center', text: '0.95', minWidth: 60, maxWidth: 60 },
@@ -77,10 +77,10 @@ const serviceTableHeaders = [
 
 const traceTableHeaders = [
   { key: 'service', align: 'left', text: '请求', minWidth: 350, maxWidth: 350 },
-  { key: 'spanNum', align: 'center', text: <>链路<br/>长度</>, minWidth: 30, maxWidth: 30 },
+  { key: 'spanNum', align: 'center', text: '链路长度', minWidth: 85, maxWidth: 85 },
   { key: 'time', align: 'center', text: '开始时间', minWidth: 150, maxWidth: 150 },
   { key: 'duration', align: 'center', text: '响应时间', minWidth: 80, maxWidth: 80 },
-  { key: 'status', align: 'center', text: '请求状态', minWidth: 40, maxWidth: 40 },
+  { key: 'status', align: 'center', text: '请求状态', minWidth: 75, maxWidth: 75 },
 ];
 
 const serviceNumPerPage = 4;
@@ -325,14 +325,14 @@ export default function RouteTrace() {
               fontSize: "12px",
               lineHeight: 1.67
             }}>
-              ABC
+              服务（Service）提供一种抽象的方法，将运行在容器组（Pod）上的应用程序公开为网络服务。
             </Typography>
           </Box>
         </Stack>
       </Box>
 
       {/* Main Body */}
-      <Stack sx={{ width: "100%" }}>
+      <Stack sx={{ width: "99%" }}>
         <div style={{height: "10px"}}/>
 
         {/* 搜索 */}
@@ -359,7 +359,7 @@ export default function RouteTrace() {
               <StyledSelect
                 value={durationSelectIndex}
                 onChange={handleDurationSelectChange}
-                width="150px" style={{ top: "3px"}}>
+                width="140px" style={{ top: "8px"}}>
                 {selectMenuItems.map((item, index) => {
                   return <MenuItem key={index} value={index}>{item}</MenuItem>;
                 })}
@@ -368,6 +368,7 @@ export default function RouteTrace() {
                 durationSelectIndex === 11 ? 
                 <LocalizationProvider dateAdapter={AdapterDayjs}>
                   <StyledDateTimePicker
+                    sx={{ height: "30px" }}
                     round= "20px"
                     width= "200px"
                     label="Start Time"
@@ -395,21 +396,21 @@ export default function RouteTrace() {
                 </LocalizationProvider>
                 : <></>
               }
-              <KubeConfirmButton endIcon={<SendIcon />} 
+              <KubeConfirmButton 
                 onClick={handleSearchClick}
                 sx={{
                   mt: "6px !important",
-                  width: "110px",
-                  height: "40px"
+                  width: "96px",
+                  height: "32px"
                 }}
-                style={{ top: "3px", left: "0px"}}>
-                Search
+                style={{ top: "6px" }}>
+                搜索
               </KubeConfirmButton>
             </Stack>
         </Box>
         { /*数据*/ }
         <Stack  direction="row" spacing={2} sx={{ maxWidth: "100%" }}>
-          <Stack sx={{ width: "99%" }}>
+          <Stack sx={{ width: "100%" }}>
             {/* Service 列表 */}
             <Stack>
               <StyledTableContainer sx={{ width: "100%" }}>
@@ -418,7 +419,7 @@ export default function RouteTrace() {
                   size='small'
                   sx={{tableLayout: 'auto'}}>
                   <TableHead>
-                    <TableRow>
+                    <TableRow sx={{ height: "52px"}}>
                       {
                         serviceTableHeaders.map((item) => {
                           return (
@@ -460,7 +461,7 @@ export default function RouteTrace() {
                   size='small'
                   sx={{tableLayout: 'auto'}}>
                   <TableHead>
-                    <TableRow>
+                    <TableRow sx={{ height: "52px"}}>
                       {
                         traceTableHeaders.map((item) => {
                           return (
