@@ -3,9 +3,9 @@
 import React from "react";
 import { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { RouteTraceCanvas } from "./DataCanvas";
+
+
 import {
-  FormControl,
   MenuItem,
   Box,
   Stack,
@@ -13,8 +13,6 @@ import {
   TableBody,
   TableHead,
   TableRow,
-  TableFooter,
-  TablePagination,
   Typography,
 } from "@mui/material"
 
@@ -22,36 +20,37 @@ import {
   KubeConfirmButton
 } from "@/components/Button";
 import {
-  StyledDateTimePicker
+  StyledDateTimePicker,
+  StyledSelect
 } from "@/components/Input";
-
 import {
   StyledTableRowCell,
   StyledTableContainer,
   StyledTableFooter
 } from '@/components/DisplayTable';
-
 import {
   LargeBoldFont,
   NormalFont,
   NormalFontBlack,
 } from "@/components/Fonts";
+
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
-import dayjs from 'dayjs';
-
 import SendIcon from '@mui/icons-material/Send';
 import TaskIcon from '@/assets/TaskIcon.svg';
 
 import { DataRow } from "./DataRow";
 import { ServiceRow } from "./ServiceRow";
+import { RouteTraceCanvas } from "./DataCanvas";
+
+
+import dayjs from 'dayjs';
 
 import {
   getRouteService,
   getRouteTrace,
   clearRouteTrace
 } from "@/actions/routeAction";
-import { StyledSelect } from "../../../components/Input";
 
 //#endregion
 //import
@@ -90,13 +89,6 @@ const spanNumPerPage = 5;
 //Constants
 
 
-//自定义函数-开始
-//#region
-
-//#endregion
-//自定义函数-结束
-
-
 export default function RouteTrace() {
 
   //定义-开始
@@ -111,16 +103,15 @@ export default function RouteTrace() {
 
   const [namespace, setNamespcae] = useState("");
 
-  //const [detailID, setDetailID] = useState(-1);
   const [detailSpan, setDetailSpan] = useState(null);
   
-  const [tableRow, setTableRow] = useState([]);
+  const [traceRow, setTraceRow] = useState([]);
   const [serviceRow, setServiceRow] = useState([]);
 
   const [servicePage, setServicePage] = useState(0);
-  const [spanPage, setSpanPage] = useState(0);
+  const [tracePage, setTracePage] = useState(0);
   const [selectedServiceIndex, setSelectedServiceIndex] = useState(-1);
-  const [selectedSpanIndex, setSelectedSpanIndex] = useState(-1);
+  const [selectedTraceIndex, setSelectedTraceIndex] = useState(-1);
 
   const dispatch = useDispatch();
 
@@ -130,15 +121,14 @@ export default function RouteTrace() {
   } = useSelector(state => {
     return {
       routeService: state.Route.routeService,
-      routeTraceDetail: state.Route.routeTraceDetail,
       routeTrace: state.Route.routeTrace
     };
   });
 
   const spanVisibleRows = React.useMemo(() => {
-    const tmp = (spanPage - 1) * spanNumPerPage;
+    const tmp = (tracePage - 1) * spanNumPerPage;
     return routeTrace ? routeTrace.slice(tmp, tmp + spanNumPerPage) : [];
-  }, [routeTrace, spanPage]);
+  }, [routeTrace, tracePage]);
   
   const serviceVisibleRows = React.useMemo(() => {
     const tmp = (servicePage - 1) * serviceNumPerPage;
@@ -148,11 +138,19 @@ export default function RouteTrace() {
   //#endregion
   //定义-结束
 
-  //style-开始
+  //自定义函数-开始
   //#region
 
+  const clearPage = () => {
+    setSelectedServiceIndex(-1);
+    setSelectedTraceIndex(-1);
+    setServicePage(1);
+    setTracePage(0);
+    setDetailSpan(null);
+  }
+
   //#endregion
-  //style-结束
+  //自定义函数-结束
 
   //HOOK-开始
   //#region
@@ -180,7 +178,7 @@ export default function RouteTrace() {
       let row = spanVisibleRows.map((item, index) => {
         return <DataRow key={item.traceID}
           onRowClick={() => handleSpanClick(index)}
-          selected={selectedSpanIndex === index}
+          selected={selectedTraceIndex === index}
           rowData={{
             service: item.service,
             spanNum: item.trace.spans.length,
@@ -193,12 +191,17 @@ export default function RouteTrace() {
       {
         row.push(<DataRow key={i} onRowClick={() => {}} rowData={null} />);
       }
-      setTableRow(row);
+      setTraceRow(row);
     }
-  }, [spanVisibleRows, selectedSpanIndex]);
+  }, [spanVisibleRows, selectedTraceIndex]);
 
   useEffect(() => {
-    handleSearchClick();
+    let now = dayjs();
+    setStartTime(now - 3600000);
+    setEndTime(now.valueOf());
+    clearPage();
+    dispatch(getRouteService(startTime, endTime));
+    dispatch(clearRouteTrace());
   }, []);
   //#endregion
   //HOOK-结束
@@ -229,14 +232,7 @@ export default function RouteTrace() {
       setStartTime(startTimeValue.valueOf());
       setEndTime(endTimeValue.valueOf());
     }
-
-    setSelectedServiceIndex(-1);
-    setSelectedSpanIndex(-1);
-    setServicePage(1);
-    setSpanPage(0);
-    //setDetailID(-1);
-    setDetailSpan(null);
-
+    clearPage();
     dispatch(getRouteService(startTime, endTime));
     dispatch(clearRouteTrace());
   }
@@ -263,29 +259,29 @@ export default function RouteTrace() {
     {
       setSelectedServiceIndex(-1);
       setServicePage(newPage);
-      setSelectedSpanIndex(-1);
-      setSpanPage(0);
+      setSelectedTraceIndex(-1);
+      setTracePage(0);
     }
   };
 
   const handleSpanChangePage = (_, newPage) => {
-    if(spanPage !== newPage)
+    if(tracePage !== newPage)
     {
-      setSelectedSpanIndex(-1);
-      setSpanPage(newPage);
+      setSelectedTraceIndex(-1);
+      setTracePage(newPage);
     }
   };
 
   const handleServiceClick = (index) => {
     dispatch(getRouteTrace(startTime, endTime, serviceVisibleRows[index].service, serviceVisibleRows[index].api));
     setSelectedServiceIndex(index);
-    setSelectedSpanIndex(-1);
-    setSpanPage(1);
+    setSelectedTraceIndex(-1);
+    setTracePage(1);
     setDetailSpan(null);
   }
 
   const handleSpanClick = (index)=>{
-    setSelectedSpanIndex(index);
+    setSelectedTraceIndex(index);
     setDetailSpan(spanVisibleRows[index]);
   }
 
@@ -477,13 +473,13 @@ export default function RouteTrace() {
                     </TableRow>
                   </TableHead>
                   <TableBody sx={{ borderBottom: "solid 2px #B8B5B7", borderTop: "solid 2px #B8B5B7" }}>
-                    {tableRow}
+                    {traceRow}
                   </TableBody>
                 </Table>
               </StyledTableContainer>
               <StyledTableFooter
                 pageSize={spanNumPerPage}
-                pageNum={spanPage}
+                pageNum={tracePage}
                 count={routeTrace ? routeTrace.length : 0}
                 handlePageChange={handleSpanChangePage}
                 sx={{

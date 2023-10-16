@@ -15,7 +15,7 @@ import {calculateDuration} from '../functions/func.js'
 const defaultMaxWidth = ['200px', '150px', '30px', '60px', '60px', '60px', '60px', '60px'];
 
 export function ServiceRow(props) {
-  const { rowData, onRowClick, selected, maxWidth } = props;
+  const { key, rowData, onRowClick, selected, maxWidth } = props;
   let _maxWidth = maxWidth;
   if (!maxWidth) {
     _maxWidth = defaultMaxWidth;
@@ -30,7 +30,8 @@ export function ServiceRow(props) {
     let high = calculateDuration(rowData.high)
     return (
       <React.Fragment>
-        <TableRow onClick={onRowClick} hover selected={selected} sx={{
+        <TableRow onClick={onRowClick} hover selected={selected} key={key}
+        sx={{
           position: 'sticky',
           backgroundColor: '#FFFFFF',
         }}>
@@ -38,43 +39,43 @@ export function ServiceRow(props) {
             sx={{ maxWidth: _maxWidth[0] }}>
             <Tooltip title={rowData.service} placement="top-end">
               <SmallLightFont style={{ color: "black", overflow: 'hidden', textOverflow: 'ellipsis' }}>            
-                {rowData.service}
+                <>{rowData.service}</>
               </SmallLightFont>
             </Tooltip>
           </StyledTableBodyCell>
           <StyledTableBodyCell align="center" sx={{ maxWidth: _maxWidth[1] }}>
             <Tooltip title={rowData.api} placement="top-end">
-                {rowData.api}
+              <>{rowData.api}</>
             </Tooltip>
           </StyledTableBodyCell>
           <StyledTableBodyCell align="center" sx={{ maxWidth: _maxWidth[2] }}>
             <Tooltip title={rowData.count} placement="top-end">
-              {rowData.count}
+              <>{rowData.count}</>
             </Tooltip>
           </StyledTableBodyCell>
           <StyledTableBodyCell align="center" sx={{ maxWidth: _maxWidth[3] }}>
             <Tooltip title={low} placement="top-end">
-              {low}
+              <>{low}</>
             </Tooltip>
           </StyledTableBodyCell>
           <StyledTableBodyCell align="center" sx={{ maxWidth: _maxWidth[4] }}>
             <Tooltip title={percentile50} placement="top-end">
-              {percentile50}
+              <>{percentile50}</>
             </Tooltip>
           </StyledTableBodyCell>
           <StyledTableBodyCell align="center" sx={{ maxWidth: _maxWidth[5] }}>
             <Tooltip title={percentile95} placement="top-end">
-              {percentile95}
+              <>{percentile95}</>
             </Tooltip>
           </StyledTableBodyCell>
           <StyledTableBodyCell align="center" sx={{ maxWidth: _maxWidth[6] }}>
             <Tooltip title={percentile99} placement="top-end">
-              {percentile99}
+              <>{percentile99}</>
             </Tooltip>
           </StyledTableBodyCell>
           <StyledTableBodyCell align="center" sx={{ maxWidth: _maxWidth[7] }}>
             <Tooltip title={high} placement="top-end">
-              {high}
+              <>{high}</>
             </Tooltip>
           </StyledTableBodyCell>
         </TableRow>
