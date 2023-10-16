@@ -7,6 +7,8 @@ import { KubeTextField } from '../../../../components/Input';
 import Docker from '@/assets/Docker.svg';
 import { useIntl } from 'react-intl';
 import ContainerAddBlock from './ContainerAddBlock';
+import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline';
+import ModeEditOutlineOutlinedIcon from '@mui/icons-material/ModeEditOutlineOutlined';
 
 export default function ContainerConfig(props) {
   const {
@@ -22,19 +24,21 @@ export default function ContainerConfig(props) {
     setContainerAddError,
     isConfig,
     setIsConfig,
-    setShowError
+    setShowError,
+    configFinish,
+    setConfigFinish,
   } = props;
 
-  
   const intl = useIntl();
   const [imageUrlError, setImageUrlError] = useState(true);
   const [portsError, setPortsError] = useState([true]);
   const [resourcesError, setResourcesError] = useState(false);
-  const [exist, setExist] = useState(false);
 
   useEffect(() => {
-    setContainerAddError(imageUrlError || portsError.includes(true) || resourcesError);
-  }, [imageUrlError, portsError, resourcesError])
+    setContainerAddError(
+      imageUrlError || portsError.includes(true) || resourcesError
+    );
+  }, [imageUrlError, portsError, resourcesError]);
 
   const handleReplicasInputChange = e => {
     setReplicas(e.target.value);
@@ -51,7 +55,24 @@ export default function ContainerConfig(props) {
     setReplicas(prevReplicas => Number(prevReplicas) + 1);
   };
 
-  const handleContainerAdd = () => {
+  const handleContainerDelete = () => {
+    setImageUrl('');
+    setPorts([{ name: 'http-0', protocol: 'HTTP', containerPort: '' }]);
+    setResources({
+      requests: {
+        cpu: '',
+        memory: '',
+      },
+      limits: {
+        cpu: '',
+        memory: '',
+      },
+    });
+    setConfigFinish(false);
+  };
+
+  const handleContainerEdit = () => {
+    setShowError(false);
     setIsConfig(true);
   };
 
@@ -77,6 +98,7 @@ export default function ContainerConfig(props) {
           setResourcesError={setResourcesError}
           showError={showError}
           setShowError={setShowError}
+          setConfigFinish={setConfigFinish}
         />
       ) : (
         <Stack spacing={1}>
@@ -168,69 +190,155 @@ export default function ContainerConfig(props) {
                 // height: "166px"
               }}
             >
+              {configFinish ? (
+                <Box
+                  sx={{
+                    borderRadius: '4px',
+                    backgroundColor: '#FFFFFF',
+                    border: '1px solid #ccd3db',
+                    padding: '11px 12px 11px 20px',
+                    '&:hover': {
+                      boxShadow: '0 4px 8px 0 rgba(36,46,66,.2)',
+                    },
+                  }}
+                >
+                  <Stack
+                    direction='row'
+                    justifyContent='space-between'
+                    alignItems='center'
+                    height='40px'
+                  >
+                    <Stack
+                      direction='row'
+                      justifyContent='flex-start'
+                      alignItems='center'
+                      spacing={2}
+                    >
+                      <Docker />
+                      <Stack direction='row' spacing={0.5}>
+                        <Box
+                          sx={{
+                            fontSize: '12px',
+                            fontWeight: 700,
+                            fontStyle: 'normal',
+                            fontStretch: 'normal',
+                            lineHeight: 1.67,
+                            letterSpacing: 'normal',
+                            color: '#242e42',
+                          }}
+                        >
+                          镜像地址:
+                        </Box>
+                        <Box
+                          sx={{
+                            fontSize: '12px',
+                            fontWeight: 400,
+                            fontStyle: 'normal',
+                            fontStretch: 'normal',
+                            lineHeight: 1.67,
+                            letterSpacing: 'normal',
+                            color: '#4C5561',
+                          }}
+                        >
+                          {imageUrl}
+                        </Box>
+                      </Stack>
+                    </Stack>
+                    <Stack direction='row'>
+                      <KubeTransparentButton
+                        sx={{
+                          color: '#b6c2cd !important',
+                          '&:hover': {
+                            color: '#324558 !important',
+                          },
+                        }}
+                        onClick={handleContainerDelete}
+                      >
+                        <DeleteOutlineIcon />
+                      </KubeTransparentButton>
+                      <KubeTransparentButton
+                        sx={{
+                          color: '#b6c2cd !important',
+                          '&:hover': {
+                            color: '#324558 !important',
+                          },
+                        }}
+                        onClick={handleContainerEdit}
+                      >
+                        <ModeEditOutlineOutlinedIcon />
+                      </KubeTransparentButton>
+                    </Stack>
+                  </Stack>
+                </Box>
+              ) : (
+                <Box
+                  sx={{
+                    borderRadius: '4px',
+                    backgroundColor: '#FFFFFF',
+                    border: '1px dashed #ccd3db',
+                    height: '140px',
+                    textAlign: 'center',
+                    cursor: 'pointer',
+                    '&:hover': {
+                      boxShadow: '0 4px 8px 0 rgba(36,46,66,.2)',
+                    },
+                  }}
+                  onClick={handleContainerEdit}
+                >
+                  <Stack
+                    direction='column'
+                    justifyContent='center'
+                    alignItems='center'
+                    sx={{
+                      p: '28px',
+                    }}
+                    spacing={0}
+                  >
+                    <Docker />
+                    <Typography
+                      sx={{
+                        fontWeight: 700,
+                        color: '#242e42',
+                        fontSize: '12px',
+                        lineHeight: 1.67,
+                        pt: '8px',
+                      }}
+                    >
+                      添加容器
+                    </Typography>
+
+                    <Typography
+                      sx={{
+                        fontWeight: 400,
+                        color: '#79879c',
+                        fontSize: '12px',
+                        lineHeight: 1.67,
+                      }}
+                    >
+                      {intl.messages['instance.containerAddDescription']}
+                    </Typography>
+                  </Stack>
+                </Box>
+              )}
+            </Box>
+            {showError && isConfig === false ? (
               <Box
                 sx={{
-                  borderRadius: '4px',
-                  backgroundColor: '#FFFFFF',
-                  border: '1px dashed #ccd3db',
-                  height: '140px',
-                  textAlign: 'center',
-                  cursor: 'pointer',
-                  '&:hover': {
-                    boxShadow: '0 4px 8px 0 rgba(36,46,66,.2)',
-                  },
+                  fontSize: '12px',
+                  fontWeight: 400,
+                  fontStyle: 'normal',
+                  fontStretch: 'normal',
+                  lineHeight: 1.67,
+                  letterSpacing: 'normal',
+                  color: '#CA2621',
+                  mt: '4px',
                 }}
-                onClick={handleContainerAdd}
               >
-                <Stack
-                  direction='column'
-                  justifyContent='center'
-                  alignItems='center'
-                  sx={{
-                    p: '28px',
-                  }}
-                  spacing={0}
-                >
-                  <Docker />
-                  <Typography
-                    sx={{
-                      fontWeight: 700,
-                      color: '#242e42',
-                      fontSize: '12px',
-                      lineHeight: 1.67,
-                      pt: '8px',
-                    }}
-                  >
-                    添加容器
-                  </Typography>
-
-                  <Typography
-                    sx={{
-                      fontWeight: 400,
-                      color: '#79879c',
-                      fontSize: '12px',
-                      lineHeight: 1.67,
-                    }}
-                  >
-                    {intl.messages['instance.containerAddDescription']}
-                  </Typography>
-                </Stack>
+                {intl.messages['instance.containerEmptyError']}
               </Box>
-            </Box>
-            <Box
-              sx={{
-                fontSize: '12px',
-                fontWeight: 400,
-                fontStyle: 'normal',
-                fontStretch: 'normal',
-                lineHeight: 1.67,
-                letterSpacing: 'normal',
-                color: '#CA2621',
-                mt: '4px',
-              }}
-            >
-              {intl.messages['instance.containerEmptyError']}
-            </Box>
+            ) : (
+              <></>
+            )}
           </Box>
         </Stack>
       )}

@@ -70,14 +70,41 @@ export default function InstanceDeploy() {
   const [basicInfoError, setBasicInfoError] = useState(false);
   const [containerAddError, setContainerAddError] = useState(false);
   const [isConfig, setIsConfig] = useState(false);
+  const [configFinish, setConfigFinish] = useState(false);
 
   const intl = useIntl();
 
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
 
+  const resetParam = () => {
+    setServiceId('');
+    setServiceName('');
+    setNamespace('');
+    setImageUrl('');
+    setReplicas(1);
+    setPorts([{ name: 'http-0', protocol: 'HTTP', containerPort: '' }]);
+    setResources({
+      requests: {
+        cpu: '',
+        memory: '',
+      },
+      limits: {
+        cpu: '',
+        memory: '',
+      },
+    });
+  };
+
   const handleConfirmClick = () => {
-    setOpen(false);
+    if (configFinish === true) {
+      
+      setOpen(false);
+      setShowError(false);
+      resetParam();
+    } else {
+      setShowError(true);
+    }
   };
 
   const handleCancelClick = () => {
@@ -117,6 +144,8 @@ export default function InstanceDeploy() {
           isConfig={isConfig}
           setIsConfig={setIsConfig}
           setShowError={setShowError}
+          configFinish={configFinish}
+          setConfigFinish={setConfigFinish}
         />
       </Box>
     );

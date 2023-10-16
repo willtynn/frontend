@@ -301,6 +301,7 @@ export default function ContainerAddBlock(props) {
     setResourcesError,
     showError,
     setShowError,
+    setConfigFinish
   } = props;
   const [returnHover, setReturnHover] = useState(false);
   const [cpuReserved, setCpuReserved] = useState('');
@@ -384,6 +385,7 @@ export default function ContainerAddBlock(props) {
         },
       });
       setShowError(false);
+      setConfigFinish(true);
       handleReturn();
     }
   };
