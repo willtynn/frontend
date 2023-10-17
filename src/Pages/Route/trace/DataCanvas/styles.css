@@ -10,19 +10,22 @@ text {
   font-size: 14px;
 }
 
-
-/*
-.node rect {
-  stroke: #999;
-  fill: #fff;
-  stroke-width: 1.5px;
+.trace_node {
+  max-width: 300px;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
- .edgePath path {
-  stroke: #333;
-  stroke-width: 3px;
-} 
-
-.service_node, .service_link {
-    cursor: pointer;
-}*/
+.tooltip {
+  opacity: 0;
+  display: none;
+  position: absolute;
+  font-size: 12px;
+  text-align: center;
+  background-color: white;
+  border-radius: 3px;
+  box-shadow: rgb(174, 174, 174) 0px 0px 10px;
+  cursor: pointer;
+  padding: 10px;
+  z-index: 9999;
+}

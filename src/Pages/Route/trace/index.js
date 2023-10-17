@@ -4,7 +4,6 @@ import React from "react";
 import { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
-
 import {
   MenuItem,
   Box,
@@ -16,12 +15,15 @@ import {
   Typography,
   Modal,
   Slide,
-  IconButton
+  IconButton,
+  Popover
 } from "@mui/material"
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
+import KubeClose from '@/assets/KubeClose.svg';
 
 import {
-  KubeConfirmButton
+  KubeConfirmButton,
+  EclipseTransparentButton
 } from "@/components/Button";
 import {
   StyledDateTimePicker,
@@ -41,6 +43,10 @@ import {
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import TaskIcon from '@/assets/TaskIcon.svg';
+import VisibilityIcon from '@mui/icons-material/Visibility';
+import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
+
+import { fontFamily } from '@/utils/commonUtils';
 
 import { DataRow } from "./DataRow";
 import { ServiceRow } from "./ServiceRow";
@@ -104,8 +110,6 @@ export default function RouteTrace() {
   const [startTime, setStartTime] = useState(0);
   const [endTime, setEndTime] = useState(0);
 
-  //const [namespace, setNamespcae] = useState("");
-
   const [detailSpan, setDetailSpan] = useState(null);
   
   const [traceRow, setTraceRow] = useState([]);
@@ -116,9 +120,12 @@ export default function RouteTrace() {
   const [selectedServiceIndex, setSelectedServiceIndex] = useState(-1);
   const [selectedTraceIndex, setSelectedTraceIndex] = useState(-1);
 
-
   const [openModal, setOpenModal] = useState(false);
+  const [showServiceColumnChooseAnchorEl, setShowServiceColumnChooseAnchorEl] = useState(null);
+  const showServiceColumnChooseOpen = Boolean(showServiceColumnChooseAnchorEl);
 
+  const [serviceColumnDisplay, setServiceColumnDisplay] = useState([true, true, true, true, true, false, true, true]);
+  //const [traceColumnDisplay, setTraceColumnDisplay] = useState([true, true, true, true, true]);
 
 
 
@@ -141,6 +148,7 @@ export default function RouteTrace() {
   
   const serviceVisibleRows = React.useMemo(() => {
     const tmp = (servicePage - 1) * serviceNumPerPage;
+    console.log(routeService);
     return routeService ? routeService.slice(tmp, tmp + serviceNumPerPage) : [];
   }, [routeService, servicePage]);
 
@@ -172,7 +180,8 @@ export default function RouteTrace() {
         return <ServiceRow key={item.id}
           selected={selectedServiceIndex === index}
           onRowClick={() => handleServiceClick(index)}
-          rowData={{...item, spanNum: 99}} 
+          rowData={{...item, spanNum: 99}}
+          showRows={serviceColumnDisplay}
           maxWidth={maxWidths}/>;
       });
       setServiceRow(row);
@@ -182,7 +191,7 @@ export default function RouteTrace() {
       }
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [routeService, serviceVisibleRows, selectedServiceIndex]);
+  }, [serviceVisibleRows, selectedServiceIndex, serviceColumnDisplay]);
 
   useEffect(() => {
     if (spanVisibleRows) {
@@ -206,7 +215,7 @@ export default function RouteTrace() {
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [spanVisibleRows, selectedTraceIndex]);
-
+/*
   useEffect(() => {
     let now = dayjs();
     setStartTime(now - 3600000);
@@ -215,13 +224,15 @@ export default function RouteTrace() {
     dispatch(getRouteService(startTime, endTime));
     dispatch(clearRouteTrace());
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, []);*/
   //#endregion
   //HOOK-结束
 
   //handle-开始
   //#region
   const handleSearchClick = (e) => {
+
+    let startTmp = 0, endTmp = 0;
     if(durationSelectIndex !== 11)
     //Duration
     {
@@ -236,24 +247,21 @@ export default function RouteTrace() {
         return;
       }
       let now = dayjs();
-      setStartTime(now - duration * 1000);
-      setEndTime(now.valueOf());
+      startTmp = now - duration * 1000;
+      endTmp = now.valueOf();
     }
     //Custom
     else
     {
-      setStartTime(startTimeValue.valueOf());
-      setEndTime(endTimeValue.valueOf());
+      startTmp = startTimeValue.valueOf();
+      endTmp = endTimeValue.valueOf();
     }
     clearPage();
-    dispatch(getRouteService(startTime, endTime));
+    setStartTime(startTmp);
+    setEndTime(endTmp);
+    dispatch(getRouteService(startTmp, endTmp));
     dispatch(clearRouteTrace());
   }
-
-  /*
-  const handleInputChange = (e) => {
-    setNamespcae(e.target.value);
-  }*/
 
   const handleDurationSelectChange = (e) => {
     setDurationSelectIndex(e.target.value);
@@ -302,7 +310,18 @@ export default function RouteTrace() {
     setOpenModal(true);
   }
 
+  const handleServiceColumnChooseItemClick = (index) => {
+    setServiceColumnDisplay(prevDisplay => {
+      let tmpDisplay = [...prevDisplay];
+      tmpDisplay[index] = !tmpDisplay[index];
+      return tmpDisplay;
+    });
+  };
+
   const handleCloseModal = () => setOpenModal(false);
+
+  const handleServiceColumnChooseClick = (event) => setShowServiceColumnChooseAnchorEl(event.currentTarget);
+  const handleServiceColumnChooseClose = () => setShowServiceColumnChooseAnchorEl(null);
 
   //#endregion
   //handle-结束
@@ -317,7 +336,6 @@ export default function RouteTrace() {
     height: '100%',
     bgcolor: 'background.paper',
     boxShadow: 'inset -15px 0px  15px -15px #444444',
-    p: 2,
   };
 
 
@@ -326,46 +344,127 @@ export default function RouteTrace() {
   return (
     <>
     <Modal
-        open={openModal}
-        onClose={handleCloseModal}
-        closeAfterTransition
-      >
-        <Slide direction="left" in={openModal} mountOnEnter unmountOnExit>
-          <Box sx={styleModalBox}>
-            <IconButton aria-label="back" color="black" onClick={handleCloseModal}>
-              <ArrowBackIcon />
-            </IconButton>
-            {/* 依赖图 */}
-            <Stack sx={{ justifyContent: "center"}}>
-              <div style={{ height: "20px" }} />
-              {(detailSpan)
-                ?
-                <div style={{ justifyContent: "center" }}>
-                  <Stack spacing={1}>
-                    <Stack direction="row" spacing={20}>
-                      <NormalFont sx={{ width: "60px" }}>服务ID</NormalFont>
-                      <NormalFontBlack>{detailSpan.id}</NormalFontBlack>
-                    </Stack>
-                    <Stack direction="row" spacing={20}>
-                      <NormalFont sx={{ width: "60px" }}>服务名</NormalFont>
-                      <NormalFontBlack>{detailSpan.service}</NormalFontBlack>
-                    </Stack>
-                    <Stack direction="row" spacing={20}>
-                      <NormalFont sx={{ width: "60px" }}>时间</NormalFont>
-                      <NormalFontBlack>{dayjs(detailSpan.time).format('YYYY-MM-DD HH:mm:ss')}</NormalFontBlack>
-                    </Stack>
-                  </Stack>
-                  <RouteTraceCanvas id={detailSpan.id} sx={{ 
-                    width: "100%" 
-                  }}/>
-                </div>
-                :
-                <></>
-              }
-            </Stack>
+      open={openModal}
+      onClose={handleCloseModal}
+      closeAfterTransition>
+      <Slide direction="left" in={openModal} mountOnEnter unmountOnExit>
+        <Box sx={styleModalBox}>
+          <Box sx={{
+              height: '40px',
+              padding: '10px 30px 10px 30px',
+              bgcolor: '#f9fbfd',
+              border: '1px solid #EBEEF5',
+            }}>
+            <Box
+              sx={{
+                cursor: 'pointer',
+                boxShadow: '0 8px 16px 0 rgba(35,45,65,.28)',
+                '&:hover': {
+                  boxShadow: 'none',
+                },
+                height: '32px',
+                width: '32px',
+                pt: "3px"
+              }}
+              onClick={handleCloseModal}>
+              <KubeClose/>
+            </Box>
           </Box>
-        </Slide>
-      </Modal>
+          {/* 依赖图 */}
+          <Stack sx={{ justifyContent: "center", pl: 4, pr: 4}}>
+            <div style={{ height: "20px" }} />
+            {(detailSpan)
+              ?
+              <div style={{ justifyContent: "center" }}>
+                <Stack spacing={1}>
+                  <Stack direction="row" spacing={20}>
+                    <NormalFont sx={{ width: "60px" }}>服务ID</NormalFont>
+                    <NormalFontBlack>{detailSpan.id}</NormalFontBlack>
+                  </Stack>
+                  <Stack direction="row" spacing={20}>
+                    <NormalFont sx={{ width: "60px" }}>服务名</NormalFont>
+                    <NormalFontBlack>{detailSpan.service}</NormalFontBlack>
+                  </Stack>
+                  <Stack direction="row" spacing={20}>
+                    <NormalFont sx={{ width: "60px" }}>时间</NormalFont>
+                    <NormalFontBlack>{dayjs(detailSpan.time).format('YYYY-MM-DD HH:mm:ss')}</NormalFontBlack>
+                  </Stack>
+                </Stack>
+                <RouteTraceCanvas id={detailSpan.id} sx={{ 
+                  width: "100%" 
+                }}/>
+              </div>
+              :
+              <></>
+            }
+          </Stack>
+        </Box>
+      </Slide>
+    </Modal>
+
+    
+    <Popover
+        id='instance-status-table-custom-content-popover'
+        open={showServiceColumnChooseOpen}
+        anchorEl={showServiceColumnChooseAnchorEl}
+        onClose={handleServiceColumnChooseClose}
+        anchorOrigin={{
+          vertical: 'bottom',
+          horizontal: 'left',
+        }}
+        sx={{
+          zIndex: 1000,
+          boxShadow: '0 4px 16px 0 rgba(39,50,71,.28)',
+          borderRadius: '4px',
+          mt: '2px !important',
+        }}>
+      <Stack
+        direction='column'
+        sx={{
+          border: '1px solid #FAFAFA',width: '100px',
+          borderRadius: '5px',padding: '8px',
+          bgcolor: '#242e42',fontSize: '12px',
+          fontFamily: fontFamily,
+        }}
+      >
+        {serviceTableHeaders.map((value, index) => {
+          return (
+            <Stack
+              direction='row'
+              onClick={() => handleServiceColumnChooseItemClick(index)}
+              sx={{
+                color: '#FFFFFF',
+                '&:hover': {
+                  bgcolor: '#36435c',
+                },
+                p: '0px 8px',
+              }}
+              justifyContent='flex-start'
+              alignItems='center'
+              spacing={1}
+            >
+              {serviceColumnDisplay[index] === true ? (
+                <VisibilityIcon fontSize='small' />
+              ) : (
+                <VisibilityOffIcon fontSize='small' />
+              )}
+              <Box
+                sx={{
+                  color: '#FFFFFF',
+                  cursor: 'pointer',
+                  height: '30px',
+                  lineHeight: '30px',
+                  fontWeight: 600,
+                  letterSpacing: '0.04em',
+                }}
+              >
+                {value.text}
+              </Box>
+            </Stack>
+          );
+        })}
+      </Stack>
+    </Popover>
     
     <Box sx={{
         width: '100%',
@@ -390,7 +489,7 @@ export default function RouteTrace() {
               fontSize: "24px",
               lineHeight: "32px"
             }}>
-              服务实例
+              路由链路
             </Typography>
             <Typography sx={{
               fontWeight: 400,
@@ -399,7 +498,7 @@ export default function RouteTrace() {
               fontSize: "12px",
               lineHeight: 1.67
             }}>
-              服务（Service）提供一种抽象的方法，将运行在容器组（Pod）上的应用程序公开为网络服务。
+              查看服务的路由链路
             </Typography>
           </Box>
         </Stack>
@@ -415,72 +514,77 @@ export default function RouteTrace() {
             padding: '10px 30px 10px 30px',
             bgcolor: '#f9fbfd',
           }}>
-          <Stack direction="row" spacing={2} style={{ width: "100%" }}>
-              { /* Namespace */ }
-              {/*
-              <Stack>
-                <SmallLightFont>
-                  Namespace
-                </SmallLightFont>
-                <FormControl>
-                  <Input
-                    value={namespace}
-                    onChange={handleInputChange}
-                  />
-                </FormControl>
-              </Stack>*/
-              }
-              <StyledSelect
-                value={durationSelectIndex}
-                onChange={handleDurationSelectChange}
-                width="140px" style={{ top: "8px"}}>
-                {selectMenuItems.map((item, index) => {
-                  return <MenuItem key={index} value={index}>{item}</MenuItem>;
-                })}
-              </StyledSelect>
-              {
-                durationSelectIndex === 11 ? 
-                <LocalizationProvider dateAdapter={AdapterDayjs}>
-                  <StyledDateTimePicker
-                    sx={{ height: "30px" }}
-                    round= "20px"
-                    width= "200px"
-                    label="Start Time"
-                    ampm={false}
-                    displayWeekNumber={true}
-                    minDate={dayjs("2020-01-01")}
-                    maxDate={dayjs().add(1, 'day')}
-                    timeSteps={{ hours: 1, minutes: 1, seconds: 10 }}
-                    value={startTimeValue}
-                    onChange={handleStartTimeChange}
-                    />
-                  <StyledDateTimePicker
-                    round= "20px"
-                    width= "200px"
-                    label="End Time"
-                    ampm={false}
-                    displayWeekNumber={true}
-                    minDate={dayjs("2020-01-01")}
-                    maxDate={dayjs().add(1, 'day')}
-                    timeSteps={{ hours: 1, minutes: 1, seconds: 10 }}
-                    value={endTimeValue}
-                    onChange={handleEndTimeChange}
-                    />
-                      
-                </LocalizationProvider>
-                : <></>
-              }
-              <KubeConfirmButton 
-                onClick={handleSearchClick}
-                sx={{
-                  mt: "6px !important",
-                  width: "96px",
-                  height: "32px"
-                }}
-                style={{ top: "6px" }}>
-                搜索
-              </KubeConfirmButton>
-            </Stack>
+            <Stack direction="row">
+              <Stack direction="row" spacing={2} sx={{ width: "calc(100% - 100px)"}}>
+                <StyledSelect
+                  value={durationSelectIndex}
+                  onChange={handleDurationSelectChange}
+                  width="140px" style={{ top: "8px"}}>
+                  {selectMenuItems.map((item, index) => {
+                    return <MenuItem key={index} value={index}>{item}</MenuItem>;
+                  })}
+                </StyledSelect>
+                {
+                  durationSelectIndex === 11 ? 
+                  <LocalizationProvider dateAdapter={AdapterDayjs}>
+                    <StyledDateTimePicker
+                      sx={{ height: "30px" }}
+                      round= "20px"
+                      width= "200px"
+                      label="Start Time"
+                      ampm={false}
+                      displayWeekNumber={true}
+                      minDate={dayjs("2020-01-01")}
+                      maxDate={dayjs().add(1, 'day')}
+                      timeSteps={{ hours: 1, minutes: 1, seconds: 10 }}
+                      value={startTimeValue}
+                      onChange={handleStartTimeChange}
+                      />
+                    <StyledDateTimePicker
+                      round= "20px"
+                      width= "200px"
+                      label="End Time"
+                      ampm={false}
+                      displayWeekNumber={true}
+                      minDate={dayjs("2020-01-01")}
+                      maxDate={dayjs().add(1, 'day')}
+                      timeSteps={{ hours: 1, minutes: 1, seconds: 10 }}
+                      value={endTimeValue}
+                      onChange={handleEndTimeChange}
+                      />
+                        
+                  </LocalizationProvider>
+                  : <></>
+                }
+              </Stack>
+              <Stack direction="row" spacing={1}>
+                <EclipseTransparentButton
+                  sx={{
+                    top: "12px",
+                    bgcolor: '#f9fbfd !important',
+                    '&:hover': {
+                      bgcolor: '#FFFFFF !important',
+                    },
+                    '& svg': {
+                      color: '#3d3b4f',
+                    },
+                    height: "32px"
+                  }}
+                  onClick={handleServiceColumnChooseClick}>
+                  <VisibilityIcon />
+                </EclipseTransparentButton>
+                <KubeConfirmButton 
+                  onClick={handleSearchClick}
+                  sx={{
+                    mt: "6px !important",
+                    width: "96px",
+                    height: "32px"
+                  }}
+                  style={{ top: "6px" }}>
+                  搜索
+                </KubeConfirmButton>
+              </Stack>
+           </Stack>
         </Box>
         { /*数据*/ }
         <Stack  direction="row" spacing={2} sx={{ maxWidth: "100%" }}>
@@ -495,12 +599,14 @@ export default function RouteTrace() {
                   <TableHead>
                     <TableRow sx={{ height: "52px"}}>
                       {
-                        serviceTableHeaders.map((item) => {
-                          return (
-                            <StyledTableRowCell key={item.key} align={item.align} 
-                              sx={{ width: item.minWidth, minWidth: item.minWidth, maxWidth: item.maxWidth }}>
-                                {item.text}
-                            </StyledTableRowCell>);
+                        serviceTableHeaders.map((item, index) => {
+                          if(serviceColumnDisplay[index])
+                            return (
+                              <StyledTableRowCell key={item.key} align={item.align} 
+                                sx={{ minWidth: item.minWidth }}>
+                                  {item.text}
+                              </StyledTableRowCell>);
+                          return <></>
                         })
                       }
                     </TableRow>
@@ -540,7 +646,7 @@ export default function RouteTrace() {
                         traceTableHeaders.map((item) => {
                           return (
                             <StyledTableRowCell key={item.key} align={item.align} 
-                              sx={{ width: item.minWidth, minWidth: item.minWidth, maxWidth: item.maxWidth }}>
+                              sx={{ minWidth: item.minWidth }}>
                                 {item.text}
                             </StyledTableRowCell>);
                         })
