@@ -167,7 +167,7 @@ export default function MiniDrawer() {
               justifyContent='center'
               alignItems='center'
             >
-              <img style={{ height: '40px' }} src={ICES} alt='ICES' />
+              
               <Box
                 sx={{
                   fontWeight: 600,
