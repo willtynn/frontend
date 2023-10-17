@@ -1,6 +1,6 @@
 export const messages = {
   menu: {
-    clusterMangementDescription: "对多集群以及每个集群的基础资源、服务组件和应用资源等进行统一管理。"
+    clusterMangementDescription: "对多集群进行统一管理。"
   },
   common: {
     errorMessage: "{msg}"

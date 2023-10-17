@@ -119,7 +119,7 @@ export default function MiniDrawer() {
           alignItems: 'center',
           textAlign: 'center',
           justifyContent: 'center',
-          backgroundColor: '#FFFFFF',
+          backgroundColor: '#EFF4F9',
           fontFamily: fontFamily,
         }}
       >
@@ -167,7 +167,6 @@ export default function MiniDrawer() {
               justifyContent='center'
               alignItems='center'
             >
-              
               <Box
                 sx={{
                   fontWeight: 600,
@@ -184,7 +183,16 @@ export default function MiniDrawer() {
         </Grid>
       </Box>
 
-      <Divider />
+      <Divider
+        sx={{
+          height: '1.5px',
+          borderStyle: 'solid',
+          borderSidth: '1px 0 0',
+          borderImageSource:
+            'radial-gradient(circle at 50% 3%,rgba(193,201,209,.53),hsla(0,0%,100%,.2))',
+          borderImageSlice: 1,
+        }}
+      />
 
       <Stack direction='row' spacing={0} justifyContent='space-between'>
         <Box
@@ -199,7 +207,7 @@ export default function MiniDrawer() {
             <Stack
               spacing={1}
               sx={{
-                height: '120px',
+                height: '80px',
                 maxWidth: '182px',
                 backgroundColor: 'rgb(36, 46, 66)',
                 boxShadow: 'rgba(36, 46, 66, 0.2) 0px 8px 16px 0px',
@@ -209,8 +217,11 @@ export default function MiniDrawer() {
                 borderRadius: '4px',
               }}
             >
-              <Stack direction='row' justifyContent="flex-start"
-  alignItems="center">
+              <Stack
+                direction='row'
+                justifyContent='flex-start'
+                alignItems='center'
+              >
                 <Box sx={{ paddingRight: '20px' }}>
                   <ClusterManagement />
                 </Box>
@@ -236,6 +247,7 @@ export default function MiniDrawer() {
                   fontStyle: 'normal',
                   fontFamily:
                     'Roboto,PingFang SC,Lantinghei SC,Helvetica Neue,Helvetica,Arial,Microsoft YaHei,微软雅黑,STHeitiSC-Light,simsun,宋体,WenQuanYi Zen Hei,WenQuanYi Micro Hei,sans-serif',
+                  textAlign: "center"
                 }}
               >
                 {intl.messages['menu.clusterMangementDescription']}
