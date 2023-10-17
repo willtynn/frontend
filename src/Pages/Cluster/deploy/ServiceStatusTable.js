@@ -624,24 +624,34 @@ export default function ServiceStatusTable(props) {
       </Popover>
       <Box
         sx={{
-          height: '40px',
+          height: '32px',
           padding: '10px 30px 10px 30px',
           bgcolor: '#f9fbfd',
         }}
       >
         <Stack direction='row' spacing={2}>
           <StyledAutocomplete
-            height='40px'
-            padding='7.5px 5px 7.5px 12px'
+            height='32px'
+            padding='6px 5px 5px 12px'
             value={project}
             onChange={(event, newValue) => {
               setProject(newValue);
             }}
             id='instance_status_table_autocomplete'
             options={projectList}
-            sx={{ width: 300 }}
+            sx={{
+              width: 300,
+              color: '#36435c',
+              fontFamily: fontFamily,
+              fontSize: '12px',
+              fontWeight: 600,
+              fontStyle: 'normal',
+              fontStretch: 'normal',
+              lineHeight: 1.67,
+              letterSpacing: 'normal',
+            }}
             renderInput={params => (
-              <TextField {...params} sx={{}} placeholder='全部项目' />
+              <TextField {...params} placeholder='全部项目' />
             )}
           />
           <ChipTextField
@@ -662,6 +672,7 @@ export default function ServiceStatusTable(props) {
                 lineHeight: 1.67,
                 letterSpacing: 'normal',
                 color: '#36435c',
+                height: "20px"
               },
             }}
             onFocus={handleSearchFocus}
@@ -678,6 +689,7 @@ export default function ServiceStatusTable(props) {
               '& svg': {
                 color: '#3d3b4f',
               },
+              height: "32px"
             }}
           >
             <RefreshIcon />
@@ -692,6 +704,7 @@ export default function ServiceStatusTable(props) {
               '& svg': {
                 color: '#3d3b4f',
               },
+              height: "32px"
             }}
             onClick={handleEyeClick}
           >

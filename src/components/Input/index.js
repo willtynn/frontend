@@ -43,7 +43,7 @@ const CustomTextField = styled(TextField)(({ theme }) => ({
     background: '#FFFFFF',
     borderRadius: '20px',
     boxSizing: 'border-box',
-    height: '40px',
+    height: '32px',
     fontFamily: fontFamily,
     color: '#262E35',
     padding: '0px 0px 0px 15px !important',
@@ -52,7 +52,7 @@ const CustomTextField = styled(TextField)(({ theme }) => ({
       borderRadius: '20px',
     },
     '& .MuiOutlinedInput-input.MuiInputBase-input': {
-      padding: '11px 12px 11px 0px !important',
+      padding: '7px 12px 7px 0px !important',
     },
     '& input': {
       height: '18px',
@@ -108,28 +108,36 @@ export const StyledAutocomplete = styled(Autocomplete)(
       background: '#FFFFFF',
       '& .MuiOutlinedInput-input.MuiInputBase-input': {
         padding: padding,
+        fontWeight: 600,
+        fontSize: '12px',
+        fontStyle: 'normal',
+        fontStretch: 'normal',
+        lineHeight: 1.67,
+        letterSpacing: 'normal',
+        '&:placeholder-shown': {
+          fontWeight: 600,
+          color: 'black !important',
+          fontSize: '12px',
+          lineHeight: 1.67,
+        },
       },
     },
   })
 );
 
-export const StyledSelect = styled(Select)(
-  ({width}) => ({
-    borderRadius: '35px',
-    height: '40px',
-    width: width,
-    background: '#FFFFFF',
-  })
-);
+export const StyledSelect = styled(Select)(({ width }) => ({
+  borderRadius: '35px',
+  height: '40px',
+  width: width,
+  background: '#FFFFFF',
+}));
 
 //DateTimePicker 在未来可能merge一个修改，支持圆角
-export const StyledDateTimePicker = styled(DateTimePicker)(
-  ({ width }) => ({
-    height: '40px',
-    width: width,
-    background: '#FFFFFF',
-  })
-);
+export const StyledDateTimePicker = styled(DateTimePicker)(({ width }) => ({
+  height: '40px',
+  width: width,
+  background: '#FFFFFF',
+}));
 
 export const KubeEndAdornmentTextField = styled(TextField)(({}) => ({
   '& input:placeholder-shown': {
@@ -218,9 +226,9 @@ export function ChipTextField(props) {
       if (!isDuplicate(realValue)) {
         setContentList([...contentList, realValue]);
       }
-      
+
       setValue('');
-      if(enterBlur) {
+      if (enterBlur) {
         input.current.blur();
       }
     }
@@ -248,7 +256,6 @@ export function ChipTextField(props) {
               width: '10%',
             },
             bgcolor: '#EFF4F9',
-              
           },
         '& fieldset': {
           border: '1px solid rgba(0, 0, 0, 0.23) !important',
@@ -260,7 +267,7 @@ export function ChipTextField(props) {
         ...sx,
       }}
       inputProps={{
-        ref: input
+        ref: input,
       }}
       InputProps={{
         startAdornment: (startAdornment !== null
@@ -356,7 +363,6 @@ export function KubeInput(props) {
 }
 
 export const KubeSelect = styled(Select)({
-  
   '& .MuiSelect-select': {
     border: '1px solid rgba(0, 0, 0, 0.23) !important',
   },
