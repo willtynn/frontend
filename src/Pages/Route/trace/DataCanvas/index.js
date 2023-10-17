@@ -65,20 +65,21 @@ export function RouteTraceCanvas(props) {
       return "<strong>Frequency:</strong> <span style='color:red'>uhafj</span>";
       })*/
     
-    edges.forEach((item, index) => {
-      g.setEdge(
-        item.start,
-        item.end,
-        {
-          label: "<div style=\"width: 100px; white-space: nowrap; text-overflow: ellipsis; overflow: hidden; word-break: break-all;\">" + item.info + "</div>",
-          labelType: "html",
-          style: "stroke: #74C67A; stroke-width: 2px; stroke-dasharray: 5, 5; fill: none;",
-          arrowheadStyle: "fill: #74C67A; width: 2px;",
-          class: "trace_link",
-          id: JSON.stringify(item),
-        }
-      ).on("mouseover", tip.show());
-    })
+    // edges.forEach((item, index) => {
+    //   g.setEdge(
+    //     item.start,
+    //     item.end,
+    //     {
+    //       label: "<div style=\"width: 100px; white-space: nowrap; text-overflow: ellipsis; overflow: hidden; word-break: break-all;\">" + item.info + "</div>",
+    //       labelType: "html",
+    //       style: "stroke: #74C67A; stroke-width: 2px; stroke-dasharray: 5, 5; fill: none;",
+    //       arrowheadStyle: "fill: #74C67A; width: 2px;",
+    //       class: "trace_link",
+    //       id: JSON.stringify(item),
+    //     }
+    //   ).on("mouseover", tip.show());
+    // }
+    // )
     g.nodes().forEach(function (v) {
       var node = g.node(v);
       // Round the corners of the nodes
