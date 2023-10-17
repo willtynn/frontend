@@ -43,9 +43,9 @@ export const StyledTableContainer = styled(TableContainer)(() => ({
 export const StyledTableRowCell = styled(TableCell)(() => ({
   [`&.${tableCellClasses.head}`]: {
     backgroundColor: '#ffffff',
-    color: '#596A7C',
+    color: '#79879c',
     fontWeight: 600,
-    fontSize: '12px',
+    fontSize: '12px !important',
     lineHeight: '18px',
     textTransform: 'uppercase',
     letterSpacing: '0.08em',
@@ -73,6 +73,7 @@ export const StyledTableBodyCell = styled(TableCell)(() => ({
     overflow: 'hidden',
     textOverflow: 'ellipsis',
     whiteSpace: 'nowrap',
+    fontSize: '12px !important',
   },
 }));
 
@@ -348,6 +349,7 @@ export function StyledTableHead(props) {
                 bgcolor: 'transparent !important',
               }}
               disableRipple
+              size="small"
             />
           </StyledTableRowCell>
         ) : (

@@ -759,15 +759,17 @@ export default function ServiceStatusTable(props) {
                       <Checkbox
                         sx={{
                           bgcolor: 'transparent !important',
+
                         }}
                         disableRipple
+                        size="small"
                       />
                     </StyledTableBodyCell>
 
                     <StyledTableBodyCell
                       align={'left'}
                       sx={{
-                        padding: '12px 16px !important',
+                        padding: '6px 16px !important',
                       }}
                     >
                       <Stack alignItems='center' direction='row' spacing={2}>
@@ -776,6 +778,7 @@ export default function ServiceStatusTable(props) {
                           style={{
                             height: '30px',
                             lineHeight: '30px',
+                            fontWeight: 600
                           }}
                         >
                           {row.name}
