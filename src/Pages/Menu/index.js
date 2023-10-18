@@ -18,6 +18,9 @@ import Gear from '@/assets/Gear.svg';
 import ClusterManagement from '@/assets/ClusterManagement.svg';
 import { KubeTransparentButton } from '../../components/Button';
 import { useIntl } from 'react-intl';
+import Cluster16 from '@/assets/Cluster16.svg';
+import Service16 from '@/assets/Service16.svg';
+import Route16 from '@/assets/Route16.svg';
 
 export default function MiniDrawer() {
   const [open, setOpen] = React.useState(true);
@@ -92,6 +95,8 @@ export default function MiniDrawer() {
     width: '24px',
     height: '24px',
     paddingRight: '12px',
+    display: "flex",
+    alignItems: "center"
   };
 
   const styleListButton = {
@@ -264,7 +269,7 @@ export default function MiniDrawer() {
                 onClick={handleClick1}
               >
                 <Box sx={styledIcon}>
-                  <DeviceHubIcon />
+                  <Cluster16 />
                 </Box>
                 <Box sx={{ ...styledFont, color: l1 ? '#55bc8a' : '#242e42' }}>
                   集群
@@ -314,7 +319,7 @@ export default function MiniDrawer() {
                 onClick={handleClick2}
               >
                 <Box sx={styledIcon}>
-                  <CloudIcon />
+                  <Service16 />
                 </Box>
                 <Box sx={{ ...styledFont, color: l2 ? '#55bc8a' : '#242e42' }}>
                   服务
@@ -363,7 +368,7 @@ export default function MiniDrawer() {
                 onClick={handleClick3}
               >
                 <Box sx={styledIcon}>
-                  <Timeline />
+                  <Route16 />
                 </Box>
                 <Box sx={{ ...styledFont, color: l3 ? '#55bc8a' : '#242e42' }}>
                   路由
