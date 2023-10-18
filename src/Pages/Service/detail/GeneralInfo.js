@@ -11,6 +11,7 @@ import {
   MenuItem,
   Stack,
   Button,
+  Tooltip,
 } from '@mui/material';
 import { SmallLightFont, SuperLargeBoldFont } from '@/components/Fonts';
 import {
@@ -62,19 +63,16 @@ const valueStyle = {
 };
 
 export default function GeneralInfo(props) {
-
   const navigate = useNavigate();
 
   const [moreOperationAnchorEl, setMoreOperationAnchorEl] = useState(null);
   const moreOperationOpen = Boolean(moreOperationAnchorEl);
 
-  
   const { exactService } = useSelector(state => {
     return {
       exactService: state.Service.exactService,
     };
   });
-  
 
   const items = [
     [<EditService />, '编辑服务', () => {}],
@@ -102,9 +100,9 @@ export default function GeneralInfo(props) {
         items={items}
         sx={{
           mt: '8px !important',
-          boxShadow: "inset 0 4px 8px 0 rgba(36,46,66,.12) !important"
+          boxShadow: 'inset 0 4px 8px 0 rgba(36,46,66,.12) !important',
         }}
-        border="none"
+        border='none'
       />
       <DetailBG />
       <Box
@@ -153,20 +151,36 @@ export default function GeneralInfo(props) {
           alignItems='center'
         >
           <Service21 />
-          <Box
-            sx={{
-              fontFamily: fontFamily,
-              fontSize: '20px',
-              fontWeight: 600,
-              fontStyle: 'normal',
-              fontStretch: 'normal',
-              lineHeight: 1.4,
-              letterSpacing: 'normal',
-              color: '#36435C',
+          <Tooltip
+            PopperProps={{
+              sx: {
+                '& .MuiTooltip-tooltip': {
+                  backgroundColor: '#242e42',
+                  margin: "0 !important"
+                },
+              },
             }}
+            title={exactService !== null ? exactService.name : ''}
+            placement='bottom'
           >
-            {exactService !== null ? exactService.name : ''}
-          </Box>
+            <Box
+              sx={{
+                fontFamily: fontFamily,
+                fontSize: '20px',
+                fontWeight: 600,
+                fontStyle: 'normal',
+                fontStretch: 'normal',
+                lineHeight: 1.4,
+                letterSpacing: 'normal',
+                color: '#36435C',
+                textOverflow: "ellipsis",
+                overflow: "hidden",
+                whiteSpace: 'nowrap'
+              }}
+            >
+              {exactService !== null ? exactService.name : ''}
+            </Box>
+          </Tooltip>
         </Stack>
         <Stack
           sx={{ mt: '12px' }}
