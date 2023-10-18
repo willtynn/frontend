@@ -28,8 +28,12 @@ import { checkVersionFormat } from '@/utils/commonUtils';
 import { fontFamily } from '@/utils/commonUtils';
 import DetailBG from '@/assets/DetailBG.svg';
 import Service21 from '@/assets/Service21.svg';
+import EditService from '@/assets/EditService.svg';
+import Delete16 from '@/assets/Delete16.svg';
 import NavigateBeforeIcon from '@mui/icons-material/NavigateBefore';
 import { useNavigate, useParams } from 'react-router-dom';
+import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
+import { StyledPopover } from '../../../components/Popover';
 
 const labelStyle = {
   fontSize: '12px',
@@ -60,6 +64,10 @@ const valueStyle = {
 export default function GeneralInfo(props) {
   const { serviceId } = useParams();
   const dispatch = useDispatch();
+  const navigate = useNavigate();
+
+  const [moreOperationAnchorEl, setMoreOperationAnchorEl] = useState(null);
+  const moreOperationOpen = Boolean(moreOperationAnchorEl);
 
   const { exactService } = useSelector(state => {
     return {
@@ -71,8 +79,36 @@ export default function GeneralInfo(props) {
     dispatch(searchServiceExactlyById(serviceId));
   }, []);
 
+  const items = [
+    [<EditService />, '编辑服务', () => {}],
+    [<Delete16 />, '删除', () => {}],
+  ];
+
+  const handleReturn = () => {
+    navigate('/service/query');
+  };
+
+  const handleMoreOperation = e => {
+    setMoreOperationAnchorEl(e.currentTarget);
+  };
+
   return (
-    <Stack direction='column' sx={{ position: 'relative', boxShadow: "0 4px 8px 0 rgba(36,46,66,.06)" }}>
+    <Stack
+      direction='column'
+      sx={{ position: 'relative', boxShadow: '0 4px 8px 0 rgba(36,46,66,.06)' }}
+    >
+      <StyledPopover
+        id='service-detail-more-operation'
+        open={moreOperationOpen}
+        anchorEl={moreOperationAnchorEl}
+        handleClose={() => setMoreOperationAnchorEl(null)}
+        items={items}
+        sx={{
+          mt: '8px !important',
+          boxShadow: "inset 0 4px 8px 0 rgba(36,46,66,.12) !important"
+        }}
+        border="none"
+      />
       <DetailBG />
       <Box
         style={{
@@ -90,6 +126,7 @@ export default function GeneralInfo(props) {
             padding: '1px 16px 1px 10px',
             border: 'none !important',
           }}
+          onClick={handleReturn}
         >
           <Stack direction='row' spacing={1}>
             <NavigateBeforeIcon fontSize='small' />
@@ -143,8 +180,14 @@ export default function GeneralInfo(props) {
           <KubeCancelButton sx={{ height: '32px', width: '96px' }}>
             编辑信息
           </KubeCancelButton>
-          <KubeCancelButton sx={{ height: '32px', width: '96px' }}>
-            更多操作
+          <KubeCancelButton
+            onClick={handleMoreOperation}
+            sx={{ height: '32px', width: '96px' }}
+          >
+            <Stack direction='row' alignItems='center' justifyContent='center'>
+              <Box sx={{ ml: '4px' }}>更多操作</Box>
+              <ArrowDropDownIcon fontSize='small' />
+            </Stack>
           </KubeCancelButton>
         </Stack>
       </Box>

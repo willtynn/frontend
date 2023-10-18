@@ -404,7 +404,7 @@ export default function RouteTrace() {
 
     
     <Popover
-        id='instance-status-table-custom-content-popover'
+        id='route-trace-table-content-popover'
         open={showServiceColumnChooseOpen}
         anchorEl={showServiceColumnChooseAnchorEl}
         onClose={handleServiceColumnChooseClose}
