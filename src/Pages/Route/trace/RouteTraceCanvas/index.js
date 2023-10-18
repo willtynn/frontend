@@ -12,6 +12,10 @@ import { getRouteTraceDetail } from "@/actions/routeAction";
 export function RouteTraceCanvas(props) {
   const dispatch = useDispatch();
   const { id } = props
+
+
+  const [noData, setNoData] = React.useState(false);
+
   const {
     routeTraceDetail
   } = useSelector(state => {
@@ -22,6 +26,7 @@ export function RouteTraceCanvas(props) {
 
   useEffect(() => {
     dispatch(getRouteTraceDetail(id));
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   },[]);
 
   useEffect(() => {
@@ -29,6 +34,14 @@ export function RouteTraceCanvas(props) {
     if (routeTraceDetail === null || routeTraceDetail === undefined || routeTraceDetail.nodes === undefined || routeTraceDetail.edges === undefined) {
       return;
     }
+
+    if(routeTraceDetail.nodes.length === 0 && routeTraceDetail.edges.length === 0)
+    {
+      setNoData(true);
+      return;
+    }
+    else
+      setNoData(false);
     
     const nodes = routeTraceDetail.nodes;
     const edges = routeTraceDetail.edges;
@@ -140,13 +153,21 @@ export function RouteTraceCanvas(props) {
   return (
     <Box
       sx={{
+        width: "100%",
         fontFamily: fontFamily,
         overflow: "auto"
       }}
     >
-      <svg id="trace_svg-canvas" sx={{ width: "100%", boxShadow: "1px 1px 4px 1px #B5B5B8" }} >
-        <g id="trace_g-canvas" />
-      </svg>
+      {
+        noData ? 
+        <Box sx={{ width: "90%", height: "200px", display: "flex", justifyContent: "center", alignItems: "center", border: "1px solid #BFBFBF", boxShadow: "2px 0px 8px rgba(35,45,65,.28)" }}>
+          <span sx={{ }}>无链路图</span>
+        </Box>
+        :
+        <svg id="trace_svg-canvas" sx={{ width: "100%", boxShadow: "2px 0px 8px rgba(35,45,65,.28)" }} >
+          <g id="trace_g-canvas" />
+        </svg>
+      }
     </Box>
   );
 

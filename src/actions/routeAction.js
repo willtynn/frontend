@@ -11,6 +11,8 @@ export const UPDATE_ROUTE_SERVICE = "UPDATE_ROUTE_SERVICE";
 export const UPDATE_ROUTE_TRACE = "UPDATE_ROUTE_TRACE";
 export const UPDATE_ROUTE_TRACE_DETAIL = "UPDATE_ROUTE_TRACE_DETAIL";
 
+export const UPDATE_FAILED = "UPDATE_FAILED";
+
 export const CLEAR_ROUTE_TRACE = "CLEAR_ROUTE_TRACE";
 
 
@@ -37,8 +39,10 @@ export function getRouteService(start, end) {
       } else{
         dispatch({ type: UPDATE_ROUTE_SERVICE, data: [] });
       }
+      dispatch({ type: UPDATE_FAILED, data: false });
     } catch {
       dispatch({ type: UPDATE_ROUTE_SERVICE, data: null });
+      dispatch({ type: UPDATE_FAILED, data: true });
     }
   }
 }
@@ -68,8 +72,10 @@ export function getRouteTrace(start, end, service, api) {
       } else{
         dispatch({ type: UPDATE_ROUTE_TRACE, data: [] });
       }
+      dispatch({ type: UPDATE_FAILED, data: false });
     } catch {
       dispatch({ type: UPDATE_ROUTE_TRACE, data: null });
+      dispatch({ type: UPDATE_FAILED, data: true });
     }
   }
 }
@@ -93,21 +99,31 @@ export function getRouteTraceDetail(id) {
         }
       )
       if (res.status === 200) {
+        console.log(res.data)
         dispatch({ type: UPDATE_ROUTE_TRACE_DETAIL, data: res.data });
       } else{
         dispatch({ type: UPDATE_ROUTE_TRACE_DETAIL, data: [] });
       }
+      dispatch({ type: UPDATE_FAILED, data: false });
     } catch {
       dispatch({ type: UPDATE_ROUTE_TRACE_DETAIL, data: null });
+      dispatch({ type: UPDATE_FAILED, data: true });
     }
   }
 }
 
 
 
-export function clearRouteTrace(id) {
+export function clearRouteTrace() {
   return async dispatch => {
     dispatch({ type: CLEAR_ROUTE_TRACE, data: null });
+    dispatch({ type: UPDATE_FAILED, data: false });
+  }
+}
+
+export function clearFailed() {
+  return async dispatch => {
+    dispatch({ type: UPDATE_FAILED, data: false });
   }
 }
 

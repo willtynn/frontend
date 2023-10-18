@@ -17,5 +17,4 @@ export function calculateDuration(duration){
     }else{
       return (duration / 86400).toFixed(1) + 'd';
     }
-    //return 'Infinity';
   }

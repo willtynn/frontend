@@ -3,7 +3,8 @@ import * as actions from "../actions/routeAction";
 const initState = {
   routeService: null,
   routeTrace: null,
-  routeTraceDetail: null
+  routeTraceDetail: null,
+  routeFailed: false // Failed 标志虽然在下一次成功调用后会被清除，但应该在处理后立刻清除
 }
 
 export default function RouteReducer(state = initState, action) {
@@ -23,6 +24,12 @@ export default function RouteReducer(state = initState, action) {
       return {
         ...state,
         routeTraceDetail: data
+      }
+    
+    case actions.UPDATE_FAILED:
+      return {
+        ...state,
+        routeFailed: data
       }
 
     case actions.CLEAR_ROUTE_TRACE:

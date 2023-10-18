@@ -15,10 +15,8 @@ import {
   Typography,
   Modal,
   Slide,
-  IconButton,
   Popover
 } from "@mui/material"
-import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import KubeClose from '@/assets/KubeClose.svg';
 
 import {
@@ -50,7 +48,8 @@ import { fontFamily } from '@/utils/commonUtils';
 
 import { DataRow } from "./DataRow";
 import { ServiceRow } from "./ServiceRow";
-import { RouteTraceCanvas } from "./DataCanvas";
+import { RouteTraceCanvas } from "./RouteTraceCanvas";
+import { Loading } from "./Loading";
 
 
 import dayjs from 'dayjs';
@@ -58,7 +57,8 @@ import dayjs from 'dayjs';
 import {
   getRouteService,
   getRouteTrace,
-  clearRouteTrace
+  clearRouteTrace,
+  clearFailed
 } from "@/actions/routeAction";
 
 //#endregion
@@ -121,6 +121,9 @@ export default function RouteTrace() {
   const [selectedTraceIndex, setSelectedTraceIndex] = useState(-1);
 
   const [openModal, setOpenModal] = useState(false);
+  const [showLoading, setShowLoading] = useState(false);
+
+
   const [showServiceColumnChooseAnchorEl, setShowServiceColumnChooseAnchorEl] = useState(null);
   const showServiceColumnChooseOpen = Boolean(showServiceColumnChooseAnchorEl);
 
@@ -133,11 +136,13 @@ export default function RouteTrace() {
 
   const {
     routeService,
-    routeTrace
+    routeTrace,
+    routeFailed
   } = useSelector(state => {
     return {
       routeService: state.Route.routeService,
-      routeTrace: state.Route.routeTrace
+      routeTrace: state.Route.routeTrace,
+      routeFailed: state.Route.routeFailed
     };
   });
 
@@ -148,7 +153,6 @@ export default function RouteTrace() {
   
   const serviceVisibleRows = React.useMemo(() => {
     const tmp = (servicePage - 1) * serviceNumPerPage;
-    console.log(routeService);
     return routeService ? routeService.slice(tmp, tmp + serviceNumPerPage) : [];
   }, [routeService, servicePage]);
 
@@ -169,25 +173,46 @@ export default function RouteTrace() {
 
   //#endregion
   //自定义函数-结束
+  const startLoading = () => {
+    setShowLoading(true);
+    document.body.style.overflow = 'hidden';
+  }
 
+  const endLoading = () => {
+    setShowLoading(false);
+    document.body.style.overflow = 'auto';
+  }
   //HOOK-开始
   //#region
 
   useEffect(() => {
+    if(routeFailed)
+    {
+      endLoading();
+      dispatch(clearFailed());
+    }
+  }, [routeFailed]);
+
+  useEffect(() => {
+    endLoading();
+    dispatch(clearFailed());
+  }, [routeService]);
+
+  useEffect(() => {
     if (serviceVisibleRows) {
-      let maxWidths = serviceTableHeaders.map((item) => item.maxWidth);
+      let minWidths = serviceTableHeaders.map((item) => item.minWidth);
       let row = serviceVisibleRows.map((item, index) => {
         return <ServiceRow key={item.id}
           selected={selectedServiceIndex === index}
           onRowClick={() => handleServiceClick(index)}
           rowData={{...item, spanNum: 99}}
           showRows={serviceColumnDisplay}
-          maxWidth={maxWidths}/>;
+          maxWidth={minWidths}/>;
       });
       setServiceRow(row);
       for(let i = row.length; i < serviceNumPerPage; i++)
       {
-        row.push(<ServiceRow key={i} onRowClick={() => {}} rowData={null} />);
+        row.push(<ServiceRow key={i} onRowClick={() => {}} rowData={null} showRows={serviceColumnDisplay}/>);
       }
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -231,7 +256,7 @@ export default function RouteTrace() {
   //handle-开始
   //#region
   const handleSearchClick = (e) => {
-
+    startLoading();
     let startTmp = 0, endTmp = 0;
     if(durationSelectIndex !== 11)
     //Duration
@@ -342,7 +367,8 @@ export default function RouteTrace() {
   //return
   //#region
   return (
-    <>
+  <>
+    <Loading show={showLoading} />
     <Modal
       open={openModal}
       onClose={handleCloseModal}
@@ -390,6 +416,7 @@ export default function RouteTrace() {
                     <NormalFontBlack>{dayjs(detailSpan.time).format('YYYY-MM-DD HH:mm:ss')}</NormalFontBlack>
                   </Stack>
                 </Stack>
+                <div style={{ height: "20px" }} />
                 <RouteTraceCanvas id={detailSpan.id} sx={{ 
                   width: "100%" 
                 }}/>
@@ -427,11 +454,11 @@ export default function RouteTrace() {
           fontFamily: fontFamily,
         }}
       >
-        {serviceTableHeaders.map((value, index) => {
+        {serviceTableHeaders.slice(1).map((value, index) => {
           return (
             <Stack
               direction='row'
-              onClick={() => handleServiceColumnChooseItemClick(index)}
+              onClick={() => handleServiceColumnChooseItemClick(index + 1)}
               sx={{
                 color: '#FFFFFF',
                 '&:hover': {
@@ -443,7 +470,7 @@ export default function RouteTrace() {
               alignItems='center'
               spacing={1}
             >
-              {serviceColumnDisplay[index] === true ? (
+              {serviceColumnDisplay[index + 1] === true ? (
                 <VisibilityIcon fontSize='small' />
               ) : (
                 <VisibilityOffIcon fontSize='small' />
@@ -716,7 +743,7 @@ export default function RouteTrace() {
         
       </Stack>
     </Box>
-    </>
+  </>
   );
   //#endregion
 }
