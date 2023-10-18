@@ -63,7 +63,6 @@ export function getRouteTrace(start, end, service, api) {
           }
         }
       )
-      console.log(res)
       if (res.status === 200) {
         dispatch({ type: UPDATE_ROUTE_TRACE, data: res.data });
       } else{
@@ -93,11 +92,9 @@ export function getRouteTraceDetail(id) {
           }
         }
       )
-      console.log(res)
       if (res.status === 200) {
         dispatch({ type: UPDATE_ROUTE_TRACE_DETAIL, data: res.data });
       } else{
-        console.log(res.data)
         dispatch({ type: UPDATE_ROUTE_TRACE_DETAIL, data: [] });
       }
     } catch {
