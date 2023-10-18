@@ -1,16 +1,5 @@
-import { useState, useEffect } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
 import {
-  TextField,
-  Box,
-  Input,
-  FormControl,
-  FormHelperText,
-  InputLabel,
-  Select,
-  MenuItem,
   Stack,
-  Button,
   Tooltip,
   Table,
   TableHead,
@@ -18,19 +7,11 @@ import {
   IconButton,
   TableBody,
 } from '@mui/material';
-import { SmallLightFont, SuperLargeBoldFont } from '@/components/Fonts';
-import {
-  OutlinedButton,
-  KubeConfirmButton,
-  KubeCancelButton,
-} from '@/components/Button';
-import { checkVersionFormat } from '@/utils/commonUtils';
 import { fontFamily } from '@/utils/commonUtils';
 import { KubeSimpleCard } from '../../../../components/InfoCard';
 import {
   StyledTableBodyCell,
   StyledTableRowCell,
-  StyledTableBox,
   StyledTableContainer,
 } from '@/components/DisplayTable';
 import PolylineIcon from '@mui/icons-material/Polyline';
@@ -89,19 +70,19 @@ export default function Information(props) {
   ];
 
   const resourceAndCapabilityHeadRow = [
-    createRow('cpu', 'cpu资源', false, '70px', '120px', true, 'center'),
-    createRow('ram', 'ram资源', false, '70px', '120px', true, 'center'),
-    createRow('disk', '硬盘资源', false, '70px', '120px', true, 'center'),
+    createRow('cpu', 'cpu资源', false, '70px', '70px', true, 'center'),
+    createRow('ram', 'ram资源', false, '70px', '70px', true, 'center'),
+    createRow('disk', '硬盘资源', false, '70px', '70px', true, 'center'),
     createRow(
       'gpuCore',
       'gpu-core资源',
       false,
       '70px',
-      '120px',
+      '70px',
       true,
       'center'
     ),
-    createRow('gpuMem', 'gpu内存资源', false, '70px', '120px', true, 'center'),
+    createRow('gpuMem', 'gpu内存资源', false, '70px', '70px', true, 'center'),
   ];
 
   const handleInterfaceDependencyClick = id => {
@@ -312,7 +293,10 @@ export default function Information(props) {
                   <StyledTableBodyCell align='left'>
                     处理能力
                   </StyledTableBodyCell>
-                  <StyledTableBodyCell align='center' colSpan={5}>
+                  <StyledTableBodyCell align='center' colSpan={5} sx={{
+                    maxWidth: "350px",
+                    minWidth: "350px"
+                  }}>
                     {service && service.desiredCapability}
                   </StyledTableBodyCell>
                   {/* {

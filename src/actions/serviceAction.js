@@ -12,6 +12,8 @@ export const UPDATE_INTERFACE_DEPENDENCY = 'UPDATE_INTERFACE_DEPENDENCY';
 
 export const UPDATE_DEPENDENCY = 'UPDATE_DEPENDENCY';
 
+export const UPDATE_SEARCH_POD = 'UPDATE_SEARCH_POD';
+
 const baseURLLink = 'http://192.168.1.104:30990';
 
 const axios_instance = axios.create({
@@ -38,7 +40,7 @@ export function searchServiceExactlyById(id) {
       );
       if (res.data.code === 200 || res.data.code === 0) {
         const serviceInfo = res.data.data;
-        if(serviceInfo.length < 1) {
+        if (serviceInfo.length < 1) {
           dispatch({ type: UPDATE_EXACT_SERVICE, data: null });
         } else {
           dispatch({ type: UPDATE_EXACT_SERVICE, data: serviceInfo[0] });
@@ -142,11 +144,37 @@ export function searchServiceByVersion(name, version) {
           },
         }
       );
-      if (res.data.code === 200) {
+      if (res.data.code === 200 || res.data.code === 0) {
         dispatch({ type: UPDATE_SEARCH_SERVICE, data: res.data.data });
+      } else if (res.data.code === 1) {
+        // alert(res.data.message)
+        dispatch(
+          setSnackbarMessageAndOpen(
+            'common.errorMessage',
+            { msg: res.data.message },
+            SEVERITIES.warning
+          )
+        );
+        dispatch({ type: UPDATE_SEARCH_SERVICE, data: [] });
+      } else {
+        dispatch(
+          setSnackbarMessageAndOpen(
+            'serviceDependency.searchServiceByNameVersionError',
+            {},
+            SEVERITIES.warning
+          )
+        );
+        dispatch({ type: UPDATE_SEARCH_SERVICE, data: [] });
       }
     } catch {
       dispatch({ type: UPDATE_SEARCH_SERVICE, data: null });
+      dispatch(
+        setSnackbarMessageAndOpen(
+          'serviceDependency.queryError',
+          {},
+          SEVERITIES.warning
+        )
+      );
     }
   };
 }
@@ -263,6 +291,58 @@ export function searchDependenciesByInterfaceId(id) {
         )
       );
       dispatch({ type: UPDATE_INTERFACE_DEPENDENCY, data: null });
+    }
+  };
+}
+
+export function searchPodsByServiceName(cluster, name) {
+  const url = '/instance/status/service';
+  const tmpInstance = axios.create({
+    baseURL: 'http://192.168.1.104:31953',
+    timeout: 10000,
+    // withCredentials: isCookie,
+    crossDomain: true,
+  });
+  return async dispatch => {
+    try {
+      
+      const res = await tmpInstance.get(
+        url,
+        {
+          params: {
+            cluster: "ices104",
+            service: "alexnet",
+          },
+        },
+        // {
+        //   headers: {
+        //     // 'Content-Type': 'application/json',
+        //     'Accept': 'application/json'
+        //   },
+        // }
+      );
+
+      if (res.data.code === 200 || res.data.code === 0) {
+        dispatch({ type: UPDATE_SEARCH_POD, data: res.data.data.items });
+      } else {
+        dispatch(
+          setSnackbarMessageAndOpen(
+            'serviceDependency.podSearchError',
+            {},
+            SEVERITIES.warning
+          )
+        );
+        dispatch({ type: UPDATE_SEARCH_POD, data: [] });
+      }
+    } catch {
+      dispatch(
+        setSnackbarMessageAndOpen(
+          'serviceDependency.podSearchError',
+          {},
+          SEVERITIES.warning
+        )
+      );
+      dispatch({ type: UPDATE_INTERFACE_DEPENDENCY, data: [] });
     }
   };
 }

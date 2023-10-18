@@ -38,7 +38,7 @@ export const StyledTextFiled = styled(TextField)(() => ({
   },
 }));
 
-const CustomTextField = styled(TextField)(({ theme }) => ({
+export const CustomTextField = styled(TextField)(({ theme }) => ({
   '& .MuiOutlinedInput-root': {
     background: '#FFFFFF',
     borderRadius: '20px',
@@ -46,13 +46,31 @@ const CustomTextField = styled(TextField)(({ theme }) => ({
     height: '32px',
     fontFamily: fontFamily,
     color: '#262E35',
-    padding: '0px 0px 0px 15px !important',
+    padding: '0px 0px 0px 12px !important',
     '& fieldset': {
       border: '1px solid rgba(0, 0, 0, 0.23)',
       borderRadius: '20px',
     },
     '& .MuiOutlinedInput-input.MuiInputBase-input': {
       padding: '7px 12px 7px 0px !important',
+    },
+    '& input': {
+      height: '18px',
+    },
+  },
+}));
+
+export const KubeAdornmentTextField = styled(TextField)(({ theme }) => ({
+  '& .MuiOutlinedInput-root': {
+    background: '#FFFFFF',
+    borderRadius: '20px',
+    boxSizing: 'border-box',
+    height: '32px',
+    fontFamily: fontFamily,
+    color: '#262E35',
+    '& fieldset': {
+      border: '1px solid rgba(0, 0, 0, 0.23)',
+      borderRadius: '20px',
     },
     '& input': {
       height: '18px',

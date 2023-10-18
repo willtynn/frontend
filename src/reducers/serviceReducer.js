@@ -6,6 +6,7 @@ const initState = {
   dependency: null,
   serviceDependency: null,
   interfaceDependency: null,
+  pods: [],
 }
 
 export default function ServiceReducer(state = initState, action) {
@@ -35,6 +36,11 @@ export default function ServiceReducer(state = initState, action) {
       return {
         ...state,
         interfaceDependency: data
+      }
+    case actions.UPDATE_SEARCH_POD:
+      return {
+        ...state,
+        pods: data
       }
     default:
       return state
