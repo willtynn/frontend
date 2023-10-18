@@ -67,9 +67,7 @@ export const StyledTableBodyCell = styled(TableCell)(() => ({
   },
   [`&.${tableCellClasses.root}`]: {
     height: '43px',
-    paddingTop: 0,
-    paddingBottom: 0,
-    paddingLeft: '24px',
+    padding: "0px 16px",
     overflow: 'hidden',
     textOverflow: 'ellipsis',
     whiteSpace: 'nowrap',

@@ -32,13 +32,13 @@ export function KubeDeploymentCard(props) {
   const { title, handleClose } = props;
   return (
     <Box
-      className="KubeDeployCard"
+      className='KubeDeployCard'
       sx={{
         bgcolor: '#f9fbfd',
         borderRadius: '4px',
         ...shadowStyle,
         p: 0,
-        height: "100%"
+        height: '100%',
       }}
     >
       <Box
@@ -82,10 +82,7 @@ export function KubeDeploymentCard(props) {
 export function KubeSimpleCard(props) {
   const { title } = props;
   return (
-    <Stack
-      spacing={1}
-      direction="column"
-    >
+    <Stack spacing={1} direction='column'>
       <Box
         sx={{
           fontSize: '12px',
@@ -93,20 +90,28 @@ export function KubeSimpleCard(props) {
           fontStyle: 'normal',
           fontWeight: 700,
           lineHeight: 1.67,
-          color: "#36435C"
+          color: '#36435C',
         }}
       >
         {title}
       </Box>
-      <Box sx={{
-        bgcolor: "#FFFFFF",
-        borderRadius: "4px",
-        padding: "12px"
-      }}>
-        {props.children}
+      <Box
+        sx={{
+          bgcolor: '#FFFFFF',
+          borderRadius: '4px',
+          padding: '12px',
+        }}
+      >
+        <Box
+          sx={{
+            bgcolor: '#F9FBFD',
+            borderRadius: '4px',
+            padding: '12px',
+          }}
+        >
+          {props.children}
+        </Box>
       </Box>
-      
     </Stack>
   );
 }
-
