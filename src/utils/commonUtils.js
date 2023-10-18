@@ -20,7 +20,7 @@ export function transformVersion(version) {
   if (!version) {
     return "";
   }
-  return version.major + "." + version.minor + "." + version.patch;
+  return parseInt(version.major) + "." + parseInt(version.minor) + "." + parseInt(version.patch);
 }
 
 export function checkVersionFormat(version) {

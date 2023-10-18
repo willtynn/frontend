@@ -12,7 +12,7 @@ export const UPDATE_INTERFACE_DEPENDENCY = 'UPDATE_INTERFACE_DEPENDENCY';
 
 export const UPDATE_DEPENDENCY = 'UPDATE_DEPENDENCY';
 
-const baseURLLink = 'http://192.168.1.104:31931';
+const baseURLLink = 'http://192.168.1.104:30990';
 
 const axios_instance = axios.create({
   baseURL: baseURLLink,

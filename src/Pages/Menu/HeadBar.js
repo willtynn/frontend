@@ -138,7 +138,7 @@ export function HeadBar() {
         }}
       />
 
-      <Box sx={{ backgroundColor: '#eff4f9', width: 'calc(100%)' }}>
+      <Box sx={{ backgroundColor: '#eff4f9', width: 'calc(100%)', fontFamily: fontFamily }}>
         <Box sx={{ display: 'block' }}>
           <Box sx={{ padding: '20px' }}>
             <Outlet />
