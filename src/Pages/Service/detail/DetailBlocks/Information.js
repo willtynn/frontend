@@ -13,27 +13,22 @@ import {
   Button,
 } from '@mui/material';
 import { SmallLightFont, SuperLargeBoldFont } from '@/components/Fonts';
-import { OutlinedButton } from '@/components/Button';
-import { UPDATE_SEARCH_SERVICE } from '@/actions/serviceAction';
 import {
-  searchServiceById,
-  searchServiceByVersion,
-} from '@/actions/serviceAction';
+  OutlinedButton,
+  KubeConfirmButton,
+  KubeCancelButton,
+} from '@/components/Button';
 import { checkVersionFormat } from '@/utils/commonUtils';
 import { fontFamily } from '@/utils/commonUtils';
-import GeneralInfo from './GeneralInfo';
-import { DetailInfo } from './DetailInfo';
+import { KubeSimpleCard } from '../../../../components/InfoCard';
 
-
-export function ServiceDetail() {
+export default function Information() {
   return (
-    <Stack
-      direction='row'
-      justifyContent='space-between'
-      alignItems='flex-start'
-    >
-      <GeneralInfo />
-      <DetailInfo />
+    <Stack direction="column" spacing={1.5}>
+      <KubeSimpleCard title='接口集合'>
+        
+      </KubeSimpleCard>
+      <KubeSimpleCard title='资源与能力'></KubeSimpleCard>
     </Stack>
   );
 }

@@ -78,3 +78,35 @@ export function KubeDeploymentCard(props) {
     </Box>
   );
 }
+
+export function KubeSimpleCard(props) {
+  const { title } = props;
+  return (
+    <Stack
+      spacing={1}
+      direction="column"
+    >
+      <Box
+        sx={{
+          fontSize: '12px',
+          fontFamily: fontFamily,
+          fontStyle: 'normal',
+          fontWeight: 700,
+          lineHeight: 1.67,
+          color: "#36435C"
+        }}
+      >
+        {title}
+      </Box>
+      <Box sx={{
+        bgcolor: "#FFFFFF",
+        borderRadius: "4px",
+        padding: "12px"
+      }}>
+        {props.children}
+      </Box>
+      
+    </Stack>
+  );
+}
+
