@@ -9,8 +9,16 @@ import Information from './DetailBlocks/Information';
 import Monitor from './DetailBlocks/Monitor';
 import ResourceStatus from './DetailBlocks/ResourceStatus';
 import ServiceRequest from './DetailBlocks/ServiceRequest';
+import { useSelector } from 'react-redux';
 
-export function DetailInfo() {
+export function DetailInfo(props) {
+
+  
+  const { exactService } = useSelector(state => {
+    return {
+      exactService: state.Service.exactService,
+    };
+  });
   return (
     <Box
       sx={{
@@ -26,16 +34,16 @@ export function DetailInfo() {
           <StyledTab value={4}>监控</StyledTab>
         </StyledTabsList>
         <StyledTabPanel value={1}>
-          <Information />
+          <Information service={exactService}/>
         </StyledTabPanel>
         <StyledTabPanel value={2}>
-          <ResourceStatus />
+          <ResourceStatus service={exactService}/>
         </StyledTabPanel>
         <StyledTabPanel value={3}>
-          <ServiceRequest />
+          <ServiceRequest service={exactService}/>
         </StyledTabPanel>
         <StyledTabPanel value={4}>
-          <Monitor />
+          <Monitor service={exactService}/>
         </StyledTabPanel>
       </Tabs>
       {/* </Stack> */}

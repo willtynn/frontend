@@ -62,22 +62,19 @@ const valueStyle = {
 };
 
 export default function GeneralInfo(props) {
-  const { serviceId } = useParams();
-  const dispatch = useDispatch();
+
   const navigate = useNavigate();
 
   const [moreOperationAnchorEl, setMoreOperationAnchorEl] = useState(null);
   const moreOperationOpen = Boolean(moreOperationAnchorEl);
 
+  
   const { exactService } = useSelector(state => {
     return {
       exactService: state.Service.exactService,
     };
   });
-
-  useEffect(() => {
-    dispatch(searchServiceExactlyById(serviceId));
-  }, []);
+  
 
   const items = [
     [<EditService />, '编辑服务', () => {}],
