@@ -18,6 +18,7 @@ import {
   Popover
 } from "@mui/material"
 import KubeClose from '@/assets/KubeClose.svg';
+import RouteIcon from '@/assets/RouteIcon.svg';
 
 import {
   KubeConfirmButton,
@@ -40,7 +41,6 @@ import {
 
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
-import TaskIcon from '@/assets/TaskIcon.svg';
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
 
@@ -191,11 +191,13 @@ export default function RouteTrace() {
       endLoading();
       dispatch(clearFailed());
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [routeFailed]);
 
   useEffect(() => {
     endLoading();
     dispatch(clearFailed());
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [routeService]);
 
   useEffect(() => {
@@ -505,8 +507,8 @@ export default function RouteTrace() {
         height: '58px',
         mb: "12px"
         }}>
-        <Stack direction="row" spacing={1}>
-          <TaskIcon />
+        <Stack direction="row" spacing={-4}>
+          <RouteIcon />
           <Box>
             <Typography sx={{
               fontWeight: 600,
