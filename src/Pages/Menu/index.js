@@ -235,6 +235,7 @@ export default function MiniDrawer() {
                 borderRadius: '4px',
                 cursor: 'pointer',
               }}
+              onClick={handleClusterSelectClick}
             >
               <Box sx={{ paddingRight: '10px' }}>
                 <ClusterManagement />
@@ -243,7 +244,7 @@ export default function MiniDrawer() {
                 spacing={0.5}
                 justifyContent="flex-start"
                 alignItems="flex-start"
-                onClick={handleClusterSelectClick}
+                
               >
                 <Box
                   sx={{
