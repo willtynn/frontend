@@ -1,44 +1,47 @@
-import * as React from 'react';
-import Box from '@mui/material/Box';
-import List from '@mui/material/List';
-import Divider from '@mui/material/Divider';
-import ListItemButton from '@mui/material/ListItemButton';
-import DeviceHubIcon from '@mui/icons-material/DeviceHub';
+import {
+  Collapse,
+  Grid,
+  Stack,
+  ListItemButton,
+  Box,
+  List,
+  Divider,
+  Modal,
+} from '@mui/material';
 import { ExpandLess, ExpandMore, Timeline } from '@mui/icons-material';
-import { Button, Collapse, Grid, Stack } from '@mui/material';
-import CloudIcon from '@mui/icons-material/Cloud';
 import { Outlet } from 'react-router-dom';
 import { useNavigate } from 'react-router-dom';
 import CommonSnackBar from '../../components/CommonSnackbar';
-import { useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { fontFamily } from '../../utils/commonUtils';
-import ICES from '@/assets/ICES.png';
 import Workbench from '@/assets/Workbench.svg';
 import Gear from '@/assets/Gear.svg';
 import ClusterManagement from '@/assets/ClusterManagement.svg';
 import { KubeTransparentButton } from '../../components/Button';
 import { useIntl } from 'react-intl';
+import ClusterSelectModal from './ClusterSelectModal';
 import Cluster16 from '@/assets/Cluster16.svg';
 import Service16 from '@/assets/Service16.svg';
 import Route16 from '@/assets/Route16.svg';
 
 export default function MiniDrawer() {
-  const [open, setOpen] = React.useState(true);
-  const [verticalOpen1, setVerticalOpen1] = React.useState(false);
-  const [verticalOpen2, setVerticalOpen2] = React.useState(false);
-  const [verticalOpen3, setVerticalOpen3] = React.useState(false);
+  const [verticalOpen1, setVerticalOpen1] = useState(false);
+  const [verticalOpen2, setVerticalOpen2] = useState(false);
+  const [verticalOpen3, setVerticalOpen3] = useState(false);
 
-  const [l1, setl1] = React.useState(false);
-  const [l11, setl11] = React.useState(false);
-  const [l12, setl12] = React.useState(false);
-  const [l13, setl13] = React.useState(false);
+  const [l1, setl1] = useState(false);
+  const [l11, setl11] = useState(false);
+  const [l12, setl12] = useState(false);
+  const [l13, setl13] = useState(false);
 
-  const [l2, setl2] = React.useState(false);
-  const [l21, setl21] = React.useState(false);
-  const [l22, setl22] = React.useState(false);
+  const [l2, setl2] = useState(false);
+  const [l21, setl21] = useState(false);
+  const [l22, setl22] = useState(false);
 
-  const [l3, setl3] = React.useState(false);
-  const [l31, setl31] = React.useState(false);
+  const [l3, setl3] = useState(false);
+  const [l31, setl31] = useState(false);
+
+  const [clusterSelectOpen, setClusterSelectOpen] = useState(false);
 
   const intl = useIntl();
 
@@ -79,6 +82,14 @@ export default function MiniDrawer() {
     setVerticalOpen3(!verticalOpen3);
   };
 
+  const handlelClusterSelectClose = () => {
+    setClusterSelectOpen(false);
+  };
+
+  const handleClusterSelectClick = () => {
+    setClusterSelectOpen(true);
+  };
+
   const styledFont = {
     color: '#242e42',
     fontSize: '12px',
@@ -95,13 +106,13 @@ export default function MiniDrawer() {
     width: '24px',
     height: '24px',
     paddingRight: '12px',
-    display: "flex",
-    alignItems: "center"
+    display: 'flex',
+    alignItems: 'center',
   };
 
   const styleListButton = {
     justifyContent: 'initial',
-    paddingLeft: '36px',
+    paddingLeft: '42px',
     ':hover': {
       backgroundColor: '#eff4f9',
     },
@@ -210,9 +221,11 @@ export default function MiniDrawer() {
           <Box sx={{ maxWidth: '220px' }}>
             {/* 深色块标签 */}
             <Stack
-              spacing={1}
+              direction='row'
+              justifyContent='flex-start'
+              alignItems='center'
               sx={{
-                height: '80px',
+                height: '40px',
                 maxWidth: '182px',
                 backgroundColor: 'rgb(36, 46, 66)',
                 boxShadow: 'rgba(36, 46, 66, 0.2) 0px 8px 16px 0px',
@@ -220,43 +233,45 @@ export default function MiniDrawer() {
                 marginTop: '20px',
                 marginBottom: '20px',
                 borderRadius: '4px',
+                cursor: 'pointer',
               }}
             >
+              <Box sx={{ paddingRight: '10px' }}>
+                <ClusterManagement />
+              </Box>
               <Stack
-                direction='row'
-                justifyContent='flex-start'
-                alignItems='center'
+                spacing={0.5}
+                justifyContent="flex-start"
+                alignItems="flex-start"
+                onClick={handleClusterSelectClick}
               >
-                <Box sx={{ paddingRight: '20px' }}>
-                  <ClusterManagement />
-                </Box>
                 <Box
                   sx={{
                     color: '#FFF',
-                    fontSize: '14px',
+                    fontSize: '12px',
                     fontWeight: 600,
                     fontStyle: 'normal',
                     fontFamily:
                       'Roboto,PingFang SC,Lantinghei SC,Helvetica Neue,Helvetica,Arial,Microsoft YaHei,微软雅黑,STHeitiSC-Light,simsun,宋体,WenQuanYi Zen Hei,WenQuanYi Micro Hei,sans-serif',
                   }}
                 >
-                  集群管理
+                  {localStorage.getItem('current_cluster')}
+                </Box>
+
+                <Box
+                  sx={{
+                    color: '#d8dee5',
+                    fontWeight: 400,
+                    fontSize: '12px',
+                    fontStyle: 'normal',
+                    fontFamily:
+                      'Roboto,PingFang SC,Lantinghei SC,Helvetica Neue,Helvetica,Arial,Microsoft YaHei,微软雅黑,STHeitiSC-Light,simsun,宋体,WenQuanYi Zen Hei,WenQuanYi Micro Hei,sans-serif',
+                    textAlign: 'center',
+                  }}
+                >
+                  集群
                 </Box>
               </Stack>
-
-              <Box
-                sx={{
-                  color: '#d8dee5',
-                  fontWeight: 400,
-                  fontSize: '14px',
-                  fontStyle: 'normal',
-                  fontFamily:
-                    'Roboto,PingFang SC,Lantinghei SC,Helvetica Neue,Helvetica,Arial,Microsoft YaHei,微软雅黑,STHeitiSC-Light,simsun,宋体,WenQuanYi Zen Hei,WenQuanYi Micro Hei,sans-serif',
-                  textAlign: "center"
-                }}
-              >
-                {intl.messages['menu.clusterMangementDescription']}
-              </Box>
             </Stack>
 
             {/* 导航列表 */}
@@ -264,7 +279,7 @@ export default function MiniDrawer() {
               <ListItemButton
                 sx={{
                   ...styleListButton,
-                  paddingLeft: '0px',
+                  paddingLeft: '12px',
                 }}
                 onClick={handleClick1}
               >
@@ -314,7 +329,7 @@ export default function MiniDrawer() {
               <ListItemButton
                 sx={{
                   ...styleListButton,
-                  paddingLeft: '0px',
+                  paddingLeft: '12px',
                 }}
                 onClick={handleClick2}
               >
@@ -363,7 +378,7 @@ export default function MiniDrawer() {
               <ListItemButton
                 sx={{
                   ...styleListButton,
-                  paddingLeft: '0px',
+                  paddingLeft: '12px',
                 }}
                 onClick={handleClick3}
               >
@@ -405,6 +420,20 @@ export default function MiniDrawer() {
           </Box>
         </Box>
       </Stack>
+
+      <Modal
+        //模态框背景颜色和模糊效果
+        sx={{
+          '& .MuiModal-backdrop': {
+            background: 'rgba(35, 45, 65, 0.7)',
+            backdropFilter: 'blur(1px)',
+          },
+        }}
+        open={clusterSelectOpen}
+        onClose={handlelClusterSelectClose}
+      >
+        <ClusterSelectModal handleCancelClick={handlelClusterSelectClose} />
+      </Modal>
     </>
   );
 }
