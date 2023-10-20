@@ -11,42 +11,23 @@ import {
   TableRow,
   TableCell,
 } from '@mui/material';
-import { SmallLightFont, SuperLargeBoldFont } from '@/components/Fonts';
 import {
-  OutlinedButton,
   KubeConfirmButton,
   KubeCancelButton,
   EclipseTransparentButton,
 } from '@/components/Button';
-import { checkVersionFormat, formatDatetimeString } from '@/utils/commonUtils';
+import { formatDatetimeString } from '@/utils/commonUtils';
 import { fontFamily } from '@/utils/commonUtils';
 import { KubeSimpleCard } from '../../../../components/InfoCard';
 import {
   StyledTableBodyCell,
-  StyledTableRowCell,
-  StyledTableBox,
   StyledTableContainer,
   StyledTableHead,
   StyledTableFooter,
 } from '@/components/DisplayTable';
 import { KubeAdornmentTextField } from '../../../../components/Input';
-import PolylineIcon from '@mui/icons-material/Polyline';
-import { useNavigate, useParams } from 'react-router';
-import ActivePod from '@/assets/ActivePod.svg';
-import PendingPod from '@/assets/PendingPod.svg';
-import FailedPod from '@/assets/FailedPod.svg';
-import SucceededPod from '@/assets/SucceededPod.svg';
 import KubeSearch from '@/assets/KubeSearch.svg';
 import RefreshIcon from '@mui/icons-material/Refresh';
-import { searchPodsByServiceName } from '../../../../actions/serviceAction';
-import {
-  RUNNING,
-  PENDING,
-  FAILED,
-  SUCCEEDED,
-} from '../../../Cluster/deploy/ServiceStatusTable';
-import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
-import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
 import {
   getRouteService,
   UPDATE_ROUTE_SERVICE,
@@ -60,11 +41,8 @@ import Watch from '@/assets/Watch.svg';
 import dayjs from 'dayjs';
 import ArrowDropUpIcon from '@mui/icons-material/ArrowDropUp';
 import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
-import { DemoContainer } from '@mui/x-date-pickers/internals/demo';
-import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
-import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
-import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import { KubeDatePicker } from '../../../../components/DatePicker';
+import { calculateDuration } from '../../../Route/trace/functions/func';
 
 const RangeCandidate = [
   ['最近10分钟', -10, 'minute'],
@@ -144,6 +122,10 @@ export default function ServiceRequest(props) {
   const [rangeIndex, setRangeIndex] = useState(4);
   const [start, setStart] = useState(dayjs().add(-2, 'hour'));
   const [end, setEnd] = useState(dayjs());
+
+  const [tmpStart, setTmpStart] = useState(dayjs().add(-2, 'hour'));
+  const [tmpEnd, setTmpEnd] = useState(dayjs());
+
   const [enter, setEnter] = useState(0);
   const [count, setCount] = useState(0);
   const dispatch = useDispatch();
@@ -258,6 +240,12 @@ export default function ServiceRequest(props) {
     }
   }, [visibleAPI]);
 
+  const resetParameter = () => {
+    setRangeIndex(4);
+    setTmpStart(dayjs().add(-2, 'hour'));
+    setTmpEnd(dayjs());
+  }
+
   //改变每页的数量
   const handlePerPageChange = pageSize => {
     dispatch({ type: CHANGE_PAGE_SIZE, data: pageSize });
@@ -277,6 +265,12 @@ export default function ServiceRequest(props) {
     // dispatch(searchPodsByServiceName(service.name));
   };
 
+  const handleRangeConfirm = () => {
+    setStart(tmpStart);
+    setEnd(tmpEnd);
+    handleClose();
+  }
+
   const handleKeyDown = e => {
     if (typeof e.target.value === 'string' && e.keyCode === 13) {
       setEnter(prev => prev + 1);
@@ -293,10 +287,12 @@ export default function ServiceRequest(props) {
 
   const handleRangeButtonClick = index => {
     setRangeIndex(index);
+    handleClose();
   };
 
   const handleApiChange = api => {
     setCurrentAPI(api);
+    resetParameter();
   };
 
   return (
@@ -423,7 +419,7 @@ export default function ServiceRequest(props) {
                 >
                   开始时间
                 </Box>
-                <KubeDatePicker value={start} setValue={setStart} />
+                <KubeDatePicker value={tmpStart} setValue={setTmpStart} />
               </Box>
 
               <Box>
@@ -439,7 +435,7 @@ export default function ServiceRequest(props) {
                 >
                   结束时间
                 </Box>
-                <KubeDatePicker value={end} setValue={setEnd} />
+                <KubeDatePicker value={tmpEnd} setValue={setTmpEnd} />
               </Box>
             </Stack>
 
@@ -450,10 +446,10 @@ export default function ServiceRequest(props) {
               spacing={1.5}
               sx={{ mt: '32px' }}
             >
-              <KubeCancelButton sx={{ height: '32px', width: '84px' }}>
+              <KubeCancelButton sx={{ height: '32px', width: '84px' }} onClick={handleClose}>
                 取消
               </KubeCancelButton>
-              <KubeConfirmButton sx={{ height: '32px', width: '84px' }}>
+              <KubeConfirmButton sx={{ height: '32px', width: '84px' }} onClick={handleRangeConfirm}>
                 确定
               </KubeConfirmButton>
             </Stack>
@@ -727,7 +723,7 @@ export default function ServiceRequest(props) {
                             maxWidth: headRow[0].maxWidth,
                           }}
                         >
-                          {row.startTime}
+                          {formatDatetimeString(row.startTime)}
                         </StyledTableBodyCell>
 
                         <StyledTableBodyCell
@@ -738,7 +734,7 @@ export default function ServiceRequest(props) {
                             maxWidth: headRow[0].maxWidth,
                           }}
                         >
-                          {row.responseTime}
+                          {calculateDuration(row.responseTime)}
                         </StyledTableBodyCell>
 
                         <StyledTableBodyCell
