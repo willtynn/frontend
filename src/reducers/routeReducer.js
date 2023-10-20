@@ -5,7 +5,9 @@ const initState = {
   routeService: null,
   routeTrace: null,
   routeTraceDetail: null,
-  routeFailed: false // Failed 标志虽然在下一次成功调用后会被清除，但应该在处理后立刻清除
+  routeFailed: false, // Failed 标志虽然在下一次成功调用后会被清除，但应该在处理后立刻清除
+  pageNum: 1,
+  pageSize: 10,
 }
 
 const orderRouteTrace = (data) => {
@@ -53,6 +55,18 @@ export default function RouteReducer(state = initState, action) {
       return {
         ...state,
         routeTrace: null
+      }
+
+    case actions.CHANGE_PAGE_NUM:
+      return {
+        ...state,
+        pageNum: data
+      }
+
+    case actions.CHANGE_PAGE_SIZE:
+      return {
+        ...state,
+        pageSize: data
       }
     default:
       return state;

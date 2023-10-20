@@ -27,6 +27,7 @@ import {
   StyledTableBox,
   StyledTableContainer,
   StyledTableHead,
+  StyledTableFooter,
 } from '@/components/DisplayTable';
 import { KubeAdornmentTextField } from '../../../../components/Input';
 import PolylineIcon from '@mui/icons-material/Polyline';
@@ -50,6 +51,8 @@ import {
   getRouteService,
   UPDATE_ROUTE_SERVICE,
   getRouteTrace,
+  CHANGE_PAGE_SIZE,
+  CHANGE_PAGE_NUM,
 } from '@/actions/routeAction';
 import API from '@/assets/API.svg';
 import WhiteAPI from '@/assets/WhiteAPI.svg';
@@ -64,9 +67,9 @@ import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import { KubeDatePicker } from '../../../../components/DatePicker';
 
 const RangeCandidate = [
-  ['最近10分钟', -10, 'min'],
-  ['最近20分钟', -20, 'min'],
-  ['最近30分钟', -30, 'min'],
+  ['最近10分钟', -10, 'minute'],
+  ['最近20分钟', -20, 'minute'],
+  ['最近30分钟', -30, 'minute'],
   ['最近1小时', -1, 'hour'],
   ['最近2小时', -2, 'hour'],
   ['最近3小时', -3, 'hour'],
@@ -102,6 +105,38 @@ function createRow(
   };
 }
 
+function descendingComparator(a, b, orderBy) {
+  if (b[orderBy] < a[orderBy]) {
+    return -1;
+  }
+  if (b[orderBy] > a[orderBy]) {
+    return 1;
+  }
+  return 0;
+}
+
+function getComparator(order, orderBy) {
+  return order === 'desc'
+    ? (a, b) => descendingComparator(a, b, orderBy)
+    : (a, b) => -descendingComparator(a, b, orderBy);
+}
+
+// Since 2020 all major browsers ensure sort stability with Array.prototype.sort().
+// stableSort() brings sort stability to non-modern browsers (notably IE11). If you
+// only support modern browsers you can replace stableSort(exampleArray, exampleComparator)
+// with exampleArray.slice().sort(exampleComparator)
+function stableSort(array, comparator) {
+  const stabilizedThis = array.map((el, index) => [el, index]);
+  stabilizedThis.sort((a, b) => {
+    const order = comparator(a[0], b[0]);
+    if (order !== 0) {
+      return order;
+    }
+    return a[1] - b[1];
+  });
+  return stabilizedThis.map(el => el[0]);
+}
+
 export default function ServiceRequest(props) {
   const { service } = props;
 
@@ -110,27 +145,40 @@ export default function ServiceRequest(props) {
   const [start, setStart] = useState(dayjs().add(-2, 'hour'));
   const [end, setEnd] = useState(dayjs());
   const [enter, setEnter] = useState(0);
+  const [count, setCount] = useState(0);
   const dispatch = useDispatch();
   const [rangeSelectAnchorEl, setRangeSelectAnchorEl] = useState(null);
   const rangeSelectOpen = Boolean(rangeSelectAnchorEl);
   const [loading, setLoading] = useState(false);
+
+  const [order, setOrder] = useState('asc');
+  const [orderBy, setOrderBy] = useState('responseTime');
 
   const [currentAPI, setCurrentAPI] = useState('');
 
   const headRow = [
     createRow('request', '请求', false, '200px', '400px', true, 'left'),
     createRow('length', '链路长度', false, '50px', '80px', true, 'center'),
-    createRow('startTime', '开始时间', false, '100px', '100px', true, 'center'),
-    createRow('responseTime','响应时间',false,'100px','100px',true,'center'),
+    createRow('startTime', '开始时间', true, '100px', '100px', true, 'center'),
+    createRow(
+      'responseTime',
+      '响应时间',
+      true,
+      '100px',
+      '100px',
+      true,
+      'center'
+    ),
     createRow('method', '请求方法', false, '50px', '80px', true, 'center'),
     createRow('code', '响应码', false, '50px', '80px', true, 'center'),
   ];
 
-  const { routeService, routeTrace, routeFailed } = useSelector(state => {
+  const { routeService, routeTrace, pageSize, pageNum } = useSelector(state => {
     return {
       routeService: state.Route.routeService,
       routeTrace: state.Route.routeTrace,
-      routeFailed: state.Route.routeFailed,
+      pageSize: state.Route.pageSize,
+      pageNum: state.Route.pageNum,
     };
   });
 
@@ -158,7 +206,13 @@ export default function ServiceRequest(props) {
         currentAPI
       )
     );
-  }, [currentAPI]);
+  }, [currentAPI, start, end]);
+
+  const handleRequestSort = (event, property) => {
+    const isAsc = orderBy === property && order === 'asc';
+    setOrder(isAsc ? 'desc' : 'asc');
+    setOrderBy(property);
+  };
 
   const find = (tags, target) => {
     for (const tag of tags) {
@@ -171,8 +225,7 @@ export default function ServiceRequest(props) {
 
   const visibleRows = useMemo(() => {
     if (!routeTrace) return [];
-    console.log(routeTrace);
-    return routeTrace.map(item => {
+    const traceData = routeTrace.map(item => {
       return {
         request: find(item.trace.spans[0].tags, 'http.url'),
         length: item.trace.spans.length,
@@ -184,7 +237,12 @@ export default function ServiceRequest(props) {
         code: find(item.trace.spans[0].tags, 'http.status_code'),
       };
     });
-  }, [routeTrace]);
+    setCount(traceData.length);
+    return stableSort(traceData, getComparator(order, orderBy)).slice(
+      (pageNum - 1) * pageSize,
+      (pageNum - 1) * pageSize + pageSize
+    );
+  }, [routeTrace, pageNum, pageSize, order, orderBy]);
 
   const visibleAPI = useMemo(() => {
     if (!routeService) return [];
@@ -199,6 +257,16 @@ export default function ServiceRequest(props) {
       setCurrentAPI(visibleAPI[0].api);
     }
   }, [visibleAPI]);
+
+  //改变每页的数量
+  const handlePerPageChange = pageSize => {
+    dispatch({ type: CHANGE_PAGE_SIZE, data: pageSize });
+  };
+
+  //改变页码
+  const handlePageChange = (_event, newPage) => {
+    dispatch({ type: CHANGE_PAGE_NUM, data: newPage });
+  };
 
   const handleSearchInputChange = e => {
     setApiSearchValue(e.target.value);
@@ -501,87 +569,99 @@ export default function ServiceRequest(props) {
       </Stack>
       <Stack direction='row' sx={{ mt: '20px' }} spacing={2}>
         {/* 左侧api列表 */}
-        <Stack direction='column' spacing={1}>
-          {visibleAPI.map((api, index) => {
-            return (
-              <Stack
-                sx={{
-                  padding: '8px 20px',
-                  width: '200px',
-                  height: '52px',
-                  borderRadius: '4px',
-                  bgcolor: currentAPI === api.api ? '#55bc8a' : '#FFFFFF',
-                  color: currentAPI === api.api ? '#FFFFFF' : '#242E42',
-                  '&:hover': {
-                    bgcolor: '#55bc8a',
-                    color: '#FFFFFF',
-                  },
-                  cursor: 'pointer',
-                  overflow: 'hidden',
-                  textOverflow: 'ellipsis',
-                  whiteSpace: 'nowrap',
-                }}
-                onClick={handleApiChange.bind(this, api.api)}
-                direction='row'
-                alignItems='center'
-                spacing={2.5}
-              >
-                <Box>{currentAPI === api.api ? <WhiteAPI /> : <API />}</Box>
-
-                <Box
+        <Box
+          sx={{
+            maxHeight: '660px',
+            overflowY: 'auto',
+          }}
+        >
+          <Stack direction='column' spacing={1} >
+            {visibleAPI.map((api, index) => {
+              return (
+                <Stack
                   sx={{
-                    width: '100%',
+                    padding: '8px 20px',
+                    width: '200px',
+                    height: '52px',
+                    borderRadius: '4px',
+                    bgcolor: currentAPI === api.api ? '#55bc8a' : '#FFFFFF',
+                    color: currentAPI === api.api ? '#FFFFFF' : '#242E42',
+                    '&:hover': {
+                      bgcolor: '#55bc8a',
+                      color: '#FFFFFF',
+                    },
+                    cursor: 'pointer',
                     overflow: 'hidden',
                     textOverflow: 'ellipsis',
                     whiteSpace: 'nowrap',
                   }}
+                  onClick={handleApiChange.bind(this, api.api)}
+                  direction='row'
+                  alignItems='center'
+                  spacing={2.5}
                 >
+                  <Box>{currentAPI === api.api ? <WhiteAPI /> : <API />}</Box>
+
                   <Box
                     sx={{
-                      fontSize: '12px',
-                      fontFamily: fontFamily,
-                      fontStyle: 'normal',
-                      fontWeight: 700,
-                      lineHeight: 1.67,
-                      color: '#242e42',
+                      width: '100%',
                       overflow: 'hidden',
                       textOverflow: 'ellipsis',
                       whiteSpace: 'nowrap',
                     }}
                   >
-                    {api.api}
+                    <Box
+                      sx={{
+                        fontSize: '12px',
+                        fontFamily: fontFamily,
+                        fontStyle: 'normal',
+                        fontWeight: 700,
+                        lineHeight: 1.67,
+                        color: '#242e42',
+                        overflow: 'hidden',
+                        textOverflow: 'ellipsis',
+                        whiteSpace: 'nowrap',
+                      }}
+                    >
+                      {api.api}
+                    </Box>
+                    <Box
+                      sx={{
+                        fontSize: '12px',
+                        fontFamily: fontFamily,
+                        fontStyle: 'normal',
+                        fontWeight: 400,
+                        lineHeight: 1.67,
+                        color: '#79879c',
+                      }}
+                    >
+                      API
+                    </Box>
                   </Box>
-                  <Box
-                    sx={{
-                      fontSize: '12px',
-                      fontFamily: fontFamily,
-                      fontStyle: 'normal',
-                      fontWeight: 400,
-                      lineHeight: 1.67,
-                      color: '#79879c',
-                    }}
-                  >
-                    API
-                  </Box>
-                </Box>
-              </Stack>
-            );
-          })}
-        </Stack>
+                </Stack>
+              );
+            })}
+          </Stack>
+        </Box>
 
         {/* 右侧请求详情 */}
-        <Box sx={{maxWidth: "calc(100% - 256px)"}}>
-          <StyledTableContainer
-            sx={{ bgcolor: '#FFF' }}
-          >
+        <Box sx={{ width: 'calc(100% - 256px)' }}>
+          <StyledTableContainer sx={{ bgcolor: '#FFF', width: '100%' }}>
             <Table
               stickyHeader
               size='small'
               sx={{
                 tableLayout: 'auto',
+                width: '100%',
               }}
             >
-              <StyledTableHead headRow={headRow} selectAll={false} />
+              <StyledTableHead
+                headRow={headRow}
+                selectAll={false}
+                order={order}
+                orderBy={orderBy}
+                onRequestSort={handleRequestSort}
+              />
 
               <TableBody>
                 {!loading &&
@@ -686,7 +766,7 @@ export default function ServiceRequest(props) {
                     );
                   })
                 ) : !loading ? (
-                  <TableRow style={{ height: '120px' }}>
+                  <TableRow style={{ height: '220px' }}>
                     <TableCell
                       colSpan={6}
                       sx={{
@@ -696,7 +776,7 @@ export default function ServiceRequest(props) {
                         fontStyle: 'normal',
                       }}
                     >
-                      There are no results
+                      There are no results...
                     </TableCell>
                   </TableRow>
                 ) : (
@@ -705,6 +785,18 @@ export default function ServiceRequest(props) {
               </TableBody>
             </Table>
           </StyledTableContainer>
+          <StyledTableFooter
+            pageNum={pageNum}
+            pageSize={pageSize}
+            // perPageList={[]}
+            count={count}
+            handlePerPageChange={handlePerPageChange}
+            handlePageChange={handlePageChange}
+            sx={{
+              pt: '12px',
+              pb: '12px',
+            }}
+          />
         </Box>
       </Stack>
     </KubeSimpleCard>

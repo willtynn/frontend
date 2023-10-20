@@ -14,6 +14,9 @@ export const UPDATE_ROUTE_TRACE_DETAIL = "UPDATE_ROUTE_TRACE_DETAIL";
 export const UPDATE_FAILED = "UPDATE_FAILED";
 
 export const CLEAR_ROUTE_TRACE = "CLEAR_ROUTE_TRACE";
+export const CHANGE_PAGE_SIZE = 'CHANGE_REQUEST_OF_SERVICE_PAGE_SIZE';
+export const CHANGE_PAGE_NUM = 'CHANGE_REQUEST_OF_SERVICE_PAGE_NUM';
+
 
 
 export function getRouteService(start, end) {
