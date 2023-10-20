@@ -238,6 +238,7 @@ export default function Information(props) {
                           maxWidth: item.maxWidth,
                           minWidth: item.minWidth,
                         }}
+                        key={item.id}
                       >
                         {service.idleResource[item.id]}
                       </StyledTableBodyCell>

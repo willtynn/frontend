@@ -53,6 +53,7 @@ export function StyledPopover(props) {
               justifyContent='flex-start'
               alignItems='center'
               spacing={1}
+              key={index}
             >
               {value[0]}
               <Box
