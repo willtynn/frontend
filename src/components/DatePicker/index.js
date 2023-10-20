@@ -39,7 +39,6 @@ export function KubeDatePicker(props) {
           components={{
             OpenPickerIcon: Calendar,
           }}
-          // openPickerIcon={Calendar}
           value={value}
           onChange={newValue => setValue(newValue)}
         />

@@ -35,7 +35,6 @@ export function StyledPopover(props) {
           bgcolor: '#242e42',
           fontSize: '12px',
           fontFamily: fontFamily,
-          border
         }}
       >
         {items.map((value, index) => {

@@ -1,6 +1,16 @@
 import { useState, useEffect, useMemo } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { Stack, Box, InputAdornment, Tooltip, Popover } from '@mui/material';
+import {
+  Stack,
+  Box,
+  InputAdornment,
+  Tooltip,
+  Popover,
+  Table,
+  TableBody,
+  TableRow,
+  TableCell,
+} from '@mui/material';
 import { SmallLightFont, SuperLargeBoldFont } from '@/components/Fonts';
 import {
   OutlinedButton,
@@ -16,6 +26,7 @@ import {
   StyledTableRowCell,
   StyledTableBox,
   StyledTableContainer,
+  StyledTableHead,
 } from '@/components/DisplayTable';
 import { KubeAdornmentTextField } from '../../../../components/Input';
 import PolylineIcon from '@mui/icons-material/Polyline';
@@ -35,8 +46,13 @@ import {
 } from '../../../Cluster/deploy/ServiceStatusTable';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
-import { getRouteService, UPDATE_ROUTE_SERVICE } from '@/actions/routeAction';
+import {
+  getRouteService,
+  UPDATE_ROUTE_SERVICE,
+  getRouteTrace,
+} from '@/actions/routeAction';
 import API from '@/assets/API.svg';
+import WhiteAPI from '@/assets/WhiteAPI.svg';
 import Watch from '@/assets/Watch.svg';
 import dayjs from 'dayjs';
 import ArrowDropUpIcon from '@mui/icons-material/ArrowDropUp';
@@ -62,6 +78,30 @@ const RangeCandidate = [
   ['最近7天', -7, 'day'],
 ];
 
+function createRow(
+  id,
+  label,
+  isOrder = true,
+  minWidth = '110px',
+  maxWidth = '220px',
+  show = true,
+  align = 'center',
+  colSpan = 1,
+  rowSpan = 1
+) {
+  return {
+    id,
+    label,
+    isOrder,
+    minWidth,
+    maxWidth,
+    show,
+    align,
+    colSpan,
+    rowSpan,
+  };
+}
+
 export default function ServiceRequest(props) {
   const { service } = props;
 
@@ -73,10 +113,29 @@ export default function ServiceRequest(props) {
   const dispatch = useDispatch();
   const [rangeSelectAnchorEl, setRangeSelectAnchorEl] = useState(null);
   const rangeSelectOpen = Boolean(rangeSelectAnchorEl);
+  const [loading, setLoading] = useState(false);
+
+  const [currentAPI, setCurrentAPI] = useState('');
+
+  const headRow = [
+    createRow('request', '请求', false, '200px', '400px', true, 'left'),
+    createRow('length', '链路长度', false, '50px', '80px', true, 'center'),
+    createRow('startTime', '开始时间', false, '100px', '100px', true, 'center'),
+    createRow('responseTime','响应时间',false,'100px','100px',true,'center'),
+    createRow('method', '请求方法', false, '50px', '80px', true, 'center'),
+    createRow('code', '响应码', false, '50px', '80px', true, 'center'),
+  ];
+
+  const { routeService, routeTrace, routeFailed } = useSelector(state => {
+    return {
+      routeService: state.Route.routeService,
+      routeTrace: state.Route.routeTrace,
+      routeFailed: state.Route.routeFailed,
+    };
+  });
 
   useEffect(() => {
     dispatch(getRouteService(start.valueOf(), end.valueOf()));
-
     return () => dispatch({ type: UPDATE_ROUTE_SERVICE, data: [] });
   }, []);
 
@@ -84,9 +143,62 @@ export default function ServiceRequest(props) {
     if (rangeIndex > 11) {
       return;
     }
-    setStart(dayjs().add(RangeCandidate[rangeIndex][1], RangeCandidate[rangeIndex][2]));
+    setStart(
+      dayjs().add(RangeCandidate[rangeIndex][1], RangeCandidate[rangeIndex][2])
+    );
     setEnd(dayjs());
   }, [rangeIndex]);
+
+  useEffect(() => {
+    dispatch(
+      getRouteTrace(
+        start.valueOf(),
+        end.valueOf(),
+        'route-control-service.cloud-collaboration-platform',
+        currentAPI
+      )
+    );
+  }, [currentAPI]);
+
+  const find = (tags, target) => {
+    for (const tag of tags) {
+      if (tag.key === target) {
+        return tag.value;
+      }
+    }
+    return '';
+  };
+
+  const visibleRows = useMemo(() => {
+    if (!routeTrace) return [];
+    console.log(routeTrace);
+    return routeTrace.map(item => {
+      return {
+        request: find(item.trace.spans[0].tags, 'http.url'),
+        length: item.trace.spans.length,
+        startTime: item.time,
+        responseTime: item.trace.spans
+          .map(span => span.duration)
+          .reduce((a, b) => a + b, 0),
+        method: find(item.trace.spans[0].tags, 'http.method'),
+        code: find(item.trace.spans[0].tags, 'http.status_code'),
+      };
+    });
+  }, [routeTrace]);
+
+  const visibleAPI = useMemo(() => {
+    if (!routeService) return [];
+    return routeService.filter(item => {
+      return true;
+      // return item.service === service.metadata.name;
+    });
+  }, [routeService]);
+
+  useEffect(() => {
+    if (visibleAPI.length > 0) {
+      setCurrentAPI(visibleAPI[0].api);
+    }
+  }, [visibleAPI]);
 
   const handleSearchInputChange = e => {
     setApiSearchValue(e.target.value);
@@ -113,6 +225,10 @@ export default function ServiceRequest(props) {
 
   const handleRangeButtonClick = index => {
     setRangeIndex(index);
+  };
+
+  const handleApiChange = api => {
+    setCurrentAPI(api);
   };
 
   return (
@@ -276,6 +392,7 @@ export default function ServiceRequest(props) {
           </Box>
         </Stack>
       </Popover>
+
       <Stack direction='row' spacing={1.5} justifyContent='space-between'>
         {/* 搜索框 */}
         <KubeAdornmentTextField
@@ -381,6 +498,214 @@ export default function ServiceRequest(props) {
         >
           <RefreshIcon fontSize='small' />
         </EclipseTransparentButton>
+      </Stack>
+      <Stack direction='row' sx={{ mt: '20px' }} spacing={2}>
+        {/* 左侧api列表 */}
+        <Stack direction='column' spacing={1}>
+          {visibleAPI.map((api, index) => {
+            return (
+              <Stack
+                sx={{
+                  padding: '8px 20px',
+                  width: '200px',
+                  height: '52px',
+                  borderRadius: '4px',
+                  bgcolor: currentAPI === api.api ? '#55bc8a' : '#FFFFFF',
+                  color: currentAPI === api.api ? '#FFFFFF' : '#242E42',
+                  '&:hover': {
+                    bgcolor: '#55bc8a',
+                    color: '#FFFFFF',
+                  },
+                  cursor: 'pointer',
+                  overflow: 'hidden',
+                  textOverflow: 'ellipsis',
+                  whiteSpace: 'nowrap',
+                }}
+                onClick={handleApiChange.bind(this, api.api)}
+                direction='row'
+                alignItems='center'
+                spacing={2.5}
+              >
+                <Box>{currentAPI === api.api ? <WhiteAPI /> : <API />}</Box>
+
+                <Box
+                  sx={{
+                    width: '100%',
+                    overflow: 'hidden',
+                    textOverflow: 'ellipsis',
+                    whiteSpace: 'nowrap',
+                  }}
+                >
+                  <Box
+                    sx={{
+                      fontSize: '12px',
+                      fontFamily: fontFamily,
+                      fontStyle: 'normal',
+                      fontWeight: 700,
+                      lineHeight: 1.67,
+                      color: '#242e42',
+                      overflow: 'hidden',
+                      textOverflow: 'ellipsis',
+                      whiteSpace: 'nowrap',
+                    }}
+                  >
+                    {api.api}
+                  </Box>
+                  <Box
+                    sx={{
+                      fontSize: '12px',
+                      fontFamily: fontFamily,
+                      fontStyle: 'normal',
+                      fontWeight: 400,
+                      lineHeight: 1.67,
+                      color: '#79879c',
+                    }}
+                  >
+                    API
+                  </Box>
+                </Box>
+              </Stack>
+            );
+          })}
+        </Stack>
+
+        {/* 右侧请求详情 */}
+        <Box sx={{maxWidth: "calc(100% - 256px)"}}>
+          <StyledTableContainer
+            sx={{ bgcolor: '#FFF' }}
+          >
+            <Table
+              stickyHeader
+              size='small'
+              sx={{
+                tableLayout: 'auto',
+              }}
+            >
+              <StyledTableHead headRow={headRow} selectAll={false} />
+
+              <TableBody>
+                {!loading &&
+                visibleRows !== null &&
+                visibleRows.length !== 0 ? (
+                  visibleRows.map((row, index) => {
+                    return (
+                      <TableRow
+                        key={row.id + '' + index}
+                        aria-checked={false}
+                        sx={{
+                          '&:last-child td, &:last-child th': {
+                            border: 0,
+                          },
+                          fontWeight: 600,
+                          maxWidth: '110px',
+                          position: 'sticky',
+                          left: 0,
+                          zIndex: 6,
+                        }}
+                        selected={false}
+                      >
+                        <StyledTableBodyCell
+                          align={'left'}
+                          sx={{
+                            padding: '6px 16px !important',
+                            minWidth: headRow[0].minWidth,
+                            maxWidth: headRow[0].maxWidth,
+                          }}
+                        >
+                          <Box>
+                            <Tooltip title={row.request}>
+                              <Box
+                                component='div'
+                                sx={{
+                                  textOverflow: 'ellipsis',
+                                  whiteSpace: 'nowrap',
+                                  overflow: 'hidden',
+                                }}
+                              >
+                                {row.request}
+                              </Box>
+                            </Tooltip>
+                          </Box>
+                        </StyledTableBodyCell>
+
+                        <StyledTableBodyCell
+                          align={'center'}
+                          sx={{
+                            display: headRow[1].show ? 'table-cell' : 'none',
+                            minWidth: headRow[0].minWidth,
+                            maxWidth: headRow[0].maxWidth,
+                          }}
+                        >
+                          {row.length}
+                        </StyledTableBodyCell>
+
+                        <StyledTableBodyCell
+                          align={'center'}
+                          sx={{
+                            display: headRow[2].show ? 'table-cell' : 'none',
+                            minWidth: headRow[0].minWidth,
+                            maxWidth: headRow[0].maxWidth,
+                          }}
+                        >
+                          {row.startTime}
+                        </StyledTableBodyCell>
+
+                        <StyledTableBodyCell
+                          align={'center'}
+                          sx={{
+                            display: headRow[3].show ? 'table-cell' : 'none',
+                            minWidth: headRow[0].minWidth,
+                            maxWidth: headRow[0].maxWidth,
+                          }}
+                        >
+                          {row.responseTime}
+                        </StyledTableBodyCell>
+
+                        <StyledTableBodyCell
+                          align={'center'}
+                          sx={{
+                            display: headRow[4].show ? 'table-cell' : 'none',
+                            minWidth: headRow[0].minWidth,
+                            maxWidth: headRow[0].maxWidth,
+                          }}
+                        >
+                          {row.method}
+                        </StyledTableBodyCell>
+
+                        <StyledTableBodyCell
+                          align={'center'}
+                          sx={{
+                            display: headRow[5].show ? 'table-cell' : 'none',
+                            minWidth: headRow[0].minWidth,
+                            maxWidth: headRow[0].maxWidth,
+                          }}
+                        >
+                          {row.code}
+                        </StyledTableBodyCell>
+                      </TableRow>
+                    );
+                  })
+                ) : !loading ? (
+                  <TableRow style={{ height: '120px' }}>
+                    <TableCell
+                      colSpan={6}
+                      sx={{
+                        textAlign: 'center',
+                        fontSize: '20px',
+                        fontFamily: fontFamily,
+                        fontStyle: 'normal',
+                      }}
+                    >
+                      There are no results
+                    </TableCell>
+                  </TableRow>
+                ) : (
+                  <div></div>
+                )}
+              </TableBody>
+            </Table>
+          </StyledTableContainer>
+        </Box>
       </Stack>
     </KubeSimpleCard>
   );
