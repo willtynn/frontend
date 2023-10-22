@@ -166,7 +166,11 @@ export default function ServiceRequest(props) {
 
   useEffect(() => {
     dispatch(getRouteService(start.valueOf(), end.valueOf()));
-    return () => dispatch({ type: UPDATE_ROUTE_SERVICE, data: [] });
+    return () => {
+      dispatch({ type: UPDATE_ROUTE_SERVICE, data: [] });
+      dispatch({ type: CHANGE_PAGE_SIZE, data: 10 });
+      dispatch({ type: CHANGE_PAGE_NUM, data: 1 });
+    };
   }, []);
 
   useEffect(() => {
@@ -708,8 +712,8 @@ export default function ServiceRequest(props) {
                           align={'center'}
                           sx={{
                             display: headRow[1].show ? 'table-cell' : 'none',
-                            minWidth: headRow[0].minWidth,
-                            maxWidth: headRow[0].maxWidth,
+                            minWidth: headRow[1].minWidth,
+                            maxWidth: headRow[1].maxWidth,
                           }}
                         >
                           {row.length}
@@ -719,8 +723,8 @@ export default function ServiceRequest(props) {
                           align={'center'}
                           sx={{
                             display: headRow[2].show ? 'table-cell' : 'none',
-                            minWidth: headRow[0].minWidth,
-                            maxWidth: headRow[0].maxWidth,
+                            minWidth: headRow[2].minWidth,
+                            maxWidth: headRow[2].maxWidth,
                           }}
                         >
                           {formatDatetimeString(row.startTime)}
@@ -730,8 +734,8 @@ export default function ServiceRequest(props) {
                           align={'center'}
                           sx={{
                             display: headRow[3].show ? 'table-cell' : 'none',
-                            minWidth: headRow[0].minWidth,
-                            maxWidth: headRow[0].maxWidth,
+                            minWidth: headRow[3].minWidth,
+                            maxWidth: headRow[3].maxWidth,
                           }}
                         >
                           {calculateDuration(row.responseTime)}
@@ -741,8 +745,8 @@ export default function ServiceRequest(props) {
                           align={'center'}
                           sx={{
                             display: headRow[4].show ? 'table-cell' : 'none',
-                            minWidth: headRow[0].minWidth,
-                            maxWidth: headRow[0].maxWidth,
+                            minWidth: headRow[4].minWidth,
+                            maxWidth: headRow[4].maxWidth,
                           }}
                         >
                           {row.method}
@@ -752,8 +756,8 @@ export default function ServiceRequest(props) {
                           align={'center'}
                           sx={{
                             display: headRow[5].show ? 'table-cell' : 'none',
-                            minWidth: headRow[0].minWidth,
-                            maxWidth: headRow[0].maxWidth,
+                            minWidth: headRow[5].minWidth,
+                            maxWidth: headRow[5].maxWidth,
                           }}
                         >
                           {row.code}
