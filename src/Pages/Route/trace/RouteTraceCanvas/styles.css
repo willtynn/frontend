@@ -1,0 +1,31 @@
+.clusters rect {
+  fill: #00ffd0;
+  stroke: #999;
+  stroke-width: 1.5px;
+}
+
+text {
+  font-weight: 300;
+  font-family: Open Sans;
+  font-size: 14px;
+}
+
+.trace_node {
+  max-width: 300px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.tooltip {
+  opacity: 0;
+  display: none;
+  position: absolute;
+  font-size: 12px;
+  text-align: center;
+  background-color: white;
+  border-radius: 3px;
+  box-shadow: rgb(174, 174, 174) 0px 0px 10px;
+  cursor: pointer;
+  padding: 10px;
+  z-index: 1000;
+}

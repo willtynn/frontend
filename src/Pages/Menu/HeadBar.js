@@ -68,7 +68,7 @@ export function HeadBar() {
         }}
       >
         <Grid container spacing={0}>
-          <Grid xs={3}>
+          <Grid xs={3} item>
             <Stack
               direction='row'
               spacing={2}
@@ -104,7 +104,7 @@ export function HeadBar() {
             </Stack>
           </Grid>
 
-          <Grid xs={6}>
+          <Grid xs={6} item>
             <Stack
               direction='row'
               spacing={6}
@@ -138,7 +138,7 @@ export function HeadBar() {
         }}
       />
 
-      <Box sx={{ backgroundColor: '#eff4f9', width: 'calc(100%)' }}>
+      <Box sx={{ backgroundColor: '#eff4f9', width: 'calc(100%)', fontFamily: fontFamily }}>
         <Box sx={{ display: 'block' }}>
           <Box sx={{ padding: '20px' }}>
             <Outlet />

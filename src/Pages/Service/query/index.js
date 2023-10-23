@@ -292,8 +292,8 @@ export default function ServiceQuery() {
   });
 
   useEffect(() => {
-    // dispatch(searchServiceById(""));
-    dispatch({ type: UPDATE_SEARCH_SERVICE, data: fakeInfo });
+    dispatch(searchServiceById(""));
+    // dispatch({ type: UPDATE_SEARCH_SERVICE, data: fakeInfo });
     return () => dispatch({ type: UPDATE_SEARCH_SERVICE, data: null });
   }, []);
 

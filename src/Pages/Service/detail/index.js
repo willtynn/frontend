@@ -18,19 +18,27 @@ import { UPDATE_SEARCH_SERVICE } from '@/actions/serviceAction';
 import {
   searchServiceById,
   searchServiceByVersion,
+  searchServiceExactlyById
 } from '@/actions/serviceAction';
 import { checkVersionFormat } from '@/utils/commonUtils';
 import { fontFamily } from '@/utils/commonUtils';
 import GeneralInfo from './GeneralInfo';
 import { DetailInfo } from './DetailInfo';
-
+import { useParams } from 'react-router';
 
 export function ServiceDetail() {
+  const { serviceId } = useParams();
+  const dispatch = useDispatch();
+  
+
+  useEffect(() => {
+    dispatch(searchServiceExactlyById(serviceId));
+  }, []);
   return (
     <Stack
       direction='row'
       justifyContent='space-between'
-      alignItems='center'
+      alignItems='flex-start'
     >
       <GeneralInfo />
       <DetailInfo />

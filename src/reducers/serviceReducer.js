@@ -8,6 +8,7 @@ const initState = {
   interfaceDependency: null,
   pageSize: 5,
   pageNum: 1,
+  pods: [],
 }
 
 export default function ServiceReducer(state = initState, action) {
@@ -47,6 +48,11 @@ export default function ServiceReducer(state = initState, action) {
       return {
         ...state,
         pageSize: data
+      }
+    case actions.UPDATE_SEARCH_POD:
+      return {
+        ...state,
+        pods: data
       }
     default:
       return state

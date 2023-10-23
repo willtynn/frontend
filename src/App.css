@@ -3,7 +3,7 @@
 }
 
 html, body{
-  height: 100%;
+  height: 100vh;
 }
 
 div#root {
@@ -38,8 +38,7 @@ div#root {
   /* position: absolute; */
   width: 100%;
   height: 100%;
-  /*overflow-x: hidden;*/
-
+  overflow-x: hidden;
   /* Grey/50 */
   background: #fafafa;
 }

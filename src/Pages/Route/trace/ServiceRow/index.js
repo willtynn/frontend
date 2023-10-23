@@ -12,13 +12,13 @@ import {calculateDuration} from '../functions/func.js'
 
 
 
-const defaultMaxWidth = ['200px', '150px', '30px', '60px', '60px', '60px', '60px', '60px'];
+const defaultminWidth = ['200px', '150px', '30px', '60px', '60px', '60px', '60px', '60px'];
 
 export function ServiceRow(props) {
-  const { key, rowData, onRowClick, selected, maxWidth } = props;
-  let _maxWidth = maxWidth;
-  if (!maxWidth) {
-    _maxWidth = defaultMaxWidth;
+  const { key, rowData, onRowClick, selected, minWidth, showRows } = props;
+  let _minWidth = minWidth;
+  if (!minWidth) {
+    _minWidth = defaultminWidth;
   }
 
   if(rowData)
@@ -35,75 +35,111 @@ export function ServiceRow(props) {
           position: 'sticky',
           backgroundColor: '#FFFFFF',
         }}>
-          <StyledTableBodyCell component="th" scope="row" 
-            sx={{ maxWidth: _maxWidth[0] }}>
-            <Tooltip title={rowData.service} placement="top-end">
-              <SmallLightFont style={{ color: "black", overflow: 'hidden', textOverflow: 'ellipsis' }}>            
-                <>{rowData.service}</>
-              </SmallLightFont>
-            </Tooltip>
-          </StyledTableBodyCell>
-          <StyledTableBodyCell align="center" sx={{ maxWidth: _maxWidth[1] }}>
-            <Tooltip title={rowData.api} placement="top-end">
-              <>{rowData.api}</>
-            </Tooltip>
-          </StyledTableBodyCell>
-          <StyledTableBodyCell align="center" sx={{ maxWidth: _maxWidth[2] }}>
-            <Tooltip title={rowData.count} placement="top-end">
-              <>{rowData.count}</>
-            </Tooltip>
-          </StyledTableBodyCell>
-          <StyledTableBodyCell align="center" sx={{ maxWidth: _maxWidth[3] }}>
-            <Tooltip title={low} placement="top-end">
-              <>{low}</>
-            </Tooltip>
-          </StyledTableBodyCell>
-          <StyledTableBodyCell align="center" sx={{ maxWidth: _maxWidth[4] }}>
-            <Tooltip title={percentile50} placement="top-end">
-              <>{percentile50}</>
-            </Tooltip>
-          </StyledTableBodyCell>
-          <StyledTableBodyCell align="center" sx={{ maxWidth: _maxWidth[5] }}>
-            <Tooltip title={percentile95} placement="top-end">
-              <>{percentile95}</>
-            </Tooltip>
-          </StyledTableBodyCell>
-          <StyledTableBodyCell align="center" sx={{ maxWidth: _maxWidth[6] }}>
-            <Tooltip title={percentile99} placement="top-end">
-              <>{percentile99}</>
-            </Tooltip>
-          </StyledTableBodyCell>
-          <StyledTableBodyCell align="center" sx={{ maxWidth: _maxWidth[7] }}>
-            <Tooltip title={high} placement="top-end">
-              <>{high}</>
-            </Tooltip>
-          </StyledTableBodyCell>
+          {
+            (showRows[0]) ? 
+              <StyledTableBodyCell component="th" scope="row" 
+                sx={{ minWidth: _minWidth[0] }}>
+                <Tooltip title={rowData.service} placement="top-end">
+                  <SmallLightFont style={{ color: "black", overflow: 'hidden', textOverflow: 'ellipsis' }}>            
+                    <>{rowData.service}</>
+                  </SmallLightFont>
+                </Tooltip>
+              </StyledTableBodyCell>
+            : <></>
+          }
+          {
+            (showRows[1]) ? 
+              <StyledTableBodyCell align="center" sx={{ minWidth: _minWidth[1] }}>
+                <Tooltip title={rowData.api} placement="top-end">
+                  <>{rowData.api}</>
+                </Tooltip>
+              </StyledTableBodyCell>
+            : <></>
+          }
+          {
+            (showRows[2]) ? 
+              <StyledTableBodyCell align="center" sx={{ minWidth: _minWidth[2] }}>
+                <Tooltip title={rowData.count} placement="top-end">
+                  <>{rowData.count}</>
+                </Tooltip>
+              </StyledTableBodyCell>
+            : <></>
+          }
+          {
+            (showRows[3]) ? 
+              <StyledTableBodyCell align="center" sx={{ minWidth: _minWidth[3] }}>
+                <Tooltip title={low} placement="top-end">
+                  <>{low}</>
+                </Tooltip>
+              </StyledTableBodyCell>
+            : <></>
+          }
+          {
+            (showRows[4]) ? 
+              <StyledTableBodyCell align="center" sx={{ minWidth: _minWidth[4] }}>
+                <Tooltip title={percentile50} placement="top-end">
+                  <>{percentile50}</>
+                </Tooltip>
+              </StyledTableBodyCell>
+            : <></>
+          }
+          {
+            (showRows[5]) ? 
+              <StyledTableBodyCell align="center" sx={{ minWidth: _minWidth[5] }}>
+                <Tooltip title={percentile95} placement="top-end">
+                  <>{percentile95}</>
+                </Tooltip>
+              </StyledTableBodyCell>
+            : <></>
+          }
+          {
+            (showRows[6]) ? 
+              <StyledTableBodyCell align="center" sx={{ minWidth: _minWidth[6] }}>
+                <Tooltip title={percentile99} placement="top-end">
+                  <>{percentile99}</>
+                </Tooltip>
+              </StyledTableBodyCell>
+            : <></>
+          }
+          {
+            (showRows[7]) ? 
+              <StyledTableBodyCell align="center" sx={{ minWidth: _minWidth[7] }}>
+                <Tooltip title={high} placement="top-end">
+                  <>{high}</>
+                </Tooltip>
+              </StyledTableBodyCell>
+            : <></>
+          }
+
         </TableRow>
       </React.Fragment>
     )
   }
   else
+  {
+    //统计列数
+    let num = showRows.reduce((total, item) => {
+      return total + (item & 1);
+    }, 0)
+    let cells = []
+    for(let i = 1; i < num; i++){
+      cells.push(<StyledTableBodyCell align="center" sx={{ minWidth: _minWidth[i], color: "transparent"}}>-</StyledTableBodyCell>)
+    }
     return (
       <React.Fragment>
         <TableRow onClick={onRowClick} hover selected={selected} sx={{
           position: 'sticky',
           backgroundColor: '#FFFFFF',
           }}>
-          <StyledTableBodyCell component="th" scope="row" sx={{ color: "transparent", maxWidth: _maxWidth[3] }}>
+
+          <StyledTableBodyCell component="th" scope="row" sx={{minWidth: _minWidth[0], color: "transparent"}}>
             -
           </StyledTableBodyCell>
-          <StyledTableBodyCell align="center" sx={{ color: "transparent", maxWidth: _maxWidth[3] }}>
-            -
-          </StyledTableBodyCell>
-          <StyledTableBodyCell align="center" sx={{ color: "transparent", maxWidth: _maxWidth[3] }}>
-            -
-          </StyledTableBodyCell>
-          <StyledTableBodyCell align="center" sx={{ color: "transparent", maxWidth: _maxWidth[3] }}>-</StyledTableBodyCell>
-          <StyledTableBodyCell align="center" sx={{ color: "transparent", maxWidth: _maxWidth[3] }}>-</StyledTableBodyCell>
-          <StyledTableBodyCell align="center" sx={{ color: "transparent", maxWidth: _maxWidth[3] }}>-</StyledTableBodyCell>
-          <StyledTableBodyCell align="center" sx={{ color: "transparent", maxWidth: _maxWidth[3] }}>-</StyledTableBodyCell>
-          <StyledTableBodyCell align="center" sx={{ color: "transparent", maxWidth: _maxWidth[3] }}>-</StyledTableBodyCell>
+          {
+            cells
+          }
         </TableRow>
       </React.Fragment>
     )
+  }
 }

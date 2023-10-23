@@ -1,6 +1,6 @@
 export const messages = {
   menu: {
-    clusterMangementDescription: "对多集群进行统一管理。"
+    clusterMangementDescription: "对多集群以及每个集群的基础资源、服务组件和应用资源等的统一管理。"
   },
   common: {
     errorMessage: "{msg}"
@@ -13,7 +13,9 @@ export const messages = {
     interfaceDependencyNotFound: "所查询接口没有相关调用关系...",
     errorMessage: "{msg}",
     searchServiceByIdEmptyError: "所查询ID没有相关服务...",
-    queryError: "查询出错，请重试..."
+    searchServiceByNameVersionError: "未查询到目标服务名称与版本所对应的服务...",
+    queryError: "查询出错，请重试...",
+    podSearchError: "获取容器组出错，请刷新重试..."
   },
   cluster: {
     clustersSearchError: "集群信息获取失败，请刷新页面重试...",
