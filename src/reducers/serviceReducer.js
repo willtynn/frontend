@@ -6,6 +6,8 @@ const initState = {
   dependency: null,
   serviceDependency: null,
   interfaceDependency: null,
+  pageSize: 5,
+  pageNum: 1,
 }
 
 export default function ServiceReducer(state = initState, action) {
@@ -35,6 +37,16 @@ export default function ServiceReducer(state = initState, action) {
       return {
         ...state,
         interfaceDependency: data
+      }
+    case actions.CHANGE_PAGE_NUM:
+      return {
+        ...state,
+        pageNum: data
+      }
+    case actions.CHANGE_PAGE_SIZE:
+      return {
+        ...state,
+        pageSize: data
       }
     default:
       return state

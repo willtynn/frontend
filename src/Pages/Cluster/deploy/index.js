@@ -245,6 +245,7 @@ export default function InstanceDeploy() {
           </Box>
         </Stack>
       </Box>
+      {/* 表格主体 */}
       <ServiceStatusTable
         embeddingButton={
           <OutlinedButton

@@ -196,7 +196,6 @@ export default function ServiceInfoBlock(props) {
                 >
                   <TableHead>
                     <TableRow>
-
                       {headRow.map((item, index) =>
                         <StyledTableRowCell
                           key={item.id}

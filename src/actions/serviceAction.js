@@ -12,6 +12,10 @@ export const UPDATE_INTERFACE_DEPENDENCY = 'UPDATE_INTERFACE_DEPENDENCY';
 
 export const UPDATE_DEPENDENCY = 'UPDATE_DEPENDENCY';
 
+export const CHANGE_PAGE_SIZE = 'CHANGE_SERVICE_PAGE_SIZE';
+
+export const CHANGE_PAGE_NUM = 'CHANGE_SERVICE_PAGE_NUM';
+
 const baseURLLink = 'http://192.168.1.104:31931';
 
 const axios_instance = axios.create({
