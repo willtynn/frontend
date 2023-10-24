@@ -48,6 +48,7 @@ export const messages = {
     containerEmptyError: "请对容器进行设置。",
     imageUrlEmptyError: "请设置容器镜像路径。",
     resourceConflictError: "资源预留不能超过资源限制。",
+    namespacesQueryError: "命名空间列表获取失败...请刷新页面重试。"
   },
   table: {
     rowsPerPage: "每页显示"

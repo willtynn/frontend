@@ -6,6 +6,8 @@ export const DEPLOY_INSTANCE = 'DEPLOY_INSTANCE';
 export const GET_INSTANCES = 'GET_INSTANCES';
 export const CHANGE_PAGE_SIZE = 'CHANGE_INSTANCE_STATUS_PAGE_SIZE';
 export const CHANGE_PAGE_NUM = 'CHANGE_INSTANCE_STATUS_PAGE_NUM';
+export const UPDATE_NAMESPACES = 'UPDATE_NAMESPACES';
+export const UPDATE_CURRENT_NAMESPACE = 'UPDATE_CURRENT_NAMESPACE';
 const baseURLLink = 'http://192.168.1.104:31953';
 
 const axios_instance = axios.create({
@@ -82,3 +84,97 @@ export function deploy(
 }
 
 
+export function getNamaspaces(cluster) {
+  const url = '/instance/namespaces';
+  return async dispatch => {
+    try {
+      const res = await axios_instance.get(
+        url,
+        {
+          params: {
+            cluster: cluster,
+            limit: 1000,
+            page: 1
+          },
+        }
+      );
+      if (res.data.code === 200 || res.data.code === 0) {
+        dispatch({ type: UPDATE_NAMESPACES, data: res.data.data.items });
+      } else if (res.data.code === 1) {
+        dispatch({ type: UPDATE_NAMESPACES, data: [] });
+        dispatch(
+          setSnackbarMessageAndOpen(
+            'instance.namespacesQueryError',
+            {},
+            SEVERITIES.warning
+          )
+        );
+      } else {
+        dispatch({ type: UPDATE_NAMESPACES, data: [] });
+        dispatch(
+          setSnackbarMessageAndOpen(
+            'instance.namespacesQueryError',
+            {},
+            SEVERITIES.warning
+          )
+        );
+      }
+    } catch {
+      dispatch({ type: UPDATE_NAMESPACES, data: [] });
+      dispatch(
+        setSnackbarMessageAndOpen(
+          'instance.namespacesQueryError',
+          {},
+          SEVERITIES.warning
+        )
+      );
+    }
+  };
+}
+
+export function getInstanceStatus(cluster, namespace) {
+  const url = '/instance/status';
+  return async dispatch => {
+    try {
+      const res = await axios_instance.get(
+        url,
+        {
+          params: {
+            cluster: cluster,
+            namespace: namespace
+          },
+        }
+      );
+      if (res.data.code === 200 || res.data.code === 0) {
+        dispatch({ type: GET_INSTANCES, data: res.data.data.items });
+      } else if (res.data.code === 1) {
+        dispatch({ type: GET_INSTANCES, data: [] });
+        dispatch(
+          setSnackbarMessageAndOpen(
+            'instance.namespacesQueryError',
+            {},
+            SEVERITIES.warning
+          )
+        );
+      } else {
+        dispatch({ type: GET_INSTANCES, data: [] });
+        dispatch(
+          setSnackbarMessageAndOpen(
+            'instance.namespacesQueryError',
+            {},
+            SEVERITIES.warning
+          )
+        );
+      }
+    } catch {
+      dispatch({ type: GET_INSTANCES, data: [] });
+      dispatch(
+        setSnackbarMessageAndOpen(
+          'instance.namespacesQueryError',
+          {},
+          SEVERITIES.warning
+        )
+      );
+    }
+  };
+}

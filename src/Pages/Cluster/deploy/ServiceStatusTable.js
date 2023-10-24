@@ -16,7 +16,12 @@ import {
 } from '@mui/material';
 
 import { useDispatch, useSelector } from 'react-redux';
-import { GET_INSTANCES } from '../../../actions/instanceAction';
+import {
+  GET_INSTANCES,
+  getNamaspaces,
+  UPDATE_CURRENT_NAMESPACE,
+  getInstanceStatus,
+} from '../../../actions/instanceAction';
 
 import {
   StyledTableBox,
@@ -305,8 +310,6 @@ const namePattern = new RegExp(/^名称:/);
 
 export default function ServiceStatusTable(props) {
   const { embeddingButton } = props;
-  const [project, setProject] = useState(null);
-  const [projectList, setProjectList] = useState(['neilchao', 'yzq']);
   const [searchList, setSearchList] = useState([]);
   const [loading, setLoading] = useState(false);
   const [tableData, setTableData] = useState([]);
@@ -325,24 +328,36 @@ export default function ServiceStatusTable(props) {
 
   const dispatch = useDispatch();
 
-  const { gottenInstances, pageSize, pageNum } = useSelector(state => {
-    return {
-      gottenInstances: state.Instance.gottenInstances,
-      pageSize: state.Instance.pageSize,
-      pageNum: state.Instance.pageNum,
-    };
-  });
+  const { gottenInstances, pageSize, pageNum, namespaces, currentNamespace } =
+    useSelector(state => {
+      return {
+        gottenInstances: state.Instance.gottenInstances,
+        pageSize: state.Instance.pageSize,
+        pageNum: state.Instance.pageNum,
+        namespaces: state.Instance.namespaces,
+        currentNamespace: state.Instance.currentNamespace,
+      };
+    });
 
   useEffect(() => {
-    dispatch({ type: GET_INSTANCES, data: data });
+    if (localStorage.getItem('current_cluster')) {
+      dispatch(getNamaspaces(localStorage.getItem('current_cluster')));
+    }
   }, []);
 
   useEffect(() => {
-    if (projectList.length < 1) {
-      return;
+    if (namespaces && namespaces.length > 0) {
+      dispatch({ type: UPDATE_CURRENT_NAMESPACE, data: namespaces[0] });
     }
-    // setProject(projectList[0]);
-  }, [projectList]);
+  }, [namespaces]);
+
+  useEffect(() => {
+    // if (localStorage.getItem('current_cluster') && currentNamespace && currentNamespace !== "") {
+    //   dispatch(getInstanceStatus(), currentNamespace)
+    // }
+    
+    dispatch({ type: GET_INSTANCES, data: data });
+  }, [currentNamespace]);
 
   useEffect(() => {
     if (searchList.length == 2) {
@@ -622,6 +637,7 @@ export default function ServiceStatusTable(props) {
           })}
         </Stack>
       </Popover>
+
       <Box
         sx={{
           height: '32px',
@@ -633,12 +649,12 @@ export default function ServiceStatusTable(props) {
           <StyledAutocomplete
             height='32px'
             padding='6px 5px 5px 12px'
-            value={project}
+            value={currentNamespace}
             onChange={(event, newValue) => {
-              setProject(newValue);
+              dispatch({ type: UPDATE_CURRENT_NAMESPACE, data: newValue });
             }}
             id='instance_status_table_autocomplete'
-            options={projectList}
+            options={namespaces}
             sx={{
               width: 300,
               color: '#36435c',
@@ -651,7 +667,7 @@ export default function ServiceStatusTable(props) {
               letterSpacing: 'normal',
             }}
             renderInput={params => (
-              <TextField {...params} placeholder='全部项目' />
+              <TextField {...params} placeholder='全部命名空间' />
             )}
           />
           <ChipTextField
@@ -672,7 +688,7 @@ export default function ServiceStatusTable(props) {
                 lineHeight: 1.67,
                 letterSpacing: 'normal',
                 color: '#36435c',
-                height: "20px"
+                height: '20px',
               },
             }}
             onFocus={handleSearchFocus}
@@ -689,7 +705,7 @@ export default function ServiceStatusTable(props) {
               '& svg': {
                 color: '#3d3b4f',
               },
-              height: "32px"
+              height: '32px',
             }}
           >
             <RefreshIcon />
@@ -704,7 +720,7 @@ export default function ServiceStatusTable(props) {
               '& svg': {
                 color: '#3d3b4f',
               },
-              height: "32px"
+              height: '32px',
             }}
             onClick={handleEyeClick}
           >
@@ -759,10 +775,9 @@ export default function ServiceStatusTable(props) {
                       <Checkbox
                         sx={{
                           bgcolor: 'transparent !important',
-
                         }}
                         disableRipple
-                        size="small"
+                        size='small'
                       />
                     </StyledTableBodyCell>
 
@@ -778,7 +793,7 @@ export default function ServiceStatusTable(props) {
                           style={{
                             height: '30px',
                             lineHeight: '30px',
-                            fontWeight: 600
+                            fontWeight: 600,
                           }}
                         >
                           {row.name}
