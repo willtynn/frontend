@@ -3,7 +3,9 @@ import * as actions from "../actions/instanceAction";
 const initState = {
   gottenInstances: null,
   pageSize: 5,
-  pageNum: 1
+  pageNum: 1,
+  namespaces: [],
+  currentNamespace: null,
 }
 
 export default function InstanceReducer(state = initState, action) {
@@ -23,6 +25,16 @@ export default function InstanceReducer(state = initState, action) {
       return {
         ...state,
         pageSize: data
+      }
+    case actions.UPDATE_NAMESPACES:
+      return {
+        ...state,
+        namespaces: data
+      }
+    case actions.UPDATE_CURRENT_NAMESPACE:
+      return {
+        ...state,
+        currentNamespace: data
       }
     default:
       return state

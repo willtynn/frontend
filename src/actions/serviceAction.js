@@ -315,8 +315,8 @@ export function searchPodsByServiceName(cluster, name) {
         url,
         {
           params: {
-            cluster: "ices104",
-            service: "alexnet",
+            cluster: cluster,
+            service: name,
           },
         },
         // {
