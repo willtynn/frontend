@@ -64,17 +64,20 @@ export default function ResourceStatus(props) {
   });
 
   useEffect(() => {
-    if(service === null) {
+    if (service === null) {
       return;
     }
-    dispatch(searchPodsByServiceName(currrentCluster, service.name));
+    if(localStorage.getItem("current_cluster")) {
+      dispatch(searchPodsByServiceName(currrentCluster, service.name));
+    }
+    
   }, []);
 
   const filtering = () => {
     const tmpPods = JSON.parse(JSON.stringify(pods));
     return tmpPods.filter((pod, index) => {
       return pod.metadata.name.includes(podSearchValue);
-    })
+    });
   };
 
   const visibleRows = useMemo(() => {
@@ -86,8 +89,8 @@ export default function ResourceStatus(props) {
   };
 
   const handleRefresh = () => {
-    setPodSearchValue("");
-    if(service === null) {
+    setPodSearchValue('');
+    if (service === null) {
       return;
     }
     dispatch(searchPodsByServiceName(service.name));
@@ -176,47 +179,77 @@ export default function ResourceStatus(props) {
 
       {/* PODS 列表 */}
       <Stack sx={{ mt: '24px' }} direction='column' spacing={1.5}>
-        {visibleRows.map((pod, index) => {
-          return (
-            <Stack
-              sx={{
-                bgcolor: '#FFFFFF',
-                borderRadius: '4px',
-                padding: '12px',
-                height: '40px',
-                cursor: 'pointer',
-                border: '1px solid #ccd3db',
-              }}
-              direction='row'
-              justifyContent='space-between'
-              alignItems='center'
-              spacing={2}
-            >
-              {/* NAME */}
-              <Stack direction='row' spacing={1}>
-                <Tooltip
-                  PopperProps={{
-                    sx: {
-                      '& .MuiTooltip-tooltip': {
-                        backgroundColor: '#242e42',
+        {visibleRows && visibleRows.length > 0 ? (
+          visibleRows.map((pod, index) => {
+            return (
+              <Stack
+                sx={{
+                  bgcolor: '#FFFFFF',
+                  borderRadius: '4px',
+                  padding: '12px',
+                  height: '40px',
+                  cursor: 'pointer',
+                  border: '1px solid #ccd3db',
+                }}
+                direction='row'
+                justifyContent='space-between'
+                alignItems='center'
+                spacing={2}
+              >
+                {/* NAME */}
+                <Stack direction='row' spacing={1}>
+                  <Tooltip
+                    PopperProps={{
+                      sx: {
+                        '& .MuiTooltip-tooltip': {
+                          backgroundColor: '#242e42',
+                        },
+                        '& .MuiTooltip-arrow': {
+                          color: '#242e42',
+                        },
                       },
-                      '& .MuiTooltip-arrow': {
-                        color: '#242e42',
-                      },
-                    },
-                  }}
-                  title={
-                    <Stack sx={{ padding: '12px' }} spacing={1}>
-                      <Box>{pod.metadata.name}</Box>
-                      <Box>{`状态：${pod.status.phase}`}</Box>
-                    </Stack>
-                  }
-                  placement='top'
-                  arrow
-                >
-                  {IconOfPod(pod.status.phase)}
-                </Tooltip>
+                    }}
+                    title={
+                      <Stack sx={{ padding: '12px' }} spacing={1}>
+                        <Box>{pod.metadata.name}</Box>
+                        <Box>{`状态：${pod.status.phase}`}</Box>
+                      </Stack>
+                    }
+                    placement='top'
+                    arrow
+                  >
+                    {IconOfPod(pod.status.phase)}
+                  </Tooltip>
 
+                  <Stack direction='column'>
+                    <Box
+                      sx={{
+                        fontSize: '12px',
+                        fontFamily: fontFamily,
+                        fontStyle: 'normal',
+                        fontWeight: 700,
+                        lineHeight: 1.67,
+                        color: '#242e42',
+                      }}
+                    >
+                      {pod.metadata.name}
+                    </Box>
+                    <Box
+                      sx={{
+                        fontSize: '12px',
+                        fontFamily: fontFamily,
+                        fontStyle: 'normal',
+                        fontWeight: 400,
+                        lineHeight: 1.67,
+                        color: '#79879c',
+                      }}
+                    >
+                      {`创建于 ${formatDatetimeString(pod.status.startTime)}`}
+                    </Box>
+                  </Stack>
+                </Stack>
+
+                {/* HOST IP */}
                 <Stack direction='column'>
                   <Box
                     sx={{
@@ -228,7 +261,7 @@ export default function ResourceStatus(props) {
                       color: '#242e42',
                     }}
                   >
-                    {pod.metadata.name}
+                    {pod.status.hostIP}
                   </Box>
                   <Box
                     sx={{
@@ -240,73 +273,63 @@ export default function ResourceStatus(props) {
                       color: '#79879c',
                     }}
                   >
-                    {`创建于 ${formatDatetimeString(pod.status.startTime)}`}
+                    主机IP地址
                   </Box>
                 </Stack>
-              </Stack>
 
-              {/* HOST IP */}
-              <Stack direction='column'>
-                <Box
-                  sx={{
-                    fontSize: '12px',
-                    fontFamily: fontFamily,
-                    fontStyle: 'normal',
-                    fontWeight: 700,
-                    lineHeight: 1.67,
-                    color: '#242e42',
-                  }}
-                >
-                  {pod.status.hostIP}
-                </Box>
-                <Box
-                  sx={{
-                    fontSize: '12px',
-                    fontFamily: fontFamily,
-                    fontStyle: 'normal',
-                    fontWeight: 400,
-                    lineHeight: 1.67,
-                    color: '#79879c',
-                  }}
-                >
-                  主机IP地址
-                </Box>
-              </Stack>
+                {/* POD IP */}
+                <Stack direction='column'>
+                  <Box
+                    sx={{
+                      fontSize: '12px',
+                      fontFamily: fontFamily,
+                      fontStyle: 'normal',
+                      fontWeight: 700,
+                      lineHeight: 1.67,
+                      color: '#242e42',
+                    }}
+                  >
+                    {pod.status.podIP}
+                  </Box>
+                  <Box
+                    sx={{
+                      fontSize: '12px',
+                      fontFamily: fontFamily,
+                      fontStyle: 'normal',
+                      fontWeight: 400,
+                      lineHeight: 1.67,
+                      color: '#79879c',
+                    }}
+                  >
+                    容器组IP地址
+                  </Box>
+                </Stack>
 
-              {/* POD IP */}
-              <Stack direction='column'>
-                <Box
-                  sx={{
-                    fontSize: '12px',
-                    fontFamily: fontFamily,
-                    fontStyle: 'normal',
-                    fontWeight: 700,
-                    lineHeight: 1.67,
-                    color: '#242e42',
-                  }}
-                >
-                  {pod.status.podIP}
-                </Box>
-                <Box
-                  sx={{
-                    fontSize: '12px',
-                    fontFamily: fontFamily,
-                    fontStyle: 'normal',
-                    fontWeight: 400,
-                    lineHeight: 1.67,
-                    color: '#79879c',
-                  }}
-                >
-                  容器组IP地址
+                <Box sx={{ padding: '12px 12px 6px 12px' }}>
+                  <KeyboardArrowDownIcon />
                 </Box>
               </Stack>
-
-              <Box sx={{ padding: '12px 12px 6px 12px' }}>
-                <KeyboardArrowDownIcon />
-              </Box>
-            </Stack>
-          );
-        })}
+            );
+          })
+        ) : (
+          <Box
+            sx={{
+              width: "100%",
+              height: "56px",
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              fontSize: '12px',
+              fontFamily: fontFamily,
+              fontStyle: 'normal',
+              fontWeight: 400,
+              lineHeight: 1.67,
+              color: '#242E42',
+            }}
+          >
+            未发现资源
+          </Box>
+        )}
       </Stack>
 
       <Box

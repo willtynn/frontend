@@ -146,7 +146,7 @@ export function getInstanceStatus(cluster, namespace) {
         }
       );
       if (res.data.code === 200 || res.data.code === 0) {
-        dispatch({ type: GET_INSTANCES, data: res.data.data.items });
+        dispatch({ type: GET_INSTANCES, data: res.data.data });
       } else if (res.data.code === 1) {
         dispatch({ type: GET_INSTANCES, data: [] });
         dispatch(

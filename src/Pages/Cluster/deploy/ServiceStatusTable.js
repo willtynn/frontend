@@ -352,11 +352,11 @@ export default function ServiceStatusTable(props) {
   }, [namespaces]);
 
   useEffect(() => {
-    // if (localStorage.getItem('current_cluster') && currentNamespace && currentNamespace !== "") {
-    //   dispatch(getInstanceStatus(), currentNamespace)
-    // }
+    if (localStorage.getItem('current_cluster') && currentNamespace && currentNamespace !== "") {
+      dispatch(getInstanceStatus(localStorage.getItem('current_cluster'), currentNamespace));
+    }
     
-    dispatch({ type: GET_INSTANCES, data: data });
+    // dispatch({ type: GET_INSTANCES, data: data });
   }, [currentNamespace]);
 
   useEffect(() => {
@@ -376,7 +376,8 @@ export default function ServiceStatusTable(props) {
   }, [searchList]);
 
   useEffect(() => {
-    if (gottenInstances === null) {
+    if (gottenInstances === null || !gottenInstances.items) {
+
       return;
     }
     const items = gottenInstances.items;
