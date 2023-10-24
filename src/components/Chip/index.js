@@ -7,6 +7,6 @@ export const CustomDefaultChip = styled(Chip)(() => ({
     border: '1px solid #DFE4E8',
     borderRadius: '6px',
     marginRight: '8px',
-    height: '28px',
+    height: '22px',
   },
 }));
