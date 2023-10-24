@@ -75,6 +75,7 @@ export const StyledTableBodyCell = styled(TableCell)(() => ({
   },
 }));
 
+
 export function StyledTableFooter(props) {
   const {
     pageNum,
@@ -224,7 +225,6 @@ function PageSizePopper(props) {
           direction='column'
           sx={{
             border: '1px solid #FAFAFA',
-
             width: '90px',
             borderRadius: '5px',
             padding: '8px',
@@ -234,7 +234,7 @@ function PageSizePopper(props) {
           onMouseOver={handlePoppernOver}
           onMouseLeave={handlePopperLeave}
         >
-          {pageSizeList.map((value, index) => {
+          {pageSizeList&&pageSizeList.map((value, index) => {
             return (
               <Box
                 sx={{
@@ -354,7 +354,7 @@ export function StyledTableHead(props) {
           <></>
         )}
 
-        {headRow.map((item, index) => {
+        {headRow&&headRow.map((item, index) => {
           if (item.isOrder) {
             return (
               <StyledTableRowCell
