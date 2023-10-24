@@ -176,6 +176,8 @@ export default function Information(props) {
                         }}
                         title={row.path}
                         placement='bottom'
+                        leaveDelay={250}
+                        enterDelay={300}
                       >
                         {row.path}
                       </Tooltip>

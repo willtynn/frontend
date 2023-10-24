@@ -5,7 +5,7 @@ import {
   Stack,
   Typography
 } from '@mui/material';
-import { UPDATE_SEARCH_SERVICE } from '@/actions/serviceAction';
+import { UPDATE_SEARCH_SERVICE, UPDATE_EXACT_SERVICE } from '@/actions/serviceAction';
 import ServiceInfoBlock from '../module/ServiceInfoBlock';
 import { QUERY } from '../module/ServiceInfoBlock';
 import ServiceOverview from '../module/Overview';
@@ -287,7 +287,11 @@ export default function ServiceQuery() {
   useEffect(() => {
     dispatch(searchServiceById(''));
     // dispatch({ type: UPDATE_SEARCH_SERVICE, data: fakeInfo });
-    return () => dispatch({ type: UPDATE_SEARCH_SERVICE, data: null });
+    return () => {
+      dispatch({ type: UPDATE_SEARCH_SERVICE, data: null })
+      dispatch({ type: UPDATE_EXACT_SERVICE, data: null })
+    };
+    
   }, []);
 
   useEffect(() => {
