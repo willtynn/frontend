@@ -371,7 +371,7 @@ export default function ServiceQuery() {
               }}
             >
               {/* 表格主体 */}
-              <ServiceOverview data={fakeInfo} setIndex={setSelectedIndex} selectedIndex={selectedIndex} />
+              <ServiceOverview data={queryResult} setIndex={setSelectedIndex} selectedIndex={selectedIndex} />
               {/* <ServiceOverview data={queryResult} setIndex={setSelectedIndex} selectedIndex={selectedIndex}/> */}
             </Box>
           )}

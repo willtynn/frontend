@@ -347,7 +347,7 @@ export default function ServiceOverview(props) {
     let id=tableData[index]['id'];
     console.log(id);
     console.log(`detail/service/${id}`)
-    navigate(`detail/service/${id}`);
+    navigate(`/detail/service/${id}`);
   };
 
   // service/query左侧表格新 
