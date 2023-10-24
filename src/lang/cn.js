@@ -3,7 +3,8 @@ export const messages = {
     clusterMangementDescription: "对多集群以及每个集群的基础资源、服务组件和应用资源等的统一管理。"
   },
   common: {
-    errorMessage: "{msg}"
+    errorMessage: "{msg}",
+    copyboard: "已复制，请您继续接下来的操作。"
   },
   serviceOverview: {
 
