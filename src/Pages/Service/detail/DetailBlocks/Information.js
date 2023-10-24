@@ -7,7 +7,7 @@ import {
   IconButton,
   TableBody,
 } from '@mui/material';
-import { fontFamily } from '@/utils/commonUtils';
+import { fontFamily, decodeInterfaceSymbol } from '@/utils/commonUtils';
 import { KubeSimpleCard } from '../../../../components/InfoCard';
 import {
   StyledTableBodyCell,
@@ -16,6 +16,9 @@ import {
 } from '@/components/DisplayTable';
 import PolylineIcon from '@mui/icons-material/Polyline';
 import { useNavigate } from 'react-router';
+import { setSnackbarMessageAndOpen } from '@/actions/snackbarAction';
+import { SEVERITIES } from '@/components/CommonSnackbar';
+import { useDispatch } from 'react-redux';
 
 function createRow(
   id,
@@ -44,9 +47,10 @@ function createRow(
 export default function Information(props) {
   const { service } = props;
   const navigate = useNavigate();
+  const dispatch = useDispatch();
 
   const headRow = [
-    createRow('id', '接口ID', false, '50px', '50px', true, 'left'),
+    createRow('id', '接口', false, '40px', '40px', true, 'left'),
     createRow('path', '请求的路径', false, '50px', '50px', true, 'center'),
     createRow(
       'inputSize',
@@ -66,6 +70,8 @@ export default function Information(props) {
       true,
       'center'
     ),
+    createRow('method', '请求方法', false, '50px', '50px', true, 'center'),
+    createRow('info', '描述', false, '50px', '50px', true, 'center'),
     createRow('dependency', '接口依赖', false, '30px', '30px', true, 'center'),
   ];
 
@@ -73,21 +79,25 @@ export default function Information(props) {
     createRow('cpu', 'cpu资源', false, '70px', '70px', true, 'center'),
     createRow('ram', 'ram资源', false, '70px', '70px', true, 'center'),
     createRow('disk', '硬盘资源', false, '70px', '70px', true, 'center'),
-    createRow(
-      'gpuCore',
-      'gpu-core资源',
-      false,
-      '70px',
-      '70px',
-      true,
-      'center'
-    ),
+    createRow('gpuCore', 'gpu-core资源', false, '70px', '70px', true, 'center'),
     createRow('gpuMem', 'gpu内存资源', false, '70px', '70px', true, 'center'),
   ];
 
   const handleInterfaceDependencyClick = id => {
     navigate(`/service/dependency?type=interface&by=0&id=${id}`);
   };
+
+  const handleCopyToClickboard = (text) => {
+    navigator.clipboard.writeText(text);
+    dispatch(
+      setSnackbarMessageAndOpen(
+        'common.copyboard',
+        { },
+        SEVERITIES.success
+      )
+    );
+  }
+
   return (
     <Stack direction='column' spacing={1.5}>
       <KubeSimpleCard title='接口集合'>
@@ -135,19 +145,84 @@ export default function Information(props) {
                     }}
                     selected={false}
                   >
-                    <StyledTableBodyCell align={headRow[0].align}>
-                      {row.id}
+                    <StyledTableBodyCell
+                      align={headRow[0].align}
+                      sx={{
+                        maxWidth: headRow[0].maxWidth,
+                        minWidth: headRow[0].minWidth,
+                      }}
+                    >
+                      {decodeInterfaceSymbol(row.id)[1]}
                     </StyledTableBodyCell>
-                    <StyledTableBodyCell align={headRow[1].align}>
-                      {row.path}
+                    <StyledTableBodyCell
+                      align={headRow[1].align}
+                      sx={{
+                        maxWidth: headRow[1].maxWidth,
+                        minWidth: headRow[1].minWidth,
+                      }}
+                    >
+                      <Tooltip
+                        PopperProps={{
+                          sx: {
+                            '& .MuiTooltip-tooltip': {
+                              backgroundColor: '#242e42',
+                              margin: '0 !important',
+                              overflowWrap: 'break-word',
+                              wordBreak: 'break-all',
+                              cursor: "pointer"
+                            },
+                          },
+                          onClick: handleCopyToClickboard.bind(this, row.path)
+                        }}
+                        title={row.path}
+                        placement='bottom'
+                      >
+                        {row.path}
+                      </Tooltip>
                     </StyledTableBodyCell>
-                    <StyledTableBodyCell align={headRow[2].align}>
+                    <StyledTableBodyCell
+                      align={headRow[2].align}
+                      sx={{
+                        maxWidth: headRow[2].maxWidth,
+                        minWidth: headRow[2].minWidth,
+                      }}
+                    >
                       {row.inputSize}
                     </StyledTableBodyCell>
-                    <StyledTableBodyCell align={headRow[3].align}>
+                    <StyledTableBodyCell
+                      align={headRow[3].align}
+                      sx={{
+                        maxWidth: headRow[3].maxWidth,
+                        minWidth: headRow[3].minWidth,
+                      }}
+                    >
                       {row.outputSize}
                     </StyledTableBodyCell>
-                    <StyledTableBodyCell align={headRow[4].align}>
+                    <StyledTableBodyCell
+                      align={headRow[4].align}
+                      sx={{
+                        maxWidth: headRow[4].maxWidth,
+                        minWidth: headRow[4].minWidth,
+                      }}
+                    >
+                      {row.method}
+                    </StyledTableBodyCell>
+                    <StyledTableBodyCell
+                      align={headRow[5].align}
+                      sx={{
+                        maxWidth: headRow[5].maxWidth,
+                        minWidth: headRow[5].minWidth,
+                      }}
+                    >
+                      {row.info}
+                    </StyledTableBodyCell>
+                    <StyledTableBodyCell
+                      align={headRow[6].align}
+                      sx={{
+                        maxWidth: headRow[6].maxWidth,
+                        minWidth: headRow[6].minWidth,
+                      }}
+                    >
                       <Tooltip title='查看依赖'>
                         <IconButton
                           onClick={() => {
@@ -294,10 +369,14 @@ export default function Information(props) {
                   <StyledTableBodyCell align='left'>
                     处理能力
                   </StyledTableBodyCell>
-                  <StyledTableBodyCell align='center' colSpan={5} sx={{
-                    maxWidth: "350px",
-                    minWidth: "350px"
-                  }}>
+                  <StyledTableBodyCell
+                    align='center'
+                    colSpan={5}
+                    sx={{
+                      maxWidth: '350px',
+                      minWidth: '350px',
+                    }}
+                  >
                     {service && service.desiredCapability}
                   </StyledTableBodyCell>
                   {/* {

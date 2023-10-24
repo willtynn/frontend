@@ -162,6 +162,10 @@ export default function Monitor(props) {
   }, []);
 
   useEffect(() => {
+    dispatch(getRouteService(start.valueOf(), end.valueOf()));
+  }, [start, end]);
+
+  useEffect(() => {
     if (rangeIndex > 11) {
       return;
     }
@@ -178,17 +182,18 @@ export default function Monitor(props) {
   };
 
   const visibleAPI = useMemo(() => {
-    if (!routeService) return [];
+    if (!service || !service.metadata || !routeService) return [];
     const tmpService = routeService.filter(item => {
-      return true;
+      // return true;
       // return item.service === service.metadata.name;
+      return item.service === service.metadata.name && (apiSearchValue==="" || item.api.includes(apiSearchValue));
     });
     setCount(tmpService.length);
     return stableSort(tmpService, getComparator(order, orderBy)).slice(
       (pageNum - 1) * pageSize,
       (pageNum - 1) * pageSize + pageSize
     );
-  }, [routeService, pageNum, pageSize, order, orderBy]);
+  }, [routeService, pageNum, pageSize, order, orderBy, enter]);
 
   const resetParameter = () => {
     setRangeIndex(4);
@@ -212,6 +217,7 @@ export default function Monitor(props) {
 
   const handleRefresh = () => {
     setApiSearchValue('');
+    resetParameter();
     // dispatch(searchPodsByServiceName(service.name));
   };
 
@@ -515,7 +521,7 @@ export default function Monitor(props) {
         </EclipseTransparentButton>
       </Stack>
 
-      {/* 右侧请求详情 */}
+      {/* API详情 */}
       <Box sx={{ width: 'calc(100% - 0px)', mt: '20px' }}>
         <StyledTableContainer sx={{ bgcolor: '#FFF', width: '100%' }}>
           <Table
@@ -596,7 +602,7 @@ export default function Monitor(props) {
                           maxWidth: headRow[2].maxWidth,
                         }}
                       >
-                        {row.low}
+                        {calculateDuration(row.low)}
                       </StyledTableBodyCell>
 
                       <StyledTableBodyCell
@@ -607,7 +613,7 @@ export default function Monitor(props) {
                           maxWidth: headRow[3].maxWidth,
                         }}
                       >
-                        {row.high}
+                        {calculateDuration(row.high)}
                       </StyledTableBodyCell>
 
                       <StyledTableBodyCell
@@ -618,7 +624,7 @@ export default function Monitor(props) {
                           maxWidth: headRow[4].maxWidth,
                         }}
                       >
-                        {row.percentile50}
+                        {calculateDuration(row.percentile50)}
                       </StyledTableBodyCell>
 
                       <StyledTableBodyCell
@@ -629,7 +635,7 @@ export default function Monitor(props) {
                           maxWidth: headRow[5].maxWidth,
                         }}
                       >
-                        {row.percentile95}
+                        {calculateDuration(row.percentile95)}
                       </StyledTableBodyCell>
 
                       <StyledTableBodyCell
@@ -640,7 +646,7 @@ export default function Monitor(props) {
                           maxWidth: headRow[6].maxWidth,
                         }}
                       >
-                        {row.percentile99}
+                        {calculateDuration(row.percentile99)}
                       </StyledTableBodyCell>
                     </TableRow>
                   );

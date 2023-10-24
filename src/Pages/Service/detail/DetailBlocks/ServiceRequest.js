@@ -231,10 +231,10 @@ export default function ServiceRequest(props) {
   }, [routeTrace, pageNum, pageSize, order, orderBy]);
 
   const visibleAPI = useMemo(() => {
-    if (!routeService) return [];
+    if (!service || !service.metadata || !routeService) return [];
     return routeService.filter(item => {
-      return true;
-      // return item.service === service.metadata.name;
+      // return true;
+      return item.service === service.metadata.name;
     });
   }, [routeService]);
 

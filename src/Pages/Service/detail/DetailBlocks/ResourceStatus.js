@@ -64,6 +64,9 @@ export default function ResourceStatus(props) {
   });
 
   useEffect(() => {
+    if(service === null) {
+      return;
+    }
     dispatch(searchPodsByServiceName(currrentCluster, service.name));
   }, []);
 
@@ -84,6 +87,9 @@ export default function ResourceStatus(props) {
 
   const handleRefresh = () => {
     setPodSearchValue("");
+    if(service === null) {
+      return;
+    }
     dispatch(searchPodsByServiceName(service.name));
   };
 

@@ -49,6 +49,9 @@ export default function ClusterSelectModal(props) {
   });
 
   const filtering = () => {
+    if(clusters === null) {
+      return;
+    }
     const tmpClusters = JSON.parse(JSON.stringify(clusters));
     return tmpClusters.filter((cluster, index) => {
       return cluster.id.includes(clusterSearchValue);
