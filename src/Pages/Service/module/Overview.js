@@ -345,8 +345,8 @@ export default function ServiceOverview(props) {
   const handleClickById = index => {
     // let id=tableData[index][0];
     let id=tableData[index]['id'];
-    console.log(id);
-    console.log(`detail/service/${id}`)
+    // console.log(id);
+    // console.log(`detail/service/${id}`)
     navigate(`/detail/service/${id}`);
   };
 
@@ -630,16 +630,20 @@ export default function ServiceOverview(props) {
                           {/* <Task /> */}
                           <ServiceQuery />
                           {/* <button >点击跳转</button> */}
-                          <span
-                            style={{
+                          <Box
+                            sx={{
                               height: '30px',
                               lineHeight: '30px',
                               fontWeight: 600,
+                              cursor: "pointer",
+                              "&:hover": {
+                                color: "#55bc8a"
+                              }
                             }}
                             onClick={handleClickById.bind(this,index)}
                           >
                             {row.id}
-                          </span>
+                          </Box>
                         </Stack>
                       </StyledTableBodyCell>
 

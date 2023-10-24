@@ -1,20 +1,10 @@
 import { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import {
-  TextField,
   Box,
-  Input,
-  FormControl,
-  FormHelperText,
-  InputLabel,
-  Select,
-  MenuItem,
   Stack,
-  Button,
+  Typography
 } from '@mui/material';
-import { BrowserRouter } from 'react-router-dom';
-import { SmallLightFont, SuperLargeBoldFont } from '@/components/Fonts';
-import { OutlinedButton } from '@/components/Button';
 import { UPDATE_SEARCH_SERVICE } from '@/actions/serviceAction';
 import ServiceInfoBlock from '../module/ServiceInfoBlock';
 import { QUERY } from '../module/ServiceInfoBlock';
@@ -24,7 +14,9 @@ import {
   searchServiceByVersion,
 } from '@/actions/serviceAction';
 import { checkVersionFormat } from '@/utils/commonUtils';
-import { fontFamily } from "@/utils/commonUtils";
+import { fontFamily } from '@/utils/commonUtils';
+import { useIntl } from 'react-intl';
+import GeneralService from '@/assets/GeneralService.svg';
 
 export const fakeInfo = [
   {
@@ -282,6 +274,7 @@ export default function ServiceQuery() {
   const [versionFormatError, setVersionFormatError] = useState(false);
   const [selectedIndex, setSelectedIndex] = useState(-1);
   const [serviceName, setServiceName] = useState('');
+  const intl = useIntl();
 
   const dispatch = useDispatch();
 
@@ -292,7 +285,7 @@ export default function ServiceQuery() {
   });
 
   useEffect(() => {
-    dispatch(searchServiceById(""));
+    dispatch(searchServiceById(''));
     // dispatch({ type: UPDATE_SEARCH_SERVICE, data: fakeInfo });
     return () => dispatch({ type: UPDATE_SEARCH_SERVICE, data: null });
   }, []);
@@ -337,60 +330,91 @@ export default function ServiceQuery() {
 
   return (
     // <BrowserRouter>
+    <Box
+      sx={{
+        minHeight: '800px',
+        m: '16px 32px 0px 32px',
+      }}
+    >
       <Box
         sx={{
-          minHeight: '800px',
-          m: '16px 32px 0px 32px',
+          borderRadius: '4px',
+          backgroundColor: '#FFFFFF',
+          padding: '24px 20px',
+          width: 'calc(100% - 40px)',
+          height: '58px',
+          mb: '12px',
         }}
       >
-        <Stack direction='row' spacing={2}>
-          <SuperLargeBoldFont
-            sx={{
-              ml: '12px',
-              fontSize: '32px !important',
-              lineHeight: '54px !important',
-            }}
-          >
-            服务查询
-          </SuperLargeBoldFont>
-        </Stack>
-        <Stack
-          direction='row'
-          spacing={4}
-          sx={{
-            mt: '24px',
-          }}
-        >
-          {queryResult === null ? (
-            <></>
-          ) : (
-            <Box
+        <Stack direction='row' spacing={1}>
+          <GeneralService />
+          <Box>
+            <Typography
               sx={{
-                // maxWidth: queryResult === null ? '100%' : '47.5%',
-                maxWidth: '100%',
+                fontWeight: 600,
+                fontStyle: 'normal',
+                color: '#242e42',
+                textShadow: '0 4px 8px rgba(36,46,66,.1)',
+                fontSize: '24px',
+                lineHeight: '32px',
               }}
             >
-              {/* 表格主体 */}
-              <ServiceOverview data={queryResult} setIndex={setSelectedIndex} selectedIndex={selectedIndex} />
-              {/* <ServiceOverview data={queryResult} setIndex={setSelectedIndex} selectedIndex={selectedIndex}/> */}
-            </Box>
-          )}
-          {queryResult === null ||
-            queryResult.length === 0 ||
-            selectedIndex === -1 ? (
-            <></>
-          ) : (
-            <Box sx={{
+              服务
+            </Typography>
+            <Typography
+              sx={{
+                fontWeight: 400,
+                fontStyle: 'normal',
+                color: '#79879c',
+                fontSize: '12px',
+                lineHeight: 1.67,
+              }}
+            >
+              {intl.messages['serviceOverview.serviceDescription']}
+            </Typography>
+          </Box>
+        </Stack>
+      </Box>
+      <Stack
+        direction='row'
+        spacing={4}
+      >
+        {queryResult === null ? (
+          <></>
+        ) : (
+          <Box
+            sx={{
+              // maxWidth: queryResult === null ? '100%' : '47.5%',
+              maxWidth: '100%',
+            }}
+          >
+            {/* 表格主体 */}
+            <ServiceOverview
+              data={queryResult}
+              setIndex={setSelectedIndex}
+              selectedIndex={selectedIndex}
+            />
+            {/* <ServiceOverview data={queryResult} setIndex={setSelectedIndex} selectedIndex={selectedIndex}/> */}
+          </Box>
+        )}
+        {queryResult === null ||
+        queryResult.length === 0 ||
+        selectedIndex === -1 ? (
+          <></>
+        ) : (
+          <Box
+            sx={{
               maxWidth: '47.5%',
-            }}>
-              {/* <ServiceInfoBlock
+            }}
+          >
+            {/* <ServiceInfoBlock
             data={queryResult[selectedIndex]}
             mode={mode}
             page={QUERY}
           /> */}
-            </Box>
-          )}
-        </Stack>
-      </Box>
+          </Box>
+        )}
+      </Stack>
+    </Box>
   );
 }

@@ -7,7 +7,7 @@ export const messages = {
     copyboard: "已复制，请您继续接下来的操作。"
   },
   serviceOverview: {
-
+    serviceDescription: "服务（Service）提供一种抽象的方法，将运行在容器组（Pod）上的应用程序公开为网络服务。"
   },
   serviceDependency: {
     serviceDependencyNotFound: "所查询服务没有相关调用关系...",
