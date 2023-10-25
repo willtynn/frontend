@@ -56,10 +56,9 @@ export default function ResourceStatus(props) {
 
   const dispatch = useDispatch();
 
-  const { pods, currrentCluster } = useSelector(state => {
+  const { pods } = useSelector(state => {
     return {
-      pods: state.Service.pods,
-      currrentCluster: state.Cluster.currrentCluster,
+      pods: state.Service.pods
     };
   });
 
@@ -68,7 +67,7 @@ export default function ResourceStatus(props) {
       return;
     }
     if(localStorage.getItem("current_cluster")) {
-      dispatch(searchPodsByServiceName(currrentCluster, service.name));
+      dispatch(searchPodsByServiceName(localStorage.getItem("current_cluster"), service.name));
     }
     
   }, []);

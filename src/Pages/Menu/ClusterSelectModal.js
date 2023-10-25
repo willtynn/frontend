@@ -41,10 +41,9 @@ export default function ClusterSelectModal(props) {
   const [enter, setEnter] = useState(0);
   const dispatch = useDispatch();
 
-  const { clusters, currrentCluster } = useSelector(state => {
+  const { clusters } = useSelector(state => {
     return {
-      clusters: state.Cluster.clusters,
-      currrentCluster: state.Cluster.currrentCluster,
+      clusters: state.Cluster.clusters
     };
   });
 

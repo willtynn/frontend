@@ -4,8 +4,7 @@ const initState = {
   clusters: null,
   selectedServer: null,
   selectedServerId: null,
-  selectedInstanceName: null,
-  currrentCluster: "ices104"
+  selectedInstanceName: null
 }
 
 export default function ClusterReducer(state = initState, action) {
@@ -30,11 +29,6 @@ export default function ClusterReducer(state = initState, action) {
       return {
         ...state,
         selectedInstanceName: data
-      }
-    case actions.UPDATE_CURRENT_CLUSTER:
-      return {
-        ...state,
-        currrentCluster: data
       }
     default:
       return state

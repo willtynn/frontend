@@ -46,6 +46,12 @@ export function HeadBar() {
     setl3(l31);
   }, [l31]);
 
+  useEffect(() => {
+    if(!localStorage.getItem("current_cluster")) {
+      localStorage.setItem("current_cluster", "ices104");
+    }
+  }, []);
+
   const styledButton = {
     borderRadius: '100px',
     backgroundColor: 'transparent',

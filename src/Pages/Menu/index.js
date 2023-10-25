@@ -48,6 +48,12 @@ export default function MiniDrawer() {
   const navigate = useNavigate();
 
   useEffect(() => {
+    if(!localStorage.getItem("current_cluster")) {
+      localStorage.setItem("current_cluster", "ices104");
+    }
+  }, []);
+
+  useEffect(() => {
     setl1(l11 || l12 || l13);
   }, [l11, l12, l13]);
 
