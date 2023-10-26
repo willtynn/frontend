@@ -2,6 +2,7 @@ import React from 'react';
 import styled from "@emotion/styled"
 import { fontFamily } from "@/utils/commonUtils";
 import './index.css';
+import {calculateDuration} from '../functions/func.js'
 
 import {
     Card,
@@ -70,27 +71,6 @@ function calculateTimeInterval(stamp){
     return result;
   }
   return 'NaN';
-}
-
-function calculateDuration(duration){
-  //要显示小数点后三位
-  if(duration < 1000){
-    return duration + 'μs';
-  }else if(duration < 1000000){
-    return (duration / 1000).toFixed(3) + 'ms';
-  }else{
-    duration /= 1000000;
-  }
-  if(duration < 60){
-    return duration.toFixed(3) + 's';
-  }else if(duration < 3600){
-    return (duration / 60).toFixed(3) + 'min';
-  }else if(duration < 86400){
-    return (duration / 3600).toFixed(3) + 'h';
-  }else{
-    return (duration / 86400).toFixed(3) + 'd';
-  }
-  //return 'Infinity';
 }
 
 //#endregion

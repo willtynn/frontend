@@ -9,6 +9,7 @@ import RouteTrace from '../Pages/Route/trace';
 import InstanceDeploy from '../Pages/Cluster/deploy';
 import { HeadBar } from '../Pages/Menu/HeadBar';
 import { ServiceDetail } from '../Pages/Service/detail';
+import { RouteTraceInfoPage } from '../Pages/Route/trace/RouteTraceInfoPage';
 
 export default function MyRoute() {
   return (
@@ -16,7 +17,7 @@ export default function MyRoute() {
       <Route path='*' element={<Navigate replace to='cluster/overview' />} />
       <Route path='detail/' element={<HeadBar />}>
         <Route path='service/:serviceId' element={<ServiceDetail />}/>
-
+        <Route path='trace/:start/:end/:traceId' element={<RouteTraceInfoPage />}/>
       </Route>
       <Route path='/' element={<Menu />}>
         <Route path='/' element={<Navigate replace to='cluster/overview' />} />
