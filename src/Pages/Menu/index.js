@@ -25,26 +25,35 @@ import Service16 from '@/assets/Service16.svg';
 import Route16 from '@/assets/Route16.svg';
 
 export default function MiniDrawer() {
+  // 这部分变量用于控制导航列表打开/关闭
   const [verticalOpen1, setVerticalOpen1] = useState(false);
   const [verticalOpen2, setVerticalOpen2] = useState(false);
   const [verticalOpen3, setVerticalOpen3] = useState(false);
+  const [verticalOpen4, setVerticalOpen4] = useState(false);
+  const [verticalOpen5, setVerticalOpen5] = useState(false);
 
+  // 这部分变量用于控制导航列表按钮字体颜色
+  // 集群模块
   const [l1, setl1] = useState(false);
   const [l11, setl11] = useState(false);
   const [l12, setl12] = useState(false);
   const [l13, setl13] = useState(false);
-
+  // 服务模块
   const [l2, setl2] = useState(false);
   const [l21, setl21] = useState(false);
   const [l22, setl22] = useState(false);
-
+  // 路由模块
   const [l3, setl3] = useState(false);
   const [l31, setl31] = useState(false);
-
-  const [clusterSelectOpen, setClusterSelectOpen] = useState(false);
+  // 应用模块
+  const [l4, setl4] = useState(false);
+  const [l41, setl41] = useState(false);
+  // 镜像模块
+  const [l5, setl5] = useState(false);
+  const [l51, setl51] = useState(false);
 
   const intl = useIntl();
-
+  const [clusterSelectOpen, setClusterSelectOpen] = useState(false);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -65,6 +74,14 @@ export default function MiniDrawer() {
     setl3(l31);
   }, [l31]);
 
+  useEffect(() => {
+    setl4(l41);
+  }, [l41]);
+
+  useEffect(() => {
+    setl5(l51);
+  }, [l51]);
+
   const setAllFalse = () => {
     setl1(false);
     setl11(false);
@@ -75,6 +92,10 @@ export default function MiniDrawer() {
     setl22(false);
     setl3(false);
     setl31(false);
+    setl4(false);
+    setl41(false);
+    setl5(false);
+    setl51(false);
   };
   const handleClick1 = () => {
     setVerticalOpen1(!verticalOpen1);
@@ -86,6 +107,14 @@ export default function MiniDrawer() {
 
   const handleClick3 = () => {
     setVerticalOpen3(!verticalOpen3);
+  };
+
+  const handleClick4 = () => {
+    setVerticalOpen4(!verticalOpen4);
+  };
+
+  const handleClick5 = () => {
+    setVerticalOpen5(!verticalOpen5);
   };
 
   const handlelClusterSelectClose = () => {
@@ -393,7 +422,7 @@ export default function MiniDrawer() {
                   <Route16 />
                 </Box>
                 <Box sx={{ ...styledFont, color: l3 ? '#55bc8a' : '#242e42' }}>
-                  路由
+                  路由（待开发）
                 </Box>
                 {verticalOpen3 ? <ExpandLess /> : <ExpandMore />}
               </ListItemButton>
@@ -411,6 +440,76 @@ export default function MiniDrawer() {
                       sx={{ ...styledFont, color: l31 ? '#55bc8a' : '#242e42' }}
                     >
                       路由链路
+                    </Box>
+                  </ListItemButton>
+                </List>
+              </Collapse>
+            </List>
+            <List sx={{ paddingTop: '0px', paddingBottom: '0px' }}>
+              <ListItemButton
+                sx={{
+                  ...styleListButton,
+                  paddingLeft: '12px',
+                }}
+                onClick={handleClick4}
+              >
+                <Box sx={styledIcon}>
+                  <Route16 />
+                </Box>
+                <Box sx={{ ...styledFont, color: l4 ? '#55bc8a' : '#242e42' }}>
+                  应用模块（待开发）
+                </Box>
+                {verticalOpen4 ? <ExpandLess /> : <ExpandMore />}
+              </ListItemButton>
+              <Collapse in={verticalOpen4} timeout='auto' unmountOnExit={true}>
+                <List component='div' disablePadding>
+                  <ListItemButton
+                    sx={styleListButton}
+                    onClick={() => {
+                      setAllFalse();
+                      setl41(true);
+                      navigate('/');
+                    }}
+                  >
+                    <Box
+                      sx={{ ...styledFont, color: l41 ? '#55bc8a' : '#242e42' }}
+                    >
+                      服务能力自动测试
+                    </Box>
+                  </ListItemButton>
+                </List>
+              </Collapse>
+            </List>
+            <List sx={{ paddingTop: '0px', paddingBottom: '0px' }}>
+              <ListItemButton
+                sx={{
+                  ...styleListButton,
+                  paddingLeft: '12px',
+                }}
+                onClick={handleClick5}
+              >
+                <Box sx={styledIcon}>
+                  <Route16 />
+                </Box>
+                <Box sx={{ ...styledFont, color: l5 ? '#55bc8a' : '#242e42' }}>
+                  镜像管理（待开发）
+                </Box>
+                {verticalOpen5 ? <ExpandLess /> : <ExpandMore />}
+              </ListItemButton>
+              <Collapse in={verticalOpen5} timeout='auto' unmountOnExit={true}>
+                <List component='div' disablePadding>
+                  <ListItemButton
+                    sx={styleListButton}
+                    onClick={() => {
+                      setAllFalse();
+                      setl51(true);
+                      navigate('/');
+                    }}
+                  >
+                    <Box
+                      sx={{ ...styledFont, color: l51 ? '#55bc8a' : '#242e42' }}
+                    >
+                      镜像列表
                     </Box>
                   </ListItemButton>
                 </List>
