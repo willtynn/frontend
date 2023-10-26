@@ -113,7 +113,7 @@ function stableSort(array, comparator) {
   return stabilizedThis.map(el => el[0]);
 }
 
-export default function Monitor(props) {
+export default function RequestMonitor(props) {
   const { service } = props;
 
   const [apiSearchValue, setApiSearchValue] = useState('');

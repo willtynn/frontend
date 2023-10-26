@@ -300,7 +300,7 @@ export default function ServiceRequest(props) {
   };
 
   return (
-    <KubeSimpleCard title='请求监控'>
+    <KubeSimpleCard title='服务接口请求'>
       <Popover
         id='instance-status-table-custom-content-popover'
         open={rangeSelectOpen}
