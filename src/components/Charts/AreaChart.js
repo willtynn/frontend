@@ -1,0 +1,90 @@
+import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, Label } from 'recharts';
+import { formatDatetimeString } from '../../utils/commonUtils';
+import { useEffect, useState, useRef } from 'react';
+import { Box } from '@mui/material';
+
+export function TimeAdaptiveAreaChart(props) {
+
+  const { data, keyName, value, width = 500, height = 500, pxGap=120 } = props;
+
+  const [tickNum, setTickNum] = useState(3);
+  const [ticks, setTicks] = useState([]);
+  const chart = useRef(null);
+
+  useEffect(() => {
+    adaptChart();
+  }, []);
+
+  useEffect(() => {
+    if (chart && chart.current && data && data.length > 0) {
+      const intervalNum = tickNum - 1;
+      const dataLength = data.length;
+      if(dataLength >= tickNum) {
+        const dataSliceLength = Math.floor(dataLength / intervalNum);
+        const tmpTicks = [];
+        for(let i = 0; i < intervalNum; i++) {
+          tmpTicks.push(data[i * dataSliceLength][keyName]);
+        }
+        tmpTicks.push(data[data.length - 1][keyName]);
+        setTicks(tmpTicks);
+      } else {
+        setTicks(data.map((record, index) => {
+          return record[keyName];
+        }));
+      }
+    } else {
+      setTicks([]);
+    }
+    
+  }, [tickNum]);
+
+  const adaptChart = () => {
+    if (chart && chart.current) {
+      const clientWidth = chart.current.clientWidth;
+      const tmpTickNum = Math.floor(clientWidth / pxGap);
+      setTickNum(tmpTickNum);
+    }
+  }
+
+  window.onresize = adaptChart;
+
+  
+
+  return (
+    <Box sx={{width: "100%", height: "100%"}} ref={chart}>
+      <ResponsiveContainer width="100%" height="100%" >
+        <AreaChart
+          width={500}
+          height={300}
+          data={data}
+          margin={{
+            top: 30,
+            right: 30,
+            left: 20,
+            bottom: 5,
+          }}
+        >
+          <CartesianGrid strokeDasharray="3 3" />
+          <XAxis
+            dataKey={keyName}
+            ticks={ticks}
+            tickFormatter={(value, index) => {
+              // console.log(value);
+              return formatDatetimeString(value);
+            }}
+          >
+
+          </XAxis>
+
+
+          <YAxis>
+            <Label value="CPU用量 (%)" offset={-25} position="insideTop" />
+          </YAxis>
+          <Tooltip />
+          <Legend />
+          <Area type="monotone" dataKey={value} stroke="#8884d8" activeDot={{ r: 8 }} />
+        </AreaChart>
+      </ResponsiveContainer>
+    </Box>
+  )
+}
