@@ -3,7 +3,6 @@
 import React from "react";
 import { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { useNavigate, useParams } from 'react-router-dom';
 
 import {
   MenuItem,
@@ -14,8 +13,11 @@ import {
   TableHead,
   TableRow,
   Typography,
+  Modal,
+  Slide,
   Popover
 } from "@mui/material"
+import KubeClose from '@/assets/KubeClose.svg';
 import RouteIcon from '@/assets/RouteIcon.svg';
 
 import {
@@ -31,14 +33,26 @@ import {
   StyledTableContainer,
   StyledTableFooter
 } from '@/components/DisplayTable';
+import {
+  LargeBoldFont,
+  NormalFont,
+  NormalFontBlack,
+} from "@/components/Fonts";
 
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
+
 import { fontFamily } from '@/utils/commonUtils';
+
+import { DataRow } from "./DataRow";
 import { ServiceRow } from "./ServiceRow";
+import { RouteTraceCanvas } from "./RouteTraceCanvas";
 import { Loading } from "./Loading";
+
+import { RouteTraceInfoPage } from "./RouteTraceInfoPage";
+
 
 import dayjs from 'dayjs';
 
@@ -72,7 +86,16 @@ const serviceTableHeaders = [
   { key: 'high', align: 'center', text: 'High', minWidth: 60, maxWidth: 60 },
 ];
 
-const serviceNumPerPage = 10;
+const traceTableHeaders = [
+  { key: 'service', align: 'left', text: '请求', minWidth: 350, maxWidth: 350 },
+  { key: 'spanNum', align: 'center', text: '链路长度', minWidth: 85, maxWidth: 85 },
+  { key: 'time', align: 'center', text: '开始时间', minWidth: 150, maxWidth: 150 },
+  { key: 'duration', align: 'center', text: '响应时间', minWidth: 80, maxWidth: 80 },
+  { key: 'status', align: 'center', text: '请求状态', minWidth: 75, maxWidth: 75 },
+];
+
+const serviceNumPerPage = 4;
+const spanNumPerPage = 5;
 //#endregion
 //Constants
 
@@ -81,8 +104,6 @@ export default function RouteTrace() {
 
   //定义-开始
   //#region
-  const navigate = useNavigate();
-
   const [durationSelectIndex, setDurationSelectIndex] = useState(5);
 
   const [startTimeValue, setStartTimeValue] = useState(dayjs().add(-1, 'hour'));
@@ -91,33 +112,46 @@ export default function RouteTrace() {
   const [startTime, setStartTime] = useState(0);
   const [endTime, setEndTime] = useState(0);
 
+  const [detailSpan, setDetailSpan] = useState(null);
   
+  const [traceRow, setTraceRow] = useState([]);
   const [serviceRow, setServiceRow] = useState([]);
 
   const [servicePage, setServicePage] = useState(0);
+  const [tracePage, setTracePage] = useState(0);
   const [selectedServiceIndex, setSelectedServiceIndex] = useState(-1);
+  const [selectedTraceIndex, setSelectedTraceIndex] = useState(-1);
 
+  const [openModal, setOpenModal] = useState(false);
   const [showLoading, setShowLoading] = useState(false);
 
-  const [showSubPage, setShowSubPage] = useState(false);
 
   const [showServiceColumnChooseAnchorEl, setShowServiceColumnChooseAnchorEl] = useState(null);
   const showServiceColumnChooseOpen = Boolean(showServiceColumnChooseAnchorEl);
 
   const [serviceColumnDisplay, setServiceColumnDisplay] = useState([true, true, true, true, true, false, true, true]);
+  //const [traceColumnDisplay, setTraceColumnDisplay] = useState([true, true, true, true, true]);
+
 
 
   const dispatch = useDispatch();
 
   const {
     routeService,
+    routeTrace,
     routeFailed
   } = useSelector(state => {
     return {
       routeService: state.Route.routeService,
+      routeTrace: state.Route.routeTrace,
       routeFailed: state.Route.routeFailed
     };
   });
+
+  const spanVisibleRows = React.useMemo(() => {
+    const tmp = (tracePage - 1) * spanNumPerPage;
+    return routeTrace ? routeTrace.slice(tmp, tmp + spanNumPerPage) : [];
+  }, [routeTrace, tracePage]);
   
   const serviceVisibleRows = React.useMemo(() => {
     const tmp = (servicePage - 1) * serviceNumPerPage;
@@ -129,13 +163,14 @@ export default function RouteTrace() {
 
   //自定义函数-开始
   //#region
-  const changePage = (id, start, end) => {
-    navigate(`/detail/trace/${start}/${end}/${id}`)
-  }
 
   const clearPage = () => {
     setSelectedServiceIndex(-1);
+    setSelectedTraceIndex(-1);
     setServicePage(1);
+    setTracePage(0);
+    setDetailSpan(null);
+    setOpenModal(false);
   }
 
   //#endregion
@@ -188,15 +223,37 @@ export default function RouteTrace() {
   }, [serviceVisibleRows, selectedServiceIndex, serviceColumnDisplay]);
 
   useEffect(() => {
+    if (spanVisibleRows) {
+      let row = spanVisibleRows.map((item, index) => {
+        return <DataRow key={item.traceID}
+          onRowClick={() => handleSpanClick(index)}
+          selected={selectedTraceIndex === index}
+          rowData={{
+            service: item.service,
+            spanNum: item.trace.spans.length,
+            time: item.time,
+            duration: item.trace.spans.map((span) => span.duration).reduce((a, b) => a + b, 0),
+            status: 200
+          }} />;
+      });
+      for(let i = row.length; i < spanNumPerPage; i++)
+      {
+        row.push(<DataRow key={i} onRowClick={() => {}} rowData={null} />);
+      }
+      setTraceRow(row);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [spanVisibleRows, selectedTraceIndex]);
+/*
+  useEffect(() => {
     let now = dayjs();
-    let startTmp = now - 3600000, endTmp = now.valueOf();
-    setStartTime(startTmp);
-    setEndTime(endTmp);
+    setStartTime(now - 3600000);
+    setEndTime(now.valueOf());
     clearPage();
-    dispatch(getRouteService(startTmp, endTmp));
+    dispatch(getRouteService(startTime, endTime));
     dispatch(clearRouteTrace());
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, []);*/
   //#endregion
   //HOOK-结束
 
@@ -252,12 +309,34 @@ export default function RouteTrace() {
     {
       setSelectedServiceIndex(-1);
       setServicePage(newPage);
+      setSelectedTraceIndex(-1);
+      setTracePage(0);
+      setOpenModal(false);
+    }
+  };
+
+  const handleSpanChangePage = (_, newPage) => {
+    if(tracePage !== newPage)
+    {
+      setSelectedTraceIndex(-1);
+      setTracePage(newPage);
+      setOpenModal(false);
     }
   };
 
   const handleServiceClick = (index) => {
+    dispatch(getRouteTrace(startTime, endTime, serviceVisibleRows[index].service, serviceVisibleRows[index].api));
     setSelectedServiceIndex(index);
-    changePage((servicePage - 1) * serviceNumPerPage + index, startTime, endTime);
+    setSelectedTraceIndex(-1);
+    setTracePage(1);
+    setDetailSpan(null);
+    setOpenModal(false);
+  }
+
+  const handleSpanClick = (index)=>{
+    setSelectedTraceIndex(index);
+    setDetailSpan(spanVisibleRows[index]);
+    setOpenModal(true);
   }
 
   const handleServiceColumnChooseItemClick = (index) => {
@@ -268,6 +347,7 @@ export default function RouteTrace() {
     });
   };
 
+  const handleCloseModal = () => setOpenModal(false);
 
   const handleServiceColumnChooseClick = (event) => setShowServiceColumnChooseAnchorEl(event.currentTarget);
   const handleServiceColumnChooseClose = () => setShowServiceColumnChooseAnchorEl(null);
@@ -275,12 +355,84 @@ export default function RouteTrace() {
   //#endregion
   //handle-结束
 
+  const styleModalBox = {
+    position: 'absolute',
+    left: "50%",
+    transform: 'translate(-100%, -50%)',
+    minWidth: "500px",
+    maxWidth: "1150px",
+    width: '50%',
+    height: '100%',
+    bgcolor: 'background.paper',
+    boxShadow: 'inset -15px 0px  15px -15px #444444',
+  };
+
 
   //return
   //#region
   return (
   <>
     <Loading show={showLoading} />
+    <Modal
+      open={openModal}
+      onClose={handleCloseModal}
+      closeAfterTransition>
+      <Slide direction="left" in={openModal} mountOnEnter unmountOnExit>
+        <Box sx={styleModalBox}>
+          <Box sx={{
+              height: '40px',
+              padding: '10px 30px 10px 30px',
+              bgcolor: '#f9fbfd',
+              border: '1px solid #EBEEF5',
+            }}>
+            <Box
+              sx={{
+                cursor: 'pointer',
+                boxShadow: '0 8px 16px 0 rgba(35,45,65,.28)',
+                '&:hover': {
+                  boxShadow: 'none',
+                },
+                height: '32px',
+                width: '32px',
+                pt: "3px"
+              }}
+              onClick={handleCloseModal}>
+              <KubeClose/>
+            </Box>
+          </Box>
+          {/* 依赖图 */}
+          <Stack sx={{ justifyContent: "center", pl: 4, pr: 4}}>
+            <div style={{ height: "20px" }} />
+            {(detailSpan)
+              ?
+              <div style={{ justifyContent: "center" }}>
+                <Stack spacing={1}>
+                  <Stack direction="row" spacing={20}>
+                    <NormalFont sx={{ width: "60px" }}>服务ID</NormalFont>
+                    <NormalFontBlack>{detailSpan.id}</NormalFontBlack>
+                  </Stack>
+                  <Stack direction="row" spacing={20}>
+                    <NormalFont sx={{ width: "60px" }}>服务名</NormalFont>
+                    <NormalFontBlack>{detailSpan.service}</NormalFontBlack>
+                  </Stack>
+                  <Stack direction="row" spacing={20}>
+                    <NormalFont sx={{ width: "60px" }}>时间</NormalFont>
+                    <NormalFontBlack>{dayjs(detailSpan.time).format('YYYY-MM-DD HH:mm:ss')}</NormalFontBlack>
+                  </Stack>
+                </Stack>
+                <div style={{ height: "20px" }} />
+                <RouteTraceCanvas id={detailSpan.id} sx={{ 
+                  width: "100%" 
+                }}/>
+              </div>
+              :
+              <></>
+            }
+          </Stack>
+        </Box>
+      </Slide>
+    </Modal>
+
     
     <Popover
         id='route-trace-table-content-popover'
@@ -344,6 +496,8 @@ export default function RouteTrace() {
         })}
       </Stack>
     </Popover>
+    
+    <RouteTraceInfoPage sx={{ width: "100%", height: "100%"}} />
 
     <Box sx={{
         width: '100%',
@@ -384,7 +538,6 @@ export default function RouteTrace() {
       </Box>
 
       {/* Main Body */}
-
       <Stack sx={{ width: "100%" }}>
         <div style={{height: "10px"}}/>
 
@@ -464,7 +617,7 @@ export default function RouteTrace() {
                   搜索
                 </KubeConfirmButton>
               </Stack>
-          </Stack>
+           </Stack>
         </Box>
         { /*数据*/ }
         <Stack  direction="row" spacing={2} sx={{ maxWidth: "100%" }}>
@@ -509,8 +662,91 @@ export default function RouteTrace() {
               />
             </Stack>
 
+            <div style={{ height: "10px" }}/>
+
+            {/* Trace 列表 */}
+            <Stack>
+              
+              <LargeBoldFont>请求信息</LargeBoldFont>
+              <StyledTableContainer sx={{ width: "100%" }}>
+                <Table 
+                  stickyHeader
+                  size='small'
+                  sx={{tableLayout: 'auto'}}>
+                  <TableHead>
+                    <TableRow sx={{ height: "52px"}}>
+                      {
+                        traceTableHeaders.map((item) => {
+                          return (
+                            <StyledTableRowCell key={item.key} align={item.align} 
+                              sx={{ minWidth: item.minWidth }}>
+                                {item.text}
+                            </StyledTableRowCell>);
+                        })
+                      }
+                    </TableRow>
+                  </TableHead>
+                  <TableBody sx={{ borderBottom: "solid 2px #B8B5B7", borderTop: "solid 2px #B8B5B7" }}>
+                    {traceRow}
+                  </TableBody>
+                </Table>
+              </StyledTableContainer>
+              <StyledTableFooter
+                pageSize={spanNumPerPage}
+                pageNum={tracePage}
+                count={routeTrace ? routeTrace.length : 0}
+                handlePageChange={handleSpanChangePage}
+                sx={{
+                  width: "100%",
+                  pt: "10px",
+                  pb: "10px"
+                }}
+              />
+            </Stack>
           </Stack>
+
+
+          {/* 依赖详细和依赖图 
+          {
+            (detailSpan)
+              ?
+              <Box sx={{ boxShadow: "1px 1px 4px 1px #B5B5B8", width: "100%", height: "100%" }}>
+                <Stack sx={{ width: "100%", padding: "15px" }}>
+                  <LargeBoldFont>链路拓扑信息图</LargeBoldFont>
+                  <Stack sx={{ paddingLeft: "10px", paddingTop: "10px" }}>
+                    <Stack>
+                      <Stack spacing={1}>
+                        <Stack direction="row" spacing={20}>
+                          <NormalFont sx={{ width: "60px" }}>服务ID</NormalFont>
+                          <NormalFontBlack>{detailSpan.id}</NormalFontBlack>
+                        </Stack>
+                        <Stack direction="row" spacing={20}>
+                          <NormalFont sx={{ width: "60px" }}>服务名</NormalFont>
+                          <NormalFontBlack>{detailSpan.service}</NormalFontBlack>
+                        </Stack>
+                        <Stack direction="row" spacing={20}>
+                          <NormalFont sx={{ width: "60px" }}>时间</NormalFont>
+                          <NormalFontBlack>{dayjs(detailSpan.time).format('YYYY-MM-DD HH:mm:ss')}</NormalFontBlack>
+                        </Stack>
+                      </Stack>
+                      <div style={{ height: "20px" }} />
+                      {(detailSpan)
+                        ?
+                        <RouteTraceCanvas id={detailSpan.id} sx={{ 
+                          width: "100%" 
+                        }}/>
+                        :
+                        <div/>
+                      }
+                    </Stack>
+                  </Stack>
+                </Stack>
+              </Box>
+              : <></>
+          }*/}
+
         </Stack>
+        
       </Stack>
     </Box>
   </>
