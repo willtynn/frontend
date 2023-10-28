@@ -33,7 +33,8 @@
     "start": "node scripts/start.js",
     "build": "node --max_old_space_size=4096 scripts/build.js",
     "test": "node scripts/test.js",
-    "eject": "react-scripts eject"
+    "eject": "react-scripts eject",
+    "prepare": "husky install"
   },
   "eslintConfig": {
     "extends": [
@@ -55,6 +56,11 @@
   },
   "devDependencies": {
     "@babel/plugin-proposal-private-property-in-object": "^7.21.11",
+    "husky": "^8.0.3",
+    "lint-staged": "^15.0.2",
     "react-dev-utils": "^12.0.1"
+  },
+  "lint-staged": {
+    "src/**/*.js": "prettier --write --ignore-unknown"
   }
 }
