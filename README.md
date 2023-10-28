@@ -10,5 +10,3 @@
   <Route path='table2' element={<CustomizedTables/>} />
 </Route>
 ```
-## 4. 格式化代码
-提交前，使用`npx prettier --write 'src/xxx.js'`,格式化自己编写的代码
