@@ -57,8 +57,8 @@ export default function MiniDrawer() {
   const navigate = useNavigate();
 
   useEffect(() => {
-    if(!localStorage.getItem("current_cluster")) {
-      localStorage.setItem("current_cluster", "ices104");
+    if (!localStorage.getItem('current_cluster')) {
+      localStorage.setItem('current_cluster', 'ices104');
     }
   }, []);
 
@@ -277,9 +277,8 @@ export default function MiniDrawer() {
               </Box>
               <Stack
                 spacing={0.5}
-                justifyContent="flex-start"
-                alignItems="flex-start"
-                
+                justifyContent='flex-start'
+                alignItems='flex-start'
               >
                 <Box
                   sx={{
