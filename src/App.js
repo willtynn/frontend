@@ -5,7 +5,7 @@ import MyRoutes from './Route';
 
 function App() {
   return (
-    <div className='Myindex' style={{backgroundColor: "#EFF4F9"}}>
+    <div className='Myindex' style={{ backgroundColor: '#EFF4F9' }}>
       <BrowserRouter>
         <MyRoutes />
       </BrowserRouter>
