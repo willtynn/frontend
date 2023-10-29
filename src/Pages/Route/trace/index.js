@@ -3,7 +3,7 @@
 import React from "react";
 import { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { useNavigate, useParams } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 
 import {
   MenuItem,
@@ -13,10 +13,12 @@ import {
   TableBody,
   TableHead,
   TableRow,
+  TableCell,
   Typography,
   Popover
 } from "@mui/material"
 import RouteIcon from '@/assets/RouteIcon.svg';
+import Question from '@/assets/Question.svg';
 
 import {
   KubeConfirmButton,
@@ -31,6 +33,12 @@ import {
   StyledTableContainer,
   StyledTableFooter
 } from '@/components/DisplayTable';
+
+import {
+  NormalLargeFont,
+  NormalBoldFont,
+  SmallLightFont
+} from "@/components/Fonts";
 
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
@@ -99,7 +107,8 @@ export default function RouteTrace() {
 
   const [showLoading, setShowLoading] = useState(false);
 
-  const [showSubPage, setShowSubPage] = useState(false);
+  const [showEmpty, setShowEmpty] = useState(false);
+  //const [showSubPage, setShowSubPage] = useState(false);
 
   const [showServiceColumnChooseAnchorEl, setShowServiceColumnChooseAnchorEl] = useState(null);
   const showServiceColumnChooseOpen = Boolean(showServiceColumnChooseAnchorEl);
@@ -120,8 +129,14 @@ export default function RouteTrace() {
   });
   
   const serviceVisibleRows = React.useMemo(() => {
+    if (!routeService || routeService.length === 0) 
+    {
+      setShowEmpty(true);
+      return [];
+    }
+    setShowEmpty(false);
     const tmp = (servicePage - 1) * serviceNumPerPage;
-    return routeService ? routeService.slice(tmp, tmp + serviceNumPerPage) : [];
+    return routeService.slice(tmp, tmp + serviceNumPerPage);
   }, [routeService, servicePage]);
 
   //#endregion
@@ -136,6 +151,10 @@ export default function RouteTrace() {
   const clearPage = () => {
     setSelectedServiceIndex(-1);
     setServicePage(1);
+  }
+
+  const getVisibleRows = () => {
+    return serviceColumnDisplay.reduce((prev,curr)=> curr ? prev+1 : prev, 0);
   }
 
   //#endregion
@@ -492,7 +511,31 @@ export default function RouteTrace() {
                     </TableRow>
                   </TableHead>
                   <TableBody>
-                    {serviceRow}
+                    {
+                      showEmpty ? 
+                      <TableRow style={{ height: '120px' }}>
+                        <TableCell
+                          colSpan={getVisibleRows()}
+                          sx={{
+                            textAlign: 'center',
+                            fontSize: '20px',
+                            fontFamily: fontFamily,
+                            fontStyle: 'normal',
+                          }}
+                        >
+                          <Question/>
+                          <NormalBoldFont>
+                            无数据
+                          </NormalBoldFont>
+                          
+                          <SmallLightFont>
+                            您可以尝试刷新数据
+                          </SmallLightFont>
+                        </TableCell>
+                      </TableRow>
+                      :
+                      serviceRow
+                    }
                   </TableBody>
                 </Table>
               </StyledTableContainer>
