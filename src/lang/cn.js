@@ -26,7 +26,8 @@ export const messages = {
     clusterInfo: "集群信息",
     instanceInfo: "实例信息",
     instanceList: "实例列表",
-    clusterTopology: "集群拓扑结构"
+    clusterTopology: "集群拓扑结构",
+    clusterNodeDescription: "集群节点是平台集群中的基础服务器，您可以在此页面查看集群节点信息。"
   },
   instance: {
     deploySuccess: "实例部署成功！",

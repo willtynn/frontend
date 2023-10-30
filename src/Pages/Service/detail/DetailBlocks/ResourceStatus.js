@@ -36,7 +36,7 @@ import {
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
 
-const IconOfPod = status => {
+export const IconOfPod = status => {
   if (status === RUNNING) {
     return <ActivePod />;
   }

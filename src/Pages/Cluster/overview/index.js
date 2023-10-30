@@ -1,5 +1,5 @@
 import { useEffect, useState, useRef } from 'react';
-import { Box, Stack, Autocomplete, TextField } from '@mui/material';
+import { Box, Stack, Autocomplete, TextField, Typography } from '@mui/material';
 
 import { useDispatch, useSelector } from 'react-redux';
 import { ClusterTopology, ClusterTopologyOnlyCanvas } from './ClusterTopology';
@@ -7,13 +7,12 @@ import InstanceList from './InstancesList';
 import { SmallLightFont, SuperLargeBoldFont } from '@/components/Fonts';
 import InfoCard from '@/components/InfoCard';
 import {
-  UPDATE_CLUSTERS,
-  SELECT_SERVER,
-  searchAllClusters,
   UPDATE_SELECTED_SERVER,
 } from '@/actions/clusterAction';
 import InstanceInfo from './InstanceInfo';
 import ClusterInfo from './ClusterInfo';
+import { useIntl } from 'react-intl';
+import ClusterNode from '@/assets/ClusterNode.svg';
 
 const fakeInstancesData = {
   items: [
@@ -189,6 +188,7 @@ export default function ClusterOverview() {
   const [instancesData, setInstancesData] = useState({});
 
   const dispatch = useDispatch();
+  const intl = useIntl();
 
   const { selectedInstanceName, clusters, selectedServer } = useSelector(state => {
     return {
@@ -309,6 +309,45 @@ export default function ClusterOverview() {
 
   return (
     <Box>
+      <Box
+        sx={{
+          borderRadius: '4px',
+          backgroundColor: '#FFFFFF',
+          padding: '24px 20px',
+          width: 'calc(100% - 40px)',
+          height: '58px',
+          mb: '12px',
+        }}
+      >
+        <Stack direction='row' spacing={1}>
+          <ClusterNode />
+          <Box>
+            <Typography
+              sx={{
+                fontWeight: 600,
+                fontStyle: 'normal',
+                color: '#242e42',
+                textShadow: '0 4px 8px rgba(36,46,66,.1)',
+                fontSize: '24px',
+                lineHeight: '32px',
+              }}
+            >
+              集群节点
+            </Typography>
+            <Typography
+              sx={{
+                fontWeight: 400,
+                fontStyle: 'normal',
+                color: '#79879c',
+                fontSize: '12px',
+                lineHeight: 1.67,
+              }}
+            >
+              {intl.messages['cluster.clusterNodeDescription']}
+            </Typography>
+          </Box>
+        </Stack>
+      </Box>
       <Stack
         direction='row'
         spacing={2}
@@ -316,15 +355,6 @@ export default function ClusterOverview() {
           mb: '40px',
         }}
       >
-        <SuperLargeBoldFont
-          sx={{
-            ml: '12px',
-            fontSize: '32px !important',
-            lineHeight: '54px !important',
-          }}
-        >
-          集群信息
-        </SuperLargeBoldFont>
         <Autocomplete
           value={targetCluster}
           onChange={(event, newValue) => {

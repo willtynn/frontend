@@ -5,7 +5,7 @@ import { Box } from '@mui/material';
 
 export function TimeAdaptiveAreaChart(props) {
 
-  const { data, keyName, value, width = 500, height = 500, pxGap=120 } = props;
+  const { data, keyName, valueName, labelY, width = 500, height = 500, pxGap=120 } = props;
 
   const [tickNum, setTickNum] = useState(3);
   const [ticks, setTicks] = useState([]);
@@ -81,10 +81,10 @@ export function TimeAdaptiveAreaChart(props) {
             axisLine={false}
             tickSize={0}
           >
-            <Label value="CPU用量 (%)" offset={-25} position="insideTop" />
+            <Label value={labelY} offset={-25} position="insideTop" />
           </YAxis>
           <Tooltip />
-          <Area type="linear" dataKey={value} stroke="#55BCA8" activeDot={{ r: 6 }} fill='rgba(85,188,138,.2)'/>
+          <Area type="linear" dataKey={valueName} stroke="#55BCA8" activeDot={{ r: 6 }} fill='rgba(85,188,138,.2)'/>
         </AreaChart>
       </ResponsiveContainer>
     </Box>
