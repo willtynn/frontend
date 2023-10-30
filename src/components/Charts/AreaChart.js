@@ -1,5 +1,5 @@
 import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, Label } from 'recharts';
-import { formatDatetimeString } from '../../utils/commonUtils';
+import { formatDatetimeString, formatDatetimeStringWithoutYear } from '../../utils/commonUtils';
 import { useEffect, useState, useRef } from 'react';
 import { Box } from '@mui/material';
 
@@ -48,8 +48,6 @@ export function TimeAdaptiveAreaChart(props) {
 
   window.onresize = adaptChart;
 
-  
-
   return (
     <Box sx={{width: "100%", height: "100%"}} ref={chart}>
       <ResponsiveContainer width="100%" height="100%" >
@@ -64,25 +62,29 @@ export function TimeAdaptiveAreaChart(props) {
             bottom: 5,
           }}
         >
-          <CartesianGrid strokeDasharray="3 3" />
+          <CartesianGrid strokeDasharray="3 3" vertical={false} />
           <XAxis
             dataKey={keyName}
             ticks={ticks}
             tickFormatter={(value, index) => {
-              // console.log(value);
-              return formatDatetimeString(value);
+              return formatDatetimeStringWithoutYear(value);
             }}
+            axisLine={false}
+            tickSize={0}
+            tickMargin={20}
           >
 
           </XAxis>
 
 
-          <YAxis>
+          <YAxis
+            axisLine={false}
+            tickSize={0}
+          >
             <Label value="CPU用量 (%)" offset={-25} position="insideTop" />
           </YAxis>
           <Tooltip />
-          <Legend />
-          <Area type="monotone" dataKey={value} stroke="#8884d8" activeDot={{ r: 8 }} />
+          <Area type="linear" dataKey={value} stroke="#55BCA8" activeDot={{ r: 6 }} fill='rgba(85,188,138,.2)'/>
         </AreaChart>
       </ResponsiveContainer>
     </Box>
