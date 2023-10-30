@@ -1,11 +1,33 @@
-import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, Label } from 'recharts';
-import { formatDatetimeString, formatDatetimeStringWithoutYear } from '../../utils/commonUtils';
+import {
+  AreaChart,
+  Area,
+  XAxis,
+  YAxis,
+  CartesianGrid,
+  Tooltip,
+  Legend,
+  ResponsiveContainer,
+  Label,
+} from 'recharts';
+import {
+  formatDatetimeString,
+  formatDatetimeStringWithoutYear,
+} from '../../utils/commonUtils';
 import { useEffect, useState, useRef } from 'react';
 import { Box } from '@mui/material';
 
 export function TimeAdaptiveAreaChart(props) {
-
-  const { data, keyName, valueName, labelY, width = 500, height = 500, pxGap=120 } = props;
+  const {
+    data,
+    keyName,
+    valueName,
+    labelY,
+    labelName,
+    unitName,
+    width = 500,
+    height = 500,
+    pxGap = 120,
+  } = props;
 
   const [tickNum, setTickNum] = useState(3);
   const [ticks, setTicks] = useState([]);
@@ -19,23 +41,24 @@ export function TimeAdaptiveAreaChart(props) {
     if (chart && chart.current && data && data.length > 0) {
       const intervalNum = tickNum - 1;
       const dataLength = data.length;
-      if(dataLength >= tickNum) {
+      if (dataLength >= tickNum) {
         const dataSliceLength = Math.floor(dataLength / intervalNum);
         const tmpTicks = [];
-        for(let i = 0; i < intervalNum; i++) {
+        for (let i = 0; i < intervalNum; i++) {
           tmpTicks.push(data[i * dataSliceLength][keyName]);
         }
         tmpTicks.push(data[data.length - 1][keyName]);
         setTicks(tmpTicks);
       } else {
-        setTicks(data.map((record, index) => {
-          return record[keyName];
-        }));
+        setTicks(
+          data.map((record, index) => {
+            return record[keyName];
+          })
+        );
       }
     } else {
       setTicks([]);
     }
-    
   }, [tickNum]);
 
   const adaptChart = () => {
@@ -44,13 +67,13 @@ export function TimeAdaptiveAreaChart(props) {
       const tmpTickNum = Math.floor(clientWidth / pxGap);
       setTickNum(tmpTickNum);
     }
-  }
+  };
 
   window.onresize = adaptChart;
 
   return (
-    <Box sx={{width: "100%", height: "100%"}} ref={chart}>
-      <ResponsiveContainer width="100%" height="100%" >
+    <Box sx={{ width: '100%', height: '100%' }} ref={chart}>
+      <ResponsiveContainer width='100%' height='100%'>
         <AreaChart
           width={500}
           height={300}
@@ -62,7 +85,7 @@ export function TimeAdaptiveAreaChart(props) {
             bottom: 5,
           }}
         >
-          <CartesianGrid strokeDasharray="3 3" vertical={false} />
+          <CartesianGrid strokeDasharray='3 3' vertical={false} />
           <XAxis
             dataKey={keyName}
             ticks={ticks}
@@ -72,21 +95,29 @@ export function TimeAdaptiveAreaChart(props) {
             axisLine={false}
             tickSize={0}
             tickMargin={20}
-          >
+          ></XAxis>
 
-          </XAxis>
-
-
-          <YAxis
-            axisLine={false}
-            tickSize={0}
-          >
-            <Label value={labelY} offset={-25} position="insideTop" />
+          <YAxis axisLine={false} tickSize={0}>
+            <Label value={labelY} offset={-25} position='insideTop' />
           </YAxis>
-          <Tooltip />
-          <Area type="linear" dataKey={valueName} stroke="#55BCA8" activeDot={{ r: 6 }} fill='rgba(85,188,138,.2)'/>
+          <Tooltip
+            label='时间'
+            formatter={(value) => {
+              return [value + " " + unitName, labelName];
+            }}
+            labelFormatter={(label, payload) =>
+              formatDatetimeStringWithoutYear(label)
+            }
+          />
+          <Area
+            type='linear'
+            dataKey={valueName}
+            stroke='#55BCA8'
+            activeDot={{ r: 6 }}
+            fill='rgba(85,188,138,.2)'
+          />
         </AreaChart>
       </ResponsiveContainer>
     </Box>
-  )
+  );
 }

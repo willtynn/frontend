@@ -32,10 +32,6 @@ function PodResourceMonitor(props) {
   useEffect(() => {
     if (data && data.results) {
       for (const result of data.results) {
-        console.log(1, result.data);
-        console.log(result.data.result);
-        console.log(result.data.result[0]);
-        console.log(result.data.result[0].values);
         if (
           result.data &&
           result.data.result &&
@@ -45,25 +41,25 @@ function PodResourceMonitor(props) {
           if (result.metric_name === 'pod_cpu_usage') {
             setCpuUsage(
               result.data.result[0].values.map((record, index) => {
-                return { ...record };
+                return { name: record[0], usage: Number(record[1]) * 1000 };
               })
             );
-          } else if (result.metric_name === 'pod_cpu_usage') {
+          } else if (result.metric_name === 'pod_net_bytes_transmitted') {
             setByteTransmitted(
               result.data.result[0].values.map((record, index) => {
-                return { ...record };
+                return { name: record[0], flow: (Number(record[1]) / 128).toFixed(2) };
               })
             );
-          } else if (result.metric_name === 'pod_cpu_usage') {
+          } else if (result.metric_name === 'pod_net_bytes_received') {
             setByteReceived(
               result.data.result[0].values.map((record, index) => {
-                return { ...record };
+                return { name: record[0], flow: (Number(record[1]) / 128).toFixed(2) };
               })
             );
           } else {
             setMemoryUsage(
               result.data.result[0].values.map((record, index) => {
-                return { ...record };
+                return { name: record[0], usage: (Number(record[1]) / 1024 / 1024).toFixed(2) };
               })
             );
           }
@@ -82,9 +78,6 @@ function PodResourceMonitor(props) {
     }
   }, [data]);
 
-  useEffect(() => {
-    console.log(cpuUsage);
-  }, [cpuUsage]);
 
   const handleMonitorClick = () => {
     setOpen(prevOpen => !prevOpen);
@@ -231,6 +224,8 @@ function PodResourceMonitor(props) {
             width: 'calc(100% - 64px)',
             bgcolor: '#FFFFFF',
             padding: '12px',
+            borderRadius: "0px 0px 4px 4px",
+            boxShadow: '0 4px 8px 0 rgba(36,46,66,.06)'
           }}
         >
           <Box
@@ -241,9 +236,11 @@ function PodResourceMonitor(props) {
           >
             <TimeAdaptiveAreaChart
               data={cpuUsage}
-              keyName='0'
-              valueName='1'
+              keyName='name'
+              valueName='usage'
               labelY='CPU 用量 (m)'
+              labelName='用量'
+              unitName='m'
             />
           </Box>
 
@@ -255,9 +252,11 @@ function PodResourceMonitor(props) {
           >
             <TimeAdaptiveAreaChart
               data={memoryUsage}
-              keyName='0'
-              valueName='1'
+              keyName='name'
+              valueName='usage'
               labelY='内存用量 (Mi)'
+              labelName='用量'
+              unitName='Mi'
             />
           </Box>
 
@@ -268,10 +267,12 @@ function PodResourceMonitor(props) {
             }}
           >
             <TimeAdaptiveAreaChart
-              data={cpuUsage}
-              keyName='0'
-              valueName='1'
+              data={byteTransmitted}
+              keyName='name'
+              valueName='flow'
               labelY='出站流量 (Kbps)'
+              labelName='出站'
+              unitName='Kbps'
             />
           </Box>
 
@@ -282,10 +283,12 @@ function PodResourceMonitor(props) {
             }}
           >
             <TimeAdaptiveAreaChart
-              data={cpuUsage}
-              keyName='0'
-              valueName='1'
+              data={byteReceived}
+              keyName='name'
+              valueName='flow'
               labelY='入站流量 (Kbps)'
+              labelName='入站'
+              unitName='Kbps'
             />
           </Box>
         </Stack>
