@@ -492,7 +492,7 @@ export default function MiniDrawer() {
                   <Route16 />
                 </Box>
                 <Box sx={{ ...styledFont, color: l5 ? '#55bc8a' : '#242e42' }}>
-                  镜像管理（待开发）
+                  镜像管理（开发中）
                 </Box>
                 {verticalOpen5 ? <ExpandLess /> : <ExpandMore />}
               </ListItemButton>
@@ -503,7 +503,7 @@ export default function MiniDrawer() {
                     onClick={() => {
                       setAllFalse();
                       setl51(true);
-                      navigate('/');
+                      navigate('/images/list');
                     }}
                   >
                     <Box
