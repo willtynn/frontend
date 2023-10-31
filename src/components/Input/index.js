@@ -85,6 +85,7 @@ export const KubeTextField = styled(TextField)(({ theme }) => ({
   width: '100%',
   '& .MuiOutlinedInput-root.MuiInputBase-root': {
     background: '#FFFFFF',
+    
     '& .MuiOutlinedInput-input.MuiInputBase-input': {
       '&:hover': {
         border: '1px solid #000',
@@ -103,6 +104,11 @@ export const KubeTextField = styled(TextField)(({ theme }) => ({
       lineHeight: 1.67,
       letterSpacing: 'normal',
       color: '#36435c',
+    },
+    '& .Mui-disabled': {
+      '&:hover': {
+        border: '1px solid rgba(0, 0, 0, 0.23) !important',
+      },
     },
     '& fieldset': {
       border: 'none',
@@ -321,8 +327,8 @@ export function KubeInput(props) {
   const { label, decription, requried, errorMessage, ...others } = props;
 
   return (
-    <Box>
-      <Stack direction='column' spacing={0.5}>
+    <Box sx={{width: "100%"}}>
+      <Stack direction='column' spacing={0.5} sx={{width: "100%"}}>
         <Stack direction='row' spacing={1}>
           <Typography
             sx={{

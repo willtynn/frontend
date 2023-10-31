@@ -39,6 +39,7 @@ export function ThreadGroup(props) {
     <>
       {groupEdit ? (
         <Box
+          id="groupEditBox"
           sx={{
             height: 'calc(100% - 148px)',
             position: 'relative',

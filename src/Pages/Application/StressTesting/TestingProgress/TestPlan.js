@@ -89,7 +89,7 @@ export function TestPlan(props) {
         />
       </Stack>
 
-      <Stack direction='column' spacing={0}>
+      <Stack direction='column' spacing={1}>
         <StyledCheckbox checked={serializeThreadgroups} setChecked={(checked) => dispatch({type: UPDATE_SERIALIZE_THREADGROUPS, data: checked})} msg={intl.messages["stressTesting.serializeThreadgroupsDescription"]} />
         <StyledCheckbox checked={tearDownOnShutdown} setChecked={(checked) => dispatch({type: UPDATE_TEARDOWN_ON_SHUTDOWN, data: checked})} msg={intl.messages["stressTesting.tearDownOnShutdownDescription"]} />
         <StyledCheckbox checked={functionalMode} setChecked={(checked) => dispatch({type: UPDATE_FUNCTIONAL_MODE, data: checked})} msg={intl.messages["stressTesting.functionalModeDescription"]} />

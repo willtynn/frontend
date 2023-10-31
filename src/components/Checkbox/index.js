@@ -15,6 +15,10 @@ export function StyledCheckbox(props) {
           '&.Mui-checked': {
             color: "#55BC8A !important",
           },
+          
+          width: "20px !important",
+          height: "20px !important"
+          
         }}
         disableRipple
         size='small'

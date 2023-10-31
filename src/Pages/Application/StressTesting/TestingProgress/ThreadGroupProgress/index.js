@@ -29,7 +29,7 @@ export function ThreadGroupProgress(props) {
 
   const [groupName, setGroupName] = useState('Thread Group');
   const [groupComment, setGroupComment] = useState('');
-  const [onSampleError, setOnSampleError] = useState(0);
+  const [onSampleError, setOnSampleError] = useState('continue');
   const [numThreads, setNumThreads] = useState(1);
   const [rampTime, setRampTime] = useState(1);
   const [loops, setLoops] = useState(1);
@@ -93,7 +93,7 @@ export function ThreadGroupProgress(props) {
     <Box
       sx={{
         overflowY: 'auto',
-        maxHeight: 'calc(100vh - 350px)',
+        height: "100%"
       }}
     >
       <Stack

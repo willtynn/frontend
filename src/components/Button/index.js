@@ -1,5 +1,5 @@
 import { Button } from "@mui/material";
-import styled from "@emotion/styled";
+import { styled } from '@mui/system';
 import { fontFamily } from "@/utils/commonUtils";
 
 export const OutlinedButton = styled(Button)({
