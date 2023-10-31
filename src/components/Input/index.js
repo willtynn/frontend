@@ -334,16 +334,20 @@ export function KubeInput(props) {
           >
             {label}
           </Typography>
-          <Typography
-            sx={{
-              color: '#ca2621',
-              fontSize: '12px',
-              lineHeight: 1.67,
-              fontWeight: 400,
-            }}
-          >
-            *
-          </Typography>
+          {requried === true ? (
+            <Typography
+              sx={{
+                color: '#ca2621',
+                fontSize: '12px',
+                lineHeight: 1.67,
+                fontWeight: 400,
+              }}
+            >
+              *
+            </Typography>
+          ) : (
+            <></>
+          )}
         </Stack>
         <KubeTextField {...others} />
         {others.error === true ? (

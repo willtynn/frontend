@@ -60,6 +60,9 @@ export const messages = {
     finished: "已设置"
   },
   stressTesting: {
-    stressTestingDescription: "考察当前软件和硬件环境下，系统所能承受的最大负荷，并帮助找出系统的瓶颈所在。"
+    stressTestingDescription: "考察当前软件和硬件环境下，系统所能承受的最大负荷，并帮助找出系统的瓶颈所在。",
+    planNameDescription: "名称只能包含小写字母、数字和连字符（-），必须以小写字母或数字开头和结尾，最长 253 个字符。",
+    planCommentDescription: "对于计划的补充说明。",
+    nameEmptyErrorMsg: "请设置一个名称。",
   }
 };

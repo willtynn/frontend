@@ -12,12 +12,33 @@ import InfoCard from '@/components/InfoCard';
 import { ContainedButton, KubeConfirmButton } from '@/components/Button';
 import { StyledTextFiled } from '@/components/Input';
 import { fontFamily } from '@/utils/commonUtils';
+import { StyledModal } from '../../../components/Modal';
 
 import StressTestingIcon from '@/assets/StressTesting.svg';
 import { useIntl } from 'react-intl';
+import { TestingProgress } from './TestingProgress.js';
 
 export default function StressTesting() {
   const intl = useIntl();
+  const [planOpen, setPlanOpen] = useState(false);
+  const [showError, setShowError] = useState(false); 
+
+  const handlePlanClick = () => {
+    setPlanOpen(true);
+  }
+
+  const handleClose = () => {
+    setPlanOpen(false);
+  }
+
+  const handleCancelClick = () => {
+    setPlanOpen(false);
+  }
+
+  const handleConfirmClick = () => {
+    setPlanOpen(false);
+  }
+
   return (
     <Stack>
       <Box
@@ -60,9 +81,19 @@ export default function StressTesting() {
         </Stack>
       </Box>
 
-      <KubeConfirmButton>
-        创建测试任务
+      <KubeConfirmButton onClick={handlePlanClick}>
+        创建测试计划
       </KubeConfirmButton>
+
+
+      <StyledModal open={planOpen} onClose={handleClose}>
+      <TestingProgress
+          handleConfirmClick={handleConfirmClick}
+          handleCancelClick={handleCancelClick}
+          showError={showError}
+          setShowError={setShowError}
+        />
+      </StyledModal>
     </Stack>
   );
 }
