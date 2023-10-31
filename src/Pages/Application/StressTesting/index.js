@@ -16,28 +16,28 @@ import { StyledModal } from '../../../components/Modal';
 
 import StressTestingIcon from '@/assets/StressTesting.svg';
 import { useIntl } from 'react-intl';
-import { TestingProgress } from './TestingProgress.js';
+import { TestingProgress } from './TestingProgress';
 
 export default function StressTesting() {
   const intl = useIntl();
   const [planOpen, setPlanOpen] = useState(false);
-  const [showError, setShowError] = useState(false); 
+  const [showError, setShowError] = useState(false);
 
   const handlePlanClick = () => {
     setPlanOpen(true);
-  }
+  };
 
   const handleClose = () => {
     setPlanOpen(false);
-  }
+  };
 
   const handleCancelClick = () => {
     setPlanOpen(false);
-  }
+  };
 
   const handleConfirmClick = () => {
     setPlanOpen(false);
-  }
+  };
 
   return (
     <Stack>
@@ -85,9 +85,8 @@ export default function StressTesting() {
         创建测试计划
       </KubeConfirmButton>
 
-
       <StyledModal open={planOpen} onClose={handleClose}>
-      <TestingProgress
+        <TestingProgress
           handleConfirmClick={handleConfirmClick}
           handleCancelClick={handleCancelClick}
           showError={showError}

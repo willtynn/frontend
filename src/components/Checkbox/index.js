@@ -9,10 +9,13 @@ export function StyledCheckbox(props) {
   };
 
   return (
-    <Stack direction='row' spacing={1}>
+    <Stack direction='row' spacing={1} alignItems='center'>
       <Checkbox
         sx={{
           bgcolor: 'transparent !important',
+          '&.Mui-checked': {
+            color: "#55BC8A !important",
+          },
         }}
         disableRipple
         size='small'

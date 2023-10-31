@@ -40,9 +40,6 @@ export function TestingProgress(props) {
   };
 
   const nextStep = () => {
-    if (currentStage === 1) {
-      return;
-    }
     setCurrentStage(prevStage => prevStage + 1);
   };
 
@@ -68,7 +65,7 @@ export function TestingProgress(props) {
             currentStage={currentStage}
           />
           <ProgressIndicator
-            title='容器组设置'
+            title='线程组设置'
             adornments={[<DockerWaiting />, <DockerNow />, <DockerFinished />]}
             stage={2}
             currentStage={currentStage}
