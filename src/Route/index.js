@@ -11,6 +11,7 @@ import { HeadBar } from '../Pages/Menu/HeadBar';
 import { ServiceDetail } from '../Pages/Service/detail';
 import { RouteTraceInfoPage } from '../Pages/Route/trace/RouteTraceInfoPage';
 import StressTesting from '../Pages/Application/StressTesting';
+import ImagesList from '../Pages/Image';
 
 export default function MyRoute() {
   return (
@@ -42,6 +43,9 @@ export default function MyRoute() {
         </Route>
         <Route path='application/'>
           <Route path="stress_testing" element={<StressTesting />} />
+        </Route>
+        <Route path='images/'>
+          <Route path="list" element={<ImagesList />} />
         </Route>
       </Route>
     </Routes>
