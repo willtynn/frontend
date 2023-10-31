@@ -1,4 +1,3 @@
-import { useEffect, useState } from 'react';
 import { Checkbox, Stack, Box } from '@mui/material';
 
 export function StyledCheckbox(props) {

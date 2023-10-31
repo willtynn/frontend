@@ -2,7 +2,7 @@ import * as actions from '../actions/applicationAction';
 
 const initState = {
   // Test Plan
-  planName: '',
+  planName: 'Test Plan',
   planComment: '',
   functionalMode: false,
   tearDownOnShutdown: false,
