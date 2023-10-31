@@ -22,6 +22,7 @@ import { useIntl } from 'react-intl';
 import ClusterSelectModal from './ClusterSelectModal';
 import Cluster16 from '@/assets/Cluster16.svg';
 import Service16 from '@/assets/Service16.svg';
+import Application16 from '@/assets/Application16.svg';
 import Route16 from '@/assets/Route16.svg';
 
 export default function MiniDrawer() {
@@ -453,10 +454,10 @@ export default function MiniDrawer() {
                 onClick={handleClick4}
               >
                 <Box sx={styledIcon}>
-                  <Route16 />
+                  <Application16 />
                 </Box>
                 <Box sx={{ ...styledFont, color: l4 ? '#55bc8a' : '#242e42' }}>
-                  应用模块（待开发）
+                  应用模块（开发中）
                 </Box>
                 {verticalOpen4 ? <ExpandLess /> : <ExpandMore />}
               </ListItemButton>
@@ -467,13 +468,13 @@ export default function MiniDrawer() {
                     onClick={() => {
                       setAllFalse();
                       setl41(true);
-                      navigate('/');
+                      navigate('/application/stress_testing');
                     }}
                   >
                     <Box
                       sx={{ ...styledFont, color: l41 ? '#55bc8a' : '#242e42' }}
                     >
-                      服务能力自动测试
+                      服务能力自动测试（开发中）
                     </Box>
                   </ListItemButton>
                 </List>

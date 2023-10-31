@@ -58,5 +58,8 @@ export const messages = {
     waiting: "未设置",
     now: "当前",
     finished: "已设置"
+  },
+  stressTesting: {
+    stressTestingDescription: "考察当前软件和硬件环境下，系统所能承受的最大负荷，并帮助找出系统的瓶颈所在。"
   }
 };

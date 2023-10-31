@@ -10,15 +10,20 @@ import InstanceDeploy from '../Pages/Cluster/deploy';
 import { HeadBar } from '../Pages/Menu/HeadBar';
 import { ServiceDetail } from '../Pages/Service/detail';
 import { RouteTraceInfoPage } from '../Pages/Route/trace/RouteTraceInfoPage';
+import StressTesting from '../Pages/Application/StressTesting';
 
 export default function MyRoute() {
   return (
     <Routes>
       <Route path='*' element={<Navigate replace to='cluster/overview' />} />
+
+      {/* 不存在导航栏 */}
       <Route path='detail/' element={<HeadBar />}>
         <Route path='service/:serviceId' element={<ServiceDetail />}/>
         <Route path='trace/:start/:end/:traceId' element={<RouteTraceInfoPage />}/>
       </Route>
+
+      {/* 存在导航栏 */}
       <Route path='/' element={<Menu />}>
         <Route path='/' element={<Navigate replace to='cluster/overview' />} />
         <Route path='cluster/'>
@@ -34,6 +39,9 @@ export default function MyRoute() {
         </Route>
         <Route path='route/'>
           <Route path='trace' element={<RouteTrace />} />
+        </Route>
+        <Route path='application/'>
+          <Route path="stress_testing" element={<StressTesting />} />
         </Route>
       </Route>
     </Routes>
