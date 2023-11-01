@@ -24,6 +24,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { FormattedMessage } from 'react-intl';
 import Triangle from '@/assets/Triangle.svg';
 import { fontFamily } from '../../utils/commonUtils';
+import { KubeCheckbox } from '../Checkbox';
 
 export const StyledTableBox = styled(TableContainer)(() => ({
   width: '100%',
@@ -339,10 +340,11 @@ export function StyledTableHead(props) {
           <StyledTableRowCell
             align='center'
             sx={{
-              width: '80px',
+              maxWidth: "30px",
+              minWidth: "30px",
             }}
           >
-            <Checkbox
+            <KubeCheckbox
               sx={{
                 bgcolor: 'transparent !important',
               }}
@@ -361,6 +363,10 @@ export function StyledTableHead(props) {
                 key={item.id}
                 align={item.align}
                 style={{display: item.show ? 'table-cell' : 'none'}}
+                sx={{
+                  maxWidth: item.maxWidth,
+                  minWidth: item.minWidth,
+                }}
                 sortDirection={orderBy === item.id ? order : false}
               >
                 <TableSortLabel

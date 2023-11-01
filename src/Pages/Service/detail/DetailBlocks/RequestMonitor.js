@@ -657,7 +657,7 @@ export default function RequestMonitor(props) {
                     colSpan={6}
                     sx={{
                       textAlign: 'center',
-                      fontSize: '20px',
+                      fontSize: '14px',
                       fontFamily: fontFamily,
                       fontStyle: 'normal',
                     }}

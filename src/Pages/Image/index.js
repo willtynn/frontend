@@ -52,6 +52,7 @@ import { formatDatetimeString } from '../../utils/commonUtils';
 import { UPDATE_SEARCH_SERVICE, UPDATE_EXACT_SERVICE } from '../../actions/serviceAction';
 import { EclipseTransparentButton } from '../../components/Button';
 import GeneralService from '@/assets/GeneralService.svg';
+import { KubeCheckbox } from '../../components/Checkbox';
 
 function TextLabel(props) {
   const { text } = props;
@@ -435,7 +436,7 @@ export default function ImagesList(props) {
                           p: '0px 16px !important',
                         }}
                       >
-                        <Checkbox
+                        <KubeCheckbox
                           sx={{
                             bgcolor: 'transparent !important',
                           }}

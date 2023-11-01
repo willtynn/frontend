@@ -1,4 +1,14 @@
 import { Checkbox, Stack, Box } from '@mui/material';
+import { styled } from '@mui/system';
+
+export const KubeCheckbox = styled(Checkbox)({
+  bgcolor: 'transparent !important',
+  '&.Mui-checked': {
+    color: '#55BC8A !important',
+  },
+  width: '20px !important',
+  height: '20px !important',
+});
 
 export function StyledCheckbox(props) {
   const { checked, setChecked, msg } = props;
@@ -13,12 +23,11 @@ export function StyledCheckbox(props) {
         sx={{
           bgcolor: 'transparent !important',
           '&.Mui-checked': {
-            color: "#55BC8A !important",
+            color: '#55BC8A !important',
           },
-          
-          width: "20px !important",
-          height: "20px !important"
-          
+
+          width: '20px !important',
+          height: '20px !important',
         }}
         disableRipple
         size='small'

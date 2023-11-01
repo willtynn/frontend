@@ -1,10 +1,18 @@
 import { useState, useEffect } from 'react';
-import { Box, Stack, Typography } from '@mui/material';
+import {
+  Box,
+  Stack,
+  Typography,
+  Table,
+  TableBody,
+  TableRow,
+  TableCell,
+} from '@mui/material';
 import { KubeInput, StyledTextFiled } from '@/components/Input';
 import { useIntl } from 'react-intl';
 import { useSelector, useDispatch } from 'react-redux';
 import { StyledRadioGroup } from '../../../../../components/Radio';
-import { StyledCheckbox } from '../../../../../components/Checkbox';
+import { KubeCheckbox } from '../../../../../components/Checkbox';
 import {
   UPDATE_WEB_SERVER_PROTOCOL,
   UPDATE_WEB_SERVER_NAME_OR_IP,
@@ -15,6 +23,42 @@ import {
   UPDATE_REQUEST_BODY_DATA,
 } from '../../../../../actions/applicationAction';
 import { KubeSubCard } from '../../../../../components/InfoCard';
+import Editor from '@monaco-editor/react';
+import {
+  StyledTableHead,
+  StyledTableContainer,
+  StyledTableBodyCell,
+  StyledTableBox,
+} from '../../../../../components/DisplayTable';
+import { fontFamily } from '../../../../../utils/commonUtils';
+import {
+  KubeConfirmButton,
+  KubeCancelButton,
+} from '../../../../../components/Button';
+
+function createRow(
+  id,
+  label,
+  isOrder = true,
+  minWidth = '110px',
+  maxWidth = '220px',
+  show = true,
+  align,
+  colSpan = 1,
+  rowSpan = 1
+) {
+  return {
+    id,
+    label,
+    isOrder,
+    minWidth,
+    maxWidth,
+    show,
+    align,
+    colSpan,
+    rowSpan,
+  };
+}
 
 export function RequestDefaults(props) {
   const { showError } = props;
@@ -44,6 +88,30 @@ export function RequestDefaults(props) {
     };
   });
 
+  const headRow = [
+    createRow('name', '名称', false, '150px', '150px', true, 'center'),
+    createRow('value', '值', false, '150px', '150px', true, 'center'),
+    createRow('urlEncode', '编码?', false, '50px', '50px', true, 'center'),
+    createRow(
+      'contentType',
+      '内容类型',
+      false,
+      '120px',
+      '130px',
+      true,
+      'center'
+    ),
+    createRow(
+      'includeEquals',
+      '包含等于?',
+      false,
+      '50px',
+      '50px',
+      true,
+      'center'
+    ),
+  ];
+
   const handleWebServerProtocolChange = e => {
     dispatch({ type: UPDATE_WEB_SERVER_PROTOCOL, data: e.target.value });
   };
@@ -64,6 +132,26 @@ export function RequestDefaults(props) {
     dispatch({
       type: UPDATE_HTTP_REQUEST_CONTENT_ENCODING,
       data: e.target.value,
+    });
+  };
+
+  function handleEditorChange(value, event) {
+    dispatch({ type: UPDATE_REQUEST_BODY_DATA, data: value });
+  }
+
+  const handleParameterAdd = () => {
+    dispatch({
+      type: UPDATE_REQUEST_PARAMETERS,
+      data: [
+        ...requestParameters,
+        {
+          name: '',
+          value: '',
+          urlEncode: false,
+          contentType: 'text/plain',
+          includeEquals: true,
+        },
+      ],
     });
   };
 
@@ -146,7 +234,9 @@ export function RequestDefaults(props) {
           </Stack>
         </KubeSubCard>
 
-        <Box
+        <Stack
+          direction='row'
+          spacing={0.5}
           sx={{
             padding: '6px 16px',
           }}
@@ -157,16 +247,125 @@ export function RequestDefaults(props) {
               [false, '消息体数据'],
             ]}
             value={isSettingParameters}
-            setValue={flag => setIsSettingParameters(flag === "true")}
+            setValue={flag => setIsSettingParameters(flag === 'true')}
           />
-        </Box>
+          <Typography
+            sx={{
+              fontWeight: 400,
+              color: '#79879c',
+              fontSize: '12px',
+              lineHeight: 1.67,
+            }}
+          >
+            （2选1）
+          </Typography>
+        </Stack>
 
         {isSettingParameters === true ? (
-          <KubeSubCard title='参数'></KubeSubCard>
+          <KubeSubCard title='参数'>
+            <Stack
+              sx={{ minHeight: '300px' }}
+              direction='column'
+              justifyContent='space-between'
+            >
+              <StyledTableContainer sx={{ bgcolor: '#FFF' }}>
+                <Table
+                  stickyHeader
+                  size='small'
+                  sx={{
+                    tableLayout: 'auto',
+                  }}
+                >
+                  <StyledTableHead headRow={headRow} selectAll={true} />
+                  <TableBody>
+                    {requestParameters &&
+                    requestParameters.length &&
+                    requestParameters.length > 0 ? (
+                      requestParameters.map((row, index) => {
+                        return (
+                          <TableRow
+                            key={row.id + '' + index}
+                            aria-checked={false}
+                            sx={{
+                              '&:last-child td, &:last-child th': {
+                                border: 0,
+                              },
+                              fontWeight: 600,
+                              maxWidth: '110px',
+                              position: 'sticky',
+                              left: 0,
+                              zIndex: 6,
+                            }}
+                            selected={false}
+                          >
+                            <StyledTableBodyCell align={'center'}>
+                              <KubeCheckbox 
+                                size='small'
+                                disableRipple
+                              />
+                            </StyledTableBodyCell>
+                            <StyledTableBodyCell align={'center'}>
+                              
+                            </StyledTableBodyCell>
+                          </TableRow>
+                        );
+                      })
+                    ) : (
+                      <TableRow style={{ height: '200px' }}>
+                        <TableCell
+                          colSpan={6}
+                          sx={{
+                            textAlign: 'center',
+                            fontSize: '14px',
+                            fontFamily: fontFamily,
+                            fontStyle: 'normal',
+                          }}
+                        >
+                          暂无参数
+                        </TableCell>
+                      </TableRow>
+                    )}
+                  </TableBody>
+                </Table>
+              </StyledTableContainer>
+
+              <Stack
+                direction='row'
+                sx={{
+                  width: '100%',
+                }}
+                spacing={2}
+                justifyContent='center'
+              >
+                <KubeConfirmButton
+                  sx={{ height: '32px', width: '84px' }}
+                  onClick={handleParameterAdd}
+                >
+                  添加
+                </KubeConfirmButton>
+                <KubeCancelButton sx={{ height: '32px', width: '84px' }}>
+                  删除
+                </KubeCancelButton>
+              </Stack>
+            </Stack>
+          </KubeSubCard>
         ) : (
-          <KubeSubCard title='消息体数据'></KubeSubCard>
+          <KubeSubCard title='消息体数据'>
+            <Box>
+              <Editor
+                height='300px'
+                defaultLanguage='json'
+                defaultValue=''
+                onChange={handleEditorChange}
+              />
+            </Box>
+          </KubeSubCard>
         )}
       </Stack>
     </Box>
   );
+}
+
+function EditableRow(props) {
+  const {} = props;
 }
