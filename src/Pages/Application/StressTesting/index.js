@@ -10,7 +10,7 @@ import {
 import { useDispatch, useSelector } from 'react-redux';
 import InfoCard from '@/components/InfoCard';
 import { ContainedButton, KubeConfirmButton } from '@/components/Button';
-import { StyledTextFiled } from '@/components/Input';
+import { StyledTextField } from '@/components/Input';
 import { fontFamily } from '@/utils/commonUtils';
 import { StyledModal } from '../../../components/Modal';
 

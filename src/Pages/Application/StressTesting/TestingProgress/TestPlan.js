@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { Box, Stack } from '@mui/material';
 import { KubeDeploymentCard } from '@/components/InfoCard';
 import { fontFamily } from '@/utils/commonUtils';
-import { KubeInput, StyledTextFiled } from '@/components/Input';
+import { KubeInput, StyledTextField } from '@/components/Input';
 import { useIntl } from 'react-intl';
 import { StyledCheckbox } from '../../../../components/Checkbox';
 import { useSelector, useDispatch } from 'react-redux';

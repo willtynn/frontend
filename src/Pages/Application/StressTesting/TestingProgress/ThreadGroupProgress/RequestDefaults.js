@@ -8,7 +8,7 @@ import {
   TableRow,
   TableCell,
 } from '@mui/material';
-import { KubeInput, StyledTextFiled } from '@/components/Input';
+import { KubeInput, StyledTextField } from '@/components/Input';
 import { useIntl } from 'react-intl';
 import { useSelector, useDispatch } from 'react-redux';
 import { StyledRadioGroup } from '../../../../../components/Radio';

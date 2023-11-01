@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { Box, Stack, Typography } from '@mui/material';
 import { fontFamily } from '@/utils/commonUtils';
-import { KubeInput, StyledTextFiled } from '@/components/Input';
+import { KubeInput, StyledTextField } from '@/components/Input';
 import { useIntl } from 'react-intl';
 import Docker from '@/assets/Docker.svg';
 import { ThreadGroupProgress } from './ThreadGroupProgress';

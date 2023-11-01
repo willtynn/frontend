@@ -41,7 +41,7 @@ import RefreshIcon from '@mui/icons-material/Refresh';
 import { useDispatch, useSelector } from 'react-redux';
 import {
   StyledAutocomplete,
-  StyledTextFiled,
+  StyledTextField,
   ChipTextField,
 } from '../../components/Input';
 import {

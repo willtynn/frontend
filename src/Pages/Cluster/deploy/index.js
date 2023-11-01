@@ -11,7 +11,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import LabelAndValue from '../../../components/LabelAndValue';
 import InfoCard from '../../../components/InfoCard';
 import { ContainedButton, OutlinedButton } from '../../../components/Button';
-import { StyledTextFiled } from '../../../components/Input';
+import { StyledTextField } from '../../../components/Input';
 import ServiceStatusTable from './ServiceStatusTable';
 import { fontFamily } from '@/utils/commonUtils';
 import DeployProgress from './DeployProgress';

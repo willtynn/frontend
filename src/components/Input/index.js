@@ -14,7 +14,7 @@ import { CustomDefaultChip } from '../Chip';
 import ChipDeleteIcon from '@/assets/ChipDeleteIcon.svg';
 import { fontFamily } from '@/utils/commonUtils';
 
-export const StyledTextFiled = styled(TextField)(() => ({
+export const StyledTextField = styled(TextField)(() => ({
   legend: {
     display: 'none',
   },

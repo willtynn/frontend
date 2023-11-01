@@ -33,7 +33,7 @@ import {
 } from '../../../components/DisplayTable';
 import {
   StyledAutocomplete,
-  StyledTextFiled,
+  StyledTextField,
   ChipTextField,
 } from '../../../components/Input';
 import { EclipseTransparentButton } from '../../../components/Button';
