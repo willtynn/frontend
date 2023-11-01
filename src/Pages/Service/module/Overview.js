@@ -150,6 +150,8 @@ export default function ServiceOverview(props) {
   const [customContentAnchorEl, setCustomContentAnchorEl] = useState(null);
   const customContentOpen = Boolean(customContentAnchorEl);
 
+  const [checkAll, setCheckAll] = useState(false);
+
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
@@ -583,6 +585,8 @@ export default function ServiceOverview(props) {
               order={order}
               orderBy={orderBy}
               onRequestSort={handleRequestSort}
+              checkAll={checkAll}
+              setCheckAll={setCheckAll}
             />
 
             <TableBody>

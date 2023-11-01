@@ -8,7 +8,7 @@ import {
   TableRow,
   TableCell,
 } from '@mui/material';
-import { KubeInput, StyledTextField } from '@/components/Input';
+import { KubeInput, EditableTextField } from '@/components/Input';
 import { useIntl } from 'react-intl';
 import { useSelector, useDispatch } from 'react-redux';
 import { StyledRadioGroup } from '../../../../../components/Radio';
@@ -64,6 +64,8 @@ export function RequestDefaults(props) {
   const { showError } = props;
 
   const [isSettingParameters, setIsSettingParameters] = useState(true);
+  const [parameterDeletedRows, setParameterDeletedRows] = useState([]);
+  const [allCheck, setAllCheck] = useState(false);
 
   const intl = useIntl();
   const dispatch = useDispatch();
@@ -87,6 +89,14 @@ export function RequestDefaults(props) {
       requestBodyData: state.Application.requestBodyData,
     };
   });
+
+  useEffect(() => {
+    setAllCheck(
+      parameterDeletedRows.every((value, index) => {
+        return value === true;
+      })
+    );
+  }, [parameterDeletedRows]);
 
   const headRow = [
     createRow('name', '名称', false, '150px', '150px', true, 'center'),
@@ -153,6 +163,38 @@ export function RequestDefaults(props) {
         },
       ],
     });
+    setParameterDeletedRows(prevRows => [...prevRows, false]);
+  };
+
+  const handleTableCellChange = (index, key, value) => {
+    let tmpParameters = JSON.parse(JSON.stringify(requestParameters));
+    tmpParameters[index][key] = value;
+    dispatch({ type: UPDATE_REQUEST_PARAMETERS, data: tmpParameters });
+  };
+
+  const handleAllCheck = checked => {
+    setAllCheck(checked);
+    setParameterDeletedRows(new Array(requestParameters.length).fill(checked));
+  };
+
+  const handleSingleRowCheck = (checked, index) => {
+    let tmpRows = JSON.parse(JSON.stringify(parameterDeletedRows));
+    tmpRows[index] = checked;
+    setParameterDeletedRows(tmpRows);
+  };
+
+  const handleParameterDelete = () => {
+    dispatch({
+      type: UPDATE_REQUEST_PARAMETERS,
+      data: requestParameters.filter((v, index) => {
+        return parameterDeletedRows[index] === false;
+      }),
+    });
+    setParameterDeletedRows(
+      parameterDeletedRows.filter((value, index) => {
+        return value === false;
+      })
+    );
   };
 
   return (
@@ -276,7 +318,12 @@ export function RequestDefaults(props) {
                     tableLayout: 'auto',
                   }}
                 >
-                  <StyledTableHead headRow={headRow} selectAll={true} />
+                  <StyledTableHead
+                    headRow={headRow}
+                    selectAll={true}
+                    checkAll={allCheck}
+                    setCheckAll={handleAllCheck}
+                  />
                   <TableBody>
                     {requestParameters &&
                     requestParameters.length &&
@@ -296,16 +343,98 @@ export function RequestDefaults(props) {
                               left: 0,
                               zIndex: 6,
                             }}
-                            selected={false}
                           >
                             <StyledTableBodyCell align={'center'}>
-                              <KubeCheckbox 
+                              <KubeCheckbox
                                 size='small'
                                 disableRipple
+                                checked={parameterDeletedRows[index]}
+                                onChange={e =>
+                                  handleSingleRowCheck(e.target.checked, index)
+                                }
                               />
                             </StyledTableBodyCell>
                             <StyledTableBodyCell align={'center'}>
-                              
+                              <EditableTextField
+                                sx={{
+                                  height: '32px',
+                                  '& input': {
+                                    textAlign: 'center',
+                                  },
+                                }}
+                                onChange={e =>
+                                  handleTableCellChange(
+                                    index,
+                                    'name',
+                                    e.target.value
+                                  )
+                                }
+                                value={row.name}
+                              />
+                            </StyledTableBodyCell>
+                            <StyledTableBodyCell align={'center'}>
+                              <EditableTextField
+                                sx={{
+                                  height: '32px',
+                                  '& input': {
+                                    textAlign: 'center',
+                                  },
+                                }}
+                                onChange={e =>
+                                  handleTableCellChange(
+                                    index,
+                                    'value',
+                                    e.target.value
+                                  )
+                                }
+                                value={row.value}
+                              />
+                            </StyledTableBodyCell>
+                            <StyledTableBodyCell align={'center'}>
+                              <KubeCheckbox
+                                size='small'
+                                disableRipple
+                                onChange={e =>
+                                  handleTableCellChange(
+                                    index,
+                                    'urlEncode',
+                                    e.target.checked
+                                  )
+                                }
+                                checked={row.urlEncode}
+                              />
+                            </StyledTableBodyCell>
+                            <StyledTableBodyCell align={'center'}>
+                              <EditableTextField
+                                sx={{
+                                  height: '32px',
+                                  '& input': {
+                                    textAlign: 'center',
+                                  },
+                                }}
+                                onChange={e =>
+                                  handleTableCellChange(
+                                    index,
+                                    'contentType',
+                                    e.target.value
+                                  )
+                                }
+                                value={row.contentType}
+                              />
+                            </StyledTableBodyCell>
+                            <StyledTableBodyCell align={'center'}>
+                              <KubeCheckbox
+                                size='small'
+                                disableRipple
+                                checked={row.includeEquals}
+                                onChange={e =>
+                                  handleTableCellChange(
+                                    index,
+                                    'includeEquals',
+                                    e.target.checked
+                                  )
+                                }
+                              />
                             </StyledTableBodyCell>
                           </TableRow>
                         );
@@ -343,7 +472,10 @@ export function RequestDefaults(props) {
                 >
                   添加
                 </KubeConfirmButton>
-                <KubeCancelButton sx={{ height: '32px', width: '84px' }}>
+                <KubeCancelButton
+                  sx={{ height: '32px', width: '84px' }}
+                  onClick={handleParameterDelete}
+                >
                   删除
                 </KubeCancelButton>
               </Stack>

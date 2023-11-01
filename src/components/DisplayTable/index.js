@@ -327,7 +327,7 @@ export function GlobalPagination(props) {
 }
 
 export function StyledTableHead(props) {
-  const { headRow, selectAll, order, orderBy, onRequestSort } = props;
+  const { headRow, selectAll, order, orderBy, onRequestSort, checkAll, setCheckAll } = props;
 
   const createSortHandler = property => event => {
     onRequestSort(event, property);
@@ -350,6 +350,8 @@ export function StyledTableHead(props) {
               }}
               disableRipple
               size="small"
+              checked={checkAll}
+              onChange={(e) => setCheckAll(e.target.checked)}
             />
           </StyledTableRowCell>
         ) : (

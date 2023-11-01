@@ -160,6 +160,7 @@ export default function ImagesList(props) {
   const [colDisplay, setColDisplay] = useState([true, true, true, true, true]);
   const [customContentAnchorEl, setCustomContentAnchorEl] = useState(null);
   const customContentOpen = Boolean(customContentAnchorEl);
+  const [checkAll, setCheckAll] = useState(false);
 
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -410,7 +411,8 @@ export default function ImagesList(props) {
             <StyledTableHead
               headRow={headFirstRow}
               selectAll={true}
-
+              checkAll={checkAll}
+              setCheckAll={setCheckAll}
             />
 
             <TableBody>
