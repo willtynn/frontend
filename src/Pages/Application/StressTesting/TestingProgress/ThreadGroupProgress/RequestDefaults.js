@@ -115,8 +115,8 @@ export function RequestDefaults(props) {
       'includeEquals',
       '包含等于?',
       false,
-      '50px',
-      '50px',
+      '70px',
+      '70px',
       true,
       'center'
     ),
@@ -496,8 +496,4 @@ export function RequestDefaults(props) {
       </Stack>
     </Box>
   );
-}
-
-function EditableRow(props) {
-  const {} = props;
 }

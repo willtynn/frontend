@@ -335,7 +335,10 @@ export function StyledTableHead(props) {
 
   return (
     <TableHead>
-      <TableRow>
+      <TableRow sx={{
+        zIndex: 7,
+        position: "relative"
+      }}>
         {selectAll === true ? (
           <StyledTableRowCell
             align='center'

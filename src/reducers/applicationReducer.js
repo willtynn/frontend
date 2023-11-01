@@ -23,6 +23,7 @@ const initState = {
   duration: null,
   delay: null,
 
+  requestDefaultName: "HTTP请求默认值",
   webServerProtocol: '',
   webServerNameOrIP: '',
   webServerPort: '',
@@ -30,6 +31,9 @@ const initState = {
   httpRequestContentEncoding: '',
   requestParameters: [],
   requestBodyData: '',
+
+  headerManagerName: "HTTP Header Manager",
+  requestHeader: [],
 
   groupEdit: false,
   currentGroupEditStage: 1,
@@ -164,6 +168,11 @@ export default function ApplicationReducer(state = initState, action) {
         ...state,
         requestBodyData: data,
       };
+    case actions.UPDATE_REQUEST_HEADER:
+      return {
+        ...state,
+        requestHeader: data,
+      }
     default:
       return state;
   }
