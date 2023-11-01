@@ -35,6 +35,8 @@ const initState = {
   headerManagerName: "HTTP Header Manager",
   requestHeader: [],
 
+  timer: [],
+
   groupEdit: false,
   currentGroupEditStage: 1,
 };
@@ -172,6 +174,11 @@ export default function ApplicationReducer(state = initState, action) {
       return {
         ...state,
         requestHeader: data,
+      }
+    case actions.UPDATE_TIMER:
+      return {
+        ...state,
+        timer: data,
       }
     default:
       return state;

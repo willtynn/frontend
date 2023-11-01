@@ -129,11 +129,11 @@ export function HeaderManager(props) {
     <Box sx={{ p: '12px' }}>
       <KubeSubCard title='信息头存储在信息头管理器中'>
         <Stack
-          sx={{ height: "300px" }}
+          sx={{ height: "320px" }}
           direction='column'
           justifyContent='space-between'
         >
-          <StyledTableContainer sx={{ bgcolor: '#FFF' }}>
+          <StyledTableContainer sx={{ bgcolor: '#FFF', mt: '12px' }}>
             <Table
               stickyHeader
               size='small'
