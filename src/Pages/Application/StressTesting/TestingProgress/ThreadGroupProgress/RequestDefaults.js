@@ -310,7 +310,7 @@ export function RequestDefaults(props) {
               direction='column'
               justifyContent='space-between'
             >
-              <StyledTableContainer sx={{ bgcolor: '#FFF' }}>
+              <StyledTableContainer sx={{ bgcolor: '#FFF', mt: '12px' }}>
                 <Table
                   stickyHeader
                   size='small'

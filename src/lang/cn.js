@@ -88,6 +88,6 @@ export const messages = {
     schedulerDescription: "调度器",
     webServerDescription: "对Web服务器进行设置。",
     httpRequestDescription: "对HTTP请求进行设置。",
-    
+    timerAddDescription: "自定义定时器的设置以创建定时器。"
   },
 };
