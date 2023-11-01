@@ -1,4 +1,4 @@
-import { Box, Stack } from '@mui/material';
+import { Box, Stack, Typography } from '@mui/material';
 import { YaHeiLargeFont } from '@/components/Fonts';
 import { shadowStyle } from '@/utils/commonUtils';
 import { fontFamily } from '../../utils/commonUtils';
@@ -113,5 +113,45 @@ export function KubeSimpleCard(props) {
         </Box>
       </Box>
     </Stack>
+  );
+}
+
+export function KubeSubCard(props) {
+  const { title, description } = props;
+
+  return (
+    <Box
+      sx={{
+        mt: '12px',
+        borderRadius: '4px',
+        backgroundColor: '#fff',
+        border: '1px solid #ccd3db',
+        p: '11px 16px',
+        mb: '50px',
+      }}
+    >
+      <Typography
+        sx={{
+          fontWeight: 600,
+          color: '#242e42',
+          fontSize: '12px',
+          lineHeight: 1.67,
+        }}
+      >
+        {title}
+      </Typography>
+
+      <Typography
+        sx={{
+          fontWeight: 400,
+          color: '#79879c',
+          fontSize: '12px',
+          lineHeight: 1.67,
+        }}
+      >
+        {description}
+      </Typography>
+      {props.children}
+    </Box>
   );
 }

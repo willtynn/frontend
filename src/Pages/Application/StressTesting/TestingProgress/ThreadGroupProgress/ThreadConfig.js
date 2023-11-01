@@ -1,12 +1,24 @@
 import { useState, useEffect } from 'react';
 import { Box, Stack, Typography } from '@mui/material';
-import { KubeDeploymentCard } from '@/components/InfoCard';
-import { fontFamily } from '@/utils/commonUtils';
 import { KubeInput, StyledTextFiled } from '@/components/Input';
 import { useIntl } from 'react-intl';
 import { useSelector, useDispatch } from 'react-redux';
 import { StyledRadioGroup } from '../../../../../components/Radio';
 import { StyledCheckbox } from '../../../../../components/Checkbox';
+import {
+  UPDATE_GROUP_NAME,
+  UPDATE_GROUP_COMMENT,
+  UPDATE_ON_SAMPLE_ERROR,
+  UPDATE_NUM_THREADS,
+  UPDATE_RAMP_TIME,
+  UPDATE_LOOPS,
+  UPDATE_LOOPS_CONTINUE_FOREVER,
+  UPDATE_SAME_USER_ON_NEXT_ITERATION,
+  UPDATE_DELAY_START,
+  UPDATE_SCHEDULER,
+  UPDATE_DURATION,
+  UPDATE_DELAY,
+} from '../../../../../actions/applicationAction';
 
 const regExp = new RegExp(/^[a-z0-9](?:[a-z0-9-]{0,251}[a-z0-9])?$/);
 const onSampleErrorData = [
@@ -19,35 +31,44 @@ const onSampleErrorData = [
 
 export function ThreadConfig(props) {
   const {
-    groupName,
-    setGroupName,
-    groupComment,
-    setGroupComment,
-    onSampleError,
-    setOnSampleError,
-    numThreads,
-    setNumThreads,
-    rampTime,
-    setRampTime,
-    loops,
-    setLoops,
-    loopsContinueForever,
-    setLoopsContinueForever,
-    sameUserOnNextIteration,
-    setSameUserOnNextIteration,
-    delayedStart,
-    setDelayedStart,
-    scheduler,
-    setScheduler,
-    duration,
-    setDuration,
-    delay,
-    setDelay,
     showError,
   } = props;
 
   const [groupNameError, setGroupNameError] = useState(true);
   const [groupNameErrorType, setGroupNameErrorType] = useState(0);
+
+  const {
+    groupName,
+    groupComment,
+    onSampleError,
+    numThreads,
+    rampTime,
+    loops,
+    loopsContinueForever,
+    sameUserOnNextIteration,
+    delayedStart,
+    scheduler,
+    duration,
+    delay,
+  } = useSelector(state => {
+    return {
+      groupName: state.Application.groupName,
+      groupComment: state.Application.groupComment,
+      onSampleError: state.Application.onSampleError,
+      numThreads: state.Application.numThreads,
+      rampTime: state.Application.rampTime,
+      loops: state.Application.loops,
+      loopsContinueForever: state.Application.loopsContinueForever,
+      sameUserOnNextIteration: state.Application.sameUserOnNextIteration,
+      sameUserOnNextIteration: state.Application.sameUserOnNextIteration,
+      delayedStart: state.Application.delayedStart,
+      scheduler: state.Application.scheduler,
+      duration: state.Application.duration,
+      delay: state.Application.delay,
+    };
+  });
+
+  const dispatch = useDispatch();
 
   const intl = useIntl();
 
@@ -61,31 +82,31 @@ export function ThreadConfig(props) {
     } else {
       setGroupNameError(false);
     }
-    setGroupName(e.target.value);
+    dispatch({type: UPDATE_GROUP_NAME, data: e.target.value});
   };
 
   const handleGroupCommentChange = e => {
-    setGroupComment(e.target.value);
+    dispatch({type: UPDATE_GROUP_COMMENT, data: e.target.value});
   };
 
   const handleNumThreadsChange = e => {
-    setNumThreads(e.target.value);
+    dispatch({type: UPDATE_NUM_THREADS, data: e.target.value});
   };
 
   const handleRampTimeChange = e => {
-    setRampTime(e.target.value);
+    dispatch({type: UPDATE_RAMP_TIME, data: e.target.value});
   };
 
   const handleLoopsChange = e => {
-    setLoops(e.target.value);
+    dispatch({type: UPDATE_LOOPS, data: e.target.value});
   };
 
   const handleDurationChange = e => {
-    setDuration(e.target.value);
+    dispatch({type: UPDATE_DURATION, data: e.target.value});
   };
 
   const handleDelayChange = e => {
-    setDelay(e.target.value);
+    dispatch({type: UPDATE_DELAY, data: e.target.value});
   };
 
   return (
@@ -132,7 +153,7 @@ export function ThreadConfig(props) {
             <StyledRadioGroup
               data={onSampleErrorData}
               value={onSampleError}
-              handleChange={setOnSampleError}
+              setValue={(onErr) => dispatch({type: UPDATE_ON_SAMPLE_ERROR, data: onErr})}
             />
           </Box>
         </Box>
@@ -155,12 +176,7 @@ export function ThreadConfig(props) {
           onChange={handleRampTimeChange}
         />
 
-        <Stack
-          direction='row'
-          width='100%'
-          justifyContent='space-between'
-          alignItems='flex-end'
-        >
+        <Stack direction='row' width='100%' justifyContent='space-between'>
           <Box
             sx={{
               width: 'calc(100% - 100px)',
@@ -176,28 +192,29 @@ export function ThreadConfig(props) {
               disabled={loopsContinueForever}
             />
           </Box>
-
-          <StyledCheckbox
-            checked={loopsContinueForever}
-            setChecked={checked => setLoopsContinueForever(checked)}
-            msg='永远'
-          />
+          <Box sx={{ pt: '30px' }}>
+            <StyledCheckbox
+              checked={loopsContinueForever}
+              setChecked={checked => dispatch({type: UPDATE_LOOPS_CONTINUE_FOREVER, data: checked})}
+              msg='永远'
+            />
+          </Box>
         </Stack>
 
         <Stack direction='column' spacing={1}>
           <StyledCheckbox
             checked={sameUserOnNextIteration}
-            setChecked={checked => setSameUserOnNextIteration(checked)}
+            setChecked={checked => dispatch({type: UPDATE_SAME_USER_ON_NEXT_ITERATION, data: checked})}
             msg={intl.messages['stressTesting.sameUserDescription']}
           />
           <StyledCheckbox
             checked={delayedStart}
-            setChecked={checked => setDelayedStart(checked)}
+            setChecked={checked => dispatch({type: UPDATE_DELAY_START, data: checked})}
             msg={intl.messages['stressTesting.delayStartDescription']}
           />
           <StyledCheckbox
             checked={scheduler}
-            setChecked={checked => setScheduler(checked)}
+            setChecked={checked => dispatch({type: UPDATE_SCHEDULER, data: checked})}
             msg={intl.messages['stressTesting.schedulerDescription']}
           />
         </Stack>

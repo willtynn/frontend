@@ -14,6 +14,8 @@ import { KubeCancelButton, KubeConfirmButton } from '@/components/Button';
 import ProgressIndicator from '../../../Cluster/deploy/DeployProgress/ProgressIndicator';
 import { TestPlan } from './TestPlan';
 import { ThreadGroup } from './ThreadGroup';
+import { useSelector, useDispatch } from 'react-redux';
+import { UPDATE_CURRENT_GROUP_EDIT_STAGE, UPDATE_GROUP_EDIT } from '../../../../actions/applicationAction';
 
 const style = {
   position: 'absolute',
@@ -26,7 +28,8 @@ const style = {
   fontFamily: fontFamily,
 };
 
-const totalStage = 4;
+const totalStage = 2;
+const totalGroupEditStage = 5;
 
 export function TestingProgress(props) {
   const { handleConfirmClick, handleCancelClick, showError, setShowError } =
@@ -34,14 +37,46 @@ export function TestingProgress(props) {
   const [currentStage, setCurrentStage] = useState(1);
 
   const intl = useIntl();
+  const dispatch = useDispatch();
+
+  const { groupEdit, currentGroupEditStage } = useSelector(state => {
+    return {
+      groupEdit: state.Application.groupEdit,
+      currentGroupEditStage: state.Application.currentGroupEditStage,
+    };
+  });
 
   const previousStep = () => {
-    setCurrentStage(prevStage => prevStage - 1);
+    if(groupEdit) {
+      dispatch({type: UPDATE_CURRENT_GROUP_EDIT_STAGE, data: currentGroupEditStage - 1});
+    } else {
+      setCurrentStage(prevStage => prevStage - 1);
+    }
   };
 
   const nextStep = () => {
-    setCurrentStage(prevStage => prevStage + 1);
+    if(groupEdit) {
+      dispatch({type: UPDATE_CURRENT_GROUP_EDIT_STAGE, data: currentGroupEditStage + 1});
+    } else {
+      setCurrentStage(prevStage => prevStage + 1);
+    }
   };
+
+  const handleCancelButtonClick = () => {
+    if(groupEdit) {
+      dispatch({type: UPDATE_GROUP_EDIT, data: false});
+    } else {
+      handleCancelClick();
+    }
+  }
+
+  const handleConfirmButtonClick = () => {
+    if(groupEdit) {
+      dispatch({type: UPDATE_GROUP_EDIT, data: false});
+    } else {
+      handleConfirmClick();
+    }
+  }
 
   const currentPage = () => {
     if (currentStage === 1) {
@@ -89,11 +124,12 @@ export function TestingProgress(props) {
         >
           <KubeCancelButton
             sx={{ height: '32px', p: '5px 23px' }}
-            onClick={handleCancelClick}
+            onClick={handleCancelButtonClick}
           >
             取消
           </KubeCancelButton>
-          {currentStage > 1 ? (
+          {/* 不在edit group时，主步骤大于1；在edit group时，次步骤大于1 */}
+          {((currentStage > 1 && !groupEdit) || (groupEdit && currentGroupEditStage > 1)) ? (
             <KubeCancelButton
               sx={{ height: '32px', p: '5px 23px' }}
               onClick={previousStep}
@@ -103,7 +139,7 @@ export function TestingProgress(props) {
           ) : (
             <></>
           )}
-          {currentStage < totalStage ? (
+          {((currentStage < totalStage && !groupEdit) || (groupEdit && currentGroupEditStage < totalGroupEditStage)) ? (
             <KubeConfirmButton
               sx={{ height: '32px', p: '5px 23px' }}
               onClick={nextStep}
@@ -113,9 +149,9 @@ export function TestingProgress(props) {
           ) : (
             <KubeConfirmButton
               sx={{ height: '32px', p: '5px 23px' }}
-              onClick={handleConfirmClick}
+              onClick={handleConfirmButtonClick}
             >
-              创建
+              {!groupEdit ? "创建" : "添加"}
             </KubeConfirmButton>
           )}
         </Stack>

@@ -1,10 +1,12 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Box, Stack, Typography } from '@mui/material';
 import { fontFamily } from '@/utils/commonUtils';
 import { KubeInput, StyledTextFiled } from '@/components/Input';
 import { useIntl } from 'react-intl';
 import Docker from '@/assets/Docker.svg';
 import { ThreadGroupProgress } from './ThreadGroupProgress';
+import { useSelector, useDispatch } from 'react-redux';
+import { UPDATE_GROUP_EDIT } from '../../../../actions/applicationAction';
 
 const onSamplerErrorText = index => {
   if (index === 0) {
@@ -23,23 +25,33 @@ const onSamplerErrorText = index => {
 export function ThreadGroup(props) {
   const { showError } = props;
 
-  const [groupEdit, setGroupEdit] = useState(false);
-
   const intl = useIntl();
 
+  const { groupEdit } = useSelector(state => {
+    return {
+      groupEdit: state.Application.groupEdit,
+    };
+  });
+
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    console.log(groupEdit);
+  }, [groupEdit]);
+
   const handleThreadGroupEdit = () => {
-    setGroupEdit(true);
+    dispatch({ type: UPDATE_GROUP_EDIT, data: true });
   };
 
   const handleReturn = () => {
-    setGroupEdit(false);
+    dispatch({ type: UPDATE_GROUP_EDIT, data: false });
   };
 
   return (
     <>
       {groupEdit ? (
         <Box
-          id="groupEditBox"
+          id='groupEditBox'
           sx={{
             height: 'calc(100% - 148px)',
             position: 'relative',

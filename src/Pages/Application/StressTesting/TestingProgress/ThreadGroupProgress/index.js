@@ -20,12 +20,17 @@ import { HttpRequest } from './HttpRequest';
 import { Timer } from './Timer';
 import { Result } from './Result';
 import { ThreadConfig } from './ThreadConfig';
+import { useSelector } from 'react-redux';
 
 export function ThreadGroupProgress(props) {
   const { handleReturn } = props;
 
   const [returnHover, setReturnHover] = useState(false);
-  const [currentStage, setCurrentStage] = useState(1);
+  const { currentGroupEditStage } = useSelector(state => {
+    return {
+      currentGroupEditStage: state.Application.currentGroupEditStage,
+    };
+  });
 
   const [groupName, setGroupName] = useState('Thread Group');
   const [groupComment, setGroupComment] = useState('');
@@ -45,7 +50,7 @@ export function ThreadGroupProgress(props) {
   );
 
   const currentPage = () => {
-    if (currentStage === 1) {
+    if (currentGroupEditStage === 1) {
       return (
         <ThreadConfig
           groupName={groupName}
@@ -75,16 +80,16 @@ export function ThreadGroupProgress(props) {
         />
       );
     }
-    if (currentStage === 2) {
+    if (currentGroupEditStage === 2) {
       return <RequestDefaults />;
     }
-    if (currentStage === 3) {
+    if (currentGroupEditStage === 3) {
       return <HeaderManager />;
     }
-    if (currentStage === 4) {
+    if (currentGroupEditStage === 4) {
       return <HttpRequest />;
     }
-    if (currentStage === 5) {
+    if (currentGroupEditStage === 5) {
       return <Timer />;
     }
     return <Result />;
@@ -105,31 +110,31 @@ export function ThreadGroupProgress(props) {
           title='线程组设置'
           adornments={[<InfoWaiting />, <InfoNow />, <InfoFinished />]}
           stage={1}
-          currentStage={currentStage}
+          currentStage={currentGroupEditStage}
         />
         <ProgressIndicator
           title='请求默认值'
           adornments={[<InfoWaiting />, <InfoNow />, <InfoFinished />]}
           stage={2}
-          currentStage={currentStage}
+          currentStage={currentGroupEditStage}
         />
         <ProgressIndicator
           title='请求头管理'
           adornments={[<InfoWaiting />, <InfoNow />, <InfoFinished />]}
           stage={3}
-          currentStage={currentStage}
+          currentStage={currentGroupEditStage}
         />
         <ProgressIndicator
           title='HTTP请求'
           adornments={[<InfoWaiting />, <InfoNow />, <InfoFinished />]}
           stage={4}
-          currentStage={currentStage}
+          currentStage={currentGroupEditStage}
         />
         <ProgressIndicator
           title='定时器'
           adornments={[<InfoWaiting />, <InfoNow />, <InfoFinished />]}
           stage={5}
-          currentStage={currentStage}
+          currentStage={currentGroupEditStage}
         />
         {/* <ProgressIndicator
           title='结果'
@@ -171,7 +176,7 @@ export function ThreadGroupProgress(props) {
             添加线程组
           </Typography>
         </Stack>
-        {currentPage(currentStage)}
+        {currentPage(currentGroupEditStage)}
       </Box>
     </Box>
   );

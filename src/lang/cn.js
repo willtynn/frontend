@@ -86,5 +86,8 @@ export const messages = {
     sameUserDescription: "Same user on each iteration",
     delayStartDescription: "延迟创建线程直到需要",
     schedulerDescription: "调度器",
+    webServerDescription: "对Web服务器进行设置。",
+    httpRequestDescription: "对HTTP请求进行设置。",
+    
   },
 };
