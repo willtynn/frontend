@@ -18,24 +18,35 @@ import StressTestingIcon from '@/assets/StressTesting.svg';
 import { useIntl } from 'react-intl';
 import { TestingProgress } from './TestingProgress';
 
+import { UPDATE_GROUP_EDIT } from '../../../actions/applicationAction';
+
 export default function StressTesting() {
   const intl = useIntl();
   const [planOpen, setPlanOpen] = useState(false);
   const [showError, setShowError] = useState(false);
 
+  const dispatch = useDispatch();
+
   const handlePlanClick = () => {
     setPlanOpen(true);
   };
 
+  const resetParameters = () => {
+    dispatch({type: UPDATE_GROUP_EDIT, data: false});
+  }
+
   const handleClose = () => {
+    resetParameters();
     setPlanOpen(false);
   };
 
   const handleCancelClick = () => {
+    resetParameters();
     setPlanOpen(false);
   };
 
   const handleConfirmClick = () => {
+    resetParameters();
     setPlanOpen(false);
   };
 
