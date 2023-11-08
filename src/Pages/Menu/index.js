@@ -46,6 +46,7 @@ export default function MiniDrawer() {
   // 路由模块
   const [l3, setl3] = useState(false);
   const [l31, setl31] = useState(false);
+  const [l32, setl32] = useState(false);
   // 应用模块
   const [l4, setl4] = useState(false);
   const [l41, setl41] = useState(false);
@@ -72,8 +73,8 @@ export default function MiniDrawer() {
   }, [l21, l22]);
 
   useEffect(() => {
-    setl3(l31);
-  }, [l31]);
+    setl3(l31||l32);
+  }, [l31,l32]);
 
   useEffect(() => {
     setl4(l41);
@@ -93,6 +94,7 @@ export default function MiniDrawer() {
     setl22(false);
     setl3(false);
     setl31(false);
+    setl32(false);
     setl4(false);
     setl41(false);
     setl5(false);
@@ -422,7 +424,7 @@ export default function MiniDrawer() {
                   <Route16 />
                 </Box>
                 <Box sx={{ ...styledFont, color: l3 ? '#55bc8a' : '#242e42' }}>
-                  路由（待开发）
+                  路由（开发中）
                 </Box>
                 {verticalOpen3 ? <ExpandLess /> : <ExpandMore />}
               </ListItemButton>
@@ -440,6 +442,20 @@ export default function MiniDrawer() {
                       sx={{ ...styledFont, color: l31 ? '#55bc8a' : '#242e42' }}
                     >
                       路由链路
+                    </Box>
+                  </ListItemButton>
+                  <ListItemButton
+                    sx={styleListButton}
+                    onClick={() => {
+                      setAllFalse();
+                      setl32(true);
+                      navigate('/route/controlling');
+                    }}
+                  >
+                    <Box
+                      sx={{ ...styledFont, color: l31 ? '#55bc8a' : '#242e42' }}
+                    >
+                      路由控制
                     </Box>
                   </ListItemButton>
                 </List>
