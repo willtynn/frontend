@@ -23,7 +23,7 @@ import { ThreadConfig } from './ThreadConfig';
 import { useSelector } from 'react-redux';
 
 export function ThreadGroupProgress(props) {
-  const { handleReturn } = props;
+  const { handleReturn, showError, setThreadConfigError } = props;
 
   const [returnHover, setReturnHover] = useState(false);
   const { currentGroupEditStage } = useSelector(state => {
@@ -39,7 +39,7 @@ export function ThreadGroupProgress(props) {
   const currentPage = () => {
     if (currentGroupEditStage === 1) {
       return (
-        <ThreadConfig />
+        <ThreadConfig setThreadConfigError={setThreadConfigError} showError={showError}/>
       );
     }
     if (currentGroupEditStage === 2) {

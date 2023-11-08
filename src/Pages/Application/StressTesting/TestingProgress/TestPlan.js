@@ -17,7 +17,7 @@ import {
 const regExp = new RegExp(/^[a-z0-9](?:[a-z0-9-]{0,251}[a-z0-9])?$/);
 
 export function TestPlan(props) {
-  const { showError } = props;
+  const { showError, setError } = props;
 
   const {
     planName,
@@ -35,11 +35,15 @@ export function TestPlan(props) {
     };
   });
 
-  const [planNameError, setPlanNameError] = useState(true);
+  const [planNameError, setPlanNameError] = useState(false);
   const [planNameErrorType, setPlanNameErrorType] = useState(0);
 
   const intl = useIntl();
   const dispatch = useDispatch();
+
+  useEffect(() => {
+    setError(planNameError);
+  }, [planNameError])
 
   const handlePlanNameChange = e => {
     if (e.target.value === '') {

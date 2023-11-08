@@ -32,9 +32,10 @@ const onSampleErrorData = [
 export function ThreadConfig(props) {
   const {
     showError,
+    setThreadConfigError
   } = props;
 
-  const [groupNameError, setGroupNameError] = useState(true);
+  const [groupNameError, setGroupNameError] = useState(false);
   const [groupNameErrorType, setGroupNameErrorType] = useState(0);
 
   const {
@@ -71,6 +72,10 @@ export function ThreadConfig(props) {
   const dispatch = useDispatch();
 
   const intl = useIntl();
+
+  useEffect(() => {
+    setThreadConfigError(groupNameError)
+  }, [groupNameError]);
 
   const handleGroupNameChange = e => {
     if (e.target.value === '') {

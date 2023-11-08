@@ -23,7 +23,7 @@ import {
   UPDATE_REQUEST_BODY_DATA,
 } from '../../../../../actions/applicationAction';
 import { KubeSubCard } from '../../../../../components/InfoCard';
-import Editor from '@monaco-editor/react';
+import Editor, { loader } from '@monaco-editor/react';
 import {
   StyledTableHead,
   StyledTableContainer,
@@ -35,6 +35,9 @@ import {
   KubeConfirmButton,
   KubeCancelButton,
 } from '../../../../../components/Button';
+import * as monaco from 'monaco-editor';
+
+loader.config({ monaco });
 
 function createRow(
   id,

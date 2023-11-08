@@ -35,6 +35,8 @@ export function TestingProgress(props) {
   const { handleConfirmClick, handleCancelClick, showError, setShowError } =
     props;
   const [currentStage, setCurrentStage] = useState(1);
+  const [testPlanError, setTestPlanError] = useState(0);
+  const [threadConfigError, setThreadConfigError] = useState(false);
 
   const intl = useIntl();
   const dispatch = useDispatch();
@@ -56,9 +58,21 @@ export function TestingProgress(props) {
 
   const nextStep = () => {
     if(groupEdit) {
-      dispatch({type: UPDATE_CURRENT_GROUP_EDIT_STAGE, data: currentGroupEditStage + 1});
+      if(currentGroupEditStage === 1 && threadConfigError) {
+        setShowError(true);
+      } else {
+        dispatch({type: UPDATE_CURRENT_GROUP_EDIT_STAGE, data: currentGroupEditStage + 1});
+        setShowError(false);
+      }
+      
     } else {
-      setCurrentStage(prevStage => prevStage + 1);
+      if(currentStage === 1 && testPlanError) {
+        setShowError(true);
+      } else {
+        setCurrentStage(prevStage => prevStage + 1);
+        setShowError(false);
+      }
+      
     }
   };
 
@@ -80,9 +94,9 @@ export function TestingProgress(props) {
 
   const currentPage = () => {
     if (currentStage === 1) {
-      return <TestPlan />
+      return <TestPlan showError={showError} setError={setTestPlanError}/>
     }
-    return <ThreadGroup />;
+    return <ThreadGroup showError={showError} setThreadConfigError={setThreadConfigError}/>;
   };
 
   return (

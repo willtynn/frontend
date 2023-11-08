@@ -29,7 +29,7 @@ const onSamplerErrorText = index => {
 };
 
 export function ThreadGroup(props) {
-  const { showError } = props;
+  const { showError, setThreadConfigError } = props;
 
   const [editIndex, setEditIndex] = useState(0);
 
@@ -75,7 +75,7 @@ export function ThreadGroup(props) {
             bgcolor: '#FFFFFF',
           }}
         >
-          <ThreadGroupProgress handleReturn={handleReturn} />
+          <ThreadGroupProgress handleReturn={handleReturn} showError={showError} setThreadConfigError={setThreadConfigError}/>
         </Box>
       ) : (
         <>
