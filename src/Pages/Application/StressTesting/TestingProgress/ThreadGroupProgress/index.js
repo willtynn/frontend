@@ -49,9 +49,6 @@ export function ThreadGroupProgress(props) {
       return <HeaderManager />;
     }
     if (currentGroupEditStage === 4) {
-      return <HttpRequest />;
-    }
-    if (currentGroupEditStage === 5) {
       return <Timer />;
     }
     return <Result />;
@@ -87,15 +84,9 @@ export function ThreadGroupProgress(props) {
           currentStage={currentGroupEditStage}
         />
         <ProgressIndicator
-          title='HTTP请求'
-          adornments={[<InfoWaiting />, <InfoNow />, <InfoFinished />]}
-          stage={4}
-          currentStage={currentGroupEditStage}
-        />
-        <ProgressIndicator
           title='定时器'
           adornments={[<InfoWaiting />, <InfoNow />, <InfoFinished />]}
-          stage={5}
+          stage={4}
           currentStage={currentGroupEditStage}
         />
         {/* <ProgressIndicator

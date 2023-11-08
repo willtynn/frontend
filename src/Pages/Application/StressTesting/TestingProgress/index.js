@@ -19,7 +19,9 @@ import {
   UPDATE_CURRENT_GROUP_EDIT_STAGE,
   UPDATE_GROUP_EDIT,
   UPDATE_THREAD_GROUPS,
-  RESET_GROUP
+  RESET_GROUP,
+  RESET_PLAN,
+  UPDATE_GROUP_EDIT_INDEX,
 } from '../../../../actions/applicationAction';
 
 const style = {
@@ -34,7 +36,7 @@ const style = {
 };
 
 const totalStage = 2;
-const totalGroupEditStage = 5;
+const totalGroupEditStage = 4;
 
 export function TestingProgress(props) {
   const { handleConfirmClick, handleCancelClick, showError, setShowError } =
@@ -78,6 +80,7 @@ export function TestingProgress(props) {
     requestBodyData,
     requestHeader,
     timer,
+    groupEditIndex,
   } = useSelector(state => {
     return {
       planName: state.Application.planName,
@@ -111,6 +114,7 @@ export function TestingProgress(props) {
       requestBodyData: state.Application.requestBodyData,
       requestHeader: state.Application.requestHeader,
       timer: state.Application.timer,
+      groupEditIndex: state.Application.groupEditIndex,
     };
   });
 
@@ -148,49 +152,87 @@ export function TestingProgress(props) {
 
   const handleCancelButtonClick = () => {
     if (groupEdit) {
+      if (groupEditIndex !== null) {
+        dispatch({ type: UPDATE_GROUP_EDIT_INDEX, data: null });
+      }
       dispatch({ type: UPDATE_GROUP_EDIT, data: false });
+      dispatch({
+        type: UPDATE_CURRENT_GROUP_EDIT_STAGE,
+        data: 1,
+      });
     } else {
       handleCancelClick();
+      setCurrentStage(1);
     }
   };
 
   const handleConfirmButtonClick = () => {
     if (groupEdit) {
+      if (groupEditIndex !== null) {
+        const tmpGroups = JSON.parse(JSON.stringify(threadGroups));
+        tmpGroups[groupEditIndex] = {
+          groupName: groupName,
+          groupComment: groupComment,
+          onSampleError: onSampleError,
+          numThreads: numThreads,
+          rampTime: rampTime,
+          loops: loops,
+          loopsContinueForever: loopsContinueForever,
+          sameUserOnNextIteration: sameUserOnNextIteration,
+          delayedStart: delayedStart,
+          scheduler: scheduler,
+          duration: duration,
+          delay: delay,
+          requestDefaultName: requestDefaultName,
+          webServerProtocol: webServerProtocol,
+          webServerNameOrIP: webServerNameOrIP,
+          webServerPort: webServerPort,
+          httpRequestMethod: httpRequestMethod,
+          httpRequestPath: httpRequestPath,
+          httpRequestContentEncoding: httpRequestContentEncoding,
+          requestParameters: requestParameters,
+          requestBodyData: requestBodyData,
+          requestHeader: requestHeader,
+          timer: timer,
+        };
+        dispatch({ type: UPDATE_THREAD_GROUPS, data: tmpGroups });
+        dispatch({ type: UPDATE_GROUP_EDIT_INDEX, data: null });
+      } else {
+        dispatch({
+          type: UPDATE_THREAD_GROUPS,
+          data: [
+            ...threadGroups,
+            {
+              groupName: groupName,
+              groupComment: groupComment,
+              onSampleError: onSampleError,
+              numThreads: numThreads,
+              rampTime: rampTime,
+              loops: loops,
+              loopsContinueForever: loopsContinueForever,
+              sameUserOnNextIteration: sameUserOnNextIteration,
+              delayedStart: delayedStart,
+              scheduler: scheduler,
+              duration: duration,
+              delay: delay,
+              requestDefaultName: requestDefaultName,
+              webServerProtocol: webServerProtocol,
+              webServerNameOrIP: webServerNameOrIP,
+              webServerPort: webServerPort,
+              httpRequestMethod: httpRequestMethod,
+              httpRequestPath: httpRequestPath,
+              httpRequestContentEncoding: httpRequestContentEncoding,
+              requestParameters: requestParameters,
+              requestBodyData: requestBodyData,
+              requestHeader: requestHeader,
+              timer: timer,
+            },
+          ],
+        });
+      }
       dispatch({ type: UPDATE_GROUP_EDIT, data: false });
-      dispatch({
-        type: UPDATE_THREAD_GROUPS,
-        data: [
-          ...threadGroups,
-          {
-            groupName: groupName,
-            groupComment: groupComment,
-            onSampleError: onSampleError,
-            numThreads: numThreads,
-            rampTime: rampTime,
-            loops: loops,
-            loopsContinueForever: loopsContinueForever,
-            sameUserOnNextIteration: sameUserOnNextIteration,
-            delayedStart: delayedStart,
-            scheduler: scheduler,
-            duration: duration,
-            delay: delay,
-            requestDefaultName: requestDefaultName,
-            webServerProtocol: webServerProtocol,
-            webServerNameOrIP: webServerNameOrIP,
-            webServerPort: webServerPort,
-            httpRequestMethod: httpRequestMethod,
-            httpRequestPath: httpRequestPath,
-            httpRequestContentEncoding: httpRequestContentEncoding,
-            requestParameters: requestParameters,
-            requestBodyData: requestBodyData,
-            requestHeader: requestHeader,
-            timer: timer,
-          },
-        ],
-      });
       dispatch({ type: RESET_GROUP });
     } else {
-      handleConfirmClick();
       console.log({
         planName: planName,
         planComment: planComment,
@@ -199,6 +241,9 @@ export function TestingProgress(props) {
         serializeThreadgroups: serializeThreadgroups,
         threadGroups: threadGroups,
       });
+      handleConfirmClick();
+      setCurrentStage(1);
+      dispatch({ type: RESET_PLAN });
     }
   };
 
@@ -282,7 +327,11 @@ export function TestingProgress(props) {
               sx={{ height: '32px', p: '5px 23px' }}
               onClick={handleConfirmButtonClick}
             >
-              {!groupEdit ? '创建' : '添加'}
+              {!groupEdit
+                ? '创建'
+                : groupEditIndex !== null
+                ? '修改线程组'
+                : '添加'}
             </KubeConfirmButton>
           )}
         </Stack>

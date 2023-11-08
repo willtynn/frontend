@@ -18,7 +18,11 @@ import StressTestingIcon from '@/assets/StressTesting.svg';
 import { useIntl } from 'react-intl';
 import { TestingProgress } from './TestingProgress';
 
-import { UPDATE_GROUP_EDIT } from '../../../actions/applicationAction';
+import {
+  UPDATE_GROUP_EDIT,
+  RESET_GROUP,
+  RESET_PLAN,
+} from '../../../actions/applicationAction';
 
 export default function StressTesting() {
   const intl = useIntl();
@@ -32,8 +36,10 @@ export default function StressTesting() {
   };
 
   const resetParameters = () => {
-    dispatch({type: UPDATE_GROUP_EDIT, data: false});
-  }
+    dispatch({ type: UPDATE_GROUP_EDIT, data: false });
+    dispatch({ type: RESET_PLAN });
+    dispatch({ type: RESET_GROUP });
+  };
 
   const handleClose = () => {
     resetParameters();

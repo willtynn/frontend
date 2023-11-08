@@ -39,6 +39,7 @@ const initState = {
   timer: [],
 
   groupEdit: false,
+  groupEditIndex: null,
   currentGroupEditStage: 1,
 };
 
@@ -218,6 +219,52 @@ export default function ApplicationReducer(state = initState, action) {
         timer: [],
         currentGroupEditStage: 1,
       };
+    case actions.RESET_PLAN:
+      return {
+        ...state,
+        planName: 'Test Plan',
+        planComment: '',
+        functionalMode: false,
+        tearDownOnShutdown: false,
+        serializeThreadgroups: false,
+        threadGroups: [],
+      };
+    case actions.FILL_GROUP_FORM:
+      return {
+        ...state,
+        groupName: data.groupName,
+        groupComment: data.groupComment,
+        onSampleError: data.onSampleError,
+        numThreads: data.numThreads,
+        rampTime: data.rampTime,
+        loops: data.loops,
+        loopsContinueForever: data.loopsContinueForever,
+        sameUserOnNextIteration: data.sameUserOnNextIteration,
+        delayedStart: data.delayedStart,
+        scheduler: data.scheduler,
+        duration: data.duration,
+        delay: data.delay,
+
+        requestDefaultName: data.requestDefaultName,
+        webServerProtocol: data.webServerProtocol,
+        webServerNameOrIP: data.webServerNameOrIP,
+        webServerPort: data.webServerPort,
+        httpRequestMethod: data.httpRequestMethod,
+        httpRequestPath: data.httpRequestPath,
+        httpRequestContentEncoding: data.httpRequestContentEncoding,
+        requestParameters: data.requestParameters,
+        requestBodyData: data.requestBodyData,
+
+        headerManagerName: data.headerManagerName,
+        requestHeader: data.requestHeader,
+
+        timer: data.timer,
+      }
+    case actions.UPDATE_GROUP_EDIT_INDEX:
+      return {
+        ...state,
+        groupEditIndex: data
+      }
     default:
       return state;
   }

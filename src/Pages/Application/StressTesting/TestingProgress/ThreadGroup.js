@@ -9,6 +9,9 @@ import { useSelector, useDispatch } from 'react-redux';
 import {
   UPDATE_GROUP_EDIT,
   UPDATE_THREAD_GROUPS,
+  FILL_GROUP_FORM,
+  UPDATE_GROUP_EDIT_INDEX,
+  UPDATE_CURRENT_GROUP_EDIT_STAGE
 } from '../../../../actions/applicationAction';
 import { KubeTransparentButton } from '../../../../components/Button';
 import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline';
@@ -31,14 +34,13 @@ const onSamplerErrorText = index => {
 export function ThreadGroup(props) {
   const { showError, setThreadConfigError } = props;
 
-  const [editIndex, setEditIndex] = useState(0);
-
   const intl = useIntl();
 
-  const { groupEdit, threadGroups } = useSelector(state => {
+  const { groupEdit, threadGroups, groupEditIndex } = useSelector(state => {
     return {
       groupEdit: state.Application.groupEdit,
       threadGroups: state.Application.threadGroups,
+      groupEditIndex: state.Application.groupEditIndex,
     };
   });
 
@@ -49,12 +51,20 @@ export function ThreadGroup(props) {
   };
 
   const handleReturn = () => {
+    if(groupEditIndex !== null) {
+      dispatch({ type: UPDATE_GROUP_EDIT_INDEX, data: null });
+    }
     dispatch({ type: UPDATE_GROUP_EDIT, data: false });
+    dispatch({
+      type: UPDATE_CURRENT_GROUP_EDIT_STAGE,
+      data: 1,
+    });
   };
 
   const handleThreadGroupEdit = index => {
     dispatch({ type: UPDATE_GROUP_EDIT, data: true });
-    setEditIndex(index);
+    dispatch({ type: FILL_GROUP_FORM, data: threadGroups[index] });
+    dispatch({ type: UPDATE_GROUP_EDIT_INDEX, data: index });
   };
 
   const handleThreadGroupDelete = index => {
@@ -115,7 +125,7 @@ export function ThreadGroup(props) {
                   sx={{
                     mb: '12px',
                   }}
-                  spacing={0.5}
+                  spacing={1}
                 >
                   {threadGroups.map((theadGroup, index) => {
                     return (
