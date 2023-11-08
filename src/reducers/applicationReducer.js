@@ -23,17 +23,17 @@ const initState = {
   duration: null,
   delay: null,
 
-  requestDefaultName: "HTTP请求默认值",
+  requestDefaultName: 'HTTP请求默认值',
   webServerProtocol: '',
   webServerNameOrIP: '',
   webServerPort: '',
-  httpRequestMethod: "POST",
+  httpRequestMethod: 'POST',
   httpRequestPath: '',
   httpRequestContentEncoding: '',
   requestParameters: [],
   requestBodyData: '',
 
-  headerManagerName: "HTTP Header Manager",
+  headerManagerName: 'HTTP Header Manager',
   requestHeader: [],
 
   timer: [],
@@ -155,7 +155,7 @@ export default function ApplicationReducer(state = initState, action) {
       return {
         ...state,
         httpRequestMethod: data,
-      }
+      };
     case actions.UPDATE_HTTP_REQUEST_PATH:
       return {
         ...state,
@@ -180,12 +180,44 @@ export default function ApplicationReducer(state = initState, action) {
       return {
         ...state,
         requestHeader: data,
-      }
+      };
     case actions.UPDATE_TIMER:
       return {
         ...state,
         timer: data,
-      }
+      };
+    case actions.RESET_GROUP:
+      return {
+        ...state,
+        groupName: 'Thread Group',
+        groupComment: '',
+        onSampleError: 'continue',
+        numThreads: 1,
+        rampTime: 1,
+        loops: 1,
+        loopsContinueForever: false,
+        sameUserOnNextIteration: true,
+        delayedStart: false,
+        scheduler: false,
+        duration: null,
+        delay: null,
+
+        requestDefaultName: 'HTTP请求默认值',
+        webServerProtocol: '',
+        webServerNameOrIP: '',
+        webServerPort: '',
+        httpRequestMethod: 'POST',
+        httpRequestPath: '',
+        httpRequestContentEncoding: '',
+        requestParameters: [],
+        requestBodyData: '',
+
+        headerManagerName: 'HTTP Header Manager',
+        requestHeader: [],
+
+        timer: [],
+        currentGroupEditStage: 1,
+      };
     default:
       return state;
   }

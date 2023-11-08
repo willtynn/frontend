@@ -20,7 +20,7 @@ import {
   UPDATE_DELAY,
 } from '../../../../../actions/applicationAction';
 
-const regExp = new RegExp(/^[a-z0-9](?:[a-z0-9-]{0,251}[a-z0-9])?$/);
+const regExp = new RegExp(/^[a-zA-Z0-9][a-zA-Z0-9 -]{0,251}[a-zA-Z0-9]$/);
 const onSampleErrorData = [
   ['continue', '继续'],
   ['startnextloop', '启动下一进程循环'],
@@ -81,11 +81,14 @@ export function ThreadConfig(props) {
     if (e.target.value === '') {
       setGroupNameError(true);
       setGroupNameErrorType(0);
+      console.log(1)
     } else if (!regExp.test(e.target.value)) {
       setGroupNameError(true);
       setGroupNameErrorType(1);
+      console.log(2)
     } else {
       setGroupNameError(false);
+      console.log(3)
     }
     dispatch({type: UPDATE_GROUP_NAME, data: e.target.value});
   };

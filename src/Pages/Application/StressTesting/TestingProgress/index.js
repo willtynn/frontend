@@ -15,7 +15,12 @@ import ProgressIndicator from '../../../Cluster/deploy/DeployProgress/ProgressIn
 import { TestPlan } from './TestPlan';
 import { ThreadGroup } from './ThreadGroup';
 import { useSelector, useDispatch } from 'react-redux';
-import { UPDATE_CURRENT_GROUP_EDIT_STAGE, UPDATE_GROUP_EDIT } from '../../../../actions/applicationAction';
+import {
+  UPDATE_CURRENT_GROUP_EDIT_STAGE,
+  UPDATE_GROUP_EDIT,
+  UPDATE_THREAD_GROUPS,
+  RESET_GROUP
+} from '../../../../actions/applicationAction';
 
 const style = {
   position: 'absolute',
@@ -41,62 +46,172 @@ export function TestingProgress(props) {
   const intl = useIntl();
   const dispatch = useDispatch();
 
-  const { groupEdit, currentGroupEditStage } = useSelector(state => {
+  const {
+    planName,
+    planComment,
+    functionalMode,
+    tearDownOnShutdown,
+    serializeThreadgroups,
+    groupEdit,
+    currentGroupEditStage,
+    threadGroups,
+    groupName,
+    groupComment,
+    onSampleError,
+    numThreads,
+    rampTime,
+    loops,
+    loopsContinueForever,
+    sameUserOnNextIteration,
+    delayedStart,
+    scheduler,
+    duration,
+    delay,
+    requestDefaultName,
+    webServerProtocol,
+    webServerNameOrIP,
+    webServerPort,
+    httpRequestMethod,
+    httpRequestPath,
+    httpRequestContentEncoding,
+    requestParameters,
+    requestBodyData,
+    requestHeader,
+    timer,
+  } = useSelector(state => {
     return {
+      planName: state.Application.planName,
+      planComment: state.Application.planComment,
+      functionalMode: state.Application.functionalMode,
+      tearDownOnShutdown: state.Application.tearDownOnShutdown,
+      serializeThreadgroups: state.Application.serializeThreadgroups,
       groupEdit: state.Application.groupEdit,
       currentGroupEditStage: state.Application.currentGroupEditStage,
+      threadGroups: state.Application.threadGroups,
+      groupName: state.Application.groupName,
+      groupComment: state.Application.groupComment,
+      onSampleError: state.Application.onSampleError,
+      numThreads: state.Application.numThreads,
+      rampTime: state.Application.rampTime,
+      loops: state.Application.loops,
+      loopsContinueForever: state.Application.loopsContinueForever,
+      sameUserOnNextIteration: state.Application.sameUserOnNextIteration,
+      delayedStart: state.Application.delayedStart,
+      scheduler: state.Application.scheduler,
+      duration: state.Application.duration,
+      delay: state.Application.delay,
+      requestDefaultName: state.Application.requestDefaultName,
+      webServerProtocol: state.Application.webServerProtocol,
+      webServerNameOrIP: state.Application.webServerNameOrIP,
+      webServerPort: state.Application.webServerPort,
+      httpRequestMethod: state.Application.httpRequestMethod,
+      httpRequestPath: state.Application.httpRequestPath,
+      httpRequestContentEncoding: state.Application.httpRequestContentEncoding,
+      requestParameters: state.Application.requestParameters,
+      requestBodyData: state.Application.requestBodyData,
+      requestHeader: state.Application.requestHeader,
+      timer: state.Application.timer,
     };
   });
 
   const previousStep = () => {
-    if(groupEdit) {
-      dispatch({type: UPDATE_CURRENT_GROUP_EDIT_STAGE, data: currentGroupEditStage - 1});
+    if (groupEdit) {
+      dispatch({
+        type: UPDATE_CURRENT_GROUP_EDIT_STAGE,
+        data: currentGroupEditStage - 1,
+      });
     } else {
       setCurrentStage(prevStage => prevStage - 1);
     }
   };
 
   const nextStep = () => {
-    if(groupEdit) {
-      if(currentGroupEditStage === 1 && threadConfigError) {
+    if (groupEdit) {
+      if (currentGroupEditStage === 1 && threadConfigError) {
         setShowError(true);
       } else {
-        dispatch({type: UPDATE_CURRENT_GROUP_EDIT_STAGE, data: currentGroupEditStage + 1});
+        dispatch({
+          type: UPDATE_CURRENT_GROUP_EDIT_STAGE,
+          data: currentGroupEditStage + 1,
+        });
         setShowError(false);
       }
-      
     } else {
-      if(currentStage === 1 && testPlanError) {
+      if (currentStage === 1 && testPlanError) {
         setShowError(true);
       } else {
         setCurrentStage(prevStage => prevStage + 1);
         setShowError(false);
       }
-      
     }
   };
 
   const handleCancelButtonClick = () => {
-    if(groupEdit) {
-      dispatch({type: UPDATE_GROUP_EDIT, data: false});
+    if (groupEdit) {
+      dispatch({ type: UPDATE_GROUP_EDIT, data: false });
     } else {
       handleCancelClick();
     }
-  }
+  };
 
   const handleConfirmButtonClick = () => {
-    if(groupEdit) {
-      dispatch({type: UPDATE_GROUP_EDIT, data: false});
+    if (groupEdit) {
+      dispatch({ type: UPDATE_GROUP_EDIT, data: false });
+      dispatch({
+        type: UPDATE_THREAD_GROUPS,
+        data: [
+          ...threadGroups,
+          {
+            groupName: groupName,
+            groupComment: groupComment,
+            onSampleError: onSampleError,
+            numThreads: numThreads,
+            rampTime: rampTime,
+            loops: loops,
+            loopsContinueForever: loopsContinueForever,
+            sameUserOnNextIteration: sameUserOnNextIteration,
+            delayedStart: delayedStart,
+            scheduler: scheduler,
+            duration: duration,
+            delay: delay,
+            requestDefaultName: requestDefaultName,
+            webServerProtocol: webServerProtocol,
+            webServerNameOrIP: webServerNameOrIP,
+            webServerPort: webServerPort,
+            httpRequestMethod: httpRequestMethod,
+            httpRequestPath: httpRequestPath,
+            httpRequestContentEncoding: httpRequestContentEncoding,
+            requestParameters: requestParameters,
+            requestBodyData: requestBodyData,
+            requestHeader: requestHeader,
+            timer: timer,
+          },
+        ],
+      });
+      dispatch({ type: RESET_GROUP });
     } else {
       handleConfirmClick();
+      console.log({
+        planName: planName,
+        planComment: planComment,
+        functionalMode: functionalMode,
+        tearDownOnShutdown: tearDownOnShutdown,
+        serializeThreadgroups: serializeThreadgroups,
+        threadGroups: threadGroups,
+      });
     }
-  }
+  };
 
   const currentPage = () => {
     if (currentStage === 1) {
-      return <TestPlan showError={showError} setError={setTestPlanError}/>
+      return <TestPlan showError={showError} setError={setTestPlanError} />;
     }
-    return <ThreadGroup showError={showError} setThreadConfigError={setThreadConfigError}/>;
+    return (
+      <ThreadGroup
+        showError={showError}
+        setThreadConfigError={setThreadConfigError}
+      />
+    );
   };
 
   return (
@@ -143,7 +258,8 @@ export function TestingProgress(props) {
             取消
           </KubeCancelButton>
           {/* 不在edit group时，主步骤大于1；在edit group时，次步骤大于1 */}
-          {((currentStage > 1 && !groupEdit) || (groupEdit && currentGroupEditStage > 1)) ? (
+          {(currentStage > 1 && !groupEdit) ||
+          (groupEdit && currentGroupEditStage > 1) ? (
             <KubeCancelButton
               sx={{ height: '32px', p: '5px 23px' }}
               onClick={previousStep}
@@ -153,7 +269,8 @@ export function TestingProgress(props) {
           ) : (
             <></>
           )}
-          {((currentStage < totalStage && !groupEdit) || (groupEdit && currentGroupEditStage < totalGroupEditStage)) ? (
+          {(currentStage < totalStage && !groupEdit) ||
+          (groupEdit && currentGroupEditStage < totalGroupEditStage) ? (
             <KubeConfirmButton
               sx={{ height: '32px', p: '5px 23px' }}
               onClick={nextStep}
@@ -165,7 +282,7 @@ export function TestingProgress(props) {
               sx={{ height: '32px', p: '5px 23px' }}
               onClick={handleConfirmButtonClick}
             >
-              {!groupEdit ? "创建" : "添加"}
+              {!groupEdit ? '创建' : '添加'}
             </KubeConfirmButton>
           )}
         </Stack>

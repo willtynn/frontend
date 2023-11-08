@@ -14,7 +14,7 @@ import {
   UPDATE_TEARDOWN_ON_SHUTDOWN,
 } from '../../../../actions/applicationAction';
 
-const regExp = new RegExp(/^[a-z0-9](?:[a-z0-9-]{0,251}[a-z0-9])?$/);
+const regExp = new RegExp(/^[a-zA-Z0-9][a-zA-Z0-9 -]{0,251}[a-zA-Z0-9]$/);
 
 export function TestPlan(props) {
   const { showError, setError } = props;

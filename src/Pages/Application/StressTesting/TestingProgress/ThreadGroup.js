@@ -75,7 +75,11 @@ export function ThreadGroup(props) {
             bgcolor: '#FFFFFF',
           }}
         >
-          <ThreadGroupProgress handleReturn={handleReturn} showError={showError} setThreadConfigError={setThreadConfigError}/>
+          <ThreadGroupProgress
+            handleReturn={handleReturn}
+            showError={showError}
+            setThreadConfigError={setThreadConfigError}
+          />
         </Box>
       ) : (
         <>
@@ -106,90 +110,104 @@ export function ThreadGroup(props) {
               }}
             >
               {/* 已有Thread Groups */}
-              <Stack sx={{
-                mb: "12px"
-              }}>
-                <Box
+              {threadGroups && threadGroups.length > 0 ? (
+                <Stack
                   sx={{
-                    borderRadius: '4px',
-                    backgroundColor: '#FFFFFF',
-                    border: '1px solid #ccd3db',
-                    padding: '11px 12px 11px 20px',
-                    '&:hover': {
-                      boxShadow: '0 4px 8px 0 rgba(36,46,66,.2)',
-                    },
+                    mb: '12px',
                   }}
+                  spacing={0.5}
                 >
-                  <Stack
-                    direction='row'
-                    justifyContent='space-between'
-                    alignItems='center'
-                    height='40px'
-                  >
-                    <Stack
-                      direction='row'
-                      justifyContent='flex-start'
-                      alignItems='center'
-                      spacing={2}
-                    >
-                      <Docker />
-                      <Stack direction='row' spacing={0.5}>
-                        <Box
-                          sx={{
-                            fontSize: '12px',
-                            fontWeight: 700,
-                            fontStyle: 'normal',
-                            fontStretch: 'normal',
-                            lineHeight: 1.67,
-                            letterSpacing: 'normal',
-                            color: '#242e42',
-                          }}
-                        >
-                          线程组
-                        </Box>
-                        <Box
-                          sx={{
-                            fontSize: '12px',
-                            fontWeight: 400,
-                            fontStyle: 'normal',
-                            fontStretch: 'normal',
-                            lineHeight: 1.67,
-                            letterSpacing: 'normal',
-                            color: '#4C5561',
-                          }}
-                        >
-                          Test Group
-                        </Box>
-                      </Stack>
-                    </Stack>
-                    <Stack direction='row'>
-                      <KubeTransparentButton
+                  {threadGroups.map((theadGroup, index) => {
+                    return (
+                      <Box
                         sx={{
-                          color: '#b6c2cd !important',
+                          borderRadius: '4px',
+                          backgroundColor: '#FFFFFF',
+                          border: '1px solid #ccd3db',
+                          padding: '11px 12px 11px 20px',
                           '&:hover': {
-                            color: '#324558 !important',
+                            boxShadow: '0 4px 8px 0 rgba(36,46,66,.2)',
                           },
                         }}
-                        onClick={handleThreadGroupDelete.bind(this, 0)}
                       >
-                        <DeleteOutlineIcon />
-                      </KubeTransparentButton>
-                      <KubeTransparentButton
-                        sx={{
-                          color: '#b6c2cd !important',
-                          '&:hover': {
-                            color: '#324558 !important',
-                          },
-                        }}
-                        onClick={handleThreadGroupEdit.bind(this, 0)}
-                      >
-                        <ModeEditOutlineOutlinedIcon />
-                      </KubeTransparentButton>
-                    </Stack>
-                  </Stack>
-                </Box>
-              </Stack>
-              
+                        <Stack
+                          direction='row'
+                          justifyContent='space-between'
+                          alignItems='center'
+                          height='40px'
+                        >
+                          <Stack
+                            direction='row'
+                            justifyContent='flex-start'
+                            alignItems='center'
+                            spacing={2}
+                          >
+                            <Docker />
+                            <Stack direction='row' spacing={0.5}>
+                              <Box
+                                sx={{
+                                  fontSize: '12px',
+                                  fontWeight: 700,
+                                  fontStyle: 'normal',
+                                  fontStretch: 'normal',
+                                  lineHeight: 1.67,
+                                  letterSpacing: 'normal',
+                                  color: '#242e42',
+                                }}
+                              >
+                                线程组
+                              </Box>
+                              <Box
+                                sx={{
+                                  fontSize: '12px',
+                                  fontWeight: 400,
+                                  fontStyle: 'normal',
+                                  fontStretch: 'normal',
+                                  lineHeight: 1.67,
+                                  letterSpacing: 'normal',
+                                  color: '#4C5561',
+                                }}
+                              >
+                                {theadGroup.groupName}
+                              </Box>
+                            </Stack>
+                          </Stack>
+                          <Stack direction='row'>
+                            <KubeTransparentButton
+                              sx={{
+                                color: '#b6c2cd !important',
+                                '&:hover': {
+                                  color: '#324558 !important',
+                                },
+                              }}
+                              onClick={handleThreadGroupDelete.bind(
+                                this,
+                                index
+                              )}
+                            >
+                              <DeleteOutlineIcon />
+                            </KubeTransparentButton>
+                            <KubeTransparentButton
+                              sx={{
+                                color: '#b6c2cd !important',
+                                '&:hover': {
+                                  color: '#324558 !important',
+                                },
+                              }}
+                              onClick={handleThreadGroupEdit.bind(this, index)}
+                            >
+                              <ModeEditOutlineOutlinedIcon />
+                            </KubeTransparentButton>
+                          </Stack>
+                        </Stack>
+                      </Box>
+                    );
+                  })}
+                </Stack>
+              ) : (
+                <></>
+              )}
+
               {/* 添加按钮 */}
               <Box
                 sx={{
