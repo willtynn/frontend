@@ -6,6 +6,7 @@ import CustomizedTables from '../Pages/TestPages/table2';
 import ServiceQuery from '@/Pages/Service/query';
 import ServiceDependency from '@/Pages/Service/dependency';
 import RouteTrace from '../Pages/Route/trace';
+import RouteControlling from '../Pages/Route/RouteControlling';
 import InstanceDeploy from '../Pages/Cluster/deploy';
 import { HeadBar } from '../Pages/Menu/HeadBar';
 import { ServiceDetail } from '../Pages/Service/detail';
@@ -40,6 +41,7 @@ export default function MyRoute() {
         </Route>
         <Route path='route/'>
           <Route path='trace' element={<RouteTrace />} />
+          <Route path='controlling' element={<RouteControlling />} />
         </Route>
         <Route path='application/'>
           <Route path="stress_testing" element={<StressTesting />} />
