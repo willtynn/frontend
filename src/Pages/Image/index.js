@@ -41,7 +41,7 @@ import RefreshIcon from '@mui/icons-material/Refresh';
 import { useDispatch, useSelector } from 'react-redux';
 import {
   StyledAutocomplete,
-  StyledTextFiled,
+  StyledTextField,
   ChipTextField,
 } from '../../components/Input';
 import {
@@ -52,6 +52,7 @@ import { formatDatetimeString } from '../../utils/commonUtils';
 import { UPDATE_SEARCH_SERVICE, UPDATE_EXACT_SERVICE } from '../../actions/serviceAction';
 import { EclipseTransparentButton } from '../../components/Button';
 import GeneralService from '@/assets/GeneralService.svg';
+import { KubeCheckbox } from '../../components/Checkbox';
 
 function TextLabel(props) {
   const { text } = props;
@@ -159,6 +160,7 @@ export default function ImagesList(props) {
   const [colDisplay, setColDisplay] = useState([true, true, true, true, true]);
   const [customContentAnchorEl, setCustomContentAnchorEl] = useState(null);
   const customContentOpen = Boolean(customContentAnchorEl);
+  const [checkAll, setCheckAll] = useState(false);
 
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -409,7 +411,8 @@ export default function ImagesList(props) {
             <StyledTableHead
               headRow={headFirstRow}
               selectAll={true}
-
+              checkAll={checkAll}
+              setCheckAll={setCheckAll}
             />
 
             <TableBody>
@@ -435,7 +438,7 @@ export default function ImagesList(props) {
                           p: '0px 16px !important',
                         }}
                       >
-                        <Checkbox
+                        <KubeCheckbox
                           sx={{
                             bgcolor: 'transparent !important',
                           }}

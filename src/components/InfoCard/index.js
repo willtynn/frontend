@@ -121,13 +121,14 @@ export function KubeSubCard(props) {
 
   return (
     <Box
+      className="KubeCard"
       sx={{
         mt: '12px',
         borderRadius: '4px',
         backgroundColor: '#fff',
         border: '1px solid #ccd3db',
         p: '11px 16px',
-        mb: '50px',
+        mb: '12px',
       }}
     >
       <Typography

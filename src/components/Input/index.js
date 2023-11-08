@@ -14,7 +14,7 @@ import { CustomDefaultChip } from '../Chip';
 import ChipDeleteIcon from '@/assets/ChipDeleteIcon.svg';
 import { fontFamily } from '@/utils/commonUtils';
 
-export const StyledTextFiled = styled(TextField)(() => ({
+export const StyledTextField = styled(TextField)(() => ({
   legend: {
     display: 'none',
   },
@@ -34,6 +34,50 @@ export const StyledTextFiled = styled(TextField)(() => ({
     },
     '& fieldset': {
       border: 'none',
+    },
+  },
+}));
+
+
+export const EditableTextField = styled(TextField)(() => ({
+  legend: {
+    display: 'none',
+  },
+  width: '100%',
+  '& .MuiOutlinedInput-root.MuiInputBase-root': {
+    background: '#FFFFFF',
+    
+    '& .MuiOutlinedInput-input.MuiInputBase-input': {
+      '&:focus': {
+        border: '1px solid #55bc8a',
+        boxShadow: '0 4px 8px 0 rgba(85,188,138,.2)',
+      },
+      border: '1px transparent rgba(0, 0, 0, 0.23)',
+      borderRadius: '4px',
+      padding: '6px 12px !important',
+      fontSize: '12px',
+      fontWeight: 600,
+      fontStyle: 'normal',
+      fontStretch: 'normal',
+      lineHeight: 1.67,
+      letterSpacing: 'normal',
+      color: '#36435c',
+    },
+    '& .Mui-disabled': {
+      '&:hover': {
+        border: '1px solid rgba(0, 0, 0, 0.23) !important',
+      },
+    },
+    '& fieldset': {
+      border: 'none',
+    },
+  },
+  '& .Mui-error': {
+    '& .MuiOutlinedInput-input.MuiInputBase-input': {
+      border: '1px solid #CA2621 !important',
+      '&:focus': {
+        boxShadow: 'none !important',
+      },
     },
   },
 }));

@@ -10,7 +10,7 @@ import {
 import { useDispatch, useSelector } from 'react-redux';
 import InfoCard from '@/components/InfoCard';
 import { ContainedButton, KubeConfirmButton } from '@/components/Button';
-import { StyledTextFiled } from '@/components/Input';
+import { StyledTextField } from '@/components/Input';
 import { fontFamily } from '@/utils/commonUtils';
 import { StyledModal } from '../../../components/Modal';
 
@@ -18,24 +18,35 @@ import StressTestingIcon from '@/assets/StressTesting.svg';
 import { useIntl } from 'react-intl';
 import { TestingProgress } from './TestingProgress';
 
+import { UPDATE_GROUP_EDIT } from '../../../actions/applicationAction';
+
 export default function StressTesting() {
   const intl = useIntl();
   const [planOpen, setPlanOpen] = useState(false);
   const [showError, setShowError] = useState(false);
 
+  const dispatch = useDispatch();
+
   const handlePlanClick = () => {
     setPlanOpen(true);
   };
 
+  const resetParameters = () => {
+    dispatch({type: UPDATE_GROUP_EDIT, data: false});
+  }
+
   const handleClose = () => {
+    resetParameters();
     setPlanOpen(false);
   };
 
   const handleCancelClick = () => {
+    resetParameters();
     setPlanOpen(false);
   };
 
   const handleConfirmClick = () => {
+    resetParameters();
     setPlanOpen(false);
   };
 

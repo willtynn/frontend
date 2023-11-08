@@ -35,7 +35,7 @@ import {
 } from '@/components/DisplayTable';
 
 import {
-  NormalLargeFont,
+  NormalFontBlack,
   NormalBoldFont,
   SmallLightFont
 } from "@/components/Fonts";
@@ -496,15 +496,24 @@ export default function RouteTrace() {
                   size='small'
                   sx={{tableLayout: 'auto'}}>
                   <TableHead>
-                    <TableRow sx={{ height: "52px"}}>
+                    <TableRow sx={{ height: "33px"}}>
                       {
                         serviceTableHeaders.map((item, index) => {
                           if(serviceColumnDisplay[index])
-                            return (
-                              <StyledTableRowCell key={item.key} align={item.align} 
-                                sx={{ minWidth: item.minWidth }}>
-                                  {item.text}
-                              </StyledTableRowCell>);
+                          {
+                            if(index === 0)
+                              return (
+                                <StyledTableRowCell key={item.key} align={item.align} 
+                                  sx={{ minWidth: item.minWidth, color: "black"}}>
+                                    {item.text}
+                                </StyledTableRowCell>);
+                            else
+                              return (
+                                <StyledTableRowCell key={item.key} align={item.align} 
+                                  sx={{ minWidth: item.minWidth }}>
+                                    {item.text}
+                                </StyledTableRowCell>);
+                          }
                           return <></>
                         })
                       }

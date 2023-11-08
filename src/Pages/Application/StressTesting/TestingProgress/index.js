@@ -8,7 +8,7 @@ import InfoNow from '@/assets/InfoNow.svg';
 import DockerFinished from '@/assets/DockerFinished.svg';
 import DockerWaiting from '@/assets/DockerWaiting.svg';
 import DockerNow from '@/assets/DockerNow.svg';
-import { KubeInput, StyledTextFiled } from '@/components/Input';
+import { KubeInput, StyledTextField } from '@/components/Input';
 import { useIntl } from 'react-intl';
 import { KubeCancelButton, KubeConfirmButton } from '@/components/Button';
 import ProgressIndicator from '../../../Cluster/deploy/DeployProgress/ProgressIndicator';

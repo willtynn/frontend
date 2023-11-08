@@ -17,7 +17,7 @@ import {
   KubeConfirmButton,
 } from '../../../../components/Button';
 
-import { StyledTextFiled } from '../../../../components/Input';
+import { StyledTextField } from '../../../../components/Input';
 import BasicInfo from './BasicInfo';
 const style = {
   position: 'absolute',

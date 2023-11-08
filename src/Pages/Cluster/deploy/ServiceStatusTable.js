@@ -33,7 +33,7 @@ import {
 } from '../../../components/DisplayTable';
 import {
   StyledAutocomplete,
-  StyledTextFiled,
+  StyledTextField,
   ChipTextField,
 } from '../../../components/Input';
 import { EclipseTransparentButton } from '../../../components/Button';
@@ -52,6 +52,7 @@ import FailedIcon from '@/assets/FailedIcon.svg';
 import SucceededIcon from '@/assets/SucceededIcon.svg';
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
+import { KubeCheckbox } from '../../../components/Checkbox';
 
 const data = {
   items: [
@@ -773,7 +774,7 @@ export default function ServiceStatusTable(props) {
                         p: '0px 16px !important',
                       }}
                     >
-                      <Checkbox
+                      <KubeCheckbox
                         sx={{
                           bgcolor: 'transparent !important',
                         }}
@@ -853,7 +854,7 @@ export default function ServiceStatusTable(props) {
                   colSpan={6}
                   sx={{
                     textAlign: 'center',
-                    fontSize: '20px',
+                    fontSize: '14px',
                     fontFamily: fontFamily,
                     fontStyle: 'normal',
                   }}

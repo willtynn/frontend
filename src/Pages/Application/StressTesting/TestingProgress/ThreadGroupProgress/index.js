@@ -8,7 +8,7 @@ import InfoNow from '@/assets/InfoNow.svg';
 import DockerFinished from '@/assets/DockerFinished.svg';
 import DockerWaiting from '@/assets/DockerWaiting.svg';
 import DockerNow from '@/assets/DockerNow.svg';
-import { KubeInput, StyledTextFiled } from '@/components/Input';
+import { KubeInput, StyledTextField } from '@/components/Input';
 import { useIntl } from 'react-intl';
 import { KubeCancelButton, KubeConfirmButton } from '@/components/Button';
 import ProgressIndicator from '../../../../Cluster/deploy/DeployProgress/ProgressIndicator';
@@ -32,19 +32,6 @@ export function ThreadGroupProgress(props) {
     };
   });
 
-  const [groupName, setGroupName] = useState('Thread Group');
-  const [groupComment, setGroupComment] = useState('');
-  const [onSampleError, setOnSampleError] = useState('continue');
-  const [numThreads, setNumThreads] = useState(1);
-  const [rampTime, setRampTime] = useState(1);
-  const [loops, setLoops] = useState(1);
-  const [loopsContinueForever, setLoopsContinueForever] = useState(false);
-  const [sameUserOnNextIteration, setSameUserOnNextIteration] = useState(true);
-  const [delayedStart, setDelayedStart] = useState(false);
-  const [scheduler, setScheduler] = useState(false);
-  const [duration, setDuration] = useState(null);
-  const [delay, setDelay] = useState(null);
-
   const [httpDefaultName, setHttpDefaultName] = useState(
     'HTTP Request Defaults'
   );
@@ -52,32 +39,7 @@ export function ThreadGroupProgress(props) {
   const currentPage = () => {
     if (currentGroupEditStage === 1) {
       return (
-        <ThreadConfig
-          groupName={groupName}
-          setGroupName={setGroupName}
-          groupComment={groupComment}
-          setGroupComment={setGroupComment}
-          onSampleError={onSampleError}
-          setOnSampleError={setOnSampleError}
-          numThreads={numThreads}
-          setNumThreads={setNumThreads}
-          rampTime={rampTime}
-          setRampTime={setRampTime}
-          loops={loops}
-          setLoops={setLoops}
-          loopsContinueForever={loopsContinueForever}
-          setLoopsContinueForever={setLoopsContinueForever}
-          sameUserOnNextIteration={sameUserOnNextIteration}
-          setSameUserOnNextIteration={setSameUserOnNextIteration}
-          delayedStart={delayedStart}
-          setDelayedStart={setDelayedStart}
-          scheduler={scheduler}
-          setScheduler={setScheduler}
-          duration={duration}
-          setDuration={setDuration}
-          delay={delay}
-          setDelay={setDelay}
-        />
+        <ThreadConfig />
       );
     }
     if (currentGroupEditStage === 2) {

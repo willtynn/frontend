@@ -24,6 +24,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { FormattedMessage } from 'react-intl';
 import Triangle from '@/assets/Triangle.svg';
 import { fontFamily } from '../../utils/commonUtils';
+import { KubeCheckbox } from '../Checkbox';
 
 export const StyledTableBox = styled(TableContainer)(() => ({
   width: '100%',
@@ -326,7 +327,7 @@ export function GlobalPagination(props) {
 }
 
 export function StyledTableHead(props) {
-  const { headRow, selectAll, order, orderBy, onRequestSort } = props;
+  const { headRow, selectAll, order, orderBy, onRequestSort, checkAll, setCheckAll } = props;
 
   const createSortHandler = property => event => {
     onRequestSort(event, property);
@@ -334,20 +335,26 @@ export function StyledTableHead(props) {
 
   return (
     <TableHead>
-      <TableRow>
+      <TableRow sx={{
+        zIndex: 7,
+        position: "relative"
+      }}>
         {selectAll === true ? (
           <StyledTableRowCell
             align='center'
             sx={{
-              width: '80px',
+              maxWidth: "30px",
+              minWidth: "30px",
             }}
           >
-            <Checkbox
+            <KubeCheckbox
               sx={{
                 bgcolor: 'transparent !important',
               }}
               disableRipple
               size="small"
+              checked={checkAll}
+              onChange={(e) => setCheckAll(e.target.checked)}
             />
           </StyledTableRowCell>
         ) : (
@@ -361,6 +368,10 @@ export function StyledTableHead(props) {
                 key={item.id}
                 align={item.align}
                 style={{display: item.show ? 'table-cell' : 'none'}}
+                sx={{
+                  maxWidth: item.maxWidth,
+                  minWidth: item.minWidth,
+                }}
                 sortDirection={orderBy === item.id ? order : false}
               >
                 <TableSortLabel

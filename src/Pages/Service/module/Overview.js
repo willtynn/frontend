@@ -41,7 +41,7 @@ import RefreshIcon from '@mui/icons-material/Refresh';
 import { useDispatch, useSelector } from 'react-redux';
 import {
   StyledAutocomplete,
-  StyledTextFiled,
+  StyledTextField,
   ChipTextField,
 } from '../../../components/Input';
 import {
@@ -51,6 +51,7 @@ import {
 import { formatDatetimeString } from '../../../utils/commonUtils';
 import { UPDATE_SEARCH_SERVICE, UPDATE_EXACT_SERVICE } from '../../../actions/serviceAction';
 import { EclipseTransparentButton } from '../../../components/Button';
+import { KubeCheckbox } from '../../../components/Checkbox';
 
 function TextLabel(props) {
   const { text } = props;
@@ -148,6 +149,8 @@ export default function ServiceOverview(props) {
   const [colDisplay, setColDisplay] = useState([true, true, true, true, true]);
   const [customContentAnchorEl, setCustomContentAnchorEl] = useState(null);
   const customContentOpen = Boolean(customContentAnchorEl);
+
+  const [checkAll, setCheckAll] = useState(false);
 
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -582,6 +585,8 @@ export default function ServiceOverview(props) {
               order={order}
               orderBy={orderBy}
               onRequestSort={handleRequestSort}
+              checkAll={checkAll}
+              setCheckAll={setCheckAll}
             />
 
             <TableBody>
@@ -609,7 +614,7 @@ export default function ServiceOverview(props) {
                           p: '0px 16px !important',
                         }}
                       >
-                        <Checkbox
+                        <KubeCheckbox
                           sx={{
                             bgcolor: 'transparent !important',
                           }}
@@ -701,7 +706,7 @@ export default function ServiceOverview(props) {
                     colSpan={6}
                     sx={{
                       textAlign: 'center',
-                      fontSize: '20px',
+                      fontSize: '14px',
                       fontFamily: fontFamily,
                       fontStyle: 'normal',
                     }}
