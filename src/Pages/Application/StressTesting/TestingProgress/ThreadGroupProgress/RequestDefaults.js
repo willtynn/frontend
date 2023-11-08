@@ -7,8 +7,9 @@ import {
   TableBody,
   TableRow,
   TableCell,
+  MenuItem,
 } from '@mui/material';
-import { KubeInput, EditableTextField } from '@/components/Input';
+import { KubeInput, EditableTextField, KubeSelect } from '@/components/Input';
 import { useIntl } from 'react-intl';
 import { useSelector, useDispatch } from 'react-redux';
 import { StyledRadioGroup } from '../../../../../components/Radio';
@@ -21,6 +22,7 @@ import {
   UPDATE_HTTP_REQUEST_CONTENT_ENCODING,
   UPDATE_REQUEST_PARAMETERS,
   UPDATE_REQUEST_BODY_DATA,
+  UPDATE_HTTP_REQUEST_METHOD,
 } from '../../../../../actions/applicationAction';
 import { KubeSubCard } from '../../../../../components/InfoCard';
 import Editor, { loader } from '@monaco-editor/react';
@@ -35,7 +37,7 @@ import {
   KubeConfirmButton,
   KubeCancelButton,
 } from '../../../../../components/Button';
-import * as monaco from 'monaco-editor';
+import * as monaco from 'monaco-editor/esm/vs/editor/editor.api'
 
 loader.config({ monaco });
 
@@ -77,6 +79,7 @@ export function RequestDefaults(props) {
     webServerProtocol,
     webServerNameOrIP,
     webServerPort,
+    httpRequestMethod,
     httpRequestPath,
     httpRequestContentEncoding,
     requestParameters,
@@ -86,12 +89,34 @@ export function RequestDefaults(props) {
       webServerProtocol: state.Application.webServerProtocol,
       webServerNameOrIP: state.Application.webServerNameOrIP,
       webServerPort: state.Application.webServerPort,
+      httpRequestMethod: state.Application.httpRequestMethod,
       httpRequestPath: state.Application.httpRequestPath,
       httpRequestContentEncoding: state.Application.httpRequestContentEncoding,
       requestParameters: state.Application.requestParameters,
       requestBodyData: state.Application.requestBodyData,
     };
   });
+
+  const methodList = [
+    'GET',
+    'POST',
+    'HEAD',
+    'PUT',
+    'OPTIONS',
+    'TRACE',
+    'DELETE',
+    'PATCH',
+    'PROPFIND',
+    'PROPPATCH',
+    'MKCOL',
+    'COPY',
+    'MOVE',
+    'LOCK',
+    'UNLOCK',
+    'REPORT',
+    'MKCALENDAR',
+    'SEARCH',
+  ];
 
   useEffect(() => {
     setAllCheck(
@@ -200,6 +225,13 @@ export function RequestDefaults(props) {
     );
   };
 
+  const handleHttpRequestMethodChange = e => {
+    dispatch({
+      type: UPDATE_HTTP_REQUEST_METHOD,
+      data: e.target.value,
+    });
+  };
+
   return (
     <Box sx={{ p: '12px' }}>
       <Stack direction='column' spacing={1.5}>
@@ -252,7 +284,46 @@ export function RequestDefaults(props) {
           description={intl.messages['stressTesting.httpRequestDescription']}
         >
           <Stack direction='row' spacing={1}>
-            <Box sx={{ width: '75%' }}>
+            <Stack sx={{ width: '17%' }} spacing={0.5}>
+              <Typography
+                sx={{
+                  color: '#36435c',
+                  fontSize: '12px',
+                  lineHeight: 1.67,
+                  fontWeight: 400,
+                }}
+              >
+                请求方法
+              </Typography>
+              <KubeSelect
+                sx={{
+                  height: '30px',
+                  fontSize: '12px',
+                  lineHeight: '1.67',
+                  color: '#242e42',
+                  "& .MuiSelect-select.MuiSelect-outlined.MuiOutlinedInput-input": {
+                    height: '31.25px !important',
+                    borderRadius: '4px !important',
+                  },
+                  '& .MuiSelect-select:hover': {
+                    border: '1px solid #000 !important',
+                  },
+                }}
+                MenuProps={{ className: 'PortProtocols-List' }}
+                value={httpRequestMethod}
+                onChange={handleHttpRequestMethodChange}
+                // error={error}
+              >
+                {methodList.map((value, item) => {
+                  return (
+                    <MenuItem className='PortProtocols-Item' value={value}>
+                      {value}
+                    </MenuItem>
+                  );
+                })}
+              </KubeSelect>
+            </Stack>
+            <Box sx={{ width: '58%' }}>
               <KubeInput
                 label='路径'
                 requried={false}

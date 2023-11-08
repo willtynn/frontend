@@ -27,6 +27,7 @@ const initState = {
   webServerProtocol: '',
   webServerNameOrIP: '',
   webServerPort: '',
+  httpRequestMethod: "POST",
   httpRequestPath: '',
   httpRequestContentEncoding: '',
   requestParameters: [],
@@ -150,6 +151,11 @@ export default function ApplicationReducer(state = initState, action) {
         ...state,
         webServerPort: data,
       };
+    case actions.UPDATE_HTTP_REQUEST_METHOD:
+      return {
+        ...state,
+        httpRequestMethod: data,
+      }
     case actions.UPDATE_HTTP_REQUEST_PATH:
       return {
         ...state,
