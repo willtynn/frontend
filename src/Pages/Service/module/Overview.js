@@ -126,9 +126,6 @@ export default function ServiceOverview(props) {
   const [orderType, setOrderType] = useState('version'); //排序的表头
   const [orderAs, setOrderAs] = useState('asc'); //排序的顺序
   const [selected, setSelected] = useState([]);
-  const [page, setPage] = useState(0);
-  const [dense, setDense] = useState(false);
-  const [rowsPerPage, setRowsPerPage] = useState(5);
   const [loading, setLoading] = useState(false);
 
   const { embeddingButton } = props;
@@ -208,8 +205,6 @@ export default function ServiceOverview(props) {
     if (queryResult === null) {
       return;
     }
-    // console.log(queryResult.items)
-    // const items = gottenInstances.myItems;
     const items = data
     const tmpData = items.map((value, index) => {
       return {
@@ -285,6 +280,13 @@ export default function ServiceOverview(props) {
 
   const visibleRows = useMemo(() => {
     const tmpData = filtering();
+    if(pageSize * (pageNum - 1) > count) {
+      dispatch({ type: CHANGE_PAGE_NUM, data: 1 });
+      return stableSort(tmpData, getComparator(order, orderBy)).slice(
+        0,
+        pageSize
+      );
+    }
     return stableSort(tmpData, getComparator(order, orderBy)).slice(
       (pageNum - 1) * pageSize,
       (pageNum - 1) * pageSize + pageSize
