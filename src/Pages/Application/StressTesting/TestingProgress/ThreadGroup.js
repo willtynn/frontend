@@ -11,7 +11,7 @@ import {
   UPDATE_THREAD_GROUPS,
   FILL_GROUP_FORM,
   UPDATE_GROUP_EDIT_INDEX,
-  UPDATE_CURRENT_GROUP_EDIT_STAGE
+  UPDATE_CURRENT_GROUP_EDIT_STAGE,
 } from '../../../../actions/applicationAction';
 import { KubeTransparentButton } from '../../../../components/Button';
 import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline';
@@ -32,7 +32,7 @@ const onSamplerErrorText = index => {
 };
 
 export function ThreadGroup(props) {
-  const { showError, setThreadConfigError } = props;
+  const { showError, setThreadConfigError, setThreadGroupError } = props;
 
   const intl = useIntl();
 
@@ -46,12 +46,16 @@ export function ThreadGroup(props) {
 
   const dispatch = useDispatch();
 
+  useEffect(() => {
+    setThreadGroupError(!threadGroups || threadGroups.length === 0);
+  }, [threadGroups]);
+
   const handleThreadGroupAdd = () => {
     dispatch({ type: UPDATE_GROUP_EDIT, data: true });
   };
 
   const handleReturn = () => {
-    if(groupEditIndex !== null) {
+    if (groupEditIndex !== null) {
       dispatch({ type: UPDATE_GROUP_EDIT_INDEX, data: null });
     }
     dispatch({ type: UPDATE_GROUP_EDIT, data: false });
@@ -268,26 +272,26 @@ export function ThreadGroup(props) {
                 </Stack>
               </Box>
             </Box>
+            {showError && (!threadGroups || threadGroups.length === 0) ? (
+              <Box
+                sx={{
+                  fontSize: '12px',
+                  fontWeight: 400,
+                  fontStyle: 'normal',
+                  fontStretch: 'normal',
+                  lineHeight: 1.67,
+                  letterSpacing: 'normal',
+                  color: '#CA2621',
+                  mt: '4px',
+                }}
+              >
+                {intl.messages['stressTesting.groupEmptyError']}
+              </Box>
+            ) : (
+              <></>
+            )}
           </Box>
         </>
-      )}
-      {showError && groupEdit === false ? (
-        <Box
-          sx={{
-            fontSize: '12px',
-            fontWeight: 400,
-            fontStyle: 'normal',
-            fontStretch: 'normal',
-            lineHeight: 1.67,
-            letterSpacing: 'normal',
-            color: '#CA2621',
-            mt: '4px',
-          }}
-        >
-          {intl.messages['stressTesting.groupEmptyError']}
-        </Box>
-      ) : (
-        <></>
       )}
     </>
   );

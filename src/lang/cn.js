@@ -85,12 +85,12 @@ export const messages = {
     functionalModeDescription:
       '函数测试（只有当你需要记录每个请求从服务器取得的数据到文件时才需要选择函数测试模式。选择这个选项很影响性能。）',
     groupAddDescription: "自定义线程组的设置以创建线程组。",
-    groupEmptyError: "请对容器进行设置。",
+    groupEmptyError: "请对线程组进行设置。",
     sameUserDescription: "Same user on each iteration",
     delayStartDescription: "延迟创建线程直到需要",
     schedulerDescription: "调度器",
     webServerDescription: "对Web服务器进行设置。",
     httpRequestDescription: "对HTTP请求进行设置。",
-    timerAddDescription: "自定义定时器的设置以创建定时器。"
+    timerAddDescription: "自定义定时器的设置以创建定时器。",
   },
 };

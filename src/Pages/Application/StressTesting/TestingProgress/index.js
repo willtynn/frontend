@@ -44,6 +44,7 @@ export function TestingProgress(props) {
   const [currentStage, setCurrentStage] = useState(1);
   const [testPlanError, setTestPlanError] = useState(0);
   const [threadConfigError, setThreadConfigError] = useState(false);
+  const [threadGroupError, setThreadGroupError] = useState(true);
 
   const intl = useIntl();
   const dispatch = useDispatch();
@@ -233,17 +234,22 @@ export function TestingProgress(props) {
       dispatch({ type: UPDATE_GROUP_EDIT, data: false });
       dispatch({ type: RESET_GROUP });
     } else {
-      console.log({
-        planName: planName,
-        planComment: planComment,
-        functionalMode: functionalMode,
-        tearDownOnShutdown: tearDownOnShutdown,
-        serializeThreadgroups: serializeThreadgroups,
-        threadGroups: threadGroups,
-      });
-      handleConfirmClick();
-      setCurrentStage(1);
-      dispatch({ type: RESET_PLAN });
+      if(threadGroupError) {
+        setShowError(true);
+      } else {
+        setShowError(false);
+        console.log({
+          planName: planName,
+          planComment: planComment,
+          functionalMode: functionalMode,
+          tearDownOnShutdown: tearDownOnShutdown,
+          serializeThreadgroups: serializeThreadgroups,
+          threadGroups: threadGroups,
+        });
+        handleConfirmClick();
+        setCurrentStage(1);
+        dispatch({ type: RESET_PLAN });
+      }
     }
   };
 
@@ -255,6 +261,7 @@ export function TestingProgress(props) {
       <ThreadGroup
         showError={showError}
         setThreadConfigError={setThreadConfigError}
+        setThreadGroupError={setThreadGroupError}
       />
     );
   };
