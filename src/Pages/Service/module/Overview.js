@@ -143,7 +143,7 @@ export default function ServiceOverview(props) {
   const searchSelectOpen = Boolean(searchSelectAnchorEl);
   const [searchBy, setSearchBy] = useState(['名称', 'ID']);
 
-  const [colDisplay, setColDisplay] = useState([true, true, true, true, true]);
+  const [colDisplay, setColDisplay] = useState([true, true, true, true]);
   const [customContentAnchorEl, setCustomContentAnchorEl] = useState(null);
   const customContentOpen = Boolean(customContentAnchorEl);
 
@@ -162,12 +162,12 @@ export default function ServiceOverview(props) {
 
   // service/query左侧表格表头
   const headFirstRow = [
-    createRow('id', '服务ID', false, '150px', '170px', true, 1, 1, 'left'),
-    createRow('name', '服务名称', false, '120px', '130px', colDisplay[0], 1, 1, 'left'),
-    createRow('repo', '代码仓库地址', false, '220px', '240px', colDisplay[1], 1, 1, 'center'),
-    createRow('imageUrl', '镜像仓库地址&Tag', false, '220px', '240px', colDisplay[2], 1, 1, 'center'),
-    createRow('version', '服务版本', false, '100px', '100px', colDisplay[3], 1, 1, 'left'),
-    createRow('interfaces', '接口集合', false, '100px', '100px', colDisplay[4], 1, 1, 'left'),
+    // createRow('id', '服务ID', false, '150px', '170px', true, 1, 1, 'left'),
+    createRow('name', '服务名称', false, '120px', '130px', true, 1, 1, 'left'),
+    createRow('repo', '代码仓库地址', false, '220px', '240px', colDisplay[0], 1, 1, 'center'),
+    createRow('imageUrl', '镜像仓库地址&Tag', false, '220px', '240px', colDisplay[1], 1, 1, 'center'),
+    createRow('version', '服务版本', false, '100px', '100px', colDisplay[2], 1, 1, 'left'),
+    createRow('interfaces', '接口集合', false, '100px', '100px', colDisplay[3], 1, 1, 'left'),
     // createRow('idleResource', '空闲时占用资源', false, '170px', '200px', true, 5, 1),
     // createRow('desiredResource', '期望资源', false, '170px', '200px', true, 5, 1),
     // createRow('desiredCapability', '处理能力', false, '170px', '200px', true, 5, 1),
@@ -469,7 +469,7 @@ export default function ServiceOverview(props) {
                       letterSpacing: '0.04em',
                     }}
                   >
-                    {headFirstRow[index + 1].label}
+                    {headFirstRow[index+1].label}
                   </Box>
                 </Stack>
               );
@@ -649,25 +649,25 @@ export default function ServiceOverview(props) {
                             }}
                             onClick={handleClickById.bind(this,index)}
                           >
-                            {row.id}
+                            {row.name}
                           </Box>
                         </Stack>
                       </StyledTableBodyCell>
 
                       {/* 服务名称 */}
-                      <StyledTableBodyCell
+                      {/* <StyledTableBodyCell
                         align={'left'}
                         // align='center'
                         sx={{ display: headFirstRow[1].show ? 'table-cell' : 'none' }}
                       >
-                        {row.name}
-                      </StyledTableBodyCell>
+                        
+                      </StyledTableBodyCell> */}
 
                       {/* 仓库 */}
                       <StyledTableBodyCell
                         align={'left'}
                         // align='center'
-                        sx={{ display: headFirstRow[2].show ? 'table-cell' : 'none' }}
+                        sx={{ display: headFirstRow[1].show ? 'table-cell' : 'none' }}
                       >
                         {row.repo}
                       </StyledTableBodyCell>
@@ -676,7 +676,7 @@ export default function ServiceOverview(props) {
                       <StyledTableBodyCell
                         align={'left'}
                         // align='center'
-                        sx={{ display: headFirstRow[3].show ? 'table-cell' : 'none' }}
+                        sx={{ display: headFirstRow[2].show ? 'table-cell' : 'none' }}
                       >
                         {row.imageUrl}
                       </StyledTableBodyCell>
@@ -685,7 +685,7 @@ export default function ServiceOverview(props) {
                       <StyledTableBodyCell
                         align={'left'}
                         // align='center'
-                        sx={{ display: headFirstRow[4].show ? 'table-cell' : 'none' }}
+                        sx={{ display: headFirstRow[3].show ? 'table-cell' : 'none' }}
                       >
                         {transformVersion(row.version)}
                       </StyledTableBodyCell>
@@ -694,7 +694,7 @@ export default function ServiceOverview(props) {
                       <StyledTableBodyCell
                         align={'left'}
                         // align='center'
-                        sx={{ display: headFirstRow[5].show ? 'table-cell' : 'none' }}
+                        sx={{ display: headFirstRow[4].show ? 'table-cell' : 'none' }}
                       >
                         {row.interfaces.length}
                       </StyledTableBodyCell>
