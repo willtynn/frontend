@@ -6,7 +6,7 @@ const initState = {
   dependency: null,
   serviceDependency: null,
   interfaceDependency: null,
-  pageSize: 5,
+  pageSize: 10,
   pageNum: 1,
   pods: [],
 }

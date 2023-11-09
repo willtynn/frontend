@@ -723,7 +723,7 @@ export default function ServiceOverview(props) {
         <StyledTableFooter
           pageNum={pageNum}
           pageSize={pageSize}
-          perPageList={[5, 20, 50, 100]}
+          perPageList={[10, 20, 50, 100]}
           count={count}
           handlePerPageChange={handlePerPageChange}
           handlePageChange={handlePageChange}
