@@ -2,7 +2,7 @@ import * as actions from "../actions/instanceAction";
 
 const initState = {
   gottenInstances: null,
-  pageSize: 5,
+  pageSize: 10,
   pageNum: 1,
   namespaces: [],
   currentNamespace: null,
