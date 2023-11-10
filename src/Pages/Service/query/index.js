@@ -295,7 +295,7 @@ export default function ServiceQuery() {
   }, []);
 
   useEffect(() => {
-    if (queryResult !== null && queryResult.length > 0) {
+    if (queryResult && queryResult.length > 0) {
       setSelectedIndex(0);
     }
   }, [queryResult]);
@@ -383,7 +383,7 @@ export default function ServiceQuery() {
         direction='row'
         spacing={4}
       >
-        {queryResult === null ? (
+        {!queryResult ? (
           <></>
         ) : (
           <Box
@@ -401,7 +401,7 @@ export default function ServiceQuery() {
             {/* <ServiceOverview data={queryResult} setIndex={setSelectedIndex} selectedIndex={selectedIndex}/> */}
           </Box>
         )}
-        {queryResult === null ||
+        {!queryResult ||
         queryResult.length === 0 ||
         selectedIndex === -1 ? (
           <></>

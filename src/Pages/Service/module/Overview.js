@@ -255,7 +255,7 @@ export default function ServiceOverview(props) {
   }, [searchList]);
 
   useEffect(() => {
-    if (queryResult === null) {
+    if (!queryResult) {
       return;
     }
     const items = data;

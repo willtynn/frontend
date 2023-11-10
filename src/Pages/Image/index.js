@@ -215,7 +215,7 @@ export default function ImagesList(props) {
   }, [searchList]);
 
   useEffect(() => {
-    if (queryResult === null) {
+    if (!queryResult) {
       return;
     }
     // console.log(queryResult.items)
