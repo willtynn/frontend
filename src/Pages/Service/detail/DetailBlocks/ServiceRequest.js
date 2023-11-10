@@ -43,6 +43,8 @@ import ArrowDropUpIcon from '@mui/icons-material/ArrowDropUp';
 import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
 import { KubeDatePicker } from '../../../../components/DatePicker';
 import { calculateDuration } from '../../../Route/trace/functions/func';
+import Question from '@/assets/Question.svg';
+import { NormalBoldFont, SmallLightFont } from '@/components/Fonts';
 
 const RangeCandidate = [
   ['最近10分钟', -10, 'minute'],
@@ -767,18 +769,21 @@ export default function ServiceRequest(props) {
                   })
                 ) : !loading ? (
                   <TableRow style={{ height: '220px' }}>
-                    <TableCell
-                      colSpan={6}
-                      sx={{
-                        textAlign: 'center',
-                        fontSize: '14px',
-                        fontFamily: fontFamily,
-                        fontStyle: 'normal',
-                      }}
-                    >
-                      There are no results...
-                    </TableCell>
-                  </TableRow>
+                <TableCell
+                  colSpan={6}
+                  sx={{
+                    textAlign: 'center',
+                    fontSize: '20px',
+                    fontFamily: fontFamily,
+                    fontStyle: 'normal',
+                  }}
+                >
+                  <Question />
+                  <NormalBoldFont>无数据</NormalBoldFont>
+
+                  <SmallLightFont>您可以尝试刷新数据</SmallLightFont>
+                </TableCell>
+              </TableRow>
                 ) : (
                   <div></div>
                 )}

@@ -14,7 +14,7 @@ import {
   Popper,
   Popover,
 } from '@mui/material';
-
+import Question from '@/assets/Question.svg';
 import { useDispatch, useSelector } from 'react-redux';
 import {
   GET_INSTANCES,
@@ -53,6 +53,7 @@ import SucceededIcon from '@/assets/SucceededIcon.svg';
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
 import { KubeCheckbox } from '../../../components/Checkbox';
+import { NormalBoldFont, SmallLightFont } from '../../../components/Fonts';
 
 const data = {
   items: [
@@ -353,10 +354,19 @@ export default function ServiceStatusTable(props) {
   }, [namespaces]);
 
   useEffect(() => {
-    if (localStorage.getItem('current_cluster') && currentNamespace && currentNamespace !== "") {
-      dispatch(getInstanceStatus(localStorage.getItem('current_cluster'), currentNamespace));
+    if (
+      localStorage.getItem('current_cluster') &&
+      currentNamespace &&
+      currentNamespace !== ''
+    ) {
+      dispatch(
+        getInstanceStatus(
+          localStorage.getItem('current_cluster'),
+          currentNamespace
+        )
+      );
     }
-    
+
     // dispatch({ type: GET_INSTANCES, data: data });
   }, [currentNamespace]);
 
@@ -378,7 +388,6 @@ export default function ServiceStatusTable(props) {
 
   useEffect(() => {
     if (gottenInstances === null || !gottenInstances.items) {
-
       return;
     }
     const items = gottenInstances.items;
@@ -464,7 +473,7 @@ export default function ServiceStatusTable(props) {
 
   const visibleRows = useMemo(() => {
     const tmpData = filtering();
-    if(pageSize * (pageNum - 1) > count) {
+    if (pageSize * (pageNum - 1) > count) {
       dispatch({ type: CHANGE_PAGE_NUM, data: 1 });
       return stableSort(tmpData, getComparator(order, orderBy)).slice(
         0,
@@ -856,17 +865,23 @@ export default function ServiceStatusTable(props) {
                 );
               })
             ) : !loading ? (
-              <TableRow style={{ height: '120px' }}>
+              <TableRow style={{ height: '220px' }}>
                 <TableCell
-                  colSpan={6}
+                  colSpan={colDisplay.reduce(
+                    (accumulator, currentValue) => accumulator + (currentValue === true),
+                    2,
+                  )}
                   sx={{
                     textAlign: 'center',
-                    fontSize: '14px',
+                    fontSize: '20px',
                     fontFamily: fontFamily,
                     fontStyle: 'normal',
                   }}
                 >
-                  There are no results
+                  <Question />
+                  <NormalBoldFont>无数据</NormalBoldFont>
+
+                  <SmallLightFont>您可以尝试刷新数据</SmallLightFont>
                 </TableCell>
               </TableRow>
             ) : (

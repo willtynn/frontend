@@ -6,6 +6,7 @@ import {
   TableRow,
   IconButton,
   TableBody,
+  TableCell
 } from '@mui/material';
 import { fontFamily, decodeInterfaceSymbol } from '@/utils/commonUtils';
 import { KubeSimpleCard } from '../../../../components/InfoCard';
@@ -19,6 +20,8 @@ import { useNavigate } from 'react-router';
 import { setSnackbarMessageAndOpen } from '@/actions/snackbarAction';
 import { SEVERITIES } from '@/components/CommonSnackbar';
 import { useDispatch } from 'react-redux';
+import Question from '@/assets/Question.svg';
+import { NormalBoldFont, SmallLightFont } from '@/components/Fonts';
 
 function createRow(
   id,
@@ -87,16 +90,12 @@ export default function Information(props) {
     navigate(`/service/dependency?type=interface&by=0&id=${id}`);
   };
 
-  const handleCopyToClickboard = (text) => {
+  const handleCopyToClickboard = text => {
     navigator.clipboard.writeText(text);
     dispatch(
-      setSnackbarMessageAndOpen(
-        'common.copyboard',
-        { },
-        SEVERITIES.success
-      )
+      setSnackbarMessageAndOpen('common.copyboard', {}, SEVERITIES.success)
     );
-  }
+  };
 
   return (
     <Stack direction='column' spacing={1.5}>
@@ -169,10 +168,10 @@ export default function Information(props) {
                               margin: '0 !important',
                               overflowWrap: 'break-word',
                               wordBreak: 'break-all',
-                              cursor: "pointer"
+                              cursor: 'pointer',
                             },
                           },
-                          onClick: handleCopyToClickboard.bind(this, row.path)
+                          onClick: handleCopyToClickboard.bind(this, row.path),
                         }}
                         title={row.path}
                         placement='bottom'
@@ -239,8 +238,8 @@ export default function Information(props) {
                   </TableRow>
                 ))
               ) : (
-                <TableRow style={{ height: '120px' }}>
-                  <StyledTableBodyCell
+                <TableRow style={{ height: '220px' }}>
+                  <TableCell
                     colSpan={5}
                     sx={{
                       textAlign: 'center',
@@ -249,8 +248,11 @@ export default function Information(props) {
                       fontStyle: 'normal',
                     }}
                   >
-                    There are no results
-                  </StyledTableBodyCell>
+                    <Question />
+                    <NormalBoldFont>无数据</NormalBoldFont>
+
+                    <SmallLightFont>您可以尝试刷新数据</SmallLightFont>
+                  </TableCell>
                 </TableRow>
               )}
             </TableBody>
@@ -395,18 +397,21 @@ export default function Information(props) {
               </TableBody>
             ) : (
               <TableBody>
-                <TableRow style={{ height: '120px' }}>
-                  <StyledTableBodyCell
+                <TableRow style={{ height: '220px' }}>
+                  <TableCell
                     colSpan={6}
                     sx={{
                       textAlign: 'center',
-                      fontSize: '14px',
+                      fontSize: '20px',
                       fontFamily: fontFamily,
                       fontStyle: 'normal',
                     }}
                   >
-                    There are no results
-                  </StyledTableBodyCell>
+                    <Question />
+                    <NormalBoldFont>无数据</NormalBoldFont>
+
+                    <SmallLightFont>您可以尝试刷新数据</SmallLightFont>
+                  </TableCell>
                 </TableRow>
               </TableBody>
             )}

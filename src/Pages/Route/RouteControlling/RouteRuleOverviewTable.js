@@ -59,6 +59,8 @@ import VisibilityIcon from '@mui/icons-material/Visibility';
 import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
 import { getRouteRules } from '../../../actions/routectlActions';
 import { RouteRule } from '@/models/RouteControlling';
+import Question from '@/assets/Question.svg';
+import { NormalBoldFont, SmallLightFont } from '../../../components/Fonts';
 
 function descendingComparator(a, b, orderBy) {
   if (b[orderBy] < a[orderBy]) {
@@ -705,9 +707,12 @@ export default function RouteRuleOverviewTable(props) {
                 );
               })
             ) : !loading ? (
-              <TableRow style={{ height: '120px' }}>
+              <TableRow style={{ height: '220px' }}>
                 <TableCell
-                  colSpan={6}
+                  colSpan={colDisplay.reduce(
+                    (accumulator, currentValue) => accumulator + (currentValue === true),
+                    2,
+                  )}
                   sx={{
                     textAlign: 'center',
                     fontSize: '20px',
@@ -715,7 +720,10 @@ export default function RouteRuleOverviewTable(props) {
                     fontStyle: 'normal',
                   }}
                 >
-                  There are no results
+                  <Question />
+                  <NormalBoldFont>无数据</NormalBoldFont>
+
+                  <SmallLightFont>您可以尝试刷新数据</SmallLightFont>
                 </TableCell>
               </TableRow>
             ) : (

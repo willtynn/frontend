@@ -31,7 +31,7 @@ import { styled } from '@mui/system';
 // import { BrowserRouter } from 'react-router-dom';
 import { useNavigate } from 'react-router-dom';
 import { transformVersion, shadowStyle } from '@/utils/commonUtils';
-import { fontFamily } from "@/utils/commonUtils";
+import { fontFamily } from '@/utils/commonUtils';
 // import Task from '@/assets/Task.svg';
 import ServiceQuery from '@/assets/ServiceQuery.svg';
 import VisibilityIcon from '@mui/icons-material/Visibility';
@@ -49,9 +49,14 @@ import {
   CHANGE_PAGE_SIZE,
 } from '../../../actions/serviceAction';
 import { formatDatetimeString } from '../../../utils/commonUtils';
-import { UPDATE_SEARCH_SERVICE, UPDATE_EXACT_SERVICE } from '../../../actions/serviceAction';
+import {
+  UPDATE_SEARCH_SERVICE,
+  UPDATE_EXACT_SERVICE,
+} from '../../../actions/serviceAction';
 import { EclipseTransparentButton } from '../../../components/Button';
 import { KubeCheckbox } from '../../../components/Checkbox';
+import Question from '@/assets/Question.svg';
+import { NormalBoldFont, SmallLightFont } from '@/components/Fonts';
 
 function TextLabel(props) {
   const { text } = props;
@@ -82,12 +87,20 @@ function createRow(
   show = true,
   colSpan = 1,
   rowSpan = 1,
-  align,
+  align
 ) {
-  return { id, label, isOrder, minWidth, maxWidth, show, colSpan, rowSpan, align };
+  return {
+    id,
+    label,
+    isOrder,
+    minWidth,
+    maxWidth,
+    show,
+    colSpan,
+    rowSpan,
+    align,
+  };
 }
-
-
 
 const headSecondRow = [
   createRow('major', '大版本号', false, '240px', '280px', true),
@@ -164,10 +177,50 @@ export default function ServiceOverview(props) {
   const headFirstRow = [
     // createRow('id', '服务ID', false, '150px', '170px', true, 1, 1, 'left'),
     createRow('name', '服务名称', false, '120px', '130px', true, 1, 1, 'left'),
-    createRow('repo', '代码仓库地址', false, '220px', '240px', colDisplay[0], 1, 1, 'center'),
-    createRow('imageUrl', '镜像仓库地址&Tag', false, '220px', '240px', colDisplay[1], 1, 1, 'center'),
-    createRow('version', '服务版本', false, '100px', '100px', colDisplay[2], 1, 1, 'left'),
-    createRow('interfaces', '接口集合', false, '100px', '100px', colDisplay[3], 1, 1, 'left'),
+    createRow(
+      'repo',
+      '代码仓库地址',
+      false,
+      '220px',
+      '240px',
+      colDisplay[0],
+      1,
+      1,
+      'center'
+    ),
+    createRow(
+      'imageUrl',
+      '镜像仓库地址&Tag',
+      false,
+      '220px',
+      '240px',
+      colDisplay[1],
+      1,
+      1,
+      'center'
+    ),
+    createRow(
+      'version',
+      '服务版本',
+      false,
+      '100px',
+      '100px',
+      colDisplay[2],
+      1,
+      1,
+      'left'
+    ),
+    createRow(
+      'interfaces',
+      '接口集合',
+      false,
+      '100px',
+      '100px',
+      colDisplay[3],
+      1,
+      1,
+      'left'
+    ),
     // createRow('idleResource', '空闲时占用资源', false, '170px', '200px', true, 5, 1),
     // createRow('desiredResource', '期望资源', false, '170px', '200px', true, 5, 1),
     // createRow('desiredCapability', '处理能力', false, '170px', '200px', true, 5, 1),
@@ -205,7 +258,7 @@ export default function ServiceOverview(props) {
     if (queryResult === null) {
       return;
     }
-    const items = data
+    const items = data;
     const tmpData = items.map((value, index) => {
       return {
         name: value.name,
@@ -221,7 +274,6 @@ export default function ServiceOverview(props) {
       setTableData(tmpData);
     }
   }, [queryResult]);
-
 
   const handleRequestSort = (_event, property) => {
     const isAsc = orderType === property && orderAs === 'asc';
@@ -280,7 +332,7 @@ export default function ServiceOverview(props) {
 
   const visibleRows = useMemo(() => {
     const tmpData = filtering();
-    if(pageSize * (pageNum - 1) > count) {
+    if (pageSize * (pageNum - 1) > count) {
       dispatch({ type: CHANGE_PAGE_NUM, data: 1 });
       return stableSort(tmpData, getComparator(order, orderBy)).slice(
         0,
@@ -351,35 +403,37 @@ export default function ServiceOverview(props) {
     navigate(`/detail/service/${id}`);
   };
 
-  // service/query左侧表格新 
+  // service/query左侧表格新
   return (
     // <BrowserRouter>
-      <Box>
-        {/* 条件过滤悬浮框 */}
-        <Popper
-          id='service-query-table-serch-popper'
-          open={searchSelectOpen}
-          anchorEl={searchSelectAnchorEl}
-          placement='bottom-start'
+    <Box>
+      {/* 条件过滤悬浮框 */}
+      <Popper
+        id='service-query-table-serch-popper'
+        open={searchSelectOpen}
+        anchorEl={searchSelectAnchorEl}
+        placement='bottom-start'
+        sx={{
+          zIndex: 1000,
+          boxShadow: '0 4px 16px 0 rgba(39,50,71,.28)',
+          borderRadius: '4px',
+          mt: '2px !important',
+        }}
+      >
+        <Stack
+          direction='column'
           sx={{
-            zIndex: 1000,
-            boxShadow: '0 4px 16px 0 rgba(39,50,71,.28)',
-            borderRadius: '4px',
-            mt: '2px !important',
-          }}>
-          <Stack
-            direction='column'
-            sx={{
-              border: '1px solid #FAFAFA',
-              width: '90px',
-              borderRadius: '5px',
-              padding: '8px',
-              bgcolor: '#242e42',
-              fontSize: '12px',
-              fontFamily: fontFamily,
-            }}
-          >
-            {searchBy && searchBy.map((value, index) => {
+            border: '1px solid #FAFAFA',
+            width: '90px',
+            borderRadius: '5px',
+            padding: '8px',
+            bgcolor: '#242e42',
+            fontSize: '12px',
+            fontFamily: fontFamily,
+          }}
+        >
+          {searchBy &&
+            searchBy.map((value, index) => {
               return (
                 <Box
                   sx={{
@@ -398,260 +452,260 @@ export default function ServiceOverview(props) {
                   {value}
                 </Box>
               );
-            })
-            }
-          </Stack>
-        </Popper>
+            })}
+        </Stack>
+      </Popper>
 
-        {/* 眼睛悬浮框 */}
-        <Popover
-          id='service-query-table-custom-content-popover'
-          open={customContentOpen}
-          anchorEl={customContentAnchorEl}
-          onClose={handleEyeClose}
-          anchorOrigin={{
-            vertical: 'bottom',
-            horizontal: 'left',
-          }}
+      {/* 眼睛悬浮框 */}
+      <Popover
+        id='service-query-table-custom-content-popover'
+        open={customContentOpen}
+        anchorEl={customContentAnchorEl}
+        onClose={handleEyeClose}
+        anchorOrigin={{
+          vertical: 'bottom',
+          horizontal: 'left',
+        }}
+        sx={{
+          zIndex: 1000,
+          boxShadow: '0 4px 16px 0 rgba(39,50,71,.28)',
+          borderRadius: '4px',
+          mt: '2px !important',
+        }}
+      >
+        <Stack
+          direction='column'
           sx={{
-            zIndex: 1000,
-            boxShadow: '0 4px 16px 0 rgba(39,50,71,.28)',
-            borderRadius: '4px',
-            mt: '2px !important',
+            border: '1px solid #FAFAFA',
+            width: '150px',
+            borderRadius: '5px',
+            padding: '8px',
+            bgcolor: '#242e42',
+            fontSize: '12px',
+            fontFamily: fontFamily,
           }}
         >
-          <Stack
-            direction='column'
-            sx={{
-              border: '1px solid #FAFAFA',
-              width: '150px',
-              borderRadius: '5px',
-              padding: '8px',
-              bgcolor: '#242e42',
-              fontSize: '12px',
-              fontFamily: fontFamily,
-            }}
-          >
-            {colDisplay.map((value, index) => {
-              // console.log(colDisplay)
-              return (
-                <Stack
-                  direction='row'
-                  onClick={handleColEyeClick.bind(this, index)}
+          {colDisplay.map((value, index) => {
+            // console.log(colDisplay)
+            return (
+              <Stack
+                direction='row'
+                onClick={handleColEyeClick.bind(this, index)}
+                sx={{
+                  color: '#FFFFFF',
+                  '&:hover': {
+                    bgcolor: '#36435c',
+                  },
+                  p: '0px 8px',
+                }}
+                justifyContent='flex-start'
+                alignItems='center'
+                spacing={1}
+              >
+                {value === true ? (
+                  <VisibilityIcon fontSize='small' />
+                ) : (
+                  <VisibilityOffIcon fontSize='small' />
+                )}
+                <Box
                   sx={{
                     color: '#FFFFFF',
-                    '&:hover': {
-                      bgcolor: '#36435c',
-                    },
-                    p: '0px 8px',
+                    cursor: 'pointer',
+                    // textAlign: 'center',
+                    height: '30px',
+                    lineHeight: '30px',
+                    fontWeight: 600,
+                    letterSpacing: '0.04em',
                   }}
-                  justifyContent='flex-start'
-                  alignItems='center'
-                  spacing={1}
                 >
-                  {value === true ? (
-                    <VisibilityIcon fontSize='small' />
-                  ) : (
-                    <VisibilityOffIcon fontSize='small' />
-                  )}
-                  <Box
-                    sx={{
-                      color: '#FFFFFF',
-                      cursor: 'pointer',
-                      // textAlign: 'center',
-                      height: '30px',
-                      lineHeight: '30px',
-                      fontWeight: 600,
-                      letterSpacing: '0.04em',
-                    }}
-                  >
-                    {headFirstRow[index+1].label}
-                  </Box>
-                </Stack>
-              );
-            })}
-          </Stack>
-        </Popover>
+                  {headFirstRow[index + 1].label}
+                </Box>
+              </Stack>
+            );
+          })}
+        </Stack>
+      </Popover>
 
-        {/* 最上面一行栏 */}
-        <Box
-          sx={{
-            height: '32px',
-            padding: '10px 30px 10px 30px',
-            bgcolor: '#f9fbfd',
-          }}
-        >
-          <Stack direction='row' spacing={2}>
-            <StyledAutocomplete
-              height='32px'
-              padding='6px 5px 5px 12px'
-              value={project}
-              onChange={(event, newValue) => {
-                setProject(newValue);
-              }}
-              id='service_table_autocomplete'
-              options={projectList}
-              sx={{
-                width: 300,
-                color: '#36435c',
-                fontFamily: fontFamily,
+      {/* 最上面一行栏 */}
+      <Box
+        sx={{
+          height: '32px',
+          padding: '10px 30px 10px 30px',
+          bgcolor: '#f9fbfd',
+        }}
+      >
+        <Stack direction='row' spacing={2}>
+          <StyledAutocomplete
+            height='32px'
+            padding='6px 5px 5px 12px'
+            value={project}
+            onChange={(event, newValue) => {
+              setProject(newValue);
+            }}
+            id='service_table_autocomplete'
+            options={projectList}
+            sx={{
+              width: 300,
+              color: '#36435c',
+              fontFamily: fontFamily,
+              fontSize: '12px',
+              fontWeight: 600,
+              fontStyle: 'normal',
+              fontStretch: 'normal',
+              lineHeight: 1.67,
+              letterSpacing: 'normal',
+            }}
+            renderInput={params => (
+              <TextField {...params} placeholder='全部项目' />
+            )}
+          />
+          {/* 搜索栏 */}
+          <ChipTextField
+            value={searchValue}
+            setValue={setSearchValue}
+            contentList={searchList}
+            setContentList={setSearchList}
+            isDuplicate={isDuplicate}
+            startAdornment={<SearchIcon />}
+            sx={{
+              width: 'calc(100% - 300px)',
+              '& .MuiOutlinedInput-input.MuiInputBase-input': {
+                // padding: '6px 12px !important',
                 fontSize: '12px',
                 fontWeight: 600,
                 fontStyle: 'normal',
                 fontStretch: 'normal',
                 lineHeight: 1.67,
                 letterSpacing: 'normal',
-              }}
-              renderInput={params => (
-                <TextField {...params} placeholder='全部项目' />
-              )}
-            />
-            {/* 搜索栏 */}
-            <ChipTextField
-              value={searchValue}
-              setValue={setSearchValue}
-              contentList={searchList}
-              setContentList={setSearchList}
-              isDuplicate={isDuplicate}
-              startAdornment={<SearchIcon />}
-              sx={{
-                width: 'calc(100% - 300px)',
-                '& .MuiOutlinedInput-input.MuiInputBase-input': {
-                  // padding: '6px 12px !important',
-                  fontSize: '12px',
-                  fontWeight: 600,
-                  fontStyle: 'normal',
-                  fontStretch: 'normal',
-                  lineHeight: 1.67,
-                  letterSpacing: 'normal',
-                  color: '#36435c',
-                  height: "20px"
-                },
-              }}
-              onFocus={handleSearchFocus}
-              onBlur={handleSearchBlur}
-              enterBlur={true}
-              id='service-search-input'
-            />
-            {/* 刷新按钮 */}
-            <EclipseTransparentButton
-              sx={{
-                bgcolor: '#f9fbfd !important',
-                '&:hover': {
-                  bgcolor: '#FFFFFF !important',
-                },
-                '& svg': {
-                  color: '#3d3b4f',
-                },
-                height: "32px"
-              }}
-            >
-              <RefreshIcon />
-            </EclipseTransparentButton>
-            {/* 眼睛按钮 */}
-            <EclipseTransparentButton
-              sx={{
-                bgcolor: '#f9fbfd !important',
-                '&:hover': {
-                  bgcolor: '#FFFFFF !important',
-                },
-                '& svg': {
-                  color: '#3d3b4f',
-                },
-                height: "32px"
-              }}
-              onClick={handleEyeClick}
-            >
-              <VisibilityIcon />
-            </EclipseTransparentButton>
-            {embeddingButton}
-          </Stack>
-        </Box>
-
-        {/* <StyledTableBox> */}
-        <StyledTableContainer sx={{ bgcolor: '#FFF' }}>
-          <Table
-            stickyHeader
-            size='small'
+                color: '#36435c',
+                height: '20px',
+              },
+            }}
+            onFocus={handleSearchFocus}
+            onBlur={handleSearchBlur}
+            enterBlur={true}
+            id='service-search-input'
+          />
+          {/* 刷新按钮 */}
+          <EclipseTransparentButton
             sx={{
-              tableLayout: 'auto',
+              bgcolor: '#f9fbfd !important',
+              '&:hover': {
+                bgcolor: '#FFFFFF !important',
+              },
+              '& svg': {
+                color: '#3d3b4f',
+              },
+              height: '32px',
             }}
           >
-            <StyledTableHead
-              headRow={headFirstRow}
-              selectAll={true}
-              order={order}
-              orderBy={orderBy}
-              onRequestSort={handleRequestSort}
-              checkAll={checkAll}
-              setCheckAll={setCheckAll}
-            />
+            <RefreshIcon />
+          </EclipseTransparentButton>
+          {/* 眼睛按钮 */}
+          <EclipseTransparentButton
+            sx={{
+              bgcolor: '#f9fbfd !important',
+              '&:hover': {
+                bgcolor: '#FFFFFF !important',
+              },
+              '& svg': {
+                color: '#3d3b4f',
+              },
+              height: '32px',
+            }}
+            onClick={handleEyeClick}
+          >
+            <VisibilityIcon />
+          </EclipseTransparentButton>
+          {embeddingButton}
+        </Stack>
+      </Box>
 
-            <TableBody>
-              {!loading && visibleRows !== null && visibleRows.length !== 0 ? (
-                visibleRows && visibleRows.map((row, index) => {
-                  return (
-                    <TableRow
-                      key={row.id + '' + index}
-                      aria-checked={false}
+      {/* <StyledTableBox> */}
+      <StyledTableContainer sx={{ bgcolor: '#FFF' }}>
+        <Table
+          stickyHeader
+          size='small'
+          sx={{
+            tableLayout: 'auto',
+          }}
+        >
+          <StyledTableHead
+            headRow={headFirstRow}
+            selectAll={true}
+            order={order}
+            orderBy={orderBy}
+            onRequestSort={handleRequestSort}
+            checkAll={checkAll}
+            setCheckAll={setCheckAll}
+          />
+
+          <TableBody>
+            {!loading && visibleRows !== null && visibleRows.length !== 0 ? (
+              visibleRows &&
+              visibleRows.map((row, index) => {
+                return (
+                  <TableRow
+                    key={row.id + '' + index}
+                    aria-checked={false}
+                    sx={{
+                      '&:last-child td, &:last-child th': {
+                        border: 0,
+                      },
+                      fontWeight: 600,
+                      maxWidth: '110px',
+                      position: 'sticky',
+                      left: 0,
+                      zIndex: 6,
+                    }}
+                    selected={false}
+                  >
+                    <StyledTableBodyCell
+                      align='center'
                       sx={{
-                        '&:last-child td, &:last-child th': {
-                          border: 0,
-                        },
-                        fontWeight: 600,
-                        maxWidth: '110px',
-                        position: 'sticky',
-                        left: 0,
-                        zIndex: 6,
+                        p: '0px 16px !important',
                       }}
-                      selected={false}
                     >
-                      <StyledTableBodyCell
-                        align='center'
+                      <KubeCheckbox
                         sx={{
-                          p: '0px 16px !important',
+                          bgcolor: 'transparent !important',
                         }}
-                      >
-                        <KubeCheckbox
+                        disableRipple
+                        size='small'
+                      />
+                    </StyledTableBodyCell>
+
+                    {/* id */}
+                    <StyledTableBodyCell
+                      align={'left'}
+                      // align='center'
+                      sx={{
+                        padding: '6px 16px !important',
+                      }}
+                    >
+                      <Stack alignItems='center' direction='row' spacing={2}>
+                        {/* <Task /> */}
+                        <ServiceQuery />
+                        {/* <button >点击跳转</button> */}
+                        <Box
                           sx={{
-                            bgcolor: 'transparent !important',
+                            height: '30px',
+                            lineHeight: '30px',
+                            fontWeight: 600,
+                            cursor: 'pointer',
+                            '&:hover': {
+                              color: '#55bc8a',
+                            },
                           }}
-                          disableRipple
-                          size="small"
-                        />
-                      </StyledTableBodyCell>
+                          onClick={handleClickById.bind(this, row.id)}
+                        >
+                          {row.name}
+                        </Box>
+                      </Stack>
+                    </StyledTableBodyCell>
 
-                      {/* id */}
-                      <StyledTableBodyCell
-                        align={'left'}
-                        // align='center'
-                        sx={{
-                          padding: '6px 16px !important',
-                        }}
-                      >
-                        <Stack alignItems='center' direction='row' spacing={2}>
-                          {/* <Task /> */}
-                          <ServiceQuery />
-                          {/* <button >点击跳转</button> */}
-                          <Box
-                            sx={{
-                              height: '30px',
-                              lineHeight: '30px',
-                              fontWeight: 600,
-                              cursor: "pointer",
-                              "&:hover": {
-                                color: "#55bc8a"
-                              }
-                            }}
-                            onClick={handleClickById.bind(this, row.id)}
-                          >
-                            {row.name}
-                          </Box>
-                        </Stack>
-                      </StyledTableBodyCell>
-
-                      {/* 服务名称 */}
-                      {/* <StyledTableBodyCell
+                    {/* 服务名称 */}
+                    {/* <StyledTableBodyCell
                         align={'left'}
                         // align='center'
                         sx={{ display: headFirstRow[1].show ? 'table-cell' : 'none' }}
@@ -659,79 +713,93 @@ export default function ServiceOverview(props) {
                         
                       </StyledTableBodyCell> */}
 
-                      {/* 仓库 */}
-                      <StyledTableBodyCell
-                        align={'left'}
-                        // align='center'
-                        sx={{ display: headFirstRow[1].show ? 'table-cell' : 'none' }}
-                      >
-                        {row.repo}
-                      </StyledTableBodyCell>
+                    {/* 仓库 */}
+                    <StyledTableBodyCell
+                      align={'left'}
+                      // align='center'
+                      sx={{
+                        display: headFirstRow[1].show ? 'table-cell' : 'none',
+                      }}
+                    >
+                      {row.repo}
+                    </StyledTableBodyCell>
 
-                      {/* 镜像 */}
-                      <StyledTableBodyCell
-                        align={'left'}
-                        // align='center'
-                        sx={{ display: headFirstRow[2].show ? 'table-cell' : 'none' }}
-                      >
-                        {row.imageUrl}
-                      </StyledTableBodyCell>
+                    {/* 镜像 */}
+                    <StyledTableBodyCell
+                      align={'left'}
+                      // align='center'
+                      sx={{
+                        display: headFirstRow[2].show ? 'table-cell' : 'none',
+                      }}
+                    >
+                      {row.imageUrl}
+                    </StyledTableBodyCell>
 
-                      {/* 版本 */}
-                      <StyledTableBodyCell
-                        align={'left'}
-                        // align='center'
-                        sx={{ display: headFirstRow[3].show ? 'table-cell' : 'none' }}
-                      >
-                        {transformVersion(row.version)}
-                      </StyledTableBodyCell>
+                    {/* 版本 */}
+                    <StyledTableBodyCell
+                      align={'left'}
+                      // align='center'
+                      sx={{
+                        display: headFirstRow[3].show ? 'table-cell' : 'none',
+                      }}
+                    >
+                      {transformVersion(row.version)}
+                    </StyledTableBodyCell>
 
-                      {/* 接口 */}
-                      <StyledTableBodyCell
-                        align={'left'}
-                        // align='center'
-                        sx={{ display: headFirstRow[4].show ? 'table-cell' : 'none' }}
-                      >
-                        {row.interfaces.length}
-                      </StyledTableBodyCell>
+                    {/* 接口 */}
+                    <StyledTableBodyCell
+                      align={'left'}
+                      // align='center'
+                      sx={{
+                        display: headFirstRow[4].show ? 'table-cell' : 'none',
+                      }}
+                    >
+                      {row.interfaces.length}
+                    </StyledTableBodyCell>
+                  </TableRow>
+                );
+              })
+            ) : !loading ? (
+              <TableRow style={{ height: '220px' }}>
+                <TableCell
+                  colSpan={colDisplay.reduce(
+                    (accumulator, currentValue) =>
+                      accumulator + (currentValue === true),
+                    2
+                  )}
+                  sx={{
+                    textAlign: 'center',
+                    fontSize: '20px',
+                    fontFamily: fontFamily,
+                    fontStyle: 'normal',
+                  }}
+                >
+                  <Question />
+                  <NormalBoldFont>无数据</NormalBoldFont>
 
-                    </TableRow>
-                  );
-                })
-              ) : !loading ? (
-                <TableRow style={{ height: '120px' }}>
-                  <TableCell
-                    colSpan={6}
-                    sx={{
-                      textAlign: 'center',
-                      fontSize: '14px',
-                      fontFamily: fontFamily,
-                      fontStyle: 'normal',
-                    }}
-                  >
-                    There are no results
-                  </TableCell>
-                </TableRow>
-              ) : (
-                <div></div>
-              )}
-            </TableBody>
-          </Table>
-        </StyledTableContainer>
-        <StyledTableFooter
-          pageNum={pageNum}
-          pageSize={pageSize}
-          perPageList={[10, 20, 50, 100]}
-          count={count}
-          handlePerPageChange={handlePerPageChange}
-          handlePageChange={handlePageChange}
-          sx={{
-            pt: '12px',
-            pb: '12px',
-          }}
-        />
-        {/* </StyledTableBox> */}
-      </Box>
+                  <SmallLightFont>您可以尝试刷新数据</SmallLightFont>
+                </TableCell>
+              </TableRow>
+            ) : (
+              <div></div>
+            )}
+          </TableBody>
+        </Table>
+      </StyledTableContainer>
+      <StyledTableFooter
+        pageNum={pageNum}
+        pageSize={pageSize}
+        perPageList={[10, 20, 50, 100]}
+        count={count}
+        handlePerPageChange={handlePerPageChange}
+        handlePageChange={handlePageChange}
+        sx={{
+          pt: '12px',
+          pb: '12px',
+        }}
+      />
+      {/* </StyledTableBox> */}
+    </Box>
     // </BrowserRouter>
   );
 }
