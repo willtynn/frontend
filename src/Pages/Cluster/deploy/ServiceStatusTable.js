@@ -464,6 +464,13 @@ export default function ServiceStatusTable(props) {
 
   const visibleRows = useMemo(() => {
     const tmpData = filtering();
+    if(pageSize * (pageNum - 1) > count) {
+      dispatch({ type: CHANGE_PAGE_NUM, data: 1 });
+      return stableSort(tmpData, getComparator(order, orderBy)).slice(
+        0,
+        pageSize
+      );
+    }
     return stableSort(tmpData, getComparator(order, orderBy)).slice(
       (pageNum - 1) * pageSize,
       (pageNum - 1) * pageSize + pageSize

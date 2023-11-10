@@ -347,11 +347,7 @@ export default function ServiceOverview(props) {
   const isSelected = name => selected.indexOf(name) !== -1;
 
   // 点击服务id跳转页面
-  const handleClickById = index => {
-    // let id=tableData[index][0];
-    let id=tableData[index]['id'];
-    // console.log(id);
-    // console.log(`detail/service/${id}`)
+  const handleClickById = id => {
     navigate(`/detail/service/${id}`);
   };
 
@@ -647,7 +643,7 @@ export default function ServiceOverview(props) {
                                 color: "#55bc8a"
                               }
                             }}
-                            onClick={handleClickById.bind(this,index)}
+                            onClick={handleClickById.bind(this, row.id)}
                           >
                             {row.name}
                           </Box>
