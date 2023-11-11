@@ -19,6 +19,7 @@ import {
 } from "@mui/material"
 import RouteIcon from '@/assets/RouteIcon.svg';
 import Question from '@/assets/Question.svg';
+import Link60 from '@/assets/Link60.svg';
 
 import {
   KubeConfirmButton,
@@ -376,8 +377,8 @@ export default function RouteTrace() {
         height: '58px',
         mb: "12px"
         }}>
-        <Stack direction="row" spacing={-4}>
-          <RouteIcon />
+        <Stack direction="row" spacing={1}>
+          <Link60 />
           <Box>
             <Typography sx={{
               fontWeight: 600,

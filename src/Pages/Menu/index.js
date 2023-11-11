@@ -24,6 +24,7 @@ import Cluster16 from '@/assets/Cluster16.svg';
 import Service16 from '@/assets/Service16.svg';
 import Application16 from '@/assets/Application16.svg';
 import Route16 from '@/assets/Route16.svg';
+import Link16 from '@/assets/Link16.svg';
 
 export default function MiniDrawer() {
   // 这部分变量用于控制导航列表打开/关闭
@@ -421,10 +422,10 @@ export default function MiniDrawer() {
                 onClick={handleClick3}
               >
                 <Box sx={styledIcon}>
-                  <Route16 />
+                  <Link16 />
                 </Box>
                 <Box sx={{ ...styledFont, color: l3 ? '#55bc8a' : '#242e42' }}>
-                  路由（开发中）
+                  路由
                 </Box>
                 {verticalOpen3 ? <ExpandLess /> : <ExpandMore />}
               </ListItemButton>
@@ -473,7 +474,7 @@ export default function MiniDrawer() {
                   <Application16 />
                 </Box>
                 <Box sx={{ ...styledFont, color: l4 ? '#55bc8a' : '#242e42' }}>
-                  应用模块（开发中）
+                  应用模块
                 </Box>
                 {verticalOpen4 ? <ExpandLess /> : <ExpandMore />}
               </ListItemButton>
@@ -490,7 +491,7 @@ export default function MiniDrawer() {
                     <Box
                       sx={{ ...styledFont, color: l41 ? '#55bc8a' : '#242e42' }}
                     >
-                      服务能力自动测试（开发中）
+                      服务能力自动测试
                     </Box>
                   </ListItemButton>
                 </List>
@@ -508,7 +509,7 @@ export default function MiniDrawer() {
                   <Route16 />
                 </Box>
                 <Box sx={{ ...styledFont, color: l5 ? '#55bc8a' : '#242e42' }}>
-                  镜像管理（开发中）
+                  镜像管理
                 </Box>
                 {verticalOpen5 ? <ExpandLess /> : <ExpandMore />}
               </ListItemButton>

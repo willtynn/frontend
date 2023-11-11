@@ -367,7 +367,7 @@ export default function ClusterOverview() {
           id='ccp_cluster_list_autocomplete'
           options={clusterList}
           sx={{ width: 300 }}
-          renderInput={params => <TextField {...params} label='Cluster ID' />}
+          renderInput={params => <TextField {...params} label='选择集群' />}
         />
       </Stack>
       <Stack direction='row' justifyContent='space-between' spacing={4}>

@@ -37,6 +37,8 @@ import { decodeInterfaceSymbol } from '@/utils/commonUtils';
 import { setSnackbarMessageAndOpen } from '@/actions/snackbarAction';
 import { SEVERITIES } from '@/components/CommonSnackbar';
 import { fontFamily } from "@/utils/commonUtils";
+import Dependency60 from '@/assets/Dependency60.svg';
+import { useIntl } from 'react-intl';
 
 function CustomTabPanel(props) {
   const { children, value, index, ...other } = props;
@@ -100,6 +102,8 @@ function ServiceDependency() {
   const serviceClick = useRef();
   const interfaceClick = useRef();
   const informationBox = useRef();
+
+  const intl = useIntl();
 
   const { exactService, dependency } = useSelector(state => {
     return {
@@ -446,6 +450,45 @@ function ServiceDependency() {
       }}
       ref={informationBox}
     >
+      <Box
+        sx={{
+          borderRadius: '4px',
+          backgroundColor: '#FFFFFF',
+          padding: '24px 20px',
+          width: 'calc(100% - 40px)',
+          height: '58px',
+          mb: '12px',
+        }}
+      >
+        <Stack direction='row' spacing={1}>
+          <Dependency60 />
+          <Box>
+            <Typography
+              sx={{
+                fontWeight: 600,
+                fontStyle: 'normal',
+                color: '#242e42',
+                textShadow: '0 4px 8px rgba(36,46,66,.1)',
+                fontSize: '24px',
+                lineHeight: '32px',
+              }}
+            >
+              服务依赖
+            </Typography>
+            <Typography
+              sx={{
+                fontWeight: 400,
+                fontStyle: 'normal',
+                color: '#79879c',
+                fontSize: '12px',
+                lineHeight: 1.67,
+              }}
+            >
+              {intl.messages['serviceDependency.serviceDependencyDescription']}
+            </Typography>
+          </Box>
+        </Stack>
+      </Box>
       <Stack
         direction='row'
         spacing={4}
@@ -453,15 +496,6 @@ function ServiceDependency() {
           mb: '12px',
         }}
       >
-        <SuperLargeBoldFont
-          sx={{
-            ml: '12px',
-            fontSize: '32px !important',
-            lineHeight: '54px !important',
-          }}
-        >
-          服务依赖
-        </SuperLargeBoldFont>
         {tabValue == 0 ? (
           <Stack direction='row' spacing={1}>
             <Stack>
