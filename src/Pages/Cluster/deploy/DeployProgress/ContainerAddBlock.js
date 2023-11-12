@@ -1,3 +1,6 @@
+/**
+ * src\Pages\Cluster\deploy\DeployProgress\ContainerAddBlock.js
+ */
 import { useEffect, useState } from 'react';
 import KubeNormalReturn from '@/assets/KubeNormalReturn.svg';
 import KubeHoverReturn from '@/assets/KubeHoverReturn.svg';

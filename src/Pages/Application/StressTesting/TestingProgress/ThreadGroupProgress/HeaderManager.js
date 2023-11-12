@@ -1,3 +1,6 @@
+/**
+ * src\Pages\Application\StressTesting\TestingProgress\ThreadGroupProgress\HeaderManager.js
+ */
 import { useState, useEffect } from 'react';
 import {
   Box,

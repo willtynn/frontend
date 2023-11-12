@@ -1,3 +1,6 @@
+/**
+ * src\Pages\Cluster\deploy\index.js
+ */
 import { useEffect, useState, useRef } from 'react';
 import {
   Box,
@@ -8,12 +11,8 @@ import {
   Stack,
 } from '@mui/material';
 import { useDispatch, useSelector } from 'react-redux';
-import LabelAndValue from '../../../components/LabelAndValue';
-import InfoCard from '../../../components/InfoCard';
 import { ContainedButton, OutlinedButton } from '../../../components/Button';
-import { StyledTextField } from '../../../components/Input';
 import ServiceStatusTable from './ServiceStatusTable';
-import { fontFamily } from '@/utils/commonUtils';
 import DeployProgress from './DeployProgress';
 import BasicInfo from './DeployProgress/BasicInfo';
 import ContainerConfig from './DeployProgress/ContainerConfig';
@@ -101,7 +100,7 @@ export default function InstanceDeploy() {
 
   const handleConfirmClick = () => {
     if (configFinish === true) {
-      // //等待后端接口的部署
+      //等待后端接口的部署
       // dispatch(
       //   deploy(
       //     (serviceId = serviceId),

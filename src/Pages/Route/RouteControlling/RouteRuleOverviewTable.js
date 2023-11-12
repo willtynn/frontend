@@ -1,26 +1,24 @@
-import { useEffect, useState, useRef, useMemo } from 'react';
+/**
+ * src\Pages\Route\RouteControlling\RouteRuleOverviewTable.js
+ */
+import { useEffect, useState, useMemo } from 'react';
 import {
   Box,
   Stack,
-  Autocomplete,
   TextField,
   Table,
-  TableHead,
   TableRow,
   Checkbox,
   TableBody,
   TableCell,
-  Typography,
   Popper,
   Popover,
 } from '@mui/material';
 
 import { useDispatch, useSelector } from 'react-redux';
 import {
-  GET_INSTANCES,
   getNamaspaces,
   UPDATE_CURRENT_NAMESPACE,
-  getInstanceStatus,
 } from '../../../actions/instanceAction';
 
 import {
@@ -29,16 +27,13 @@ import {
 } from '../../../actions/serviceAction';
 
 import {
-  StyledTableBox,
   StyledTableContainer,
-  StyledTableRowCell,
   StyledTableBodyCell,
   StyledTableFooter,
   StyledTableHead,
 } from '../../../components/DisplayTable';
 import {
   StyledAutocomplete,
-  StyledTextFiled,
   ChipTextField,
 } from '../../../components/Input';
 import { EclipseTransparentButton } from '../../../components/Button';
@@ -280,17 +275,7 @@ export default function RouteRuleOverviewTable(props) {
       '130px',
       colDisplay[2],
       'center'
-    ),
-    // ,
-    // createRow(
-    //   'startTime',
-    //   '启动时间',
-    //   true,
-    //   '120px',
-    //   '130px',
-    //   colDisplay[3],
-    //   'center'
-    // ),
+    )
   ];
 
   const handleRequestSort = (event, property) => {

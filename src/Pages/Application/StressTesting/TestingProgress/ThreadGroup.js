@@ -1,3 +1,6 @@
+/**
+ * src\Pages\Application\StressTesting\TestingProgress\ThreadGroup.js
+ */
 import { useEffect, useState } from 'react';
 import { Box, Stack, Typography } from '@mui/material';
 import { fontFamily } from '@/utils/commonUtils';

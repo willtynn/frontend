@@ -1,38 +1,27 @@
-import { useEffect, useState, useRef, useMemo, version } from 'react';
+/**
+ * src\Pages\Service\module\Overview.js
+ */
+import { useEffect, useState, useMemo } from 'react';
 import {
-  StyledTableBox,
   StyledTableContainer,
-  StyledTableRowCell,
   StyledTableBodyCell,
   StyledTableFooter,
   StyledTableHead,
 } from '@/components/DisplayTable';
 import {
-  CircularProgress,
   TableRow,
-  TableHead,
   Box,
   Table,
   TableCell,
-  TableContainer,
-  Typography,
-  IconButton,
-  Tooltip,
-  Toolbar,
   TableBody,
-  tableCellClasses,
   Popover,
   Popper,
   Stack,
   TextField,
-  Checkbox,
 } from '@mui/material';
-import { styled } from '@mui/system';
-// import { BrowserRouter } from 'react-router-dom';
 import { useNavigate } from 'react-router-dom';
-import { transformVersion, shadowStyle } from '@/utils/commonUtils';
+import { transformVersion } from '@/utils/commonUtils';
 import { fontFamily } from '@/utils/commonUtils';
-// import Task from '@/assets/Task.svg';
 import ServiceQuery from '@/assets/ServiceQuery.svg';
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
@@ -41,42 +30,19 @@ import RefreshIcon from '@mui/icons-material/Refresh';
 import { useDispatch, useSelector } from 'react-redux';
 import {
   StyledAutocomplete,
-  StyledTextField,
   ChipTextField,
 } from '../../../components/Input';
 import {
   CHANGE_PAGE_NUM,
   CHANGE_PAGE_SIZE,
 } from '../../../actions/serviceAction';
-import { formatDatetimeString } from '../../../utils/commonUtils';
 import {
   UPDATE_SEARCH_SERVICE,
-  UPDATE_EXACT_SERVICE,
 } from '../../../actions/serviceAction';
 import { EclipseTransparentButton } from '../../../components/Button';
 import { KubeCheckbox } from '../../../components/Checkbox';
 import Question from '@/assets/Question.svg';
 import { NormalBoldFont, SmallLightFont } from '@/components/Fonts';
-
-function TextLabel(props) {
-  const { text } = props;
-  return (
-    <Box>
-      <Tooltip title={text}>
-        <Box
-          component='div'
-          sx={{
-            textOverflow: 'ellipsis',
-            whiteSpace: 'nowrap',
-            overflow: 'hidden',
-          }}
-        >
-          {text}
-        </Box>
-      </Tooltip>
-    </Box>
-  );
-}
 
 function createRow(
   id,
@@ -106,21 +72,6 @@ const headSecondRow = [
   createRow('major', '大版本号', false, '240px', '280px', true),
   createRow('minor', '小版本号', false, '190px', '190px', true),
   createRow('patch', 'Patch版本号', false, '200px', '240px', true),
-  // createRow('idleCpu', 'cpu资源', false, '150px', '150px', true),
-  // createRow('idleRam', 'ram资源', false, '170px', '200px', true),
-  // createRow('idleDisk', '硬盘资源', false, '170px', '200px', true),
-  // createRow('idleGpuCore', 'gpu-core资源', false, '170px', '200px', true),
-  // createRow('idleGpuMem', 'gpu内存资源', false, '170px', '200px', true),
-  // createRow('desiredCpu', 'cpu资源', false, '150px', '150px', true),
-  // createRow('desiredRam', 'ram资源', false, '170px', '200px', true),
-  // createRow('desiredDisk', '硬盘资源', false, '170px', '200px', true),
-  // createRow('desiredGpuCore', 'gpu-core资源', false, '170px', '200px', true),
-  // createRow('desiredGpuMem', 'gpu内存资源', false, '170px', '200px', true),
-  // createRow('desiredCapabilityCpu', 'cpu资源', false, '150px', '150px', true),
-  // createRow('desiredCapabilityRam', 'ram资源', false, '170px', '200px', true),
-  // createRow('desiredCapabilityDisk', '硬盘资源', false, '170px', '200px', true),
-  // createRow('desiredCapabilityCore', 'gpu-core资源', false, '170px', '200px', true),
-  // createRow('desiredCapabilityMem', 'gpu内存资源', false, '170px', '200px', true),
 ];
 
 const versionKey = ['major', 'minor', 'patch'];
@@ -145,7 +96,6 @@ export default function ServiceOverview(props) {
   const [project, setProject] = useState(null);
   const [projectList, setProjectList] = useState([]);
   const [searchList, setSearchList] = useState([]);
-  // const [loading, setLoading] = useState(false);
   const [tableData, setTableData] = useState([]);
   const [count, setCount] = useState(0);
   const [order, setOrder] = useState('asc');
@@ -620,8 +570,6 @@ export default function ServiceOverview(props) {
           {embeddingButton}
         </Stack>
       </Box>
-
-      {/* <StyledTableBox> */}
       <StyledTableContainer sx={{ bgcolor: '#FFF' }}>
         <Table
           stickyHeader
@@ -703,15 +651,6 @@ export default function ServiceOverview(props) {
                         </Box>
                       </Stack>
                     </StyledTableBodyCell>
-
-                    {/* 服务名称 */}
-                    {/* <StyledTableBodyCell
-                        align={'left'}
-                        // align='center'
-                        sx={{ display: headFirstRow[1].show ? 'table-cell' : 'none' }}
-                      >
-                        
-                      </StyledTableBodyCell> */}
 
                     {/* 仓库 */}
                     <StyledTableBodyCell
@@ -798,8 +737,6 @@ export default function ServiceOverview(props) {
           pb: '12px',
         }}
       />
-      {/* </StyledTableBox> */}
     </Box>
-    // </BrowserRouter>
   );
 }

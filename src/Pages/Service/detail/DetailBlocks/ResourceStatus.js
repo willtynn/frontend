@@ -1,25 +1,14 @@
+/**
+ * src\Pages\Service\detail\DetailBlocks\ResourceStatus.js
+ */
 import { useState, useEffect, useMemo } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Stack, Box, InputAdornment, Tooltip } from '@mui/material';
-import { SmallLightFont, SuperLargeBoldFont } from '@/components/Fonts';
-import {
-  OutlinedButton,
-  KubeConfirmButton,
-  KubeCancelButton,
-} from '@/components/Button';
-import { checkVersionFormat, formatDatetimeString } from '@/utils/commonUtils';
+import { formatDatetimeString } from '@/utils/commonUtils';
 import { fontFamily } from '@/utils/commonUtils';
 import { KubeSimpleCard } from '../../../../components/InfoCard';
-import {
-  StyledTableBodyCell,
-  StyledTableRowCell,
-  StyledTableBox,
-  StyledTableContainer,
-} from '@/components/DisplayTable';
 import { EclipseTransparentButton } from '../../../../components/Button';
 import { KubeAdornmentTextField } from '../../../../components/Input';
-import PolylineIcon from '@mui/icons-material/Polyline';
-import { useNavigate, useParams } from 'react-router';
 import ActivePod from '@/assets/ActivePod.svg';
 import PendingPod from '@/assets/PendingPod.svg';
 import FailedPod from '@/assets/FailedPod.svg';
@@ -31,10 +20,8 @@ import {
   RUNNING,
   PENDING,
   FAILED,
-  SUCCEEDED,
 } from '../../../Cluster/deploy/ServiceStatusTable';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
-import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
 
 export const IconOfPod = status => {
   if (status === RUNNING) {
@@ -58,7 +45,7 @@ export default function ResourceStatus(props) {
 
   const { pods } = useSelector(state => {
     return {
-      pods: state.Service.pods
+      pods: state.Service.pods,
     };
   });
 
@@ -66,10 +53,14 @@ export default function ResourceStatus(props) {
     if (service === null) {
       return;
     }
-    if(localStorage.getItem("current_cluster")) {
-      dispatch(searchPodsByServiceName(localStorage.getItem("current_cluster"), service.name));
+    if (localStorage.getItem('current_cluster')) {
+      dispatch(
+        searchPodsByServiceName(
+          localStorage.getItem('current_cluster'),
+          service.name
+        )
+      );
     }
-    
   }, []);
 
   const filtering = () => {
@@ -313,8 +304,8 @@ export default function ResourceStatus(props) {
         ) : (
           <Box
             sx={{
-              width: "100%",
-              height: "56px",
+              width: '100%',
+              height: '56px',
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'center',

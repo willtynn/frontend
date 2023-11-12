@@ -1,20 +1,15 @@
+/**
+ * src\Pages\Service\query\index.js
+ */
 import { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+import { Box, Stack, Typography } from '@mui/material';
 import {
-  Box,
-  Stack,
-  Typography
-} from '@mui/material';
-import { UPDATE_SEARCH_SERVICE, UPDATE_EXACT_SERVICE } from '@/actions/serviceAction';
-import ServiceInfoBlock from '../module/ServiceInfoBlock';
-import { QUERY } from '../module/ServiceInfoBlock';
-import ServiceOverview from '../module/Overview';
-import {
-  searchServiceById,
-  searchServiceByVersion,
+  UPDATE_SEARCH_SERVICE,
+  UPDATE_EXACT_SERVICE,
 } from '@/actions/serviceAction';
-import { checkVersionFormat } from '@/utils/commonUtils';
-import { fontFamily } from '@/utils/commonUtils';
+import ServiceOverview from '../module/Overview';
+import { searchServiceById } from '@/actions/serviceAction';
 import { useIntl } from 'react-intl';
 import GeneralService from '@/assets/GeneralService.svg';
 
@@ -268,12 +263,7 @@ export const fakeInfo = [
 ];
 
 export default function ServiceQuery() {
-  const [mode, setMode] = useState(0);
-  const [queryContent, setQueryContent] = useState('');
-  const [emptyError, setEmptyError] = useState(false);
-  const [versionFormatError, setVersionFormatError] = useState(false);
   const [selectedIndex, setSelectedIndex] = useState(-1);
-  const [serviceName, setServiceName] = useState('');
   const intl = useIntl();
 
   const dispatch = useDispatch();
@@ -288,10 +278,9 @@ export default function ServiceQuery() {
     dispatch(searchServiceById(''));
     // dispatch({ type: UPDATE_SEARCH_SERVICE, data: fakeInfo });
     return () => {
-      dispatch({ type: UPDATE_SEARCH_SERVICE, data: null })
-      dispatch({ type: UPDATE_EXACT_SERVICE, data: null })
+      dispatch({ type: UPDATE_SEARCH_SERVICE, data: null });
+      dispatch({ type: UPDATE_EXACT_SERVICE, data: null });
     };
-    
   }, []);
 
   useEffect(() => {
@@ -300,40 +289,7 @@ export default function ServiceQuery() {
     }
   }, [queryResult]);
 
-  const handleChange = event => {
-    setVersionFormatError(false);
-    setMode(event.target.value);
-  };
-
-  const handleInputChange = event => {
-    setQueryContent(event.target.value);
-    setVersionFormatError(false);
-  };
-
-  const handleServiceNameChange = event => {
-    setServiceName(event.target.value);
-  };
-
-  const handleSearchClick = e => {
-    // if (!queryContent || queryContent === "") {
-    //   setEmptyError(true);
-    //   return;
-    // }
-    if (mode === 0) {
-      dispatch(searchServiceById(queryContent));
-    } else {
-      const version = checkVersionFormat(queryContent);
-      if (!version) {
-        setVersionFormatError(true);
-        return;
-      }
-      dispatch(searchServiceByVersion(serviceName, version));
-    }
-    setSelectedIndex(-1);
-  };
-
   return (
-    // <BrowserRouter>
     <Box
       sx={{
         minHeight: '800px',
@@ -379,16 +335,12 @@ export default function ServiceQuery() {
           </Box>
         </Stack>
       </Box>
-      <Stack
-        direction='row'
-        spacing={4}
-      >
+      <Stack direction='row' spacing={4}>
         {!queryResult ? (
           <></>
         ) : (
           <Box
             sx={{
-              // maxWidth: queryResult === null ? '100%' : '47.5%',
               maxWidth: '100%',
             }}
           >
@@ -398,25 +350,16 @@ export default function ServiceQuery() {
               setIndex={setSelectedIndex}
               selectedIndex={selectedIndex}
             />
-            {/* <ServiceOverview data={queryResult} setIndex={setSelectedIndex} selectedIndex={selectedIndex}/> */}
           </Box>
         )}
-        {!queryResult ||
-        queryResult.length === 0 ||
-        selectedIndex === -1 ? (
+        {!queryResult || queryResult.length === 0 || selectedIndex === -1 ? (
           <></>
         ) : (
           <Box
             sx={{
               maxWidth: '47.5%',
             }}
-          >
-            {/* <ServiceInfoBlock
-            data={queryResult[selectedIndex]}
-            mode={mode}
-            page={QUERY}
-          /> */}
-          </Box>
+          ></Box>
         )}
       </Stack>
     </Box>

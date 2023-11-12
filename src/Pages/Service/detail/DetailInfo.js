@@ -1,3 +1,6 @@
+/**
+ * src\Pages\Service\detail\DetailInfo.js
+ */
 import { Box } from '@mui/material';
 import { Tabs } from '@mui/base/Tabs';
 import {
@@ -13,8 +16,6 @@ import ResourceMonitor from './DetailBlocks/ResourceMonitor';
 import { useSelector } from 'react-redux';
 
 export function DetailInfo(props) {
-
-  
   const { exactService } = useSelector(state => {
     return {
       exactService: state.Service.exactService,
@@ -36,19 +37,19 @@ export function DetailInfo(props) {
           <StyledTab value={5}>资源监控</StyledTab>
         </StyledTabsList>
         <StyledTabPanel value={1}>
-          <Information service={exactService}/>
+          <Information service={exactService} />
         </StyledTabPanel>
         <StyledTabPanel value={2}>
-          <ResourceStatus service={exactService}/>
+          <ResourceStatus service={exactService} />
         </StyledTabPanel>
         <StyledTabPanel value={3}>
-          <ServiceRequest service={exactService}/>
+          <ServiceRequest service={exactService} />
         </StyledTabPanel>
         <StyledTabPanel value={4}>
-          <RequestMonitor service={exactService}/>
+          <RequestMonitor service={exactService} />
         </StyledTabPanel>
         <StyledTabPanel value={5}>
-          <ResourceMonitor service={exactService}/>
+          <ResourceMonitor service={exactService} />
         </StyledTabPanel>
       </Tabs>
       {/* </Stack> */}

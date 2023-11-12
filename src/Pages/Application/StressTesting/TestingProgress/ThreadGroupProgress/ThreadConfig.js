@@ -1,3 +1,6 @@
+/**
+ * src\Pages\Application\StressTesting\TestingProgress\ThreadGroupProgress\ThreadConfig.js
+ */
 import { useState, useEffect } from 'react';
 import { Box, Stack, Typography } from '@mui/material';
 import { KubeInput, StyledTextField } from '@/components/Input';

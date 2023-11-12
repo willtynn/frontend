@@ -1,3 +1,6 @@
+/**
+ * src\Pages\Cluster\deploy\DeployProgress\BasicInfo.js
+ */
 import { useState, useEffect } from 'react';
 import { Box, Stack } from '@mui/material';
 import { fontFamily } from '../../../../utils/commonUtils';

@@ -1,50 +1,19 @@
+/**
+ * src\Pages\Menu\HeadBar.js
+ */
 import * as React from 'react';
 import Box from '@mui/material/Box';
 import Divider from '@mui/material/Divider';
-import { Button, Collapse, Grid, Stack } from '@mui/material';
+import { Grid, Stack } from '@mui/material';
 import { Outlet } from 'react-router-dom';
-import { useNavigate } from 'react-router-dom';
 import CommonSnackBar from '../../components/CommonSnackbar';
 import { useEffect } from 'react';
 import { fontFamily } from '../../utils/commonUtils';
 import Workbench from '@/assets/Workbench.svg';
 import Gear from '@/assets/Gear.svg';
 import { KubeTransparentButton } from '../../components/Button';
-import { useIntl } from 'react-intl';
 
 export function HeadBar() {
-  const [open, setOpen] = React.useState(true);
-  const [verticalOpen1, setVerticalOpen1] = React.useState(false);
-  const [verticalOpen2, setVerticalOpen2] = React.useState(false);
-  const [verticalOpen3, setVerticalOpen3] = React.useState(false);
-
-  const [l1, setl1] = React.useState(false);
-  const [l11, setl11] = React.useState(false);
-  const [l12, setl12] = React.useState(false);
-  const [l13, setl13] = React.useState(false);
-
-  const [l2, setl2] = React.useState(false);
-  const [l21, setl21] = React.useState(false);
-  const [l22, setl22] = React.useState(false);
-
-  const [l3, setl3] = React.useState(false);
-  const [l31, setl31] = React.useState(false);
-
-  const intl = useIntl();
-
-  const navigate = useNavigate();
-
-  useEffect(() => {
-    setl1(l11 || l12 || l13);
-  }, [l11, l12, l13]);
-
-  useEffect(() => {
-    setl2(l21 || l22);
-  }, [l21, l22]);
-
-  useEffect(() => {
-    setl3(l31);
-  }, [l31]);
 
   useEffect(() => {
     if(!localStorage.getItem("current_cluster")) {

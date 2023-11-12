@@ -1,3 +1,6 @@
+/**
+ * src\Pages\Cluster\deploy\DeployProgress\index.js
+ */
 import { useState, useEffect } from 'react';
 import { Box, Stack } from '@mui/material';
 import { KubeDeploymentCard } from '@/components/InfoCard';

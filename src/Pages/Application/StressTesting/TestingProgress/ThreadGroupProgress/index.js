@@ -1,3 +1,6 @@
+/**
+ * src\Pages\Application\StressTesting\TestingProgress\ThreadGroupProgress\index.js
+ */
 import { useState, useEffect } from 'react';
 import { Box, Stack, Typography } from '@mui/material';
 import { KubeDeploymentCard } from '@/components/InfoCard';

@@ -1,38 +1,20 @@
-import { useState, useEffect } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+import { useState } from 'react';
+import { useSelector } from 'react-redux';
 import {
-  TextField,
   Box,
-  Input,
-  FormControl,
-  FormHelperText,
-  InputLabel,
-  Select,
-  MenuItem,
   Stack,
-  Button,
   Tooltip,
 } from '@mui/material';
-import { SmallLightFont, SuperLargeBoldFont } from '@/components/Fonts';
 import {
-  OutlinedButton,
-  KubeConfirmButton,
   KubeCancelButton,
 } from '@/components/Button';
-import { UPDATE_SEARCH_SERVICE } from '@/actions/serviceAction';
-import {
-  searchServiceById,
-  searchServiceByVersion,
-  searchServiceExactlyById,
-} from '@/actions/serviceAction';
-import { checkVersionFormat } from '@/utils/commonUtils';
 import { fontFamily } from '@/utils/commonUtils';
 import DetailBG from '@/assets/DetailBG.svg';
 import Service21 from '@/assets/Service21.svg';
 import EditService from '@/assets/EditService.svg';
 import Delete16 from '@/assets/Delete16.svg';
 import NavigateBeforeIcon from '@mui/icons-material/NavigateBefore';
-import { useNavigate, useParams } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
 import { StyledPopover } from '../../../../components/Popover';
 

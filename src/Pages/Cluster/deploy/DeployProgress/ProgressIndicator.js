@@ -1,3 +1,6 @@
+/**
+ * src\Pages\Cluster\deploy\DeployProgress\ProgressIndicator.js
+ */
 import { Box, Stack } from '@mui/material';
 import { useIntl } from 'react-intl';
 

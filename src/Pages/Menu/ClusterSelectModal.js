@@ -1,18 +1,12 @@
+/**
+ * src\Pages\Menu\ClusterSelectModal.js
+ */
 import { useState, useEffect, useMemo } from 'react';
 import { Box, Stack, InputAdornment } from '@mui/material';
 import { KubeDeploymentCard } from '@/components/InfoCard';
-import { ContainedButton, OutlinedButton } from '@/components/Button';
 import { fontFamily } from '@/utils/commonUtils';
-import InfoFinished from '@/assets/InfoFinished.svg';
-import InfoWaiting from '@/assets/InfoWaiting.svg';
-import InfoNow from '@/assets/InfoNow.svg';
-import DockerFinished from '@/assets/DockerFinished.svg';
-import DockerWaiting from '@/assets/DockerWaiting.svg';
-import DockerNow from '@/assets/DockerNow.svg';
-import { KubeInput } from '@/components/Input';
 import { useIntl } from 'react-intl';
 import {
-  KubeCancelButton,
   EclipseTransparentButton,
 } from '@/components/Button';
 import SingleCluster from '@/assets/SingleCluster.svg';
@@ -56,10 +50,6 @@ export default function ClusterSelectModal(props) {
       return cluster.id.includes(clusterSearchValue);
     });
   };
-
-  const visibleRows = useMemo(() => {
-    return filtering();
-  }, [clusters, enter]);
 
   const handleSearchInputChange = e => {
     setClusterSearchValue(e.target.value);

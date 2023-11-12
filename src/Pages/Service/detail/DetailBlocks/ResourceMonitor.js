@@ -1,3 +1,6 @@
+/**
+ * src\Pages\Service\detail\DetailBlocks\ResourceMonitor.js
+ */
 import { useState, useEffect } from 'react';
 import { Box, Stack, Tooltip } from '@mui/material';
 import { KubeSimpleCard } from '../../../../components/InfoCard';
@@ -5,7 +8,6 @@ import { TimeAdaptiveAreaChart } from '../../../../components/Charts/AreaChart';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
 import { fontFamily } from '../../../../utils/commonUtils';
-import { IconOfPod } from './ResourceStatus';
 import ActivePod from '@/assets/ActivePod.svg';
 
 import { serviceMonitorData } from '../data';

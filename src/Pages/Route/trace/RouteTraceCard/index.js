@@ -1,3 +1,6 @@
+/**
+ * src\Pages\Route\trace\RouteTraceCard\index.js
+ */
 import React from 'react';
 import styled from "@emotion/styled"
 import { fontFamily } from "@/utils/commonUtils";

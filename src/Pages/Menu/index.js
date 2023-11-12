@@ -1,3 +1,6 @@
+/**
+ * src\Pages\Menu\index.js
+ */
 import {
   Collapse,
   Grid,

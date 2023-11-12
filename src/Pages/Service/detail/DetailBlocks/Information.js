@@ -1,3 +1,6 @@
+/**
+ * src\Pages\Service\detail\DetailBlocks\Information.js
+ */
 import {
   Stack,
   Tooltip,
@@ -6,7 +9,7 @@ import {
   TableRow,
   IconButton,
   TableBody,
-  TableCell
+  TableCell,
 } from '@mui/material';
 import { fontFamily, decodeInterfaceSymbol } from '@/utils/commonUtils';
 import { KubeSimpleCard } from '../../../../components/InfoCard';
@@ -383,16 +386,6 @@ export default function Information(props) {
                   >
                     {service && service.desiredCapability}
                   </StyledTableBodyCell>
-                  {/* {
-                    resourceAndCapabilityHeadRow.map((item, index) =>
-                      <StyledTableCell
-                        key={item.id}
-                        align='center'
-                      >
-                        {data.desiredCapability[item.id]}
-                      </StyledTableCell>
-                    )
-                  } */}
                 </TableRow>
               </TableBody>
             ) : (

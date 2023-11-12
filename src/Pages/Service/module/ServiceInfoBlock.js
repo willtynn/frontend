@@ -1,66 +1,53 @@
-import { 
-  useEffect,
-  useRef,
-  useState
-} from "react"
-import LabelAndValue from "@/components/LabelAndValue"
+/**
+ * src\Pages\Service\module\ServiceInfoBlock.js
+ */
+import { useEffect, useRef, useState } from 'react';
+import LabelAndValue from '@/components/LabelAndValue';
 import {
   Box,
   Table,
   TableRow,
   TableHead,
   TableBody,
-  TableContainer,
   Stack,
-  tableCellClasses,
-  TableCell,
   IconButton,
-  Tooltip
-} from "@mui/material"
-import { LargeBoldFont } from "@/components/Fonts"
-import { transformVersion, shadowStyle } from "@/utils/commonUtils"
+  Tooltip,
+} from '@mui/material';
+import { LargeBoldFont } from '@/components/Fonts';
+import { transformVersion, shadowStyle } from '@/utils/commonUtils';
 import {
   StyledTableBodyCell,
   StyledTableRowCell,
-  StyledTableBox,
-  StyledTableContainer
-} from "@/components/DisplayTable"
-import { styled } from '@mui/system';
+  StyledTableContainer,
+} from '@/components/DisplayTable';
 import PolylineIcon from '@mui/icons-material/Polyline';
-import { useNavigate } from "react-router-dom"
-import { fontFamily } from "@/utils/commonUtils";
-export const QUERY = "QUERY";
-export const SERVICE_DEPENDENCY = "SERVICE_DEPENDENCY";
-export const INTERFACE_DEPENDENCY = "INTERFACE_DEPENDENCY";
+import { useNavigate } from 'react-router-dom';
+import { fontFamily } from '@/utils/commonUtils';
+export const QUERY = 'QUERY';
+export const SERVICE_DEPENDENCY = 'SERVICE_DEPENDENCY';
+export const INTERFACE_DEPENDENCY = 'INTERFACE_DEPENDENCY';
 
 export default function ServiceInfoBlock(props) {
-
-  const { data, mode, page, cb = () => {}, init = () => {} } = props
+  const { data, mode, page, cb = () => {}, init = () => {} } = props;
   const navigate = useNavigate();
-  const [resourceTableWidth, setResourceTableWidth] = useState("650px");
+  const [resourceTableWidth, setResourceTableWidth] = useState('650px');
   const [values, setValues] = useState([]);
   const interfaceTable = useRef();
 
   const labels = [
-    "服务ID",
-    "服务名称",
-    "代码仓库地址",
-    "镜像仓库地址&Tag",
-    "服务版本"
-  ]
+    '服务ID',
+    '服务名称',
+    '代码仓库地址',
+    '镜像仓库地址&Tag',
+    '服务版本',
+  ];
 
-  const isUrl = [
-    false,
-    false,
-    true,
-    false,
-    false
-  ]
+  const isUrl = [false, false, true, false, false];
 
   useEffect(() => {
-    setResourceTableWidth(interfaceTable.current.clientWidth + "px");
+    setResourceTableWidth(interfaceTable.current.clientWidth + 'px');
     init();
-    if(!data) {
+    if (!data) {
       return;
     }
     const tmpValues = [
@@ -68,10 +55,9 @@ export default function ServiceInfoBlock(props) {
       data.name,
       data.repo,
       data.imageUrl,
-      transformVersion(data.version)
+      transformVersion(data.version),
     ];
     setValues(tmpValues);
-    
   }, [data]);
 
   function createRow(
@@ -92,7 +78,7 @@ export default function ServiceInfoBlock(props) {
     createRow('path', '请求的路径', false, '70px', '80px', true),
     createRow('inputSize', '输入数据大小', false, '80px', '140px', true),
     createRow('outputSize', '输出数据大小', false, '60px', '70px', true),
-    createRow('dependency', '接口依赖', false, '60px', '70px', true)
+    createRow('dependency', '接口依赖', false, '60px', '70px', true),
   ];
 
   const resourceAndCapabilityHeadRow = [
@@ -103,47 +89,46 @@ export default function ServiceInfoBlock(props) {
     createRow('gpuMem', 'gpu内存资源', false, '70px', '120px', true),
   ];
 
-  const handleServiceDependencyClick = (id) => {
-    navigate(`/service/dependency?type=service&by=${mode}&id=${id}`)
-    cb()
-  }
+  const handleServiceDependencyClick = id => {
+    navigate(`/service/dependency?type=service&by=${mode}&id=${id}`);
+    cb();
+  };
 
-  const handleInterfaceDependencyClick = (id) => {
-    navigate(`/service/dependency?type=interface&by=0&id=${id}`)
-    cb()
-  }
+  const handleInterfaceDependencyClick = id => {
+    navigate(`/service/dependency?type=interface&by=0&id=${id}`);
+    cb();
+  };
 
   return (
     <Box
       sx={{
         ...shadowStyle,
-        minHeight: "500px"
+        minHeight: '500px',
       }}
     >
-      <Stack sx={{
-        mb: "20px"
-      }}
-        direction="row"
-        spacing={2}>
+      <Stack
+        sx={{
+          mb: '20px',
+        }}
+        direction='row'
+        spacing={2}
+      >
         <LargeBoldFont
           sx={{
-            lineHeight: "40px !important"
+            lineHeight: '40px !important',
           }}
         >
           服务详细信息
         </LargeBoldFont>
-        {
-          page !== SERVICE_DEPENDENCY
-            ?
-            <Tooltip title="查看依赖">
-              <IconButton onClick={() => handleServiceDependencyClick(data.id)}>
-                <PolylineIcon />
-              </IconButton>
-            </Tooltip>
-            :
-            <></>
-        }
-
+        {page !== SERVICE_DEPENDENCY ? (
+          <Tooltip title='查看依赖'>
+            <IconButton onClick={() => handleServiceDependencyClick(data.id)}>
+              <PolylineIcon />
+            </IconButton>
+          </Tooltip>
+        ) : (
+          <></>
+        )}
       </Stack>
 
       <LabelAndValue
@@ -154,7 +139,7 @@ export default function ServiceInfoBlock(props) {
         rowSpacing={0}
       />
 
-      <Stack direction='row' spacing={0} sx={{ mt: "8px" }}>
+      <Stack direction='row' spacing={0} sx={{ mt: '8px' }}>
         <Box
           sx={{
             width: '224px',
@@ -178,100 +163,90 @@ export default function ServiceInfoBlock(props) {
         <Box
           ref={interfaceTable}
           sx={{
-            width: "calc(100% - 224px)"
+            width: 'calc(100% - 224px)',
           }}
         >
-          {
-            data && data.interfaces !== null
-              ?
-              <StyledTableContainer sx={{ maxHeight: '680px'}}>
-                <Table
-                  stickyHeader
-                  aria-label='simple table'
-                  size='small'
-                  sx={{
-                    tableLayout: 'auto',
-                    minWidth: "100%"
-                  }}
-                >
-                  <TableHead>
-                    <TableRow>
-                      {headRow.map((item, index) =>
-                        <StyledTableRowCell
-                          key={item.id}
-                          align="center"
-                          sx={{
-                            maxWidth: item.maxWidth,
-                            minWidth: item.minWidth,
-                          }}
-                        >
-                          {item.label}
-                        </StyledTableRowCell>
-                      )}
-                    </TableRow>
-                  </TableHead>
-                  <TableBody>
-                    {data.interfaces.map((row, index) =>
-                      <TableRow
-                        key={row.id + '' + index}
-                        aria-checked={false}
+          {data && data.interfaces !== null ? (
+            <StyledTableContainer sx={{ maxHeight: '680px' }}>
+              <Table
+                stickyHeader
+                aria-label='simple table'
+                size='small'
+                sx={{
+                  tableLayout: 'auto',
+                  minWidth: '100%',
+                }}
+              >
+                <TableHead>
+                  <TableRow>
+                    {headRow.map((item, index) => (
+                      <StyledTableRowCell
+                        key={item.id}
+                        align='center'
                         sx={{
-                          '&:last-child td, &:last-child th': {
-                            border: 0
-                          },
-                          fontWeight: 600,
-                          maxWidth: '110px',
-                          position: 'sticky',
-                          left: 0,
-                          zIndex: 6,
-                          backgroundColor: '#FFF !important',
+                          maxWidth: item.maxWidth,
+                          minWidth: item.minWidth,
                         }}
-                        selected={false}
                       >
-                        <StyledTableBodyCell
-                          align='center'
-                        >
-                          {row.id}
-                        </StyledTableBodyCell>
-                        <StyledTableBodyCell
-                          align='center'
-                        >
-                          {row.path}
-                        </StyledTableBodyCell>
-                        <StyledTableBodyCell
-                          align='center'
-                        >
-                          {row.inputSize}
-                        </StyledTableBodyCell>
-                        <StyledTableBodyCell
-                          align='center'
-                        >
-                          {row.outputSize}
-                        </StyledTableBodyCell>
-                        <StyledTableBodyCell
-                          align='center'
-                        >
-                          <Tooltip title="查看依赖">
-                            <IconButton onClick={() => {
-                              handleInterfaceDependencyClick(row.id)
-                            }} size="small">
-                              <PolylineIcon />
-                            </IconButton>
-                          </Tooltip>
-                        </StyledTableBodyCell>
-                      </TableRow>
-                    )}
-                  </TableBody>
-                </Table>
-
-              </StyledTableContainer>
-              :
-              <></>
-          }
+                        {item.label}
+                      </StyledTableRowCell>
+                    ))}
+                  </TableRow>
+                </TableHead>
+                <TableBody>
+                  {data.interfaces.map((row, index) => (
+                    <TableRow
+                      key={row.id + '' + index}
+                      aria-checked={false}
+                      sx={{
+                        '&:last-child td, &:last-child th': {
+                          border: 0,
+                        },
+                        fontWeight: 600,
+                        maxWidth: '110px',
+                        position: 'sticky',
+                        left: 0,
+                        zIndex: 6,
+                        backgroundColor: '#FFF !important',
+                      }}
+                      selected={false}
+                    >
+                      <StyledTableBodyCell align='center'>
+                        {row.id}
+                      </StyledTableBodyCell>
+                      <StyledTableBodyCell align='center'>
+                        {row.path}
+                      </StyledTableBodyCell>
+                      <StyledTableBodyCell align='center'>
+                        {row.inputSize}
+                      </StyledTableBodyCell>
+                      <StyledTableBodyCell align='center'>
+                        {row.outputSize}
+                      </StyledTableBodyCell>
+                      <StyledTableBodyCell align='center'>
+                        <Tooltip title='查看依赖'>
+                          <IconButton
+                            onClick={() => {
+                              handleInterfaceDependencyClick(row.id);
+                            }}
+                            size='small'
+                          >
+                            <PolylineIcon />
+                          </IconButton>
+                        </Tooltip>
+                      </StyledTableBodyCell>
+                    </TableRow>
+                  ))}
+                </TableBody>
+              </Table>
+            </StyledTableContainer>
+          ) : (
+            <></>
+          )}
         </Box>
       </Stack>
 
-      <Stack direction='row' spacing={0} sx={{ mt: "8px" }}>
+      <Stack direction='row' spacing={0} sx={{ mt: '8px' }}>
         <Box
           sx={{
             width: '224px',
@@ -293,30 +268,30 @@ export default function ServiceInfoBlock(props) {
           资源与能力
         </Box>
 
-        <Box sx={{
-          width: "calc(100% - 224px)"
-        }}>
-          <StyledTableContainer sx={{ maxHeight: '680px', overflow: "auto", width: "100%" }}>
+        <Box
+          sx={{
+            width: 'calc(100% - 224px)',
+          }}
+        >
+          <StyledTableContainer
+            sx={{ maxHeight: '680px', overflow: 'auto', width: '100%' }}
+          >
             <Table
               stickyHeader
               aria-label='simple table'
               size='small'
               sx={{
                 tableLayout: 'auto',
-                minWidth: "100%"
+                minWidth: '100%',
               }}
             >
               <TableHead>
                 <TableRow>
-                  <StyledTableRowCell
-                    align="center"
-                  >
-                    Type
-                  </StyledTableRowCell>
-                  {resourceAndCapabilityHeadRow.map((item, index) =>
+                  <StyledTableRowCell align='center'>Type</StyledTableRowCell>
+                  {resourceAndCapabilityHeadRow.map((item, index) => (
                     <StyledTableRowCell
                       key={item.id}
-                      align="center"
+                      align='center'
                       sx={{
                         maxWidth: item.maxWidth,
                         minWidth: item.minWidth,
@@ -324,7 +299,7 @@ export default function ServiceInfoBlock(props) {
                     >
                       {item.label}
                     </StyledTableRowCell>
-                  )}
+                  ))}
                 </TableRow>
               </TableHead>
               <TableBody>
@@ -332,7 +307,7 @@ export default function ServiceInfoBlock(props) {
                   aria-checked={false}
                   sx={{
                     '&:last-child td, &:last-child th': {
-                      border: 0
+                      border: 0,
                     },
                     fontWeight: 600,
                     maxWidth: '110px',
@@ -343,13 +318,11 @@ export default function ServiceInfoBlock(props) {
                   }}
                   selected={false}
                 >
-                  <StyledTableBodyCell
-                    align='center'
-                  >
+                  <StyledTableBodyCell align='center'>
                     空闲时占用资源
                   </StyledTableBodyCell>
-                  { data &&
-                    resourceAndCapabilityHeadRow.map((item, index) =>
+                  {data &&
+                    resourceAndCapabilityHeadRow.map((item, index) => (
                       <StyledTableBodyCell
                         align='center'
                         sx={{
@@ -359,14 +332,13 @@ export default function ServiceInfoBlock(props) {
                       >
                         {data.idleResource[item.id]}
                       </StyledTableBodyCell>
-                    )
-                  }
+                    ))}
                 </TableRow>
                 <TableRow
                   aria-checked={false}
                   sx={{
                     '&:last-child td, &:last-child th': {
-                      border: 0
+                      border: 0,
                     },
                     fontWeight: 600,
                     maxWidth: '110px',
@@ -377,14 +349,11 @@ export default function ServiceInfoBlock(props) {
                   }}
                   selected={false}
                 >
-                  <StyledTableBodyCell
-                    align='center'
-                    
-                  >
+                  <StyledTableBodyCell align='center'>
                     期望资源
                   </StyledTableBodyCell>
-                  { data &&
-                    resourceAndCapabilityHeadRow.map((item, index) =>
+                  {data &&
+                    resourceAndCapabilityHeadRow.map((item, index) => (
                       <StyledTableBodyCell
                         key={item.id}
                         align='center'
@@ -395,14 +364,13 @@ export default function ServiceInfoBlock(props) {
                       >
                         {data.desiredResource[item.id]}
                       </StyledTableBodyCell>
-                    )
-                  }
+                    ))}
                 </TableRow>
                 <TableRow
                   aria-checked={false}
                   sx={{
                     '&:last-child td, &:last-child th': {
-                      border: 0
+                      border: 0,
                     },
                     fontWeight: 600,
                     maxWidth: '110px',
@@ -413,15 +381,10 @@ export default function ServiceInfoBlock(props) {
                   }}
                   selected={false}
                 >
-                  <StyledTableBodyCell
-                    align='center'
-                  >
+                  <StyledTableBodyCell align='center'>
                     处理能力
                   </StyledTableBodyCell>
-                  <StyledTableBodyCell
-                    align='center'
-                    colSpan={5}
-                  >
+                  <StyledTableBodyCell align='center' colSpan={5}>
                     {data && data.desiredCapability}
                   </StyledTableBodyCell>
                   {/* {
@@ -437,12 +400,9 @@ export default function ServiceInfoBlock(props) {
                 </TableRow>
               </TableBody>
             </Table>
-
           </StyledTableContainer>
-
         </Box>
       </Stack>
-
     </Box>
-  )
+  );
 }

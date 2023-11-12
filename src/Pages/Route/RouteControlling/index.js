@@ -1,205 +1,23 @@
-import { useEffect, useState, useRef } from 'react';
+/**
+ * src\Pages\Route\RouteControlling\index.js
+ */
+import { useState } from 'react';
 import {
   Box,
-  Button,
   Typography,
-  Modal,
-  TextField,
   Stack,
 } from '@mui/material';
-import { useDispatch, useSelector } from 'react-redux';
-import LabelAndValue from '../../../components/LabelAndValue';
-import InfoCard from '../../../components/InfoCard';
 import { ContainedButton, OutlinedButton } from '../../../components/Button';
-import { StyledTextFiled } from '../../../components/Input';
 import RouteRuleOverviewTable from './RouteRuleOverviewTable';
-import { fontFamily } from '@/utils/commonUtils';
 import TaskIcon from '@/assets/TaskIcon.svg';
 import { useIntl } from 'react-intl';
-import { deploy } from '../../../actions/instanceAction';
 
-const formControlStyle = {
-  // height: "45px",
-  legend: {
-    display: 'none',
-  },
-  width: '100%',
-  '& .MuiOutlinedInput-root.MuiInputBase-root': {
-    '& .MuiOutlinedInput-input.MuiInputBase-input': {
-      '&:hover': {
-        border: '1px solid #000',
-      },
-      '&:focus': {
-        border: '2px solid #0072E5',
-      },
-      border: '1px solid rgba(0, 0, 0, 0.23)',
-      borderRadius: '5px',
-      p: '11px 8px !important',
-    },
-    '& fieldset': {
-      border: 'none',
-    },
-  },
-};
 
 export default function RouteControlling() {
   const [open, setOpen] = useState(false);
-  const [serviceId, setServiceId] = useState('');
-  const [serviceName, setServiceName] = useState('');
-  const [namespace, setNamespace] = useState('');
-  const [imageUrl, setImageUrl] = useState('');
-  const [replicas, setReplicas] = useState(1);
-  const [ports, setPorts] = useState([
-    { name: 'http-0', protocol: 'HTTP', containerPort: '' },
-  ]);
-
-  const [showError, setShowError] = useState(false);
-  const [resources, setResources] = useState({
-    requests: {
-      cpu: '',
-      memory: '',
-    },
-    limits: {
-      cpu: '',
-      memory: '',
-    },
-  });
-
-  const [basicInfoError, setBasicInfoError] = useState(false);
-  const [containerAddError, setContainerAddError] = useState(false);
-  const [isConfig, setIsConfig] = useState(false);
-  const [configFinish, setConfigFinish] = useState(false);
-
   const intl = useIntl();
-  const dispatch = useDispatch();
 
   const handleOpen = () => setOpen(true);
-  const handleClose = () => setOpen(false);
-
-  const resetParam = () => {
-    setServiceId('');
-    setServiceName('');
-    setNamespace('');
-    setImageUrl('');
-    setReplicas(1);
-    setPorts([{ name: 'http-0', protocol: 'HTTP', containerPort: '' }]);
-    setResources({
-      requests: {
-        cpu: '',
-        memory: '',
-      },
-      limits: {
-        cpu: '',
-        memory: '',
-      },
-    });
-    setConfigFinish(false);
-  };
-
-  const handleConfirmClick = () => {
-    if (configFinish === true) {
-      // //等待后端接口的部署
-      // dispatch(
-      //   deploy(
-      //     (serviceId = serviceId),
-      //     (serviceName = serviceName),
-      //     (namespace = namespace),
-      //     (imageUrl = imageUrl),
-      //     (replicas = replicas),
-      //     (ports = ports),
-      //     (resources = {
-      //       requests: {
-      //         cpu: resources.requests.cpu + '',
-      //         memory:
-      //           resources.requests.memory === ''
-      //             ? ''
-      //             : resources.requests.memory + 'Mi',
-      //       },
-      //       limits: {
-      //         cpu: resources.limits.cpu + '',
-      //         memory:
-      //           resources.limits.memory === ''
-      //             ? ''
-      //             : resources.limits.memory + 'Mi',
-      //       },
-      //     })
-      //   )
-      // );
-      console.log({
-        serviceId: serviceId,
-        serviceName: serviceName,
-        namespace: namespace,
-        imageUrl: imageUrl,
-        replicas: replicas,
-        ports: ports,
-        resources: {
-          requests: {
-            cpu: resources.requests.cpu + '',
-            memory:
-              resources.requests.memory === ''
-                ? ''
-                : resources.requests.memory + 'Mi',
-          },
-          limits: {
-            cpu: resources.limits.cpu + '',
-            memory:
-              resources.limits.memory === ''
-                ? ''
-                : resources.limits.memory + 'Mi',
-          },
-        },
-      });
-      setOpen(false);
-      setShowError(false);
-      resetParam();
-    } else {
-      setShowError(true);
-    }
-  };
-
-  const handleCancelClick = () => {
-    setOpen(false);
-  };
-
-  const currentPage = stage => {
-    if (stage === 1) {
-      return (
-        <Box sx={{ p: '64px 64px 32px 64px', bgcolor: '#FFFFFF' }}>
-          {/* <BasicInfo
-            serviceId={serviceId}
-            setServiceId={setServiceId}
-            serviceName={serviceName}
-            setServiceName={setServiceName}
-            namespace={namespace}
-            setNamespace={setNamespace}
-            showError={showError}
-            setBasicInfoError={setBasicInfoError}
-          /> */}
-        </Box>
-      );
-    }
-    return (
-      <Box sx={{ p: '20px 64px 32px 64px', bgcolor: '#FFFFFF' }}>
-        {/* <ContainerConfig
-          imageUrl={imageUrl}
-          setImageUrl={setImageUrl}
-          replicas={replicas}
-          setReplicas={setReplicas}
-          ports={ports}
-          setPorts={setPorts}
-          resources={resources}
-          setResources={setResources}
-          showError={showError}
-          setContainerAddError={setContainerAddError}
-          isConfig={isConfig}
-          setIsConfig={setIsConfig}
-          setShowError={setShowError}
-          configFinish={configFinish}
-          setConfigFinish={setConfigFinish}
-        /> */}
-      </Box>
-    );
-  };
 
   return (
     <Box>
@@ -256,17 +74,6 @@ export default function RouteControlling() {
           </OutlinedButton>
         }
       />
-     {/* <Modal open={open} onClose={handleClose}>
-        <DeployProgress
-          handleConfirmClick={handleConfirmClick}
-          handleCancelClick={handleCancelClick}
-          totalStage={2}
-          currentPage={currentPage}
-          basicInfoError={basicInfoError}
-          setShowError={setShowError}
-          isConfig={isConfig}
-        /> 
-      </Modal>*/}
     </Box>
   );
 }

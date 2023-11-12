@@ -1,19 +1,15 @@
-import {
-  Box,
-  Stack,
-  Tooltip,
-} from '@mui/material';
-import {
-  KubeCancelButton,
-} from '@/components/Button';
+/**
+ * src\Pages\Route\trace\RouteTraceInfoPage\GeneralInfo.js
+ */
+import { Box, Stack, Tooltip } from '@mui/material';
+import { KubeCancelButton } from '@/components/Button';
 import { fontFamily } from '@/utils/commonUtils';
 import DetailBG from '@/assets/DetailBG.svg';
 import Service21 from '@/assets/Service21.svg';
 import NavigateBeforeIcon from '@mui/icons-material/NavigateBefore';
-import { useNavigate, useParams } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 
-import {calculateDuration} from '../functions/func.js'
-
+import { calculateDuration } from '../functions/func.js';
 
 const labelStyle = {
   fontSize: '12px',
@@ -42,49 +38,21 @@ const valueStyle = {
 };
 
 export default function GeneralInfo(props) {
-  const {info} = props;
+  const { info } = props;
 
   console.log(info);
 
   const navigate = useNavigate();
 
-  //const [moreOperationAnchorEl, setMoreOperationAnchorEl] = useState(null);
-  //const moreOperationOpen = Boolean(moreOperationAnchorEl);
-
-/*
-  const items = [
-    [<EditService />, '编辑服务', () => {}],
-    [<Delete16 />, '删除', () => {}],
-  ];*/
-
   const handleReturn = () => {
-    //navigate('/route/trace');
     navigate(-1);
   };
-
-  /*
-  const handleMoreOperation = e => {
-    setMoreOperationAnchorEl(e.currentTarget);
-  };*/
 
   return (
     <Stack
       direction='column'
       sx={{ position: 'relative', boxShadow: '0 4px 8px 0 rgba(36,46,66,.06)' }}
     >
-      {/*
-      <StyledPopover
-        id='service-detail-more-operation'
-        open={moreOperationOpen}
-        anchorEl={moreOperationAnchorEl}
-        handleClose={() => setMoreOperationAnchorEl(null)}
-        items={items}
-        sx={{
-          mt: '8px !important',
-          boxShadow: 'inset 0 4px 8px 0 rgba(36,46,66,.12) !important',
-        }}
-        border='none'
-      /> */}
       <DetailBG />
       <Box
         style={{
@@ -137,7 +105,7 @@ export default function GeneralInfo(props) {
               sx: {
                 '& .MuiTooltip-tooltip': {
                   backgroundColor: '#242e42',
-                  margin: "0 !important"
+                  margin: '0 !important',
                 },
               },
             }}
@@ -154,35 +122,13 @@ export default function GeneralInfo(props) {
                 lineHeight: 1.4,
                 letterSpacing: 'normal',
                 color: '#36435C',
-                wordBreak:"break-all",
+                wordBreak: 'break-all',
               }}
             >
               {info !== null ? info.service : ''}
             </Box>
           </Tooltip>
         </Stack>
-        {/*<Stack
-          sx={{ mt: '12px' }}
-          direction='row'
-          spacing={1.5}
-          alignItems='center'
-        >
-          
-          <KubeCancelButton sx={{ height: '32px', width: '96px' }}>
-            编辑信息
-          </KubeCancelButton>
-          
-          <KubeCancelButton
-            onClick={handleMoreOperation}
-            sx={{ height: '32px', width: '96px' }}
-          >
-            
-            <Stack direction='row' alignItems='center' justifyContent='center'>
-              <Box sx={{ ml: '4px' }}>更多操作</Box>
-              <ArrowDropDownIcon fontSize='small' />
-            </Stack> 
-          </KubeCancelButton>
-        </Stack>*/}
       </Box>
       <Box
         style={{
@@ -214,15 +160,11 @@ export default function GeneralInfo(props) {
         <Stack sx={{ margin: '6px 0px' }} direction='column' spacing={1.5}>
           <Stack direction='row' spacing={0.75}>
             <Box sx={labelStyle}>服务 API</Box>
-            <Box sx={valueStyle}>
-              {info !== null ? info.api : ''}
-            </Box>
+            <Box sx={valueStyle}>{info !== null ? info.api : ''}</Box>
           </Stack>
           <Stack direction='row' spacing={0.75}>
             <Box sx={labelStyle}>请求数量</Box>
-            <Box sx={valueStyle}>
-              {info !== null ? info.count : ''}
-            </Box>
+            <Box sx={valueStyle}>{info !== null ? info.count : ''}</Box>
           </Stack>
           <Stack direction='row' spacing={0.75}>
             <Box sx={labelStyle}>Low</Box>

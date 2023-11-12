@@ -1,9 +1,11 @@
+/**
+ * src\Pages\Service\dependency\index.js
+ */
 import React from 'react';
 import { useState, useEffect, useRef } from 'react';
 import { ThreeLayerCanvas, EdgeCenterCanvas } from './canvas';
 import { useDispatch, useSelector } from 'react-redux';
 import {
-  TextField,
   Box,
   Input,
   FormControl,
@@ -12,12 +14,11 @@ import {
   Select,
   MenuItem,
   Stack,
-  Button,
   Tabs,
   Tab,
   Typography,
 } from '@mui/material';
-import { SmallLightFont, SuperLargeBoldFont } from '@/components/Fonts';
+import { SmallLightFont } from '@/components/Fonts';
 import { OutlinedButton } from '@/components/Button';
 import {
   UPDATE_EXACT_SERVICE,
@@ -26,14 +27,12 @@ import {
 } from '@/actions/serviceAction';
 import ServiceInfoBlock from '../module/ServiceInfoBlock';
 import InvokeInfoBlock from '../module/InvokeInfoBlock';
-import { fakeInfo } from '../query';
 import PropTypes from 'prop-types';
 import {
   SERVICE_DEPENDENCY,
   INTERFACE_DEPENDENCY,
 } from '../module/ServiceInfoBlock';
-import { useParams, useSearchParams, useLocation } from 'react-router-dom';
-import { decodeInterfaceSymbol } from '@/utils/commonUtils';
+import { useSearchParams } from 'react-router-dom';
 import { setSnackbarMessageAndOpen } from '@/actions/snackbarAction';
 import { SEVERITIES } from '@/components/CommonSnackbar';
 import { fontFamily } from "@/utils/commonUtils";

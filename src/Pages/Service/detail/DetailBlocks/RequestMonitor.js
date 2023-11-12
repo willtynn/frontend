@@ -1,3 +1,6 @@
+/**
+ * src\Pages\Service\detail\DetailBlocks\RequestMonitor.js
+ */
 import { useState, useEffect, useMemo } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import {
@@ -33,8 +36,6 @@ import {
   CHANGE_PAGE_SIZE,
   CHANGE_PAGE_NUM,
 } from '@/actions/routeAction';
-import API from '@/assets/API.svg';
-import WhiteAPI from '@/assets/WhiteAPI.svg';
 import Watch from '@/assets/Watch.svg';
 import dayjs from 'dayjs';
 import ArrowDropUpIcon from '@mui/icons-material/ArrowDropUp';
