@@ -457,7 +457,7 @@ export default function MiniDrawer() {
                     }}
                   >
                     <Box
-                      sx={{ ...styledFont, color: l31 ? '#55bc8a' : '#242e42' }}
+                      sx={{ ...styledFont, color: l32 ? '#55bc8a' : '#242e42' }}
                     >
                       路由控制
                     </Box>
