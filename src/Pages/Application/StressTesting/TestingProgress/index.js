@@ -26,6 +26,7 @@ import {
   RESET_GROUP,
   RESET_PLAN,
   UPDATE_GROUP_EDIT_INDEX,
+  measure,
 } from '../../../../actions/applicationAction';
 
 const style = {
@@ -41,6 +42,56 @@ const style = {
 
 const totalStage = 2;
 const totalGroupEditStage = 4;
+
+const composeTestParams = testPlan => {
+  testPlan.threadGroups = testPlan.threadGroups.map((group, index) => {
+    const timerList = group.timer.map((singleTimer, index) => {
+      return {
+        name: singleTimer.id,
+        threadDelay: singleTimer.threadDelay,
+        deviation: singleTimer.deviation,
+        constantDelayOffset: singleTimer.constantDelayOffset,
+        lambda: singleTimer.lambda,
+        randomDelayMaximum: singleTimer.randomDelayMaximum,
+      };
+    });
+    let headerManager = {}
+    group.requestHeader.forEach((header, index) => {
+      headerManager[header.name] = header.value;
+    });
+    return {
+      threadGroupName: group.groupName,
+      threadNum: group.numThreads,
+      rampUp: group.rampTime,
+      // 如何确定是否loop？
+      loopControllerVO: {
+        loopControllerName: 'loop controller',
+        loopNum: group.loops,
+      },
+      httpSamplerProxyVO: {
+        name: group.requestDefaultName,
+        protocol: group.webServerProtocol,
+        server: group.webServerNameOrIP,
+        path: group.httpRequestPath,
+        port: group.webServerPort,
+        method: group.httpRequestMethod,
+        // request parameters??
+        body: group.requestBodyData,
+        useKeepAlive: 'true',
+        followRedirects: 'true',
+      },
+      headerManagerVO: {
+        headerManagerName: 'header manager',
+        headerList: headerManager,
+      },
+      timerList: timerList
+    };
+  });
+  return {
+    testPlanName: testPlan.planName,
+    threadGroupList: testPlan.threadGroups,
+  };
+};
 
 export function TestingProgress(props) {
   const { handleConfirmClick, handleCancelClick, showError, setShowError } =
@@ -238,18 +289,19 @@ export function TestingProgress(props) {
       dispatch({ type: UPDATE_GROUP_EDIT, data: false });
       dispatch({ type: RESET_GROUP });
     } else {
-      if(threadGroupError) {
+      if (threadGroupError) {
         setShowError(true);
       } else {
         setShowError(false);
-        console.log({
+        const testPlanData = composeTestParams({
           planName: planName,
           planComment: planComment,
           functionalMode: functionalMode,
           tearDownOnShutdown: tearDownOnShutdown,
           serializeThreadgroups: serializeThreadgroups,
           threadGroups: threadGroups,
-        });
+        })
+        dispatch(measure(testPlanData));
         handleConfirmClick();
         setCurrentStage(1);
         dispatch({ type: RESET_PLAN });
