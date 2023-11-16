@@ -5,11 +5,11 @@ import { buttonClasses } from '@mui/base/Button';
 import { Tab, tabClasses } from '@mui/base/Tab';
 
 export const StyledTab = styled(Tab)`
-  height: 32px;
+  height: 28px;
   
-  color: #FFFFFF;
+  color: #36435C;
   cursor: pointer;
-  border-radius: 4px;
+  border-radius: 14px;
   font-size: 12px;
   font-weight: 500;
   padding: 8px 12px;
@@ -18,17 +18,12 @@ export const StyledTab = styled(Tab)`
   justify-content: center;
   align-items: center;
   width: 108px;
-  background-color: #242E42;
-  margin-right: 12px;
-
-  &:hover {
-    color: #55bc8a;
-  }
+  background-color: #f9fbfd;
+  
 
   &.${tabClasses.selected} {
-    background-color: #55bc8a;
+    background-color: #36435C;
     color: #FFFFFF;
-    box-shadow: 0 8px 16px 0 rgba(85,188,138,.36);
   }
 
   &.${buttonClasses.disabled} {
@@ -38,15 +33,17 @@ export const StyledTab = styled(Tab)`
 `;
 
 export const StyledTabsList = styled(TabsList)`
-  padding: 0px 14px;
-  height: 48px;
-  min-width: 400px;
-  background-color: #242E42;
-  border-radius: 4px;
+  padding: 0px 2px;
+  height: 32px;
+  background-color: #f9fbfd;
+  border-radius: 16px;
   display: flex;
   align-items: center;
   justify-content: flex-start;
   align-content: space-between;
+  boxShadow: 0 4px 8px 0 rgba(36,46,66,.06);
+  border: 1px solid #ccd3db;
+  display: inline-flex;
 `;
 
 export const StyledTabPanel = styled(TabPanel)`

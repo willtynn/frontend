@@ -14,8 +14,6 @@ import {
   Select,
   MenuItem,
   Stack,
-  Tabs,
-  Tab,
   Typography,
 } from '@mui/material';
 import { SmallLightFont } from '@/components/Fonts';
@@ -38,6 +36,12 @@ import { SEVERITIES } from '@/components/CommonSnackbar';
 import { fontFamily } from '@/utils/commonUtils';
 import Dependency60 from '@/assets/Dependency60.svg';
 import { useIntl } from 'react-intl';
+import { Tabs } from '@mui/base/Tabs';
+import {
+  StyledTab,
+  StyledTabsList,
+  StyledTabPanel,
+} from '@/components/Tab/CircleTab';
 
 function CustomTabPanel(props) {
   const { children, value, index, ...other } = props;
@@ -462,7 +466,7 @@ function ServiceDependency() {
           padding: '24px 20px',
           width: 'calc(100% - 40px)',
           height: '58px',
-          mb: '12px',
+          boxShadow: '0 4px 8px 0 rgba(36,46,66,.06)',
         }}
       >
         <Stack direction='row' spacing={1}>
@@ -494,201 +498,196 @@ function ServiceDependency() {
           </Box>
         </Stack>
       </Box>
-      <Stack
-        direction='row'
-        spacing={4}
-        sx={{
-          mb: '12px',
-        }}
-      >
-        {tabValue == 0 ? (
-          <Stack direction='row' spacing={1}>
-            <Stack>
-              <SmallLightFont>Query</SmallLightFont>
-              <FormControl>
-                <Input
-                  id='my-input'
-                  aria-describedby='my-helper-text'
-                  value={queryContent}
-                  onChange={handleInputChange}
-                  error={emptyError}
-                />
-                {!emptyError && mode === 1 ? (
-                  <FormHelperText
+      <Box sx={{
+        boxShadow: '0 4px 8px 0 rgba(36,46,66,.06)',
+        height: '32px',
+            p: '6px 12px',
+            bgcolor: '#EFF4F9',
+      }}>
+        <Box>
+          <Tabs defaultValue={1}>
+            <StyledTabsList>
+              <StyledTab value={1}>服务依赖</StyledTab>
+              <StyledTab value={2}>接口依赖</StyledTab>
+            </StyledTabsList>
+
+            <StyledTabPanel value={1}>
+              <Box>
+                <Stack direction='row' spacing={1}>
+                  <Stack>
+                    <SmallLightFont>Query</SmallLightFont>
+                    <FormControl>
+                      <Input
+                        id='my-input'
+                        aria-describedby='my-helper-text'
+                        value={queryContent}
+                        onChange={handleInputChange}
+                        error={emptyError}
+                      />
+                      {!emptyError && mode === 1 ? (
+                        <FormHelperText
+                          sx={{
+                            m: '3px 0px 0px 0px',
+                          }}
+                        >
+                          Version Format should be "xx.xx.xx".
+                        </FormHelperText>
+                      ) : (
+                        <></>
+                      )}
+                      {emptyError ? (
+                        <FormHelperText
+                          sx={{
+                            m: '3px 0px 0px 0px',
+                            color: 'red',
+                          }}
+                        >
+                          This field is required.
+                        </FormHelperText>
+                      ) : (
+                        <></>
+                      )}
+                    </FormControl>
+                  </Stack>
+                  <FormControl variant='standard'>
+                    <InputLabel
+                      id='service_search_mode_label'
+                      sx={{
+                        color: 'var(--gray-500, #596A7C)',
+                        fontFamily: fontFamily,
+                        fontStyle: 'normal',
+                      }}
+                    >
+                      Search Mode
+                    </InputLabel>
+                    <Select
+                      labelId='service_search_mode_label'
+                      id='service_search_mode'
+                      value={mode}
+                      onChange={handleChange}
+                      sx={{
+                        minWidth: '120px',
+                      }}
+                    >
+                      <MenuItem value={0}>By ID</MenuItem>
+                      <MenuItem value={1}>By Version</MenuItem>
+                    </Select>
+                  </FormControl>
+                  <OutlinedButton
+                    ref={serviceClick}
                     sx={{
-                      m: '3px 0px 0px 0px',
+                      mt: '16px !important',
+                      width: '84px',
+                      height: '32px',
                     }}
+                    onClick={handleSearchClick}
                   >
-                    Version Format should be "xx.xx.xx".
-                  </FormHelperText>
-                ) : (
-                  <></>
-                )}
-                {emptyError ? (
-                  <FormHelperText
+                    Search
+                  </OutlinedButton>
+                </Stack>
+                <Stack direction={direction} spacing={2}>
+                  {nodes.length !== 0 ? (
+                    <ThreeLayerCanvas
+                      nodes={nodes}
+                      links={links}
+                      handleNodeClick={handleNodeClick}
+                      handleLinkClick={handleLinkClick}
+                    />
+                  ) : (
+                    <></>
+                  )}
+                  <Stack direction='column' spacing={1}>
+                    {clickedLink !== null ? (
+                      <InvokeInfoBlock data={clickedLink} init={resizeFunc} />
+                    ) : (
+                      <></>
+                    )}
+                  </Stack>
+                </Stack>
+              </Box>
+            </StyledTabPanel>
+            <StyledTabPanel value={2}>
+              <Box>
+                <Stack direction='row' spacing={1}>
+                  <Stack>
+                    <SmallLightFont>Query</SmallLightFont>
+                    <FormControl>
+                      <Input
+                        id='my-input'
+                        aria-describedby='my-helper-text'
+                        value={queryContent}
+                        onChange={handleInputChange}
+                        error={emptyError}
+                      />
+                      {emptyError ? (
+                        <FormHelperText
+                          sx={{
+                            m: '3px 0px 0px 0px',
+                            color: 'red',
+                          }}
+                        >
+                          This field is required.
+                        </FormHelperText>
+                      ) : (
+                        <FormHelperText
+                          sx={{
+                            m: '3px 0px 0px 0px',
+                          }}
+                        >
+                          Please enter interface id.
+                        </FormHelperText>
+                      )}
+                    </FormControl>
+                  </Stack>
+                  <OutlinedButton
+                    ref={interfaceClick}
                     sx={{
-                      m: '3px 0px 0px 0px',
-                      color: 'red',
+                      mt: '16px !important',
+                      width: '84px',
+                      height: '32px',
                     }}
+                    onClick={handleInterfaceSearchClick}
                   >
-                    This field is required.
-                  </FormHelperText>
-                ) : (
-                  <></>
-                )}
-              </FormControl>
-            </Stack>
-            <FormControl variant='standard'>
-              <InputLabel
-                id='service_search_mode_label'
-                sx={{
-                  color: 'var(--gray-500, #596A7C)',
-                  fontFamily: fontFamily,
-                  fontStyle: 'normal',
-                }}
-              >
-                Search Mode
-              </InputLabel>
-              <Select
-                labelId='service_search_mode_label'
-                id='service_search_mode'
-                value={mode}
-                onChange={handleChange}
-                sx={{
-                  minWidth: '120px',
-                }}
-              >
-                <MenuItem value={0}>By ID</MenuItem>
-                <MenuItem value={1}>By Version</MenuItem>
-              </Select>
-            </FormControl>
-            <OutlinedButton
-              ref={serviceClick}
-              sx={{
-                mt: '16px !important',
-                width: '84px',
-                height: '32px',
-              }}
-              onClick={handleSearchClick}
-            >
-              Search
-            </OutlinedButton>
-          </Stack>
-        ) : (
-          <Stack direction='row' spacing={1}>
-            <Stack>
-              <SmallLightFont>Query</SmallLightFont>
-              <FormControl>
-                <Input
-                  id='my-input'
-                  aria-describedby='my-helper-text'
-                  value={queryContent}
-                  onChange={handleInputChange}
-                  error={emptyError}
-                />
-                {emptyError ? (
-                  <FormHelperText
-                    sx={{
-                      m: '3px 0px 0px 0px',
-                      color: 'red',
-                    }}
-                  >
-                    This field is required.
-                  </FormHelperText>
-                ) : (
-                  <FormHelperText
-                    sx={{
-                      m: '3px 0px 0px 0px',
-                    }}
-                  >
-                    Please enter interface id.
-                  </FormHelperText>
-                )}
-              </FormControl>
-            </Stack>
-            <OutlinedButton
-              ref={interfaceClick}
-              sx={{
-                mt: '16px !important',
-                width: '84px',
-                height: '32px',
-              }}
-              onClick={handleInterfaceSearchClick}
-            >
-              Search
-            </OutlinedButton>
-          </Stack>
-        )}
-      </Stack>
-      <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
-        <Tabs
-          value={tabValue}
-          onChange={handleTabChange}
-          aria-label='basic tabs example'
-        >
-          <Tab label='基于服务的依赖查询' {...a11yProps(0)} />
-          <Tab label='基于接口的依赖查询' {...a11yProps(1)} />
-        </Tabs>
+                    Search
+                  </OutlinedButton>
+                </Stack>
+                <Stack direction={direction} spacing={2}>
+                  {inodes.length !== 0 ? (
+                    <EdgeCenterCanvas
+                      nodes={inodes}
+                      links={ilinks}
+                      handleNodeClick={handleInterfaceNodeClick}
+                      handleLinkClick={handleInterfaceLinkClick}
+                    />
+                  ) : (
+                    <></>
+                  )}
+                  <Stack direction='column' spacing={1}>
+                    {exactService !== null ? (
+                      <ServiceInfoBlock
+                        data={exactService}
+                        mode={0}
+                        page={INTERFACE_DEPENDENCY}
+                        cb={() => {
+                          setParamChange(paramChange + 1);
+                        }}
+                        init={resizeFunc}
+                      />
+                    ) : (
+                      <></>
+                    )}
+                    {clickedLink !== null ? (
+                      <InvokeInfoBlock data={clickedLink} init={resizeFunc} />
+                    ) : (
+                      <></>
+                    )}
+                  </Stack>
+                </Stack>
+              </Box>
+            </StyledTabPanel>
+          </Tabs>
+        </Box>
       </Box>
-      <CustomTabPanel value={tabValue} index={0}>
-        <Box>
-          <Stack direction={direction} spacing={2}>
-            {nodes.length !== 0 ? (
-              <ThreeLayerCanvas
-                nodes={nodes}
-                links={links}
-                handleNodeClick={handleNodeClick}
-                handleLinkClick={handleLinkClick}
-              />
-            ) : (
-              <></>
-            )}
-            <Stack direction='column' spacing={1}>
-              {clickedLink !== null ? (
-                <InvokeInfoBlock data={clickedLink} init={resizeFunc} />
-              ) : (
-                <></>
-              )}
-            </Stack>
-          </Stack>
-        </Box>
-      </CustomTabPanel>
-      <CustomTabPanel value={tabValue} index={1}>
-        <Box>
-          <Stack direction={direction} spacing={2}>
-            {inodes.length !== 0 ? (
-              <EdgeCenterCanvas
-                nodes={inodes}
-                links={ilinks}
-                handleNodeClick={handleInterfaceNodeClick}
-                handleLinkClick={handleInterfaceLinkClick}
-              />
-            ) : (
-              <></>
-            )}
-            <Stack direction='column' spacing={1}>
-              {exactService !== null ? (
-                <ServiceInfoBlock
-                  data={exactService}
-                  mode={0}
-                  page={INTERFACE_DEPENDENCY}
-                  cb={() => {
-                    setParamChange(paramChange + 1);
-                  }}
-                  init={resizeFunc}
-                />
-              ) : (
-                <></>
-              )}
-              {clickedLink !== null ? (
-                <InvokeInfoBlock data={clickedLink} init={resizeFunc} />
-              ) : (
-                <></>
-              )}
-            </Stack>
-          </Stack>
-        </Box>
-      </CustomTabPanel>
     </Box>
   );
 }
