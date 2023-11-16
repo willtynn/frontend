@@ -250,9 +250,10 @@ export function EdgeCenterCanvas(props) {
       sx={{
         fontFamily: fontFamily,
         ...shadowStyle,
+        width: '100%',
       }}
     >
-      <svg id='interface_svg-canvas' height='1000'>
+      <svg style={{minWidth: "100%"}} id='interface_svg-canvas' height='1000'>
         <g id='interface_g-canvas'></g>
       </svg>
     </Box>

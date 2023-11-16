@@ -370,7 +370,7 @@ function ServiceDependency() {
       clearVarible();
       return;
     }
-    const _recursive_search = (node, isDown) => {
+    const _recursive_search = (node, isDown, path) => {
       graph_dict[node] = {
         id: node,
         label: node,
@@ -397,16 +397,19 @@ function ServiceDependency() {
             invoke_info: invoke_info,
           });
         }
-        _recursive_search(callee_node, isDown);
+        if(path.find((value, index) => value === node) === undefined) {
+          _recursive_search(callee_node, isDown, [...path, callee_node]);
+        }
+        
       }
     };
     target_up_nodes = new Set(target_up_nodes);
     target_down_nodes = new Set(target_down_nodes);
     for (const up_node of target_up_nodes) {
-      _recursive_search(up_node, false);
+      _recursive_search(up_node, false, [up_node]);
     }
     for (const down_node of target_down_nodes) {
-      _recursive_search(down_node, true);
+      _recursive_search(down_node, true, [down_node]);
     }
     for (const node of Object.values(graph_dict)) {
       nodes.push(node);
@@ -613,6 +616,7 @@ function ServiceDependency() {
             >
               Search
             </OutlinedButton>
+            
           </Stack>
         )}
       </Stack>
