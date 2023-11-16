@@ -32,10 +32,10 @@ import {
   SERVICE_DEPENDENCY,
   INTERFACE_DEPENDENCY,
 } from '../module/ServiceInfoBlock';
-import { useSearchParams } from 'react-router-dom';
+import { useSearchParams, useNavigate } from 'react-router-dom';
 import { setSnackbarMessageAndOpen } from '@/actions/snackbarAction';
 import { SEVERITIES } from '@/components/CommonSnackbar';
-import { fontFamily } from "@/utils/commonUtils";
+import { fontFamily } from '@/utils/commonUtils';
 import Dependency60 from '@/assets/Dependency60.svg';
 import { useIntl } from 'react-intl';
 
@@ -97,6 +97,7 @@ function ServiceDependency() {
   const [paramChange, setParamChange] = useState(0);
 
   const dispatch = useDispatch();
+  const navigate = useNavigate();
 
   const serviceClick = useRef();
   const interfaceClick = useRef();
@@ -113,6 +114,7 @@ function ServiceDependency() {
 
   useEffect(() => {
     dispatch(searchDependencies());
+    localStorage.setItem('serviceFrom', 'dependency');
   }, []);
 
   useEffect(() => {
@@ -200,10 +202,10 @@ function ServiceDependency() {
     } else {
       setDirection('row');
     }
-  }
-  
+  };
+
   window.onresize = () => {
-    resizeFunc()
+    resizeFunc();
   };
 
   const clearVarible = () => {
@@ -397,10 +399,9 @@ function ServiceDependency() {
             invoke_info: invoke_info,
           });
         }
-        if(path.find((value, index) => value === node) === undefined) {
+        if (path.find((value, index) => value === node) === undefined) {
           _recursive_search(callee_node, isDown, [...path, callee_node]);
         }
-        
       }
     };
     target_up_nodes = new Set(target_up_nodes);
@@ -430,7 +431,7 @@ function ServiceDependency() {
   };
 
   const handleNodeClick = id => {
-    dispatch(searchServiceExactlyById(id));
+    navigate(`/detail/service/${id}`);
   };
 
   const handleLinkClick = data => {
@@ -438,7 +439,7 @@ function ServiceDependency() {
   };
 
   const handleInterfaceNodeClick = id => {
-    dispatch(searchServiceExactlyById(id));
+    navigate(`/detail/service/${id}`);
   };
 
   const handleInterfaceLinkClick = data => {
@@ -616,7 +617,6 @@ function ServiceDependency() {
             >
               Search
             </OutlinedButton>
-            
           </Stack>
         )}
       </Stack>
@@ -644,21 +644,8 @@ function ServiceDependency() {
               <></>
             )}
             <Stack direction='column' spacing={1}>
-              {exactService !== null ? (
-                <ServiceInfoBlock
-                  data={exactService}
-                  mode={mode}
-                  page={SERVICE_DEPENDENCY}
-                  cb={() => {
-                    setParamChange(paramChange + 1);
-                  }}
-                  init={resizeFunc}
-                />
-              ) : (
-                <></>
-              )}
               {clickedLink !== null ? (
-                <InvokeInfoBlock data={clickedLink} init={resizeFunc}/>
+                <InvokeInfoBlock data={clickedLink} init={resizeFunc} />
               ) : (
                 <></>
               )}
@@ -694,7 +681,7 @@ function ServiceDependency() {
                 <></>
               )}
               {clickedLink !== null ? (
-                <InvokeInfoBlock data={clickedLink} init={resizeFunc}/>
+                <InvokeInfoBlock data={clickedLink} init={resizeFunc} />
               ) : (
                 <></>
               )}

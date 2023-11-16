@@ -276,6 +276,7 @@ export default function ServiceQuery() {
 
   useEffect(() => {
     dispatch(searchServiceById(''));
+    localStorage.setItem('serviceFrom', 'overview');
     // dispatch({ type: UPDATE_SEARCH_SERVICE, data: fakeInfo });
     return () => {
       dispatch({ type: UPDATE_SEARCH_SERVICE, data: null });

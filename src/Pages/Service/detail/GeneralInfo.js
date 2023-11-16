@@ -1,7 +1,7 @@
 /**
  * src\Pages\Service\detail\GeneralInfo.js
  */
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 import {
   Box,
@@ -52,6 +52,7 @@ export default function GeneralInfo(props) {
 
   const [moreOperationAnchorEl, setMoreOperationAnchorEl] = useState(null);
   const moreOperationOpen = Boolean(moreOperationAnchorEl);
+  const [backText, setBackText] = useState("服务");
 
   const { exactService } = useSelector(state => {
     return {
@@ -64,8 +65,23 @@ export default function GeneralInfo(props) {
     [<Delete16 />, '删除', () => {}],
   ];
 
+  useEffect(() => {
+    const from = localStorage.getItem("serviceFrom");
+    if(from === "dependency") {
+      setBackText("服务依赖");
+    } else {
+      setBackText("服务");
+    }
+  }, []);
+
   const handleReturn = () => {
-    navigate('/service/query');
+    const from = localStorage.getItem("serviceFrom");
+    if(from === "dependency") {
+      navigate('/service/dependency');
+    } else {
+      navigate('/service/query');
+    }
+    
   };
 
   const handleMoreOperation = e => {
@@ -125,7 +141,7 @@ export default function GeneralInfo(props) {
                 },
               }}
             >
-              服务
+              {backText}
             </Box>
           </Stack>
         </KubeCancelButton>
