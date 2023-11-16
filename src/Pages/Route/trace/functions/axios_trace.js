@@ -5,6 +5,7 @@ import axios from 'axios';
 import { getLocalStorage } from '@/utils/localStorageHandler';
 
 export const baseURLLink = "http://10.70.31.154:30458";
+// export const baseURLLink = "http://192.168.1.104:30458";
 
 export const cookieSet = () => {
   var ACookie = getLocalStorage('isAcceptCookie');

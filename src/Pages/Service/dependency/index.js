@@ -141,6 +141,7 @@ function ServiceDependency() {
             invoking: [],
           };
         }
+        // 记录每个服务的调用关系和被调用关系
         for (const single_call_info of call_info) {
           tmpGraph[caller_service].invoking.push([
             callee_service,
@@ -339,6 +340,7 @@ function ServiceDependency() {
     let target_up_nodes = [];
     let target_down_nodes = [];
     let flag = false;
+    // 查看该接口是否被调用
     for (const key of Object.keys(graph)) {
       const invoking_arr = graph[key].invoking;
       for (const invoking_element of invoking_arr) {

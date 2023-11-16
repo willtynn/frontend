@@ -84,32 +84,22 @@ export function ClusterCanvas(props) {
 
     const server_nodes = document.getElementsByClassName(`server_node_${id}`);
     for (const server_node of server_nodes) {
-      // server_node.addEventListener('click', () => {
-
-      //   console.log("Click from canvas", id, server_node.id)
-      //   handleNodeClick(server_node.id);
-      // });
       server_node.onclick = () => {
         handleNodeClick(server_node.id);
       };
     }
 
     // Center the graph
-    // console.log(svg.attr("width"));
-    var xCenterOffset = 300;
-    // console.log(xCenterOffset);
-    // var xCenterOffset = (canvasBox.current.clientWidth - g.graph().width) / 2;
-    console.log(canvasBox.current.clientWidth, g.graph().width)
-    svgGroup.attr('transform', 'translate(' + xCenterOffset + ', 20)');
-
+    var xCenterOffset = (svg.property("width").baseVal.value - g.graph().width) / 2;
+    svgGroup.attr('transform', 'translate(' + xCenterOffset + ', 50)');
     svg.attr('height', g.graph().height + 100);
-    svg.attr('width', canvasBox.current.clientWidth);
-
     const polygon_texts = document.getElementsByClassName("polygon_text")
     for(let i = 0; i < polygon_texts.length; i++) {
       polygon_texts[i].style.left=`${-polygon_texts[i].clientWidth / 2}px`
     }
   }, [links]);
+
+
 
   return (
     <Box
@@ -119,7 +109,7 @@ export function ClusterCanvas(props) {
       }}
       ref={canvasBox}
     >
-      <svg id={`${id}_svg-canvas`} height='1000'>
+      <svg style={{width: "100%"}} id={`${id}_svg-canvas`} height='1000'>
         <g id={`${id}_g-canvas`}></g>
       </svg>
     </Box>
