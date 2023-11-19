@@ -62,6 +62,10 @@ export const messages = {
     resourceConflictError: '资源预留不能超过资源限制。',
     namespacesQueryError: '命名空间列表获取失败...请刷新页面重试。',
   },
+  image: {
+    listQueryError: '镜像列表获取失败...请刷新页面重试。',
+    deleteError: '镜像删除失败...请重试。',
+  },
   routerule:{
     routeruleDesc:'控制实例间的路由规则'
   },

@@ -1,6 +1,3 @@
-/**
- * src\Pages\Image\index.js
- */
 import { useEffect, useState, useMemo } from 'react';
 import {
   StyledTableContainer,
@@ -14,14 +11,15 @@ import {
   Typography,
   Tooltip,
   TableBody,
-  Stack,
+  Stack, IconButton,
 } from '@mui/material';
 // import Task from '@/assets/Task.svg';
 import ServiceQuery from '@/assets/ServiceQuery.svg';
 import { useDispatch, useSelector } from 'react-redux';
-import { UPDATE_SEARCH_SERVICE, UPDATE_EXACT_SERVICE } from '../../actions/serviceAction';
+import { getImageList, deleteImage } from '../../actions/imageAction';
 import GeneralService from '@/assets/GeneralService.svg';
 import { KubeCheckbox } from '../../components/Checkbox';
+import DeleteIcon from "@mui/icons-material/Delete";
 
 function TextLabel(props) {
   const { text } = props;
@@ -57,28 +55,8 @@ function createRow(
   return { id, label, isOrder, minWidth, maxWidth, show, colSpan, rowSpan, align };
 }
 
-export const RUNNING = 'Running';
-export const PENDING = 'Pending';
-export const FAILED = 'Failed';
-export const SUCCEEDED = 'Succeeded';
-
-function createData(name, version) {
-    return { name, version };
-}
-
-const rows = [
-    createData('192.168.1.104:5000/buildservice', '2.0'),
-    createData('192.168.1.104:5000/cloud-collaboration-platform/cluster-service', '0.1.1'),
-    createData('192.168.1.104:5000/cloud-collaboration-platform/real-route-control-service', '0.1'),
-    createData('192.168.1.104:5000/cloud-collaboration-platform/svc-service', '0.3.1'),
-    createData('192.168.1.104:5000/ht_k8s_test_image', '0.1'),
-];
-
 export default function ImagesList(props) {
   const { data, setIndex, selectedIndex } = props;
-  const [projectList, setProjectList] = useState([]);
-  const [searchList, setSearchList] = useState([]);
-  // const [loading, setLoading] = useState(false);
   const [tableData, setTableData] = useState([]);
   const [count, setCount] = useState(0);
   const [searchSelectAnchorEl, setSearchSelectAnchorEl] = useState(null);
@@ -87,48 +65,43 @@ export default function ImagesList(props) {
 
   const dispatch = useDispatch();
 
-  const { queryResult } = useSelector(state => {
+  const { imageList } = useSelector(state => {
     return {
-      queryResult: state.Service.queryResult
+      imageList: state.Image.imageList
     };
   });
+
+  // const rows = imageList;
+
+  const rows = [
+    {
+      "Name": "192.168.1.104:5000/buildservice:1.1",
+      "Labels": {
+        "io.cri-containerd.image": "managed"
+      },
+      "Target": {
+        "mediaType": "application/vnd.docker.distribution.manifest.v2+json",
+        "digest": "sha256:27bdcbfb779a7dec50b8ab090097562fdf09acf64a15e950969ec0c83142419c",
+        "size": 2432
+      },
+      "CreatedAt": "2023-10-15T07:46:04.865519365Z",
+      "UpdatedAt": "2023-10-15T07:46:04.893784698Z"
+    },
+  ];
 
   // service/query左侧表格表头
   const headFirstRow = [
     createRow('name', '镜像名', false, '150px', '170px', true, 1, 1, 'left'),
-    createRow('version', '版本', false, '120px', '130px', true, 1, 1, 'left'),
+    createRow('size', '大小', false, '120px', '130px', true, 1, 1, 'left'),
+    createRow('delete', '操作', false, '120px', '130px', true, 1, 1, 'center'),
   ];
 
   useEffect(() => {
-    dispatch({ type: UPDATE_SEARCH_SERVICE, data: data });
+    dispatch(getImageList());
   }, []);
 
   useEffect(() => {
-    if (projectList.length < 1) {
-      return;
-    }
-    // setProject(projectList[0]);
-  }, [projectList]);
-
-  // 搜索栏提示list的更新
-  useEffect(() => {
-    if (searchList.length == 2) {
-      setSearchBy([]);
-      return;
-    }
-    if (searchList.length == 0) {
-      setSearchBy(['名称', 'ID']);
-      return;
-    }
-    if (searchList[0].startsWith('ID:')) {
-      setSearchBy(['名称']);
-    } else {
-      setSearchBy(['ID']);
-    }
-  }, [searchList]);
-
-  useEffect(() => {
-    if (!queryResult) {
+    if (!imageList) {
       return;
     }
     const items = rows
@@ -142,7 +115,13 @@ export default function ImagesList(props) {
       setCount(tmpData.length);
       setTableData(tmpData);
     }
-  }, [queryResult]);
+  }, [imageList]);
+
+  const deleteClick = name => {
+    dispatch(deleteImage(name));
+    dispatch(getImageList());
+    return ''
+  }
 
   return (
     <>
@@ -185,7 +164,7 @@ export default function ImagesList(props) {
           </Box>
         </Stack>
       </Box>
-          <StyledTableContainer sx={{ bgcolor: '#FFF' }}>
+          <StyledTableContainer sx={{ backgroundColor: '#FFF' }}>
           <Table
             stickyHeader
             size='small'
@@ -195,7 +174,7 @@ export default function ImagesList(props) {
           >
             <StyledTableHead
               headRow={headFirstRow}
-              selectAll={true}
+              selectAll={false}
               checkAll={checkAll}
               setCheckAll={setCheckAll}
             />
@@ -203,7 +182,7 @@ export default function ImagesList(props) {
             <TableBody>
               {rows.map((row) => (
                     <TableRow
-                      key={row.name}
+                      key={row.Name}
                       aria-checked={false}
                       sx={{
                         '&:last-child td, &:last-child th': {
@@ -217,20 +196,20 @@ export default function ImagesList(props) {
                       }}
                       selected={false}
                     >
-                      <StyledTableBodyCell
-                        align='center'
-                        sx={{
-                          p: '0px 16px !important',
-                        }}
-                      >
-                        <KubeCheckbox
-                          sx={{
-                            bgcolor: 'transparent !important',
-                          }}
-                          disableRipple
-                          size="small"
-                        />
-                      </StyledTableBodyCell>
+                      {/*<StyledTableBodyCell*/}
+                      {/*  align='center'*/}
+                      {/*  sx={{*/}
+                      {/*    p: '0px 16px !important',*/}
+                      {/*  }}*/}
+                      {/*>*/}
+                      {/*  <KubeCheckbox*/}
+                      {/*    sx={{*/}
+                      {/*      backgroundColor: 'transparent !important',*/}
+                      {/*    }}*/}
+                      {/*    disableRipple*/}
+                      {/*    size="small"*/}
+                      {/*  />*/}
+                      {/*</StyledTableBodyCell>*/}
 
                       {/* id */}
                       <StyledTableBodyCell
@@ -256,7 +235,7 @@ export default function ImagesList(props) {
                             }}
                             onClick={() => {}}
                           >
-                            {row.name}
+                            {row.Name}
                           </Box>
                         </Stack>
                       </StyledTableBodyCell>
@@ -266,11 +245,25 @@ export default function ImagesList(props) {
                         align={'left'}
                         // align='center'
                       >
-                        {row.version}
+                        {row.Target.size}
                       </StyledTableBodyCell>
 
+                      {/* 操作 */}
+                      <StyledTableBodyCell
+                        align={'center'}
+                        // align='center'
+                      >
+                        <IconButton
+                          onClick={() => {deleteClick(row.Name)}}
+                          aria-label="delete">
+                          <DeleteIcon
+                            size='small'
+                            sx={{color:'#79879c', ':hover': {color:'#242e42'}}}
+                          />
+                        </IconButton>
+                      </StyledTableBodyCell>
                     </TableRow>
-                  ))};
+                  ))}
             </TableBody>
           </Table>
         </StyledTableContainer>
