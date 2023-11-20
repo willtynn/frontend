@@ -336,33 +336,19 @@ export default function ServiceQuery() {
           </Box>
         </Stack>
       </Box>
-      <Stack direction='row' spacing={4}>
-        {!queryResult ? (
-          <></>
-        ) : (
-          <Box
-            sx={{
-              maxWidth: '100%',
-            }}
-          >
-            {/* 表格主体 */}
-            <ServiceOverview
-              data={queryResult}
-              setIndex={setSelectedIndex}
-              selectedIndex={selectedIndex}
-            />
-          </Box>
-        )}
-        {!queryResult || queryResult.length === 0 || selectedIndex === -1 ? (
-          <></>
-        ) : (
-          <Box
-            sx={{
-              maxWidth: '47.5%',
-            }}
-          ></Box>
-        )}
-      </Stack>
+
+      <Box
+        sx={{
+          maxWidth: '100%',
+        }}
+      >
+        {/* 表格主体 */}
+        <ServiceOverview
+          data={queryResult}
+          setIndex={setSelectedIndex}
+          selectedIndex={selectedIndex}
+        />
+      </Box>
     </Box>
   );
 }
