@@ -20,6 +20,11 @@ import { getImageList, deleteImage } from '../../actions/imageAction';
 import GeneralService from '@/assets/GeneralService.svg';
 import { KubeCheckbox } from '../../components/Checkbox';
 import DeleteIcon from "@mui/icons-material/Delete";
+import {EclipseTransparentButton, KubeConfirmButton} from "../../components/Button";
+import VisibilityIcon from "@mui/icons-material/Visibility";
+import RefreshIcon from "@mui/icons-material/Refresh";
+import {ChipTextField} from "../../components/Input";
+import SearchIcon from "@mui/icons-material/Search";
 
 function TextLabel(props) {
   const { text } = props;
@@ -62,7 +67,8 @@ export default function ImagesList(props) {
   const [searchSelectAnchorEl, setSearchSelectAnchorEl] = useState(null);
   const [searchBy, setSearchBy] = useState(['名称', 'ID']);
   const [checkAll, setCheckAll] = useState(false);
-
+  const [searchValue, setSearchValue] = useState('');
+  const [searchList, setSearchList] = useState([]);
   const dispatch = useDispatch();
 
   const { imageList } = useSelector(state => {
@@ -92,7 +98,8 @@ export default function ImagesList(props) {
   // service/query左侧表格表头
   const headFirstRow = [
     createRow('name', '镜像名', false, '150px', '170px', true, 1, 1, 'left'),
-    createRow('size', '大小', false, '120px', '130px', true, 1, 1, 'left'),
+    createRow('size', '大小', false, '120px', '130px', true, 1, 1, 'center'),
+    createRow('cluster', '所在集群', false, '120px', '130px', true, 1, 1, 'center'),
     createRow('delete', '操作', false, '120px', '130px', true, 1, 1, 'center'),
   ];
 
@@ -122,10 +129,19 @@ export default function ImagesList(props) {
     dispatch(getImageList());
     return ''
   }
+  const isDuplicate = () => {
+    return false;
+  };
+
+  const handleSearchBlur = () => {
+    setTimeout(() => {
+      setSearchSelectAnchorEl(null);
+    }, 300);
+  };
 
   return (
     <>
-        <Box
+      <Box
         sx={{
           borderRadius: '4px',
           backgroundColor: '#FFFFFF',
@@ -164,7 +180,88 @@ export default function ImagesList(props) {
           </Box>
         </Stack>
       </Box>
-          <StyledTableContainer sx={{ backgroundColor: '#FFF' }}>
+      <Box
+        sx={{
+          width: '100%',
+          minWidth: '600px',
+        }}
+      >
+        {/* Main Body */}
+        <Stack sx={{ width: '100%' }}>
+          <div style={{ height: '10px' }} />
+          {/* 搜索 */}
+          <Box
+            sx={{
+              height: '32px',
+              padding: '10px 30px 10px 30px',
+              backgroundColor: '#f9fbfd',
+            }}
+          >
+            <Stack direction='row'>
+              <Stack
+                direction='row'
+                spacing={2}
+                sx={{ width: 'calc(100% - 100px)' }}
+              >
+                {/* 搜索栏 */}
+                <ChipTextField
+                  value={searchValue}
+                  setValue={setSearchValue}
+                  contentList={searchList}
+                  setContentList={setSearchList}
+                  isDuplicate={isDuplicate}
+                  startAdornment={<SearchIcon />}
+                  sx={{
+                    width: 'calc(100% - 100px)',
+                    '& .MuiOutlinedInput-input.MuiInputBase-input': {
+                      fontSize: '12px',
+                      fontWeight: 600,
+                      fontStyle: 'normal',
+                      fontStretch: 'normal',
+                      lineHeight: 1.67,
+                      letterSpacing: 'normal',
+                      color: '#36435c',
+                      height: "20px"
+                    },
+                  }}
+                  // onFocus={handleSearchFocus}
+                  onBlur={handleSearchBlur}
+                  enterBlur={true}
+                  id='service-search-input'
+                />
+                {/* 刷新按钮 */}
+                <EclipseTransparentButton
+                  sx={{
+                    backgroundColor: '#f9fbfd !important',
+                    '&:hover': {
+                      backgroundColor: '#FFFFFF !important',
+                    },
+                    '& svg': {
+                      color: '#3d3b4f',
+                    },
+                    height: "32px"
+                  }}
+                  // onClick={handleRefresh}
+                >
+                  <RefreshIcon />
+                </EclipseTransparentButton>
+              </Stack>
+              <Stack direction='row' spacing={1}>
+                <KubeConfirmButton
+                  // onClick={handleAddClick}
+                  sx={{
+                    width: '96px',
+                    height: '32px',
+                  }}
+                >
+                  拉取镜像
+                </KubeConfirmButton>
+              </Stack>
+            </Stack>
+          </Box>
+        </Stack>
+
+        <StyledTableContainer sx={{ backgroundColor: '#FFF' }}>
           <Table
             stickyHeader
             size='small'
@@ -174,7 +271,7 @@ export default function ImagesList(props) {
           >
             <StyledTableHead
               headRow={headFirstRow}
-              selectAll={false}
+              selectAll={true}
               checkAll={checkAll}
               setCheckAll={setCheckAll}
             />
@@ -196,28 +293,25 @@ export default function ImagesList(props) {
                       }}
                       selected={false}
                     >
-                      {/*<StyledTableBodyCell*/}
-                      {/*  align='center'*/}
-                      {/*  sx={{*/}
-                      {/*    p: '0px 16px !important',*/}
-                      {/*  }}*/}
-                      {/*>*/}
-                      {/*  <KubeCheckbox*/}
-                      {/*    sx={{*/}
-                      {/*      backgroundColor: 'transparent !important',*/}
-                      {/*    }}*/}
-                      {/*    disableRipple*/}
-                      {/*    size="small"*/}
-                      {/*  />*/}
-                      {/*</StyledTableBodyCell>*/}
-
-                      {/* id */}
                       <StyledTableBodyCell
-                        align={'left'}
-                        // align='center'
+                        align='center'
                         sx={{
-                          padding: '6px 16px !important',
+                          p: '0px 16px !important',
                         }}
+                      >
+                        <KubeCheckbox
+                          sx={{
+                            backgroundColor: 'transparent !important',
+                          }}
+                          disableRipple
+                          size="small"
+                        />
+                      </StyledTableBodyCell>
+
+                      {/* image name */}
+                      <StyledTableBodyCell
+                        align='left'
+                        sx={{ padding: '6px 16px !important' }}
                       >
                         <Stack alignItems='center' direction='row' spacing={2}>
                           {/* <Task /> */}
@@ -229,7 +323,7 @@ export default function ImagesList(props) {
                               lineHeight: '30px',
                               fontWeight: 600,
                               cursor: "pointer",
-                              "&:hover": {
+                              ":hover": {
                                 color: "#55bc8a"
                               }
                             }}
@@ -240,25 +334,26 @@ export default function ImagesList(props) {
                         </Stack>
                       </StyledTableBodyCell>
 
-                      {/* 服务名称 */}
-                      <StyledTableBodyCell
-                        align={'left'}
-                        // align='center'
-                      >
+                      {/* 大小 */}
+                      <StyledTableBodyCell align='center'>
                         {row.Target.size}
+                      </StyledTableBodyCell>
+
+                      {/* 所在集群 */}
+                      <StyledTableBodyCell align='center'>
+                        /
                       </StyledTableBodyCell>
 
                       {/* 操作 */}
                       <StyledTableBodyCell
-                        align={'center'}
-                        // align='center'
+                        align='center'
                       >
                         <IconButton
                           onClick={() => {deleteClick(row.Name)}}
                           aria-label="delete">
                           <DeleteIcon
                             size='small'
-                            sx={{color:'#79879c', ':hover': {color:'#242e42'}}}
+                            sx={{color:'#79879c', ':hover': {color:'#36435c'}}}
                           />
                         </IconButton>
                       </StyledTableBodyCell>
@@ -267,6 +362,7 @@ export default function ImagesList(props) {
             </TableBody>
           </Table>
         </StyledTableContainer>
+      </Box>
     </>
   );
 }
