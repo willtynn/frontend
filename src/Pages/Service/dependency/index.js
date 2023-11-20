@@ -167,7 +167,9 @@ function ServiceDependency() {
             true,
             {
               caller: single_call_info.caller,
+              callerDetail: call.callerDetail,
               callee: single_call_info.callee,
+              calleeDetail: single_call_info.calleeServiceDetail,
               ...single_call_info.extraData,
             },
           ]);
@@ -176,7 +178,9 @@ function ServiceDependency() {
             false,
             {
               caller: single_call_info.caller,
+              callerDetail: call.callerDetail,
               callee: single_call_info.callee,
+              calleeDetail: single_call_info.calleeServiceDetail,
               ...single_call_info.extraData,
             },
           ]);
@@ -237,7 +241,7 @@ function ServiceDependency() {
           if (caller === currentService) {
             graph_dict[caller] = {
               id: caller,
-              label: caller,
+              label: call.callerDetail.name,
               type: 'target',
             };
             for (const single_call_info of call_info) {
@@ -250,7 +254,7 @@ function ServiceDependency() {
               ) {
                 graph_dict[callee_service] = {
                   id: callee_service,
-                  label: callee_service,
+                  label: single_call_info.calleeServiceDetail.name,
                   type: 'invoking',
                 };
               }
@@ -270,14 +274,14 @@ function ServiceDependency() {
                 if (!(callee_service in graph_dict)) {
                   graph_dict[callee_service] = {
                     id: callee_service,
-                    label: callee_service,
+                    label: single_call_info.calleeServiceDetail.name,
                     type: 'target',
                   };
                 }
 
                 graph_dict[caller] = {
                   id: caller,
-                  label: caller,
+                  label: call.callerDetail.name,
                   type: 'invoked',
                 };
                 links.push({
@@ -316,6 +320,7 @@ function ServiceDependency() {
   }, [currentService]);
 
   useEffect(() => {
+    console.log("graph", graph)
     if (currentInterface !== null) {
       if (dependency === null) {
         dispatch(
@@ -366,7 +371,7 @@ function ServiceDependency() {
       const _recursive_search = (node, isDown, path) => {
         graph_dict[node] = {
           id: node,
-          label: node,
+          label: positiveServices[node].name,
         };
         let arr;
         if (isDown) {
