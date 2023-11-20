@@ -93,20 +93,21 @@ function ServiceDependency() {
    */
   const [inodes, setInodes] = useState([]);
   const [ilinks, setIlinks] = useState([]);
-
-  const [mode, setMode] = useState(0);
-  const [queryContent, setQueryContent] = useState('');
-  const [emptyError, setEmptyError] = useState(false);
   const [clickedLink, setClickedLink] = useState(null);
   const [tabValue, setTabValue] = useState(1);
   const [graph, setGraph] = useState(null);
-  const [direction, setDirection] = useState('row');
 
   /**
    * 存在依赖关系的服务
    */
   const [positiveServices, setPositiveServices] = useState({});
   const [currentService, setCurrentService] = useState(null);
+
+  /**
+   * 存在依赖关系的接口
+   */
+  const [positiveInterfaces, setPositiveInterfaces] = useState({});
+  const [currentInterface, setCurrentInterface] = useState(null);
 
   const [searchParams] = useSearchParams();
   const [paramChange, setParamChange] = useState(0);
@@ -141,6 +142,7 @@ function ServiceDependency() {
     }
     let tmpGraph = {};
     let tmpPositiveServices = {};
+    let tmpPositiveInterfaces = {};
     for (const call of dependency) {
       const caller_service = call.caller;
       tmpPositiveServices[caller_service] = call.callerDetail;
@@ -180,11 +182,15 @@ function ServiceDependency() {
           ]);
           tmpPositiveServices[callee_service] =
             single_call_info.calleeServiceDetail;
+          tmpPositiveInterfaces[single_call_info.callee] = {
+            path: single_call_info.calleePath,
+          };
         }
       }
     }
     setGraph(tmpGraph);
     setPositiveServices(tmpPositiveServices);
+    setPositiveInterfaces(tmpPositiveInterfaces);
   }, [dependency]);
 
   useEffect(() => {
@@ -194,17 +200,14 @@ function ServiceDependency() {
     if (type === 'service') {
       setTabValue(0);
       if (Number(by) === 0) {
-        setMode(0);
-        setQueryContent(target_id);
         setTimeout(() => {
           serviceClick.current.click();
         }, 400);
       } else if (Number(by) === 1) {
-        setMode(1);
+
       }
     } else if (type === 'interface') {
       setTabValue(1);
-      setQueryContent(target_id);
       setTimeout(() => {
         interfaceClick.current.click();
       }, 400);
@@ -239,7 +242,12 @@ function ServiceDependency() {
             };
             for (const single_call_info of call_info) {
               // 如果已有节点，并且为target，则保持type（target > invoking = invoked）(解决非DAG颜色混乱的问题)
-              if(!(callee_service in graph_dict && graph_dict[callee_service].type === "target")) {
+              if (
+                !(
+                  callee_service in graph_dict &&
+                  graph_dict[callee_service].type === 'target'
+                )
+              ) {
                 graph_dict[callee_service] = {
                   id: callee_service,
                   label: callee_service,
@@ -266,7 +274,7 @@ function ServiceDependency() {
                     type: 'target',
                   };
                 }
-                
+
                 graph_dict[caller] = {
                   id: caller,
                   label: caller,
@@ -307,20 +315,120 @@ function ServiceDependency() {
     }
   }, [currentService]);
 
-  const resizeFunc = () => {
-    if (!informationBox.current) {
-      return;
-    }
-    if (informationBox.current.clientWidth < 1800) {
-      setDirection('column');
-    } else {
-      setDirection('row');
-    }
-  };
+  useEffect(() => {
+    if (currentInterface !== null) {
+      if (dependency === null) {
+        dispatch(
+          setSnackbarMessageAndOpen(
+            'serviceDependency.serviceDependencyNotFound',
+            {},
+            SEVERITIES.warning
+          )
+        );
+        return;
+      }
+      let nodes = [];
+      let links = [];
+      let graph_dict = {};
+      let target_up_nodes = [];
+      let target_down_nodes = [];
+      let flag = false;
+      // 查看该接口是否被调用
+      for (const key of Object.keys(graph)) {
+        const invoking_arr = graph[key].invoking;
+        for (const invoking_element of invoking_arr) {
+          const [callee_node, isDown, invoke_info] = invoking_element;
+          if (invoke_info.callee === currentInterface) {
+            flag = true;
+            target_up_nodes.push(key);
+            target_down_nodes.push(callee_node);
+            // 此时添加边，因为如果图为DAG，则后续不会再访问到
+            links.push({
+              source: key,
+              target: callee_node,
+              invoke_info: invoke_info,
+              center: true,
+            });
+          }
+        }
+      }
+      if (flag === false) {
+        dispatch(
+          setSnackbarMessageAndOpen(
+            'serviceDependency.interfaceDependencyNotFound',
+            {},
+            SEVERITIES.warning
+          )
+        );
+        clearVarible();
+        return;
+      }
+      const _recursive_search = (node, isDown, path) => {
+        graph_dict[node] = {
+          id: node,
+          label: node,
+        };
+        let arr;
+        if (isDown) {
+          arr = graph[node].invoking;
+        } else {
+          arr = graph[node].invoked;
+        }
+        for (const element of arr) {
+          const [callee_node, _, invoke_info] = element;
 
-  window.onresize = () => {
-    resizeFunc();
-  };
+          if (isDown) {
+            links.push({
+              source: node,
+              target: callee_node,
+              invoke_info: invoke_info,
+              center: false
+            });
+          } else {
+            links.push({
+              source: callee_node,
+              target: node,
+              invoke_info: invoke_info,
+              center: false
+            });
+          }
+          if (path.find((value, index) => value === node) === undefined) {
+            _recursive_search(callee_node, isDown, [...path, callee_node]);
+          }
+        }
+      };
+      target_up_nodes = new Set(target_up_nodes);
+      target_down_nodes = new Set(target_down_nodes);
+      for (const up_node of target_up_nodes) {
+        _recursive_search(up_node, false, [up_node]);
+      }
+      for (const down_node of target_down_nodes) {
+        _recursive_search(down_node, true, [down_node]);
+      }
+      for (const node of Object.values(graph_dict)) {
+        nodes.push(node);
+      }
+      if (nodes.length === 0 || links.length === 0) {
+        dispatch(
+          setSnackbarMessageAndOpen(
+            'serviceDependency.interfaceDependencyNotFound',
+            {},
+            SEVERITIES.warning
+          )
+        );
+        clearVarible();
+      } else {
+        setInodes(nodes);
+        links = links.map((link, index) => {
+          if(link.invoke_info.callee === currentInterface) {
+            link.center = true;
+          }
+          return link;
+        });
+        setIlinks(links);
+      }
+    }
+  }, [currentInterface]);
 
   const clearVarible = () => {
     /**
@@ -332,122 +440,6 @@ function ServiceDependency() {
     setLinks([]);
     setInodes([]);
     setIlinks([]);
-  };
-
-  const handleTabChange = (event, newValue) => {
-    dispatch({ type: UPDATE_EXACT_SERVICE, data: null });
-    setClickedLink(null);
-    setTabValue(newValue);
-  };
-
-  const handleChange = event => {
-    setMode(event.target.value);
-  };
-
-  const handleInputChange = event => {
-    setQueryContent(event.target.value);
-    if (event.target.value !== '') {
-      setEmptyError(false);
-    }
-  };
-
-  const handleInterfaceSearchClick = e => {
-    if (!queryContent || queryContent === '') {
-      setEmptyError(true);
-      return;
-    }
-    let nodes = [];
-    let links = [];
-    let graph_dict = {};
-    let target_up_nodes = [];
-    let target_down_nodes = [];
-    let flag = false;
-    // 查看该接口是否被调用
-    for (const key of Object.keys(graph)) {
-      const invoking_arr = graph[key].invoking;
-      for (const invoking_element of invoking_arr) {
-        const [callee_node, isDown, invoke_info] = invoking_element;
-        if (invoke_info.callee === queryContent) {
-          flag = true;
-          target_up_nodes.push(key);
-          target_down_nodes.push(callee_node);
-          // 此时添加边，因为如果图为DAG，则后续不会再访问到
-          links.push({
-            source: key,
-            target: callee_node,
-            invoke_info: invoke_info,
-            center: true,
-          });
-        }
-      }
-    }
-    if (flag === false) {
-      dispatch(
-        setSnackbarMessageAndOpen(
-          'serviceDependency.interfaceDependencyNotFound',
-          {},
-          SEVERITIES.warning
-        )
-      );
-      clearVarible();
-      return;
-    }
-    const _recursive_search = (node, isDown, path) => {
-      graph_dict[node] = {
-        id: node,
-        label: node,
-      };
-      let arr;
-      if (isDown) {
-        arr = graph[node].invoking;
-      } else {
-        arr = graph[node].invoked;
-      }
-      for (const element of arr) {
-        const [callee_node, _, invoke_info] = element;
-
-        if (isDown) {
-          links.push({
-            source: node,
-            target: callee_node,
-            invoke_info: invoke_info,
-          });
-        } else {
-          links.push({
-            source: callee_node,
-            target: node,
-            invoke_info: invoke_info,
-          });
-        }
-        if (path.find((value, index) => value === node) === undefined) {
-          _recursive_search(callee_node, isDown, [...path, callee_node]);
-        }
-      }
-    };
-    target_up_nodes = new Set(target_up_nodes);
-    target_down_nodes = new Set(target_down_nodes);
-    for (const up_node of target_up_nodes) {
-      _recursive_search(up_node, false, [up_node]);
-    }
-    for (const down_node of target_down_nodes) {
-      _recursive_search(down_node, true, [down_node]);
-    }
-    for (const node of Object.values(graph_dict)) {
-      nodes.push(node);
-    }
-    if (nodes.length === 0 || links.length === 0) {
-      dispatch(
-        setSnackbarMessageAndOpen(
-          'serviceDependency.interfaceDependencyNotFound',
-          {},
-          SEVERITIES.warning
-        )
-      );
-      clearVarible();
-    } else {
-      setInodes(nodes);
-      setIlinks(links);
-    }
   };
 
   const handleNodeClick = id => {
@@ -543,63 +535,61 @@ function ServiceDependency() {
                     bgcolor: '#f9fbfd',
                   }}
                 >
-                  <Stack direction='row' spacing={2}>
-                    <KubeAutocomplete
-                      height='32px'
-                      padding='6px 5px 5px 12px'
-                      value={currentService}
-                      onChange={(event, newValue) => {
-                        setCurrentService(newValue);
-                      }}
-                      id='positive_service_autocomplete'
-                      options={Object.keys(positiveServices)}
-                      filterOptions={(options, params) => {
-                        const { inputValue } = params;
-                        return options.filter((option, index) => {
-                          return (
-                            option.includes(inputValue) ||
-                            positiveServices[option].name.includes(inputValue)
-                          );
-                        });
-                      }}
-                      renderOption={(props, option, state) => {
-                        const composed = `${positiveServices[option].name} (${option}) `;
+                  <KubeAutocomplete
+                    height='32px'
+                    padding='6px 5px 5px 12px'
+                    value={currentService}
+                    onChange={(event, newValue) => {
+                      setCurrentService(newValue);
+                    }}
+                    id='positive_service_autocomplete'
+                    options={Object.keys(positiveServices)}
+                    filterOptions={(options, params) => {
+                      const { inputValue } = params;
+                      return options.filter((option, index) => {
                         return (
-                          <Tooltip title={composed} placement='top'>
-                            <Box
-                              {...props}
-                              sx={{
-                                overflow: 'hidden !important',
-                                whiteSpace: 'nowrap',
-                                textOverflow: 'ellipsis',
-                                display: 'block !important',
-                              }}
-                            >
-                              {composed}
-                            </Box>
-                          </Tooltip>
+                          option.includes(inputValue) ||
+                          positiveServices[option].name.includes(inputValue)
                         );
-                      }}
-                      sx={{
-                        width: '100%',
-                        color: '#36435c',
-                        fontFamily: fontFamily,
-                        fontSize: '12px',
-                        fontWeight: 600,
-                        fontStyle: 'normal',
-                        fontStretch: 'normal',
-                        lineHeight: 1.67,
-                        letterSpacing: 'normal',
-                      }}
-                      renderInput={params => {
-                        const option = params.inputProps.value;
-                        if (positiveServices[option]) {
-                          params.inputProps.value = `${positiveServices[option].name} (${option}) `;
-                        }
-                        return <TextField {...params} placeholder='可选服务' />;
-                      }}
-                    />
-                  </Stack>
+                      });
+                    }}
+                    renderOption={(props, option, state) => {
+                      const composed = `${positiveServices[option].name} (${option}) `;
+                      return (
+                        <Tooltip title={composed} placement='top'>
+                          <Box
+                            {...props}
+                            sx={{
+                              overflow: 'hidden !important',
+                              whiteSpace: 'nowrap',
+                              textOverflow: 'ellipsis',
+                              display: 'block !important',
+                            }}
+                          >
+                            {composed}
+                          </Box>
+                        </Tooltip>
+                      );
+                    }}
+                    sx={{
+                      width: '100%',
+                      color: '#36435c',
+                      fontFamily: fontFamily,
+                      fontSize: '12px',
+                      fontWeight: 600,
+                      fontStyle: 'normal',
+                      fontStretch: 'normal',
+                      lineHeight: 1.67,
+                      letterSpacing: 'normal',
+                    }}
+                    renderInput={params => {
+                      const option = params.inputProps.value;
+                      if (positiveServices[option]) {
+                        params.inputProps.value = `${positiveServices[option].name} (${option}) `;
+                      }
+                      return <TextField {...params} placeholder='可选服务' />;
+                    }}
+                  />
                 </Box>
 
                 <Box
@@ -642,7 +632,7 @@ function ServiceDependency() {
               <Box>
                 <Stack direction='column' spacing={1}>
                   {clickedLink !== null ? (
-                    <InvokeInfoBlock data={clickedLink} init={resizeFunc} />
+                    <InvokeInfoBlock data={clickedLink} />
                   ) : (
                     <></>
                   )}
@@ -650,51 +640,84 @@ function ServiceDependency() {
               </Box>
             </StyledTabPanel>
             <StyledTabPanel value={2}>
-              <Box>
-                <Stack direction='row' spacing={1}>
-                  <Stack>
-                    <SmallLightFont>Query</SmallLightFont>
-                    <FormControl>
-                      <Input
-                        id='my-input'
-                        aria-describedby='my-helper-text'
-                        value={queryContent}
-                        onChange={handleInputChange}
-                        error={emptyError}
-                      />
-                      {emptyError ? (
-                        <FormHelperText
-                          sx={{
-                            m: '3px 0px 0px 0px',
-                            color: 'red',
-                          }}
-                        >
-                          This field is required.
-                        </FormHelperText>
-                      ) : (
-                        <FormHelperText
-                          sx={{
-                            m: '3px 0px 0px 0px',
-                          }}
-                        >
-                          Please enter interface id.
-                        </FormHelperText>
-                      )}
-                    </FormControl>
-                  </Stack>
-                  <OutlinedButton
-                    ref={interfaceClick}
-                    sx={{
-                      mt: '16px !important',
-                      width: '84px',
-                      height: '32px',
+              <Box
+                sx={{
+                  boxShadow: '0px 0px 12px 0px rgba(38, 46, 53, 0.12)',
+                  borderRadius: '5px',
+                }}
+              >
+                <Box
+                  sx={{
+                    height: '32px',
+                    padding: '10px 20px',
+                    bgcolor: '#f9fbfd',
+                  }}
+                >
+                  <KubeAutocomplete
+                    height='32px'
+                    padding='6px 5px 5px 12px'
+                    value={currentInterface}
+                    onChange={(event, newValue) => {
+                      setCurrentInterface(newValue);
                     }}
-                    onClick={handleInterfaceSearchClick}
-                  >
-                    Search
-                  </OutlinedButton>
-                </Stack>
-                <Stack direction={direction} spacing={2}>
+                    id='positive_interface_autocomplete'
+                    options={Object.keys(positiveInterfaces)}
+                    filterOptions={(options, params) => {
+                      const { inputValue } = params;
+                      return options.filter((option, index) => {
+                        return (
+                          option.includes(inputValue) ||
+                          positiveInterfaces[option].path.includes(inputValue)
+                        );
+                      });
+                    }}
+                    renderOption={(props, option, state) => {
+                      const composed = `${positiveInterfaces[option].path} (${option}) `;
+                      return (
+                        <Tooltip title={composed} placement='top'>
+                          <Box
+                            {...props}
+                            sx={{
+                              overflow: 'hidden !important',
+                              whiteSpace: 'nowrap',
+                              textOverflow: 'ellipsis',
+                              display: 'block !important',
+                            }}
+                          >
+                            {composed}
+                          </Box>
+                        </Tooltip>
+                      );
+                    }}
+                    sx={{
+                      width: '100%',
+                      color: '#36435c',
+                      fontFamily: fontFamily,
+                      fontSize: '12px',
+                      fontWeight: 600,
+                      fontStyle: 'normal',
+                      fontStretch: 'normal',
+                      lineHeight: 1.67,
+                      letterSpacing: 'normal',
+                    }}
+                    renderInput={params => {
+                      const option = params.inputProps.value;
+                      if (positiveInterfaces[option]) {
+                        params.inputProps.value = `${positiveInterfaces[option].path} (${option}) `;
+                      }
+                      return <TextField {...params} placeholder='可选接口' />;
+                    }}
+                  />
+                </Box>
+
+                <Box
+                  sx={{
+                    height: '100%',
+                    bgcolor: '#FFFFFF',
+                    borderRadius: '5px',
+                    p: 0,
+                  }}
+                >
                   {inodes.length !== 0 ? (
                     <EdgeCenterCanvas
                       nodes={inodes}
@@ -703,29 +726,34 @@ function ServiceDependency() {
                       handleLinkClick={handleInterfaceLinkClick}
                     />
                   ) : (
-                    <></>
+                    <Box
+                      sx={{
+                        minHeight: '400px',
+                        display: 'grid',
+                      }}
+                    >
+                      <Stack
+                        direction='row'
+                        spacing={2}
+                        alignItems='center'
+                        justifyContent='center'
+                      >
+                        <InfoAlert />
+                        <YaHeiLargeFont>
+                          {intl.messages['serviceDependency.interfaceBasedMsg']}
+                        </YaHeiLargeFont>
+                      </Stack>
+                    </Box>
                   )}
-                  <Stack direction='column' spacing={1}>
-                    {exactService !== null ? (
-                      <ServiceInfoBlock
-                        data={exactService}
-                        mode={0}
-                        page={INTERFACE_DEPENDENCY}
-                        cb={() => {
-                          setParamChange(paramChange + 1);
-                        }}
-                        init={resizeFunc}
-                      />
-                    ) : (
-                      <></>
-                    )}
-                    {clickedLink !== null ? (
-                      <InvokeInfoBlock data={clickedLink} init={resizeFunc} />
-                    ) : (
-                      <></>
-                    )}
-                  </Stack>
-                </Stack>
+                </Box>
+              </Box>
+
+              <Box>
+                {clickedLink !== null ? (
+                  <InvokeInfoBlock data={clickedLink}/>
+                ) : (
+                  <></>
+                )}
               </Box>
             </StyledTabPanel>
           </Tabs>
