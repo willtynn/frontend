@@ -20,7 +20,8 @@ export const messages = {
       '未查询到目标服务名称与版本所对应的服务...',
     queryError: '查询出错，请重试...',
     podSearchError: '获取容器组出错，请刷新重试...',
-    serviceDependencyDescription: "服务依赖是指一个软件系统依赖于外部的服务或API，通常通过网络进行通信。"
+    serviceDependencyDescription: "服务依赖是指一个软件系统依赖于外部的服务或API，通常通过网络进行通信。",
+    serviceBasedMsg: "请选择一个服务。"
   },
   cluster: {
     clustersSearchError: '集群信息获取失败，请刷新页面重试...',

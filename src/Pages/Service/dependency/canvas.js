@@ -31,38 +31,23 @@ export function ThreeLayerCanvas(props) {
       .setDefaultEdgeLabel(() => {
         return {};
       });
-    let top_count = 0,
-      bottom_count = 0;
-    g.setNode('top_group', {
-      label: '调用当前服务的服务',
-      clusterLabelPos: 'top',
-      style: 'fill: #ffd47f',
-    });
-    g.setNode('bottom_group', {
-      label: '当前服务调用的服务',
-      clusterLabelPos: 'bottom',
-      style: 'fill: #5f9488',
-    });
+
     nodes.forEach((item, index) => {
-      g.setNode(item.id, {
-        label: item.label,
-        class: 'service_node',
-        id: item.id,
-      });
-      if (item.type === 'invoked') {
-        ++top_count;
-        g.setParent(item.id, 'top_group');
-      } else if (item.type === 'invoking') {
-        ++bottom_count;
-        g.setParent(item.id, 'bottom_group');
+      if (item.type === 'target') {
+        g.setNode(item.id, {
+          label: item.label,
+          class: 'service_node',
+          id: item.id,
+          style: "fill: #ffd47f"
+        });
+      } else {
+        g.setNode(item.id, {
+          label: item.label,
+          class: 'service_node',
+          id: item.id,
+        });
       }
     });
-    if (top_count === 0) {
-      g.removeNode('top_group');
-    }
-    if (bottom_count === 0) {
-      g.removeNode('bottom_group');
-    }
 
     links.forEach((item, index) => {
       g.setEdge(item.source, item.target, {
@@ -84,14 +69,15 @@ export function ThreeLayerCanvas(props) {
   useEffect(() => {
     // Create the renderer
     var render = new dagreD3.render();
-
     // Set up an SVG group so that we can translate the final graph.
-
     var svg = d3.select(document.getElementById('svg-canvas'));
     let svgGroup = d3.select(document.getElementById('g-canvas'));
-
     // Run the renderer. This is what draws the final graph.
     render(svgGroup, graph);
+
+    if (graph._label.height == undefined || graph._label.height == -Infinity) {
+      return;
+    }
 
     const service_nodes = document.getElementsByClassName('service_node');
     for (const service_node of service_nodes) {
@@ -107,7 +93,6 @@ export function ThreeLayerCanvas(props) {
         handleLinkClick(service_link_info);
       });
     }
-
     // Center the graph
     var xCenterOffset =
       (svg.property('width').baseVal.value - graph.graph().width) / 2;
@@ -130,7 +115,7 @@ export function ThreeLayerCanvas(props) {
         fontFamily: fontFamily,
         width: '100%',
         overflow: 'auto',
-        ...shadowStyle,
+        // ...shadowStyle,
       }}
     >
       <svg style={{ minWidth: '100%' }} id='svg-canvas' height='600'>
@@ -139,10 +124,6 @@ export function ThreeLayerCanvas(props) {
     </Box>
   );
 }
-
-
-
-
 
 export function EdgeCenterCanvas(props) {
   const { nodes, links, handleNodeClick, handleLinkClick } = props;
@@ -249,11 +230,10 @@ export function EdgeCenterCanvas(props) {
     <Box
       sx={{
         fontFamily: fontFamily,
-        ...shadowStyle,
         width: '100%',
       }}
     >
-      <svg style={{minWidth: "100%"}} id='interface_svg-canvas' height='1000'>
+      <svg style={{ minWidth: '100%' }} id='interface_svg-canvas' height='1000'>
         <g id='interface_g-canvas'></g>
       </svg>
     </Box>
