@@ -193,6 +193,34 @@ export const StyledAutocomplete = styled(Autocomplete)(
   })
 );
 
+export const KubeAutocomplete = styled(Autocomplete)(
+  ({ height, padding }) => ({
+    '& .MuiOutlinedInput-root.MuiInputBase-root': {
+      height: height,
+      padding: 0,
+      background: '#FFFFFF',
+      '& .MuiOutlinedInput-input.MuiInputBase-input': {
+        padding: padding,
+        fontWeight: 600,
+        fontSize: '12px',
+        fontStyle: 'normal',
+        fontStretch: 'normal',
+        lineHeight: 1.67,
+        letterSpacing: 'normal',
+        '&:placeholder-shown': {
+          fontWeight: 600,
+          color: 'black !important',
+          fontSize: '12px',
+          lineHeight: 1.67,
+        },
+      },
+    },
+    "& .MuiAutocomplete-option": {
+      display: "block !important"
+    }
+  })
+);
+
 export const StyledSelect = styled(Select)(({ width }) => ({
   borderRadius: '35px',
   height: '40px',

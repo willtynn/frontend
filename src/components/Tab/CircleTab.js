@@ -12,7 +12,6 @@ export const StyledTab = styled(Tab)`
   border-radius: 14px;
   font-size: 12px;
   font-weight: 500;
-  padding: 8px 12px;
   border: none;
   display: flex;
   justify-content: center;
@@ -34,6 +33,7 @@ export const StyledTab = styled(Tab)`
 
 export const StyledTabsList = styled(TabsList)`
   padding: 0px 2px;
+  margin: 0px 12px;
   height: 32px;
   background-color: #f9fbfd;
   border-radius: 16px;
