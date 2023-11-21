@@ -77,23 +77,7 @@ export default function ImagesList(props) {
     };
   });
 
-  // const rows = imageList;
-
-  const rows = [
-    {
-      "Name": "192.168.1.104:5000/buildservice:1.1",
-      "Labels": {
-        "io.cri-containerd.image": "managed"
-      },
-      "Target": {
-        "mediaType": "application/vnd.docker.distribution.manifest.v2+json",
-        "digest": "sha256:27bdcbfb779a7dec50b8ab090097562fdf09acf64a15e950969ec0c83142419c",
-        "size": 2432
-      },
-      "CreatedAt": "2023-10-15T07:46:04.865519365Z",
-      "UpdatedAt": "2023-10-15T07:46:04.893784698Z"
-    },
-  ];
+  const rows = imageList;
 
   // service/query左侧表格表头
   const headFirstRow = [

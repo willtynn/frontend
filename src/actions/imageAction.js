@@ -29,8 +29,8 @@ export function getImageList(cluster) {
           },
         }
       );
-      if (res.data.code === 200 || res.data.code === 0) {
-        dispatch({ type: UPDATE_LIST, data: res.data.data });
+      if (res.status === 200) {
+        dispatch({ type: UPDATE_LIST, data: res.data });
       } else {
         dispatch({ type: UPDATE_LIST, data: [] });
         dispatch(
