@@ -5,10 +5,10 @@ import { useRef } from 'react';
 import * as d3 from 'd3';
 import dagreD3 from 'dagre-d3';
 import { useEffect, useState } from 'react';
-import { Box } from '@mui/material';
-import { shadowStyle } from '@/utils/commonUtils';
+import { Box, Stack } from '@mui/material';
 import { fontFamily } from '@/utils/commonUtils';
 import './styles.css';
+// import D3Tip from '../../../components/Tip/D3Tip';
 
 const normalEdgeStyle = {
   style: 'stroke: #333; stroke-width: 3px; fill: none;',
@@ -16,7 +16,7 @@ const normalEdgeStyle = {
 };
 
 export function ThreeLayerCanvas(props) {
-  const { nodes, links, handleNodeClick, handleLinkClick } = props;
+  const { nodes, links, handleNodeClick, services } = props;
   const [graph, setGraph] = useState(
     new dagreD3.graphlib.Graph({ compound: true })
       .setGraph({})
@@ -24,6 +24,18 @@ export function ThreeLayerCanvas(props) {
         return {};
       })
   );
+
+  const [id, setId] = useState('');
+  const [repo, setRepo] = useState('');
+  const [imageUrl, setImageUrl] = useState('');
+
+  const [callerId, setCallerId] = useState('');
+  const [callerPath, setCallerPath] = useState('');
+  const [calleeId, setCalleeId] = useState('');
+  const [calleePath, setCalleePath] = useState('');
+
+  const nodeTooltip = useRef(null);
+  const edgeTooltip = useRef(null);
 
   useEffect(() => {
     var g = new dagreD3.graphlib.Graph({ compound: true })
@@ -38,7 +50,7 @@ export function ThreeLayerCanvas(props) {
           label: item.label,
           class: 'service_node',
           id: item.id,
-          style: "fill: #ffd47f"
+          style: 'fill: #ffd47f',
         });
       } else {
         g.setNode(item.id, {
@@ -75,22 +87,42 @@ export function ThreeLayerCanvas(props) {
     // Run the renderer. This is what draws the final graph.
     render(svgGroup, graph);
 
-    if (graph._label.height == undefined || graph._label.height == -Infinity) {
-      return;
-    }
+    // if (graph._label.height == undefined || graph._label.height == -Infinity) {
+    //   return;
+    // }
 
     const service_nodes = document.getElementsByClassName('service_node');
     for (const service_node of service_nodes) {
       service_node.addEventListener('click', () => {
         handleNodeClick(service_node.id);
       });
+      service_node.addEventListener('mouseover', e => {
+        setId(service_node.id);
+        setRepo(services[service_node.id].repo)
+        setImageUrl(services[service_node.id].imageUrl)
+        nodeTooltip.current.style.display = 'block';
+        nodeTooltip.current.style.top = e.clientY + 20 + 'px';
+        nodeTooltip.current.style.left = e.clientX + 'px';
+      });
+      service_node.addEventListener('mouseleave', function () {
+        nodeTooltip.current.style.display = 'none';
+      });
     }
 
     const service_links = document.getElementsByClassName('service_link');
     for (const service_link of service_links) {
-      service_link.addEventListener('click', () => {
-        const service_link_info = JSON.parse(service_link.id);
-        handleLinkClick(service_link_info);
+      const service_link_info = JSON.parse(service_link.id);
+      service_link.addEventListener('mouseover', e => {
+        setCallerId(service_link_info.caller);
+        setCallerPath(service_link_info.callerPath)
+        setCalleeId(service_link_info.callee)
+        setCalleePath(service_link_info.calleePath)
+        edgeTooltip.current.style.display = 'block';
+        edgeTooltip.current.style.top = e.clientY + 20 + 'px';
+        edgeTooltip.current.style.left = e.clientX + 'px';
+      });
+      service_link.addEventListener('mouseleave', function () {
+        edgeTooltip.current.style.display = 'none';
       });
     }
     // Center the graph
@@ -121,12 +153,81 @@ export function ThreeLayerCanvas(props) {
       <svg style={{ minWidth: '100%' }} id='svg-canvas' height='600'>
         <g id='g-canvas'></g>
       </svg>
+      <Box
+        ref={nodeTooltip}
+        sx={{
+          bgcolor: '#242E42',
+          position: 'absolute',
+          borderRadius: '5px',
+          p: '12px',
+          color: '#FFFFFF',
+          display: 'none',
+          fontSize: '12px',
+          fontWeight: 400,
+          fontStyle: 'normal',
+          fontStretch: 'normal',
+          lineHeight: 1.67,
+          letterSpacing: 'normal',
+        }}
+      >
+        <Stack direction='column' spacing={1}>
+          <Stack direction='row' spacing={1}>
+            <Box sx={{width: "80px"}}>ID</Box>
+            <Box>{id}</Box>
+          </Stack>
+          <Stack direction='row' spacing={1}>
+            <Box sx={{width: "80px"}}>代码仓库地址</Box>
+            <Box>{repo}</Box>
+          </Stack>
+          <Stack direction='row' spacing={1}>
+            <Box sx={{width: "80px"}}>镜像仓库地址</Box>
+            <Box>{imageUrl}</Box>
+          </Stack>
+        </Stack>
+      </Box>
+
+      <Box
+        ref={edgeTooltip}
+        sx={{
+          bgcolor: '#242E42',
+          position: 'absolute',
+          borderRadius: '5px',
+          p: '12px',
+          color: '#FFFFFF',
+          display: 'none',
+          fontSize: '12px',
+          fontWeight: 400,
+          fontStyle: 'normal',
+          fontStretch: 'normal',
+          lineHeight: 1.67,
+          letterSpacing: 'normal',
+        }}
+      >
+        <Stack direction='column' spacing={1}>
+          <Stack direction='row' spacing={1}>
+            <Box sx={{width: "80px"}}>源接口ID</Box>
+            <Box>{callerId}</Box>
+          </Stack>
+          <Stack direction='row' spacing={1}>
+            <Box sx={{width: "80px"}}>源接口路径</Box>
+            <Box>{callerPath}</Box>
+          </Stack>
+          <Stack direction='row' spacing={1}>
+            <Box sx={{width: "80px"}}>目标接口ID</Box>
+            <Box>{calleeId}</Box>
+          </Stack>
+          <Stack direction='row' spacing={1}>
+            <Box sx={{width: "80px"}}>目标接口路径</Box>
+            <Box>{calleePath}</Box>
+          </Stack>
+        </Stack>
+      </Box>
     </Box>
   );
 }
 
 export function EdgeCenterCanvas(props) {
-  const { nodes, links, handleNodeClick, handleLinkClick } = props;
+  const { nodes, links, handleNodeClick, services } = props;
   const [graph, setGraph] = useState(
     new dagreD3.graphlib.Graph({ compound: true })
       .setGraph({})
@@ -134,6 +235,18 @@ export function EdgeCenterCanvas(props) {
         return {};
       })
   );
+
+  const [id, setId] = useState('');
+  const [repo, setRepo] = useState('');
+  const [imageUrl, setImageUrl] = useState('');
+
+  const [callerId, setCallerId] = useState('');
+  const [callerPath, setCallerPath] = useState('');
+  const [calleeId, setCalleeId] = useState('');
+  const [calleePath, setCalleePath] = useState('');
+
+  const nodeTooltip = useRef(null);
+  const edgeTooltip = useRef(null);
 
   useEffect(() => {
     var g = new dagreD3.graphlib.Graph({ compound: true })
@@ -154,18 +267,16 @@ export function EdgeCenterCanvas(props) {
     links.forEach((item, index) => {
       if (item.center) {
         g.setEdge(item.source, item.target, {
-          label: item.invoke_info.callee,
           style: 'stroke: #f66; stroke-width: 3px; fill: none;',
           arrowheadStyle: 'fill: #f66; width: 3px;',
           class: 'service_link',
-          id: JSON.stringify(item),
+          id: JSON.stringify(item.invoke_info),
         });
       } else {
         g.setEdge(item.source, item.target, {
-          label: item.invoke_info.callee,
           ...normalEdgeStyle,
           class: 'service_link',
-          id: JSON.stringify(item),
+          id: JSON.stringify(item.invoke_info),
         });
       }
     });
@@ -196,18 +307,36 @@ export function EdgeCenterCanvas(props) {
       service_node.addEventListener('click', () => {
         handleNodeClick(service_node.id);
       });
+      service_node.addEventListener('mouseover', e => {
+        setId(service_node.id);
+        setRepo(services[service_node.id].repo)
+        setImageUrl(services[service_node.id].imageUrl)
+        nodeTooltip.current.style.display = 'block';
+        nodeTooltip.current.style.top = e.clientY + 20 + 'px';
+        nodeTooltip.current.style.left = e.clientX + 'px';
+      });
+      service_node.addEventListener('mouseleave', function () {
+        nodeTooltip.current.style.display = 'none';
+      });
     }
 
     const service_links = document.getElementsByClassName('service_link');
     for (const service_link of service_links) {
-      service_link.addEventListener('click', () => {
-        const service_link_info = JSON.parse(service_link.id);
-        handleLinkClick({
-          source: service_link_info.source,
-          target: service_link_info.target,
-          ...service_link_info.invoke_info,
-        });
+
+      const service_link_info = JSON.parse(service_link.id);
+      service_link.addEventListener('mouseover', e => {
+        setCallerId(service_link_info.caller);
+        setCallerPath(service_link_info.callerPath)
+        setCalleeId(service_link_info.callee)
+        setCalleePath(service_link_info.calleePath)
+        edgeTooltip.current.style.display = 'block';
+        edgeTooltip.current.style.top = e.clientY + 20 + 'px';
+        edgeTooltip.current.style.left = e.clientX + 'px';
       });
+      service_link.addEventListener('mouseleave', function () {
+        edgeTooltip.current.style.display = 'none';
+      });
+
     }
 
     // Center the graph
@@ -236,6 +365,77 @@ export function EdgeCenterCanvas(props) {
       <svg style={{ minWidth: '100%' }} id='interface_svg-canvas' height='1000'>
         <g id='interface_g-canvas'></g>
       </svg>
+
+      <Box
+        ref={nodeTooltip}
+        sx={{
+          bgcolor: '#242E42',
+          position: 'absolute',
+          borderRadius: '5px',
+          p: '12px',
+          color: '#FFFFFF',
+          display: 'none',
+          fontSize: '12px',
+          fontWeight: 400,
+          fontStyle: 'normal',
+          fontStretch: 'normal',
+          lineHeight: 1.67,
+          letterSpacing: 'normal',
+        }}
+      >
+        <Stack direction='column' spacing={1}>
+          <Stack direction='row' spacing={1}>
+            <Box sx={{width: "80px"}}>ID</Box>
+            <Box>{id}</Box>
+          </Stack>
+          <Stack direction='row' spacing={1}>
+            <Box sx={{width: "80px"}}>代码仓库地址</Box>
+            <Box>{repo}</Box>
+          </Stack>
+          <Stack direction='row' spacing={1}>
+            <Box sx={{width: "80px"}}>镜像仓库地址</Box>
+            <Box>{imageUrl}</Box>
+          </Stack>
+        </Stack>
+      </Box>
+
+      <Box
+        ref={edgeTooltip}
+        sx={{
+          bgcolor: '#242E42',
+          position: 'absolute',
+          borderRadius: '5px',
+          p: '12px',
+          color: '#FFFFFF',
+          display: 'none',
+          fontSize: '12px',
+          fontWeight: 400,
+          fontStyle: 'normal',
+          fontStretch: 'normal',
+          lineHeight: 1.67,
+          letterSpacing: 'normal',
+        }}
+      >
+        <Stack direction='column' spacing={1}>
+          <Stack direction='row' spacing={1}>
+            <Box sx={{width: "80px"}}>源接口ID</Box>
+            <Box>{callerId}</Box>
+          </Stack>
+          <Stack direction='row' spacing={1}>
+            <Box sx={{width: "80px"}}>源接口路径</Box>
+            <Box>{callerPath}</Box>
+          </Stack>
+          <Stack direction='row' spacing={1}>
+            <Box sx={{width: "80px"}}>目标接口ID</Box>
+            <Box>{calleeId}</Box>
+          </Stack>
+          <Stack direction='row' spacing={1}>
+            <Box sx={{width: "80px"}}>目标接口路径</Box>
+            <Box>{calleePath}</Box>
+          </Stack>
+        </Stack>
+      </Box>
+
     </Box>
   );
 }

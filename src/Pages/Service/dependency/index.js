@@ -167,8 +167,10 @@ function ServiceDependency() {
             true,
             {
               caller: single_call_info.caller,
+              callerPath: single_call_info.callerPath,
               callerDetail: call.callerDetail,
               callee: single_call_info.callee,
+              calleePath: single_call_info.calleePath,
               calleeDetail: single_call_info.calleeServiceDetail,
               ...single_call_info.extraData,
             },
@@ -178,8 +180,10 @@ function ServiceDependency() {
             false,
             {
               caller: single_call_info.caller,
+              callerPath: single_call_info.callerPath,
               callerDetail: call.callerDetail,
               callee: single_call_info.callee,
+              calleePath: single_call_info.calleePath,
               calleeDetail: single_call_info.calleeServiceDetail,
               ...single_call_info.extraData,
             },
@@ -263,7 +267,9 @@ function ServiceDependency() {
                 target: callee_service,
                 invoke_info: {
                   caller: single_call_info.caller,
+                  callerPath: single_call_info.callerPath,
                   callee: single_call_info.callee,
+                  calleePath: single_call_info.calleePath,
                   ...single_call_info.extraData,
                 },
               });
@@ -289,7 +295,9 @@ function ServiceDependency() {
                   target: callee_service,
                   invoke_info: {
                     caller: single_call_info.caller,
+                    callerPath: single_call_info.callerPath,
                     callee: single_call_info.callee,
+                    calleePath: single_call_info.calleePath,
                     ...single_call_info.extraData,
                   },
                 });
@@ -320,7 +328,6 @@ function ServiceDependency() {
   }, [currentService]);
 
   useEffect(() => {
-    console.log("graph", graph)
     if (currentInterface !== null) {
       if (dependency === null) {
         dispatch(
@@ -449,10 +456,6 @@ function ServiceDependency() {
 
   const handleNodeClick = id => {
     navigate(`/detail/service/${id}`);
-  };
-
-  const handleLinkClick = data => {
-    setClickedLink(data);
   };
 
   const handleInterfaceNodeClick = id => {
@@ -610,7 +613,7 @@ function ServiceDependency() {
                       nodes={nodes}
                       links={links}
                       handleNodeClick={handleNodeClick}
-                      handleLinkClick={handleLinkClick}
+                      services={positiveServices}
                     />
                   ) : (
                     <Box
@@ -729,6 +732,7 @@ function ServiceDependency() {
                       links={ilinks}
                       handleNodeClick={handleInterfaceNodeClick}
                       handleLinkClick={handleInterfaceLinkClick}
+                      services={positiveServices}
                     />
                   ) : (
                     <Box

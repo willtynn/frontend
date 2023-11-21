@@ -135,7 +135,6 @@ export function RouteTraceCard(props) {
   React.useEffect(() => {
     if(leftDiv.current && rightDiv.current && progressStack.current){
       let length = progressStack.current.offsetWidth - 30;
-      console.log(length);
       leftDiv.current.style.width = (progress / 100 * length) + 'px';
       rightDiv.current.style.width = ((100 - progress) / 100 * length) + 'px';
       //TODO:在用户改变浏览器窗口大小时（尤其是扩大时），条不会随之伸长。
