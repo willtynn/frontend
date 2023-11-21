@@ -102,7 +102,6 @@ export function getRouteTraceDetail(id) {
         }
       )
       if (res.status === 200) {
-        console.log(res.data)
         dispatch({ type: UPDATE_ROUTE_TRACE_DETAIL, data: res.data });
       } else{
         dispatch({ type: UPDATE_ROUTE_TRACE_DETAIL, data: [] });

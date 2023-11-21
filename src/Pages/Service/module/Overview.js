@@ -236,7 +236,6 @@ export default function ServiceOverview(props) {
     searchList.forEach((value, _) => {
       if (value.startsWith('ID:')) {
         tmpData = tmpData.filter((tableRow, _) => {
-          console.log(tableRow.phase);
           return tableRow.id.includes(value.replace(IDPattern, ''));
         });
       } else if (value.startsWith('名称:')) {

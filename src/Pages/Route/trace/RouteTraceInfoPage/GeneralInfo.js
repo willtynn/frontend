@@ -40,8 +40,6 @@ const valueStyle = {
 export default function GeneralInfo(props) {
   const { info } = props;
 
-  console.log(info);
-
   const navigate = useNavigate();
 
   const handleReturn = () => {

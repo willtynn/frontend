@@ -289,7 +289,6 @@ export default function RouteRuleOverviewTable(props) {
     searchList.forEach((value, _) => {
       if (value.startsWith('状态:')) {
         tmpData = tmpData.filter((tableRow, _) => {
-          console.log(tableRow.phase);
           return tableRow.phase.includes(value.replace(statusPattern, ''));
         });
       } else if (value.startsWith('名称:')) {
