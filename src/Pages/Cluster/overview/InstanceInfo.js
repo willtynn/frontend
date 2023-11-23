@@ -86,7 +86,7 @@ export default function InstanceInfo(props) {
                     <IconButton
                       onClick={() => {
                         navigate(
-                          `/service/dependency?type=service&by=0&id=${instance.metadata.labels.app}`
+                          `/service/dependency?type=service&id=${instance.metadata.labels.app}`
                         );
                       }}
                       sx={{

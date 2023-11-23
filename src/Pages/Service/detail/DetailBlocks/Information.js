@@ -90,7 +90,7 @@ export default function Information(props) {
   ];
 
   const handleInterfaceDependencyClick = id => {
-    navigate(`/service/dependency?type=interface&by=0&id=${id}`);
+    navigate(`/service/dependency?type=interface&id=${id}`);
   };
 
   const handleCopyToClickboard = text => {

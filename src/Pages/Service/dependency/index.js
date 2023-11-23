@@ -19,19 +19,11 @@ import {
   Tooltip,
 } from '@mui/material';
 import { SmallLightFont, YaHeiLargeFont } from '@/components/Fonts';
-import { OutlinedButton } from '@/components/Button';
 import {
   UPDATE_EXACT_SERVICE,
-  searchServiceExactlyById,
   searchDependencies,
 } from '@/actions/serviceAction';
-import ServiceInfoBlock from '../module/ServiceInfoBlock';
-import InvokeInfoBlock from '../module/InvokeInfoBlock';
 import PropTypes from 'prop-types';
-import {
-  SERVICE_DEPENDENCY,
-  INTERFACE_DEPENDENCY,
-} from '../module/ServiceInfoBlock';
 import { useSearchParams, useNavigate } from 'react-router-dom';
 import { setSnackbarMessageAndOpen } from '@/actions/snackbarAction';
 import { SEVERITIES } from '@/components/CommonSnackbar';
@@ -44,43 +36,8 @@ import {
   StyledTabsList,
   StyledTabPanel,
 } from '@/components/Tab/CircleTab';
-import InfoCard from '@/components/InfoCard';
 import InfoAlert from '@/assets/InfoAlert.svg';
 import { KubeAutocomplete } from '../../../components/Input';
-import { shadowStyle } from '@/utils/commonUtils';
-
-function CustomTabPanel(props) {
-  const { children, value, index, ...other } = props;
-
-  return (
-    <div
-      role='tabpanel'
-      hidden={value !== index}
-      id={`simple-tabpanel-${index}`}
-      aria-labelledby={`simple-tab-${index}`}
-      {...other}
-    >
-      {value === index && (
-        <Box sx={{ p: 3 }}>
-          <Typography>{children}</Typography>
-        </Box>
-      )}
-    </div>
-  );
-}
-
-CustomTabPanel.propTypes = {
-  children: PropTypes.node,
-  index: PropTypes.number.isRequired,
-  value: PropTypes.number.isRequired,
-};
-
-function a11yProps(index) {
-  return {
-    id: `simple-tab-${index}`,
-    'aria-controls': `simple-tabpanel-${index}`,
-  };
-}
 
 function ServiceDependency() {
   /**
@@ -115,15 +72,10 @@ function ServiceDependency() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
-  const serviceClick = useRef();
-  const interfaceClick = useRef();
-  const informationBox = useRef();
-
   const intl = useIntl();
 
-  const { exactService, dependency } = useSelector(state => {
+  const { dependency } = useSelector(state => {
     return {
-      exactService: state.Service.exactService,
       dependency: state.Service.dependency,
     };
   });
@@ -203,22 +155,13 @@ function ServiceDependency() {
 
   useEffect(() => {
     const type = searchParams.get('type');
-    const by = searchParams.get('by');
     const target_id = searchParams.get('id');
     if (type === 'service') {
-      setTabValue(0);
-      if (Number(by) === 0) {
-        setTimeout(() => {
-          serviceClick.current.click();
-        }, 400);
-      } else if (Number(by) === 1) {
-
-      }
-    } else if (type === 'interface') {
       setTabValue(1);
-      setTimeout(() => {
-        interfaceClick.current.click();
-      }, 400);
+      setCurrentService(target_id);
+    } else if (type === 'interface') {
+      setTabValue(2);
+      setCurrentInterface(target_id);
     }
   }, [paramChange]);
 
@@ -394,14 +337,14 @@ function ServiceDependency() {
               source: node,
               target: callee_node,
               invoke_info: invoke_info,
-              center: false
+              center: false,
             });
           } else {
             links.push({
               source: callee_node,
               target: node,
               invoke_info: invoke_info,
-              center: false
+              center: false,
             });
           }
           if (path.find((value, index) => value === node) === undefined) {
@@ -432,7 +375,7 @@ function ServiceDependency() {
       } else {
         setInodes(nodes);
         links = links.map((link, index) => {
-          if(link.invoke_info.callee === currentInterface) {
+          if (link.invoke_info.callee === currentInterface) {
             link.center = true;
           }
           return link;
@@ -473,7 +416,6 @@ function ServiceDependency() {
         minHeight: '800px',
         m: '16px',
       }}
-      ref={informationBox}
     >
       <Box
         sx={{
@@ -551,6 +493,7 @@ function ServiceDependency() {
                       setCurrentService(newValue);
                     }}
                     id='positive_service_autocomplete'
+                    noOptionsText="无可选服务"
                     options={Object.keys(positiveServices)}
                     filterOptions={(options, params) => {
                       const { inputValue } = params;
@@ -637,15 +580,6 @@ function ServiceDependency() {
                   )}
                 </Box>
               </Box>
-              <Box>
-                <Stack direction='column' spacing={1}>
-                  {clickedLink !== null ? (
-                    <InvokeInfoBlock data={clickedLink} />
-                  ) : (
-                    <></>
-                  )}
-                </Stack>
-              </Box>
             </StyledTabPanel>
             <StyledTabPanel value={2}>
               <Box
@@ -669,6 +603,7 @@ function ServiceDependency() {
                       setCurrentInterface(newValue);
                     }}
                     id='positive_interface_autocomplete'
+                    noOptionsText="无可选接口"
                     options={Object.keys(positiveInterfaces)}
                     filterOptions={(options, params) => {
                       const { inputValue } = params;
@@ -755,14 +690,6 @@ function ServiceDependency() {
                     </Box>
                   )}
                 </Box>
-              </Box>
-
-              <Box>
-                {clickedLink !== null ? (
-                  <InvokeInfoBlock data={clickedLink}/>
-                ) : (
-                  <></>
-                )}
               </Box>
             </StyledTabPanel>
           </Tabs>
