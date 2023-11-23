@@ -28,6 +28,12 @@ import {
   UPDATE_GROUP_EDIT_INDEX,
   measure,
 } from '../../../../actions/applicationAction';
+import {
+  CONSTANT_TIMER,
+  UNIFORM_RANDOM_TIMER,
+  POISSON_RANDOM_TIMER,
+  GAUSSIAN_RANDOM_TIMER,
+} from './ThreadGroupProgress/Timer';
 
 const style = {
   position: 'absolute',
@@ -46,27 +52,56 @@ const totalGroupEditStage = 4;
 const composeTestParams = testPlan => {
   testPlan.threadGroups = testPlan.threadGroups.map((group, index) => {
     const timerList = group.timer.map((singleTimer, index) => {
-      return {
-        name: singleTimer.id,
-        threadDelay: singleTimer.threadDelay,
-        deviation: singleTimer.deviation,
-        constantDelayOffset: singleTimer.constantDelayOffset,
-        lambda: singleTimer.lambda,
-        randomDelayMaximum: singleTimer.randomDelayMaximum,
-      };
+      if (singleTimer.id === CONSTANT_TIMER) {
+        return {
+          name: singleTimer.id,
+          threadDelay: singleTimer.threadDelay,
+          comment: '',
+        };
+      } else if (singleTimer.id === UNIFORM_RANDOM_TIMER) {
+        return {
+          name: singleTimer.id,
+          constantDelayOffset: singleTimer.constantDelayOffset,
+          randomDelayMaximum: singleTimer.randomDelayMaximum,
+          comment: '',
+        };
+      } else if (singleTimer.id === POISSON_RANDOM_TIMER) {
+        return {
+          name: singleTimer.id,
+          constantDelayOffset: singleTimer.constantDelayOffset,
+          lambda: singleTimer.lambda,
+          comment: '',
+        };
+      } else if (singleTimer.id === GAUSSIAN_RANDOM_TIMER) {
+        return {
+          name: singleTimer.id,
+          deviation: singleTimer.deviation,
+          constantDelayOffset: singleTimer.constantDelayOffset,
+          comment: '',
+        };
+      } else {
+        return {};
+      }
     });
-    let headerManager = {}
+    let headerManager = {};
     group.requestHeader.forEach((header, index) => {
       headerManager[header.name] = header.value;
     });
+    let httpArguments = {};
+    group.requestParameters.forEach((parameter, index) => {
+      httpArguments[parameter.name] = parameter.value;
+    })
     return {
       threadGroupName: group.groupName,
       threadNum: group.numThreads,
       rampUp: group.rampTime,
+      scheduler: group.scheduler,
+      duration: group.duration,
+      delay: group.delay,
       // 如何确定是否loop？
       loopControllerVO: {
-        loopControllerName: 'loop controller',
         loopNum: group.loops,
+        continueForerever: group.loopsContinueForever,
       },
       httpSamplerProxyVO: {
         name: group.requestDefaultName,
@@ -75,20 +110,24 @@ const composeTestParams = testPlan => {
         path: group.httpRequestPath,
         port: group.webServerPort,
         method: group.httpRequestMethod,
-        // request parameters??
         body: group.requestBodyData,
         useKeepAlive: 'true',
         followRedirects: 'true',
+        arguments: httpArguments
       },
       headerManagerVO: {
         headerManagerName: 'header manager',
         headerList: headerManager,
       },
-      timerList: timerList
+      timerList: timerList,
     };
   });
   return {
     testPlanName: testPlan.planName,
+    serialized: testPlan.serializeThreadgroups,
+    functionalMode: testPlan.functionalMode,
+    tearDown: testPlan.tearDownOnShutdown,
+    comment: testPlan.planComment,
     threadGroupList: testPlan.threadGroups,
   };
 };
@@ -293,6 +332,7 @@ export function TestingProgress(props) {
         setShowError(true);
       } else {
         setShowError(false);
+        
         const testPlanData = composeTestParams({
           planName: planName,
           planComment: planComment,
@@ -300,8 +340,9 @@ export function TestingProgress(props) {
           tearDownOnShutdown: tearDownOnShutdown,
           serializeThreadgroups: serializeThreadgroups,
           threadGroups: threadGroups,
-        })
-        dispatch(measure(testPlanData));
+        });
+        console.log(testPlanData);
+        // dispatch(measure(testPlanData));
         handleConfirmClick();
         setCurrentStage(1);
         dispatch({ type: RESET_PLAN });
