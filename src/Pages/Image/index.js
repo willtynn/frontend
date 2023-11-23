@@ -11,9 +11,9 @@ import {
   Typography,
   Tooltip,
   TableBody,
-  Stack, IconButton,
+  Stack, IconButton, TextField,
 } from '@mui/material';
-// import Task from '@/assets/Task.svg';
+import React from 'react';
 import ServiceQuery from '@/assets/ServiceQuery.svg';
 import { useDispatch, useSelector } from 'react-redux';
 import { getImageList, deleteImage } from '../../actions/imageAction';
@@ -23,8 +23,10 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import {EclipseTransparentButton, KubeConfirmButton} from "../../components/Button";
 import VisibilityIcon from "@mui/icons-material/Visibility";
 import RefreshIcon from "@mui/icons-material/Refresh";
-import {ChipTextField} from "../../components/Input";
+import {ChipTextField, StyledAutocomplete} from "../../components/Input";
 import SearchIcon from "@mui/icons-material/Search";
+import { fontFamily } from '@/utils/commonUtils';
+import {StyledTableFooter} from "../../components/DisplayTable";
 
 function TextLabel(props) {
   const { text } = props;
@@ -69,6 +71,9 @@ export default function ImagesList(props) {
   const [checkAll, setCheckAll] = useState(false);
   const [searchValue, setSearchValue] = useState('');
   const [searchList, setSearchList] = useState([]);
+  const [imagePage, setImagePage] = useState(0);
+  const [selectedImageIndex, setSelectedImageIndex] = useState(0);
+  const [clusterSelected, setClusterSelected] = useState('ices04');
   const dispatch = useDispatch();
 
   const { imageList } = useSelector(state => {
@@ -78,17 +83,43 @@ export default function ImagesList(props) {
   });
 
   const rows = imageList;
+  const imageNumPerPage = 10;
 
-  // service/query左侧表格表头
+  const clearPage = () => {
+    setSelectedImageIndex(-1);
+    setImagePage(1);
+  };
+
+  const filtering = () => {
+    let tmpData = JSON.parse(JSON.stringify(imageList));
+    searchList.forEach((value, _) => {
+      tmpData = tmpData.filter((tableRow, _) => {
+        return tableRow.imageName.includes(value);
+      });
+    });
+    return tmpData;
+  };
+
+  const visibleRows = React.useMemo(() => {
+    if (!imageList || imageList.length === 0) {
+      return [];
+    }
+    const tmpData = filtering();
+    const tmp = (imagePage - 1) * imageNumPerPage;
+    return tmpData.slice(tmp, tmp + imageNumPerPage);
+  }, [imageList, imagePage, searchList]);
+
   const headFirstRow = [
     createRow('name', '镜像名', false, '150px', '170px', true, 1, 1, 'left'),
-    createRow('size', '大小', false, '120px', '130px', true, 1, 1, 'center'),
-    createRow('cluster', '所在集群', false, '120px', '130px', true, 1, 1, 'center'),
+    createRow('version', '版本', false, '100px', '100px', true, 1, 1, 'center'),
+    createRow('size', '大小（Bytes）', false, '120px', '130px', true, 1, 1, 'center'),
+    createRow('cluster', '所在节点', false, '120px', '130px', true, 1, 1, 'center'),
     createRow('delete', '操作', false, '120px', '130px', true, 1, 1, 'center'),
   ];
 
   useEffect(() => {
-    dispatch(getImageList());
+    dispatch(getImageList(clusterSelected));
+    clearPage();
   }, []);
 
   useEffect(() => {
@@ -108,10 +139,9 @@ export default function ImagesList(props) {
     }
   }, [imageList]);
 
-  const deleteClick = name => {
-    dispatch(deleteImage(name));
-    dispatch(getImageList());
-    return ''
+  const deleteClick = (name, cluster, version) => {
+    dispatch(deleteImage(name, cluster, version));
+    dispatch(getImageList(cluster));
   }
   const isDuplicate = () => {
     return false;
@@ -123,6 +153,12 @@ export default function ImagesList(props) {
     }, 300);
   };
 
+  const handleChangePage = (_, newPage) => {
+    if (imagePage !== newPage) {
+      setSelectedImageIndex(-1);
+      setImagePage(newPage);
+    }
+  };
   return (
     <>
       <Box
@@ -187,6 +223,31 @@ export default function ImagesList(props) {
                 spacing={2}
                 sx={{ width: 'calc(100% - 100px)' }}
               >
+                <StyledAutocomplete
+                  height='32px'
+                  padding='6px 5px 5px 12px'
+                  value={clusterSelected}
+                  onChange={(event, newValue) => {
+                    setClusterSelected(newValue);
+                    dispatch(getImageList(newValue));
+                  }}
+                  id='image_table_autocomplete'
+                  options={['ices04','icespve01', 'icespve02', 'icespve03']}
+                  sx={{
+                    width: 300,
+                    color: '#36435c',
+                    fontFamily: fontFamily,
+                    fontSize: '12px',
+                    fontWeight: 600,
+                    fontStyle: 'normal',
+                    fontStretch: 'normal',
+                    lineHeight: 1.67,
+                    letterSpacing: 'normal',
+                  }}
+                  renderInput={params => (
+                    <TextField {...params} placeholder='全部节点' />
+                  )}
+                />
                 {/* 搜索栏 */}
                 <ChipTextField
                   value={searchValue}
@@ -225,7 +286,12 @@ export default function ImagesList(props) {
                     },
                     height: "32px"
                   }}
-                  // onClick={handleRefresh}
+                  onClick={() => {
+                    clearPage();
+                    if(clusterSelected !== '') {
+                      dispatch(getImageList(clusterSelected));
+                    }
+                  }}
                 >
                   <RefreshIcon />
                 </EclipseTransparentButton>
@@ -261,7 +327,7 @@ export default function ImagesList(props) {
             />
 
             <TableBody>
-              {rows.map((row) => (
+              {visibleRows.map((row) => (
                     <TableRow
                       key={row.Name}
                       aria-checked={false}
@@ -313,19 +379,24 @@ export default function ImagesList(props) {
                             }}
                             onClick={() => {}}
                           >
-                            {row.Name}
+                            {row.imageName}
                           </Box>
                         </Stack>
                       </StyledTableBodyCell>
 
-                      {/* 大小 */}
+                      {/* 版本 */}
                       <StyledTableBodyCell align='center'>
-                        {row.Target.size}
+                        {row.imageVersion === ''? 'None': row.imageVersion}
                       </StyledTableBodyCell>
 
-                      {/* 所在集群 */}
+                      {/* 大小 */}
                       <StyledTableBodyCell align='center'>
-                        /
+                        {row.imageSize}
+                      </StyledTableBodyCell>
+
+                      {/* 所在节点 */}
+                      <StyledTableBodyCell align='center'>
+                        {row.node}
                       </StyledTableBodyCell>
 
                       {/* 操作 */}
@@ -333,7 +404,7 @@ export default function ImagesList(props) {
                         align='center'
                       >
                         <IconButton
-                          onClick={() => {deleteClick(row.Name)}}
+                          onClick={() => {deleteClick(row.imageName, row.node, row.imageVersion)}}
                           aria-label="delete">
                           <DeleteIcon
                             size='small'
@@ -346,6 +417,17 @@ export default function ImagesList(props) {
             </TableBody>
           </Table>
         </StyledTableContainer>
+        <StyledTableFooter
+          pageSize={imageNumPerPage}
+          pageNum={imagePage}
+          count={imageList ? imageList.length : 0}
+          handlePageChange={handleChangePage}
+          sx={{
+            width: '100%',
+            pt: '10px',
+            pb: '10px',
+          }}
+        />
       </Box>
     </>
   );
