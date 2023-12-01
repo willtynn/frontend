@@ -275,7 +275,7 @@ export default function StressTesting() {
   const searchSelectOpen = Boolean(searchSelectAnchorEl);
   const [searchBy, setSearchBy] = useState(['名称', '状态']);
 
-  const [colDisplay, setColDisplay] = useState([true, true, true, true]);
+  const [colDisplay, setColDisplay] = useState([true, true, true, true, true]);
   const [customContentAnchorEl, setCustomContentAnchorEl] = useState(null);
   const customContentOpen = Boolean(customContentAnchorEl);
 
@@ -576,8 +576,7 @@ export default function StressTesting() {
           <Stack
             direction='column'
             sx={{
-              border: '1px solid #FAFAFA',
-              width: '100px',
+              width: '150px',
               borderRadius: '5px',
               padding: '8px',
               bgcolor: '#242e42',
@@ -610,7 +609,6 @@ export default function StressTesting() {
                     sx={{
                       color: '#FFFFFF',
                       cursor: 'pointer',
-                      // textAlign: 'center',
                       height: '30px',
                       lineHeight: '30px',
                       fontWeight: 600,
