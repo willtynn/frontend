@@ -44,6 +44,7 @@ const initState = {
 
   pageNum: 1,
   pageSize: 10,
+  currentPlan: null,
 };
 
 export default function ApplicationReducer(state = initState, action) {
@@ -279,6 +280,12 @@ export default function ApplicationReducer(state = initState, action) {
       return {
         ...state,
         pageSize: data
+      }
+
+    case actions.UPDATE_CURRENT_PLAN:
+      return {
+        ...state,
+        currentPlan: data
       }
 
     default:

@@ -15,6 +15,7 @@ import { ServiceDetail } from '../Pages/Service/detail';
 import { RouteTraceInfoPage } from '../Pages/Route/trace/RouteTraceInfoPage';
 import StressTesting from '../Pages/Application/StressTesting';
 import ImagesList from '../Pages/Image';
+import { TestPlanDetail } from '../Pages/Application/StressTesting/Detail';
 
 export default function MyRoute() {
   return (
@@ -24,6 +25,7 @@ export default function MyRoute() {
       {/* 不存在导航栏 */}
       <Route path='detail/' element={<HeadBar />}>
         <Route path='service/:serviceId' element={<ServiceDetail />}/>
+        <Route path='testplan/:testPlanId' element={<TestPlanDetail />}/>
         <Route path='trace/:start/:end/:traceId' element={<RouteTraceInfoPage />}/>
       </Route>
 

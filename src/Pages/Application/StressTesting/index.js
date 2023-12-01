@@ -754,8 +754,8 @@ export default function StressTesting() {
                       >
                         <Stack alignItems='center' direction='row' spacing={2}>
                           <Task />
-                          <span
-                            style={{
+                          <Box
+                            sx={{
                               height: '30px',
                               lineHeight: '30px',
                               fontWeight: 600,
@@ -769,7 +769,7 @@ export default function StressTesting() {
                             }}
                           >
                             {row.testPlanName}
-                          </span>
+                          </Box>
                         </Stack>
                       </StyledTableBodyCell>
 
