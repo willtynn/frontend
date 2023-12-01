@@ -48,6 +48,9 @@ export const RESET_PLAN = 'RESET_PLAN';
 export const FILL_GROUP_FORM = 'FILL_GROUP_FORM';
 export const UPDATE_GROUP_EDIT_INDEX = 'UPDATE_GROUP_EDIT_INDEX';
 
+export const UPDATE_TEST_PLAN_PAGE_SIZE = "UPDATE_TEST_PLAN_PAGE_SIZE";
+export const UPDATE_TEST_PLAN_PAGE_NUM = "UPDATE_TEST_PLAN_PAGE_NUM";
+
 const baseURLLink = 'http://192.168.1.104:32454';
 
 const axios_instance = axios.create({

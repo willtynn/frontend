@@ -41,6 +41,9 @@ const initState = {
   groupEdit: false,
   groupEditIndex: null,
   currentGroupEditStage: 1,
+
+  pageNum: 1,
+  pageSize: 10,
 };
 
 export default function ApplicationReducer(state = initState, action) {
@@ -265,6 +268,19 @@ export default function ApplicationReducer(state = initState, action) {
         ...state,
         groupEditIndex: data
       }
+
+    case actions.UPDATE_TEST_PLAN_PAGE_NUM:
+      return {
+        ...state,
+        pageNum: data
+      }
+    
+    case actions.UPDATE_TEST_PLAN_PAGE_SIZE:
+      return {
+        ...state,
+        pageSize: data
+      }
+
     default:
       return state;
   }
