@@ -28,12 +28,12 @@ const data = {
       },
       httpSamplerProxyVO: {
         name: "HTTP请求默认值",
-        protocol: "fff",
-        server: "wee",
-        path: "12545",
-        port: "102",
-        method: "POST",
-        body: "",
+        protocol: "HTTP",
+        server: "192.168.1.104:14447",
+        path: "/getSomething",
+        port: "1020",
+        method: "GET",
+        body: "'setSearchBy' is assigned a value but never used",
         useKeepAlive: "true",
         followRedirects: "true",
         arguments: {
