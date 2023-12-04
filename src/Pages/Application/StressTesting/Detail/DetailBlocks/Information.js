@@ -10,7 +10,7 @@ import {
   TableBody,
   TableRow,
   TableCell,
-  TableHead
+  TableHead,
 } from '@mui/material';
 import {
   KubeConfirmButton,
@@ -25,6 +25,8 @@ import {
   StyledTableRowCell,
   StyledTableContainer,
 } from '@/components/DisplayTable';
+import Question from '@/assets/Question.svg';
+import { NormalBoldFont, SmallLightFont } from '@/components/Fonts';
 
 const labelStyle = {
   fontSize: '12px',
@@ -93,6 +95,31 @@ export function Information() {
   const requestHeadHeadRow = [
     createRow('key', '键', false, '70px', '70px', true, 'center'),
     createRow('value', '值', false, '70px', '70px', true, 'center'),
+  ];
+
+  const timerHeadRow = [
+    createRow('name', '名称', false, '70px', '70px', true, 'center'),
+    createRow('threadDelay', '线程延迟', false, '70px', '70px', true, 'center'),
+    createRow(
+      'constantDelayOffset',
+      '恒定延迟偏移',
+      false,
+      '70px',
+      '70px',
+      true,
+      'center'
+    ),
+    createRow(
+      'randomDelayMaximum',
+      '延迟最大值',
+      false,
+      '70px',
+      '70px',
+      true,
+      'center'
+    ),
+    createRow('deviation', 'deviation', false, '70px', '70px', true, 'center'),
+    createRow('lambda', 'lambda', false, '70px', '70px', true, 'center'),
   ];
 
   useEffect(() => {
@@ -205,6 +232,7 @@ export function Information() {
             boxShadow: '0 6px 16px 0 rgba(33,43,54,.2)',
           },
         }}
+        spacing={2}
       >
         {currentThreadGroup !== null ? (
           <>
@@ -475,7 +503,7 @@ export function Information() {
                   <Stack direction='row' spacing={3}>
                     <Box sx={labelStyle}>请求头</Box>
                     <Box sx={valueStyle}>
-                    <StyledTableContainer sx={{ maxHeight: '680px' }}>
+                      <StyledTableContainer sx={{ maxHeight: '680px' }}>
                         <Table
                           stickyHeader
                           size='small'
@@ -574,7 +602,147 @@ export function Information() {
                 direction='column'
                 spacing={1.5}
               >
-                hah
+                {currentPlan &&
+                currentPlan.threadGroupList[currentThreadGroup] ? (
+                  <StyledTableContainer sx={{ maxHeight: '680px' }}>
+                    <Table
+                      stickyHeader
+                      size='small'
+                      sx={{
+                        tableLayout: 'auto',
+                        minWidth: '100%',
+                      }}
+                    >
+                      <TableHead>
+                        <TableRow>
+                          {timerHeadRow.map((item, index) => (
+                            <StyledTableRowCell
+                              key={item.id}
+                              align={item.align}
+                              sx={{
+                                maxWidth: item.maxWidth,
+                                minWidth: item.minWidth,
+                              }}
+                            >
+                              {item.label}
+                            </StyledTableRowCell>
+                          ))}
+                        </TableRow>
+                      </TableHead>
+                      {currentPlan.threadGroupList[currentThreadGroup].timerList
+                        .length > 0 ? (
+                        <TableBody>
+                          {currentPlan.threadGroupList[currentThreadGroup].timerList.map((timer, index) => (
+                            <TableRow
+                              key={timer.name + '' + index}
+                              aria-checked={false}
+                              sx={{
+                                '&:last-child td, &:last-child th': {
+                                  border: 0,
+                                },
+                                fontWeight: 600,
+                                maxWidth: '110px',
+                                position: 'sticky',
+                                left: 0,
+                                zIndex: 6,
+                                backgroundColor: '#FFF !important',
+                              }}
+                              selected={false}
+                            >
+                              <StyledTableBodyCell
+                                align={timerHeadRow[0].align}
+                                sx={{
+                                  maxWidth: timerHeadRow[0].maxWidth,
+                                  minWidth: timerHeadRow[0].minWidth,
+                                }}
+                              >
+                                {timer.name}
+                              </StyledTableBodyCell>
+                              <StyledTableBodyCell
+                                align={timerHeadRow[1].align}
+                                sx={{
+                                  maxWidth: timerHeadRow[1].maxWidth,
+                                  minWidth: timerHeadRow[1].minWidth,
+                                }}
+                              >
+                                {
+                                  timer.threadDelay ?? "/"
+                                }
+                              </StyledTableBodyCell>
+                              <StyledTableBodyCell
+                                align={timerHeadRow[2].align}
+                                sx={{
+                                  maxWidth: timerHeadRow[2].maxWidth,
+                                  minWidth: timerHeadRow[2].minWidth,
+                                }}
+                              >
+                                {
+                                  timer.constantDelayOffset ?? "/"
+                                }
+                              </StyledTableBodyCell>
+                              <StyledTableBodyCell
+                                align={timerHeadRow[3].align}
+                                sx={{
+                                  maxWidth: timerHeadRow[3].maxWidth,
+                                  minWidth: timerHeadRow[3].minWidth,
+                                }}
+                              >
+                                {
+                                  timer.randomDelayMaximum ?? "/"
+                                }
+                              </StyledTableBodyCell>
+                              <StyledTableBodyCell
+                                align={timerHeadRow[4].align}
+                                sx={{
+                                  maxWidth: timerHeadRow[4].maxWidth,
+                                  minWidth: timerHeadRow[4].minWidth,
+                                }}
+                              >
+                                {
+                                  timer.deviation ?? "/"
+                                }
+                              </StyledTableBodyCell>
+                              <StyledTableBodyCell
+                                align={timerHeadRow[5].align}
+                                sx={{
+                                  maxWidth: timerHeadRow[5].maxWidth,
+                                  minWidth: timerHeadRow[5].minWidth,
+                                }}
+                              >
+                                {
+                                  timer.lambda ?? "/"
+                                }
+                              </StyledTableBodyCell>
+                            </TableRow>
+                          ))}
+                        </TableBody>
+                      ) : (
+                        <TableBody>
+                          <TableRow style={{ height: '220px' }}>
+                            <TableCell
+                              colSpan={6}
+                              sx={{
+                                textAlign: 'center',
+                                fontSize: '20px',
+                                fontFamily: fontFamily,
+                                fontStyle: 'normal',
+                              }}
+                            >
+                              <Question />
+                              <NormalBoldFont>无数据</NormalBoldFont>
+
+                              <SmallLightFont>
+                                您可以尝试刷新数据
+                              </SmallLightFont>
+                            </TableCell>
+                          </TableRow>
+                        </TableBody>
+                      )}
+                    </Table>
+                  </StyledTableContainer>
+                ) : (
+                  <></>
+                )}
               </Stack>
             </Stack>
           </>

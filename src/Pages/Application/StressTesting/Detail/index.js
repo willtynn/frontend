@@ -59,6 +59,51 @@ const data = {
           comment: ""
         }
       ]
+    },
+    {
+      threadGroupName: "Thread Group2",
+      threadNum: 1,
+      rampUp: 1,
+      scheduler: false,
+      duration: null,
+      delay: null,
+      loopControllerVO: {
+        loopNum: 1,
+        continueForerever: false
+      },
+      httpSamplerProxyVO: {
+        name: "HTTP请求默认值",
+        protocol: "HTTP",
+        server: "192.168.1.104:14447",
+        path: "/getSomething",
+        port: "1020",
+        method: "GET",
+        body: "'setSearchBy' is assigned a value but never used",
+        useKeepAlive: "true",
+        followRedirects: "true",
+        arguments: {
+          dd: "ddwr"
+        }
+      },
+      headerManagerVO: {
+        headerManagerName: "header manager",
+        headerList: {
+          dss: "www"
+        }
+      },
+      timerList: [
+        {
+          name: "constant",
+          threadDelay: 300,
+          comment: ""
+        },
+        {
+          name: "uniformRandom",
+          constantDelayOffset: 0,
+          randomDelayMaximum: 100,
+          comment: ""
+        }
+      ]
     }
   ]
 }
