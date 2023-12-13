@@ -46,7 +46,8 @@ const initState = {
   pageSize: 10,
   currentPlan: null,
   testPlans: [],
-  currrentTestResults: []
+  currrentTestResults: [],
+  currentResult: null,
 };
 
 export default function ApplicationReducer(state = initState, action) {
@@ -299,6 +300,11 @@ export default function ApplicationReducer(state = initState, action) {
       return {
         ...state,
         testPlans: data
+      }
+    case actions.UPDATE_CURRENT_TEST_RESULT:
+      return {
+        ...state,
+        currentResult: data
       }
 
     default:

@@ -55,6 +55,7 @@ export const UPDATE_CURRENT_PLAN = 'UPDATE_CURRENT_PLAN';
 
 export const UPDATE_CURRENT_TEST_RESULTS = 'UPDATE_CURRENT_TEST_RESULTS';
 export const UPDATE_TEST_PLANS = 'UPDATE_TEST_PLANS';
+export const UPDATE_CURRENT_TEST_RESULT = "UPDATE_CURRENT_TEST_RESULT";
 
 const baseURLLink = 'http://192.168.1.104:14447';
 
@@ -65,6 +66,53 @@ const axios_instance = axios.create({
   crossDomain: true,
 });
 
+export function getTestResultByResultId(testResultId) {
+  const url = '/pressureMeasurement/getTestResultByResultId';
+  return async dispatch => {
+    try {
+      const res = await axios_instance.get(
+        url,
+        {
+          params: {
+            testResultId: testResultId
+          },
+        },
+        {
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        }
+      );
+      if (res.data.code === 200 || res.data.code === 0) {
+        dispatch({ type: UPDATE_CURRENT_TEST_RESULT, data: res.data.data });
+      } else if (res.data.code === 1) {
+        dispatch(
+          setSnackbarMessageAndOpen(
+            'common.errorMessage',
+            { msg: res.data.message },
+            SEVERITIES.warning
+          )
+        );
+      } else {
+        dispatch(
+          setSnackbarMessageAndOpen(
+            'stressTesting.resultsSearchError',
+            {},
+            SEVERITIES.warning
+          )
+        );
+      }
+    } catch {
+      dispatch(
+        setSnackbarMessageAndOpen(
+          'stressTesting.resultsSearchError',
+          {},
+          SEVERITIES.warning
+        )
+      );
+    }
+  };
+}
 
 export function getTestResultsByID(testPlanId) {
   const url = '/pressureMeasurement/getTestResultsByID';
@@ -96,7 +144,7 @@ export function getTestResultsByID(testPlanId) {
       } else {
         dispatch(
           setSnackbarMessageAndOpen(
-            'stressTesting.planSearchError',
+            'stressTesting.resultsSearchError',
             {},
             SEVERITIES.warning
           )
@@ -105,7 +153,7 @@ export function getTestResultsByID(testPlanId) {
     } catch {
       dispatch(
         setSnackbarMessageAndOpen(
-          'stressTesting.planSearchError',
+          'stressTesting.resultsSearchError',
           {},
           SEVERITIES.warning
         )

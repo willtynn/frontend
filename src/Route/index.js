@@ -16,6 +16,7 @@ import { RouteTraceInfoPage } from '../Pages/Route/trace/RouteTraceInfoPage';
 import StressTesting from '../Pages/Application/StressTesting';
 import ImagesList from '../Pages/Image';
 import { TestPlanDetail } from '../Pages/Application/StressTesting/Detail';
+import { ResultDetail } from '../Pages/Application/StressTesting/ResultDetail';
 
 export default function MyRoute() {
   return (
@@ -26,6 +27,7 @@ export default function MyRoute() {
       <Route path='detail/' element={<HeadBar />}>
         <Route path='service/:serviceId' element={<ServiceDetail />}/>
         <Route path='testplan/:testPlanId' element={<TestPlanDetail />}/>
+        <Route path='planresult/:testResultId' element={<ResultDetail />}/>
         <Route path='trace/:start/:end/:traceId' element={<RouteTraceInfoPage />}/>
       </Route>
 

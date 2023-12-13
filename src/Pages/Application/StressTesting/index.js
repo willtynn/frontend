@@ -246,6 +246,7 @@ export default function StressTesting() {
 
   const filtering = () => {
     let tmpData = JSON.parse(JSON.stringify(tableData));
+    setCount(tableData.length);
     searchList.forEach((value, _) => {
       if (value.startsWith('状态:')) {
         tmpData = tmpData.filter((tableRow, _) => {
