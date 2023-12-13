@@ -100,3 +100,11 @@ export const decodeInterfaceSymbol = (symbol) => {
   }
   return sub_symbol_arr
 }
+
+export const getBoolString = str => {
+  if(str === false) {
+    return "否";
+  } else {
+    return "是"
+  }
+}

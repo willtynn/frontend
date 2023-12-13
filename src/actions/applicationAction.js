@@ -48,12 +48,15 @@ export const RESET_PLAN = 'RESET_PLAN';
 export const FILL_GROUP_FORM = 'FILL_GROUP_FORM';
 export const UPDATE_GROUP_EDIT_INDEX = 'UPDATE_GROUP_EDIT_INDEX';
 
-export const UPDATE_TEST_PLAN_PAGE_SIZE = "UPDATE_TEST_PLAN_PAGE_SIZE";
-export const UPDATE_TEST_PLAN_PAGE_NUM = "UPDATE_TEST_PLAN_PAGE_NUM";
+export const UPDATE_TEST_PLAN_PAGE_SIZE = 'UPDATE_TEST_PLAN_PAGE_SIZE';
+export const UPDATE_TEST_PLAN_PAGE_NUM = 'UPDATE_TEST_PLAN_PAGE_NUM';
 
-export const UPDATE_CURRENT_PLAN = "UPDATE_CURRENT_PLAN";
+export const UPDATE_CURRENT_PLAN = 'UPDATE_CURRENT_PLAN';
 
-const baseURLLink = 'http://192.168.1.104:32454';
+export const UPDATE_CURRENT_TEST_RESULTS = 'UPDATE_CURRENT_TEST_RESULTS';
+export const UPDATE_TEST_PLANS = 'UPDATE_TEST_PLANS';
+
+const baseURLLink = 'http://192.168.1.104:14447';
 
 const axios_instance = axios.create({
   baseURL: baseURLLink,
@@ -61,6 +64,152 @@ const axios_instance = axios.create({
   // withCredentials: isCookie,
   crossDomain: true,
 });
+
+export function getTestPlanById(testPlanId) {
+  const url = '/pressureMeasurement/getTestPlanById';
+  return async dispatch => {
+    try {
+      const res = await axios_instance.get(
+        url,
+        {
+          params: {
+            testPlanId: testPlanId
+          },
+        },
+        {
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        }
+      );
+      if (res.data.code === 200 || res.data.code === 0) {
+        dispatch({ type: UPDATE_CURRENT_PLAN, data: res.data.data });
+      } else if (res.data.code === 1) {
+        dispatch(
+          setSnackbarMessageAndOpen(
+            'common.errorMessage',
+            { msg: res.data.message },
+            SEVERITIES.warning
+          )
+        );
+      } else {
+        dispatch(
+          setSnackbarMessageAndOpen(
+            'stressTesting.planSearchError',
+            {},
+            SEVERITIES.warning
+          )
+        );
+      }
+    } catch {
+      dispatch(
+        setSnackbarMessageAndOpen(
+          'stressTesting.planSearchError',
+          {},
+          SEVERITIES.warning
+        )
+      );
+    }
+  };
+}
+
+export function getTestPlans() {
+  const url = '/pressureMeasurement/testPlans';
+  return async dispatch => {
+    try {
+      const res = await axios_instance.get(
+        url,
+        {},
+        {
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        }
+      );
+      if (res.data.code === 200 || res.data.code === 0) {
+        dispatch({ type: UPDATE_TEST_PLANS, data: res.data.data });
+      } else if (res.data.code === 1) {
+        // alert(res.data.message)
+        dispatch(
+          setSnackbarMessageAndOpen(
+            'common.errorMessage',
+            { msg: res.data.message },
+            SEVERITIES.warning
+          )
+        );
+      } else {
+        dispatch(
+          setSnackbarMessageAndOpen(
+            'stressTesting.planSearchError',
+            {},
+            SEVERITIES.warning
+          )
+        );
+      }
+    } catch {
+      dispatch(
+        setSnackbarMessageAndOpen(
+          'stressTesting.planSearchError',
+          {},
+          SEVERITIES.warning
+        )
+      );
+    }
+  };
+}
+
+export function createTestPlan(testPlan) {
+  const url = '/pressureMeasurement/createTestPlan';
+  return async dispatch => {
+    try {
+      const res = await axios_instance.post(
+        url,
+        {
+          ...testPlan,
+        },
+        {
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        }
+      );
+      if (res.data.code === 200 || res.data.code === 0) {
+        dispatch(
+          setSnackbarMessageAndOpen(
+            'stressTesting.planCreatedMsg',
+            {},
+            SEVERITIES.success
+          )
+        );
+      } else if (res.data.code === 1) {
+        // alert(res.data.message)
+        dispatch(
+          setSnackbarMessageAndOpen(
+            'common.errorMessage',
+            { msg: res.data.message },
+            SEVERITIES.warning
+          )
+        );
+      } else {
+        dispatch(
+          setSnackbarMessageAndOpen(
+            'stressTesting.planCreationFailedMsg',
+            {},
+            SEVERITIES.warning
+          )
+        );
+      }
+    } catch {
+      dispatch(
+        setSnackbarMessageAndOpen(
+          'stressTesting.planCreationFailedMsg',
+          {},
+          SEVERITIES.warning
+        )
+      );
+    }
+  };
+}
 
 export function measure(testPlan) {
   const url = '/pressureMeasurement/measure';

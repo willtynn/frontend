@@ -101,6 +101,7 @@ export const messages = {
     httpRequestDescription: "对HTTP请求进行设置。",
     timerAddDescription: "自定义定时器的设置以创建定时器。",
     planCreatedMsg: "成功创建测试计划！",
-    planCreationFailedMsg: "测试计划创建失败，请重试。"
+    planCreationFailedMsg: "测试计划创建失败，请重试。",
+    planSearchError: "无法获取测试计划，请刷新页面重试。"
   },
 };

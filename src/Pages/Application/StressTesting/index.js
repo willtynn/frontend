@@ -51,7 +51,8 @@ import {
   RESET_GROUP,
   RESET_PLAN,
   UPDATE_TEST_PLAN_PAGE_NUM,
-  UPDATE_TEST_PLAN_PAGE_SIZE
+  UPDATE_TEST_PLAN_PAGE_SIZE,
+  getTestPlans
 } from '../../../actions/applicationAction';
 
 export const RUNNING = 'Running';
@@ -281,12 +282,12 @@ export default function StressTesting() {
 
   const [searchList, setSearchList] = useState([]);
 
-  const { pageSize, pageNum } =
+  const { pageSize, pageNum, testPlans } =
     useSelector(state => {
       return {
         pageSize: state.Application.pageSize,
         pageNum: state.Application.pageNum,
-
+        testPlans: state.Application.testPlans
       };
     });
 
@@ -294,8 +295,12 @@ export default function StressTesting() {
   const navigate = useNavigate();
 
   useEffect(() => {
-    setTableData(data);
+    dispatch(getTestPlans());
   }, []);
+
+  useEffect(() => {
+    setTableData(testPlans);
+  }, [testPlans]);
 
   const headRow = [
     createRow('testPlanName', '测试名称', true, '100px', '100px', true, 'left'),
@@ -765,7 +770,7 @@ export default function StressTesting() {
                               },
                             }}
                             onClick={() => {
-                              navigate(`/detail/testplan/123`);
+                              navigate(`/detail/testplan/${row.id}`);
                             }}
                           >
                             {row.testPlanName}
@@ -799,21 +804,21 @@ export default function StressTesting() {
                         align={'center'}
                         sx={{ display: headRow[2].show ? 'table-cell' : 'none' }}
                       >
-                        {row.serialized}
+                        {row.serialized ? "是" : "否"}
                       </StyledTableBodyCell>
 
                       <StyledTableBodyCell
                         align={'center'}
                         sx={{ display: headRow[3].show ? 'table-cell' : 'none' }}
                       >
-                        {row.functionalMode}
+                        {row.functionalMode ? "是" : "否"}
                       </StyledTableBodyCell>
 
                       <StyledTableBodyCell
                         align={'center'}
                         sx={{ display: headRow[4].show ? 'table-cell' : 'none' }}
                       >
-                        {row.tearDown}
+                        {row.tearDown ? "是" : "否"}
                       </StyledTableBodyCell>
                       <StyledTableBodyCell
                         align={'center'}

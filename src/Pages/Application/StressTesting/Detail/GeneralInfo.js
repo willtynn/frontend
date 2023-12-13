@@ -17,6 +17,7 @@ import NavigateBeforeIcon from '@mui/icons-material/NavigateBefore';
 import { useNavigate, useParams } from 'react-router-dom';
 import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
 import { StyledPopover } from '@/components/Popover';
+import { getBoolString } from '../../../../utils/commonUtils';
 
 
 const labelStyle = {
@@ -72,6 +73,7 @@ export default function GeneralInfo(props) {
   const handleMoreOperation = e => {
     setMoreOperationAnchorEl(e.currentTarget);
   };
+
 
   return (
     <Stack
@@ -175,7 +177,7 @@ export default function GeneralInfo(props) {
           alignItems='center'
         >
           <KubeCancelButton sx={{ height: '32px', width: '96px' }}>
-            编辑信息
+            开始测试
           </KubeCancelButton>
           <KubeCancelButton
             onClick={handleMoreOperation}
@@ -225,19 +227,19 @@ export default function GeneralInfo(props) {
           <Stack direction='row' spacing={0.75}>
             <Box sx={labelStyle}>序列化</Box>
             <Box sx={valueStyle}>
-              {currentPlan !== null ? currentPlan.serialized : ''}
+              {currentPlan !== null ? getBoolString(currentPlan.serialized) : ''}
             </Box>
           </Stack>
           <Stack direction='row' spacing={0.75}>
             <Box sx={labelStyle}>函数模式</Box>
             <Box sx={valueStyle}>
-              {currentPlan !== null ? currentPlan.functionalMode : ''}
+              {currentPlan !== null ? getBoolString(currentPlan.functionalMode) : ''}
             </Box>
           </Stack>
           <Stack direction='row' spacing={0.75}>
             <Box sx={labelStyle}>tear</Box>
             <Box sx={valueStyle}>
-              {currentPlan !== null ? currentPlan.tearDown : ''}
+              {currentPlan !== null ? getBoolString(currentPlan.tearDown) : ''}
             </Box>
           </Stack>
           <Stack direction='row' spacing={0.75}>

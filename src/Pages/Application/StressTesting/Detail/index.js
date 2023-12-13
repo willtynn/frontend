@@ -5,7 +5,7 @@ import { Stack } from '@mui/material';
 import { useParams } from 'react-router';
 import GeneralInfo from './GeneralInfo';
 import DetailInfo from './DetailInfo';
-import { UPDATE_CURRENT_PLAN } from '@/actions/applicationAction';
+import { getTestPlanById } from '@/actions/applicationAction';
 
 const data = {
   testPlanName: "Test Plan",
@@ -113,8 +113,9 @@ export function TestPlanDetail() {
   const dispatch = useDispatch();
 
   useEffect(() => {
-    dispatch({type: UPDATE_CURRENT_PLAN, data: data});
+    dispatch(getTestPlanById(testPlanId));
   }, []);
+
   return (
     <Stack
       direction='row'

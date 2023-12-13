@@ -27,6 +27,7 @@ import {
 } from '@/components/DisplayTable';
 import Question from '@/assets/Question.svg';
 import { NormalBoldFont, SmallLightFont } from '@/components/Fonts';
+import { getBoolString } from '@/utils/commonUtils';
 
 const labelStyle = {
   fontSize: '12px',
@@ -370,8 +371,8 @@ export function Information() {
                   <Box sx={valueStyle}>
                     {currentPlan &&
                     currentPlan.threadGroupList[currentThreadGroup] !== null
-                      ? currentPlan.threadGroupList[currentThreadGroup]
-                          .httpSamplerProxyVO.useKeepAlive
+                      ? getBoolString(currentPlan.threadGroupList[currentThreadGroup]
+                          .httpSamplerProxyVO.useKeepAlive)
                       : ''}
                   </Box>
                 </Stack>
@@ -380,8 +381,8 @@ export function Information() {
                   <Box sx={valueStyle}>
                     {currentPlan &&
                     currentPlan.threadGroupList[currentThreadGroup] !== null
-                      ? currentPlan.threadGroupList[currentThreadGroup]
-                          .httpSamplerProxyVO.followRedirects
+                      ? getBoolString(currentPlan.threadGroupList[currentThreadGroup]
+                          .httpSamplerProxyVO.followRedirects)
                       : ''}
                   </Box>
                 </Stack>
@@ -390,7 +391,7 @@ export function Information() {
                 {currentPlan &&
                 currentPlan.threadGroupList[currentThreadGroup] &&
                 currentPlan.threadGroupList[currentThreadGroup]
-                  .httpSamplerProxyVO.body ? (
+                  .httpSamplerProxyVO ? (
                   <Stack direction='row' spacing={3}>
                     <Box sx={labelStyle}>请求体</Box>
                     <Box sx={valueStyle}>
@@ -407,6 +408,8 @@ export function Information() {
                 {/* 请求参数 */}
                 {currentPlan &&
                 currentPlan.threadGroupList[currentThreadGroup] &&
+                currentPlan.threadGroupList[currentThreadGroup]
+                .httpSamplerProxyVO.arguments &&
                 Object.keys(
                   currentPlan.threadGroupList[currentThreadGroup]
                     .httpSamplerProxyVO.arguments
@@ -496,6 +499,8 @@ export function Information() {
                 {/* 请求头 */}
                 {currentPlan &&
                 currentPlan.threadGroupList[currentThreadGroup] &&
+                currentPlan.threadGroupList[currentThreadGroup]
+                    .headerManagerVO.headerList &&
                 Object.keys(
                   currentPlan.threadGroupList[currentThreadGroup]
                     .headerManagerVO.headerList
@@ -629,12 +634,12 @@ export function Information() {
                           ))}
                         </TableRow>
                       </TableHead>
-                      {currentPlan.threadGroupList[currentThreadGroup].timerList
+                      {currentPlan.threadGroupList[currentThreadGroup].timers && currentPlan.threadGroupList[currentThreadGroup].timers
                         .length > 0 ? (
                         <TableBody>
-                          {currentPlan.threadGroupList[currentThreadGroup].timerList.map((timer, index) => (
+                          {currentPlan.threadGroupList[currentThreadGroup].timers.map((timer, index) => (
                             <TableRow
-                              key={timer.name + '' + index}
+                              key={timer.type + '' + index}
                               aria-checked={false}
                               sx={{
                                 '&:last-child td, &:last-child th': {
@@ -656,7 +661,7 @@ export function Information() {
                                   minWidth: timerHeadRow[0].minWidth,
                                 }}
                               >
-                                {timer.name}
+                                {timer.type}
                               </StyledTableBodyCell>
                               <StyledTableBodyCell
                                 align={timerHeadRow[1].align}
