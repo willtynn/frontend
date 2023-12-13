@@ -65,6 +65,55 @@ const axios_instance = axios.create({
   crossDomain: true,
 });
 
+
+export function getTestResultsByID(testPlanId) {
+  const url = '/pressureMeasurement/getTestResultsByID';
+  return async dispatch => {
+    try {
+      const res = await axios_instance.get(
+        url,
+        {
+          params: {
+            testPlanId: testPlanId
+          },
+        },
+        {
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        }
+      );
+      if (res.data.code === 200 || res.data.code === 0) {
+        dispatch({ type: UPDATE_CURRENT_TEST_RESULTS, data: res.data.data });
+      } else if (res.data.code === 1) {
+        dispatch(
+          setSnackbarMessageAndOpen(
+            'common.errorMessage',
+            { msg: res.data.message },
+            SEVERITIES.warning
+          )
+        );
+      } else {
+        dispatch(
+          setSnackbarMessageAndOpen(
+            'stressTesting.planSearchError',
+            {},
+            SEVERITIES.warning
+          )
+        );
+      }
+    } catch {
+      dispatch(
+        setSnackbarMessageAndOpen(
+          'stressTesting.planSearchError',
+          {},
+          SEVERITIES.warning
+        )
+      );
+    }
+  };
+}
+
 export function getTestPlanById(testPlanId) {
   const url = '/pressureMeasurement/getTestPlanById';
   return async dispatch => {
