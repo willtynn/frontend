@@ -59,7 +59,7 @@ export default function GeneralInfo(props) {
   ];
 
   const handleReturn = () => {
-    navigate('/detail/testplan/');
+    navigate(`/detail/testplan/${currentResult.planId}`);
   };
 
   const handleMoreOperation = e => {
