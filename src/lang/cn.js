@@ -103,6 +103,8 @@ export const messages = {
     planCreatedMsg: "成功创建测试计划！",
     planCreationFailedMsg: "测试计划创建失败，请重试。",
     planSearchError: "无法获取测试计划，请刷新页面重试。",
-    resultsSearchError: "无法获取测试结果，请刷新页面重试。"
+    resultsSearchError: "无法获取测试结果，请刷新页面重试。",
+    testStartMsg: "测试已启动，请稍后查看结果。",
+    testStartError: "测试启动失败，请重试。"
   },
 };

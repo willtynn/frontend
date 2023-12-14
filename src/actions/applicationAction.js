@@ -308,14 +308,16 @@ export function createTestPlan(testPlan) {
   };
 }
 
-export function measure(testPlan) {
+export function measure(testPlanId) {
   const url = '/pressureMeasurement/measure';
   return async dispatch => {
     try {
-      const res = await axios_instance.post(
+      const res = await axios_instance.get(
         url,
         {
-          ...testPlan,
+          params: {
+            testPlanId: testPlanId
+          },
         },
         {
           headers: {
@@ -326,13 +328,12 @@ export function measure(testPlan) {
       if (res.data.code === 200 || res.data.code === 0) {
         dispatch(
           setSnackbarMessageAndOpen(
-            'stressTesting.planCreatedMsg',
+            'stressTesting.testStartMsg',
             {},
             SEVERITIES.success
           )
         );
       } else if (res.data.code === 1) {
-        // alert(res.data.message)
         dispatch(
           setSnackbarMessageAndOpen(
             'common.errorMessage',
@@ -343,7 +344,7 @@ export function measure(testPlan) {
       } else {
         dispatch(
           setSnackbarMessageAndOpen(
-            'stressTesting.planCreationFailedMsg',
+            'stressTesting.testStartError',
             {},
             SEVERITIES.warning
           )
@@ -352,7 +353,7 @@ export function measure(testPlan) {
     } catch {
       dispatch(
         setSnackbarMessageAndOpen(
-          'stressTesting.planCreationFailedMsg',
+          'stressTesting.testStartError',
           {},
           SEVERITIES.warning
         )

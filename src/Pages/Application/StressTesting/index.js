@@ -11,7 +11,6 @@ import {
   TableRow
 } from '@mui/material';
 import { useDispatch, useSelector } from 'react-redux';
-import InfoCard from '@/components/InfoCard';
 import { ContainedButton, KubeConfirmButton } from '@/components/Button';
 import { fontFamily } from '@/utils/commonUtils';
 import { StyledModal } from '../../../components/Modal';
@@ -24,8 +23,6 @@ import {
   StyledTableHead,
 } from '@/components/DisplayTable';
 import {
-  StyledAutocomplete,
-  StyledTextField,
   ChipTextField,
 } from '@/components/Input';
 import StressTestingIcon from '@/assets/StressTesting.svg';

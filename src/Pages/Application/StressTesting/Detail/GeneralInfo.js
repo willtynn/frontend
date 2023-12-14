@@ -18,6 +18,7 @@ import { useNavigate, useParams } from 'react-router-dom';
 import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
 import { StyledPopover } from '@/components/Popover';
 import { getBoolString } from '../../../../utils/commonUtils';
+import { measure } from '@/actions/applicationAction';
 
 
 const labelStyle = {
@@ -176,8 +177,10 @@ export default function GeneralInfo(props) {
           spacing={1.5}
           alignItems='center'
         >
-          <KubeCancelButton sx={{ height: '32px', width: '96px' }}>
-            开始测试
+          <KubeCancelButton sx={{ height: '32px', width: '96px' }} onClick={() => {
+            dispatch(measure(currentPlan.id));
+          }}>
+            开始测试  
           </KubeCancelButton>
           <KubeCancelButton
             onClick={handleMoreOperation}
