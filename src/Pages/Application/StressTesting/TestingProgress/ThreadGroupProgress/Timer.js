@@ -255,10 +255,10 @@ export function Timer(props) {
   );
 }
 
-export const CONSTANT_TIMER = 'constant';
-export const UNIFORM_RANDOM_TIMER = 'uniformRandom';
-export const POISSON_RANDOM_TIMER = 'poissonRandom';
-export const GAUSSIAN_RANDOM_TIMER = 'gaussianRandom';
+export const CONSTANT_TIMER = 'ConstantTimer';
+export const UNIFORM_RANDOM_TIMER = 'UniformRandomTimer';
+export const POISSON_RANDOM_TIMER = 'PoissonRandomTimer';
+export const GAUSSIAN_RANDOM_TIMER = 'GaussianRandomTimer';
 
 function TimerConfiguration(props) {
   const { editTimer, handleConfirmClick, handleCancelClick } = props;

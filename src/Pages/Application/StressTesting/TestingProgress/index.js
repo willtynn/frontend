@@ -27,6 +27,7 @@ import {
   RESET_PLAN,
   UPDATE_GROUP_EDIT_INDEX,
   measure,
+  createTestPlan
 } from '../../../../actions/applicationAction';
 import {
   CONSTANT_TIMER,
@@ -54,12 +55,14 @@ const composeTestParams = testPlan => {
     const timerList = group.timer.map((singleTimer, index) => {
       if (singleTimer.id === CONSTANT_TIMER) {
         return {
+          type: singleTimer.id,
           name: singleTimer.id,
           threadDelay: singleTimer.threadDelay,
           comment: '',
         };
       } else if (singleTimer.id === UNIFORM_RANDOM_TIMER) {
         return {
+          type: singleTimer.id,
           name: singleTimer.id,
           constantDelayOffset: singleTimer.constantDelayOffset,
           randomDelayMaximum: singleTimer.randomDelayMaximum,
@@ -67,6 +70,7 @@ const composeTestParams = testPlan => {
         };
       } else if (singleTimer.id === POISSON_RANDOM_TIMER) {
         return {
+          type: singleTimer.id,
           name: singleTimer.id,
           constantDelayOffset: singleTimer.constantDelayOffset,
           lambda: singleTimer.lambda,
@@ -74,6 +78,7 @@ const composeTestParams = testPlan => {
         };
       } else if (singleTimer.id === GAUSSIAN_RANDOM_TIMER) {
         return {
+          type: singleTimer.id,
           name: singleTimer.id,
           deviation: singleTimer.deviation,
           constantDelayOffset: singleTimer.constantDelayOffset,
@@ -95,11 +100,12 @@ const composeTestParams = testPlan => {
       threadGroupName: group.groupName,
       threadNum: group.numThreads,
       rampUp: group.rampTime,
-      scheduler: group.scheduler,
-      duration: group.duration,
-      delay: group.delay,
+      // scheduler: group.scheduler,
+      // duration: group.duration,
+      // delay: group.delay,
       // 如何确定是否loop？
       loopControllerVO: {
+        loopControllerName: "Loop Controller",
         loopNum: group.loops,
         continueForerever: group.loopsContinueForever,
       },
@@ -119,7 +125,7 @@ const composeTestParams = testPlan => {
         headerManagerName: 'header manager',
         headerList: headerManager,
       },
-      timerList: timerList,
+      timers: timerList,
     };
   });
   return {
@@ -341,8 +347,8 @@ export function TestingProgress(props) {
           serializeThreadgroups: serializeThreadgroups,
           threadGroups: threadGroups,
         });
-        console.log(testPlanData);
-        // dispatch(measure(testPlanData));
+        // console.log(testPlanData);
+        dispatch(createTestPlan(testPlanData));
         handleConfirmClick();
         setCurrentStage(1);
         dispatch({ type: RESET_PLAN });

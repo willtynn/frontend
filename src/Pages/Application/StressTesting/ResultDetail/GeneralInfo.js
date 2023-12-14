@@ -1,13 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import {
-  Box,
-  Stack,
-  Tooltip,
-} from '@mui/material';
-import {
-  KubeCancelButton,
-} from '@/components/Button';
+import { Box, Stack, Tooltip } from '@mui/material';
+import { KubeCancelButton } from '@/components/Button';
 import { fontFamily } from '@/utils/commonUtils';
 import DetailBG from '@/assets/DetailBG.svg';
 import Service21 from '@/assets/Service21.svg';
@@ -18,7 +12,6 @@ import { useNavigate, useParams } from 'react-router-dom';
 import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
 import { StyledPopover } from '@/components/Popover';
 import { getBoolString } from '@/utils/commonUtils';
-
 
 const labelStyle = {
   fontSize: '12px',
@@ -51,7 +44,7 @@ export default function GeneralInfo(props) {
 
   const [moreOperationAnchorEl, setMoreOperationAnchorEl] = useState(null);
   const moreOperationOpen = Boolean(moreOperationAnchorEl);
-  const [backText, setBackText] = useState("测试计划");
+  const [backText, setBackText] = useState('测试计划');
   const dispatch = useDispatch();
 
   const { currentResult } = useSelector(state => {
@@ -60,10 +53,9 @@ export default function GeneralInfo(props) {
     };
   });
 
-
   const items = [
-    [<EditService />, '编辑', () => { }],
-    [<Delete16 />, '删除', () => { }],
+    [<EditService />, '编辑', () => {}],
+    [<Delete16 />, '删除', () => {}],
   ];
 
   const handleReturn = () => {
@@ -73,7 +65,6 @@ export default function GeneralInfo(props) {
   const handleMoreOperation = e => {
     setMoreOperationAnchorEl(e.currentTarget);
   };
-
 
   return (
     <Stack
@@ -139,36 +130,23 @@ export default function GeneralInfo(props) {
           alignItems='center'
         >
           <Service21 />
-          <Tooltip
-            PopperProps={{
-              sx: {
-                '& .MuiTooltip-tooltip': {
-                  backgroundColor: '#242e42',
-                  margin: "0 !important"
-                },
-              },
+          <Box
+            sx={{
+              fontFamily: fontFamily,
+              fontSize: '20px',
+              fontWeight: 600,
+              fontStyle: 'normal',
+              fontStretch: 'normal',
+              lineHeight: 1.4,
+              letterSpacing: 'normal',
+              color: '#36435C',
+              textOverflow: 'ellipsis',
+              overflow: 'hidden',
+              whiteSpace: 'nowrap',
             }}
-            title={currentResult !== null ? currentResult.testPlanName : ''}
-            placement='bottom'
           >
-            <Box
-              sx={{
-                fontFamily: fontFamily,
-                fontSize: '20px',
-                fontWeight: 600,
-                fontStyle: 'normal',
-                fontStretch: 'normal',
-                lineHeight: 1.4,
-                letterSpacing: 'normal',
-                color: '#36435C',
-                textOverflow: "ellipsis",
-                overflow: "hidden",
-                whiteSpace: 'nowrap'
-              }}
-            >
-              {currentResult !== null ? currentResult.testPlanName : ''}
-            </Box>
-          </Tooltip>
+            {`ID: ${currentResult !== null ? currentResult.id : ''}`}
+          </Box>
         </Stack>
         <Stack
           sx={{ mt: '12px' }}
@@ -177,7 +155,7 @@ export default function GeneralInfo(props) {
           alignItems='center'
         >
           <KubeCancelButton sx={{ height: '32px', width: '96px' }}>
-            开始测试
+            删除结果
           </KubeCancelButton>
           <KubeCancelButton
             onClick={handleMoreOperation}
@@ -219,33 +197,17 @@ export default function GeneralInfo(props) {
         {/* Key-Value Pair */}
         <Stack sx={{ margin: '6px 0px' }} direction='column' spacing={1.5}>
           <Stack direction='row' spacing={0.75}>
-            <Box sx={labelStyle}>状态</Box>
+            <Box sx={labelStyle}>开始时间</Box>
             <Box sx={valueStyle}>
-              {currentResult !== null ? currentResult.status : ''}
+              {currentResult !== null ? currentResult.startTime : ''}
             </Box>
           </Stack>
           <Stack direction='row' spacing={0.75}>
-            <Box sx={labelStyle}>序列化</Box>
+            <Box sx={labelStyle}>结束时间</Box>
             <Box sx={valueStyle}>
-              {currentResult !== null ? getBoolString(currentResult.serialized) : ''}
-            </Box>
-          </Stack>
-          <Stack direction='row' spacing={0.75}>
-            <Box sx={labelStyle}>函数模式</Box>
-            <Box sx={valueStyle}>
-              {currentResult !== null ? getBoolString(currentResult.functionalMode) : ''}
-            </Box>
-          </Stack>
-          <Stack direction='row' spacing={0.75}>
-            <Box sx={labelStyle}>tear</Box>
-            <Box sx={valueStyle}>
-              {currentResult !== null ? getBoolString(currentResult.tearDown) : ''}
-            </Box>
-          </Stack>
-          <Stack direction='row' spacing={0.75}>
-            <Box sx={labelStyle}>描述</Box>
-            <Box sx={valueStyle}>
-              {currentResult !== null ? currentResult.comment : ''}
+              {currentResult !== null
+                ? currentResult.endTime
+                : ''}
             </Box>
           </Stack>
         </Stack>
