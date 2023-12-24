@@ -48,6 +48,8 @@ const initState = {
   testPlans: [],
   currrentTestResults: [],
   currentResult: null,
+
+  aggregateReport: null,
 };
 
 export default function ApplicationReducer(state = initState, action) {
@@ -305,6 +307,12 @@ export default function ApplicationReducer(state = initState, action) {
       return {
         ...state,
         currentResult: data
+      }
+
+    case actions.UPDATE_AGGREGATE_REPORT:
+      return {
+        ...state,
+        aggregateReport: data
       }
 
     default:

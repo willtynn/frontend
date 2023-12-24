@@ -57,7 +57,10 @@ export const UPDATE_CURRENT_TEST_RESULTS = 'UPDATE_CURRENT_TEST_RESULTS';
 export const UPDATE_TEST_PLANS = 'UPDATE_TEST_PLANS';
 export const UPDATE_CURRENT_TEST_RESULT = "UPDATE_CURRENT_TEST_RESULT";
 
+export const UPDATE_AGGREGATE_REPORT = "UPDATE_AGGREGATE_REPORT";
+
 const baseURLLink = 'http://192.168.1.104:14447';
+// const baseURLLink = 'http://localhost:8848';
 
 const axios_instance = axios.create({
   baseURL: baseURLLink,
@@ -304,6 +307,140 @@ export function createTestPlan(testPlan) {
           SEVERITIES.warning
         )
       );
+    }
+  };
+}
+
+export function updateAggregateReport(planId) {
+  const url = '/pressureMeasurement/updateAggregateReport';
+  return async dispatch => {
+    try {
+      const res = await axios_instance.get(
+        url,
+        {
+          params: {
+            planId: planId
+          },
+        },
+        {
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        }
+      );
+      if (res.data.code === 200 || res.data.code === 0) {
+        dispatch(
+          setSnackbarMessageAndOpen(
+            'stressTesting.aggregateReportUpdateeSuccess',
+            {},
+            SEVERITIES.warning
+          )
+        );
+      } else {
+        dispatch(
+          setSnackbarMessageAndOpen(
+            'stressTesting.aggregateReportUpdateeError',
+            {},
+            SEVERITIES.warning
+          )
+        );
+      }
+    } catch {
+      dispatch(
+        setSnackbarMessageAndOpen(
+          'stressTesting.aggregateReportUpdateeError',
+          {},
+          SEVERITIES.warning
+        )
+      );
+    }
+  };
+}
+
+export function createAggregateReport(planId) {
+  const url = '/pressureMeasurement/createAggregateReport';
+  return async dispatch => {
+    try {
+      const res = await axios_instance.get(
+        url,
+        {
+          params: {
+            planId: planId
+          },
+        },
+        {
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        }
+      );
+      if (res.data.code === 200 || res.data.code === 0) {
+        dispatch(
+          setSnackbarMessageAndOpen(
+            'stressTesting.aggregateReportCreateSuccess',
+            {},
+            SEVERITIES.warning
+          )
+        );
+      } else {
+        dispatch(
+          setSnackbarMessageAndOpen(
+            'stressTesting.aggregateReportCreateError',
+            {},
+            SEVERITIES.warning
+          )
+        );
+      }
+    } catch {
+      dispatch(
+        setSnackbarMessageAndOpen(
+          'stressTesting.aggregateReportCreateError',
+          {},
+          SEVERITIES.warning
+        )
+      );
+    }
+  };
+}
+
+export function getAggregateReportByPlanId(planId) {
+  const url = '/pressureMeasurement/getAggregateReportByPlanId';
+  return async dispatch => {
+    try {
+      const res = await axios_instance.get(
+        url,
+        {
+          params: {
+            planId: planId
+          },
+        },
+        {
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        }
+      );
+      if (res.data.code === 200 || res.data.code === 0) {
+        dispatch({type: UPDATE_AGGREGATE_REPORT, data: res.data.data});
+      } else {
+        dispatch(
+          setSnackbarMessageAndOpen(
+            'stressTesting.aggregateReportError',
+            {},
+            SEVERITIES.warning
+          )
+        );
+        dispatch({type: UPDATE_AGGREGATE_REPORT, data: null});
+      }
+    } catch {
+      dispatch(
+        setSnackbarMessageAndOpen(
+          'stressTesting.aggregateReportError',
+          {},
+          SEVERITIES.warning
+        )
+      );
+      dispatch({type: UPDATE_AGGREGATE_REPORT, data: null});
     }
   };
 }

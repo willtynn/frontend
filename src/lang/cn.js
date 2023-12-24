@@ -105,6 +105,11 @@ export const messages = {
     planSearchError: "无法获取测试计划，请刷新页面重试。",
     resultsSearchError: "无法获取测试结果，请刷新页面重试。",
     testStartMsg: "测试已启动，请稍后查看结果。",
-    testStartError: "测试启动失败，请重试。"
+    testStartError: "测试启动失败，请重试。",
+    aggregateReportError: "聚合报告获取出错，请重试。",
+    aggregateReportCreateSuccess: "聚合报告已生成。",
+    aggregateReportCreateError: "聚合报告生成失败，请重试。",
+    aggregateReportUpdateeSuccess: "聚合报告已生成。",
+    aggregateReportUpdateeError: "聚合报告生成失败，请重试。"
   },
 };
