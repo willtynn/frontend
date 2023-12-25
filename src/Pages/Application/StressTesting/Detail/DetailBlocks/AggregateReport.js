@@ -18,10 +18,15 @@ import {
   StyledTableRowCell,
   StyledTableContainer,
 } from '@/components/DisplayTable';
-import { getAggregateReportByPlanId } from '../../../../../actions/applicationAction';
+import {
+  getAggregateReportByPlanId,
+  createAggregateReport,
+  updateAggregateReport,
+} from '../../../../../actions/applicationAction';
 import { useParams } from 'react-router';
 import Question from '@/assets/Question.svg';
 import { NormalBoldFont, SmallLightFont } from '@/components/Fonts';
+import { KubeConfirmButton } from '../../../../../components/Button';
 
 function createRow(
   id,
@@ -49,9 +54,10 @@ function createRow(
 
 export function AggregateReport() {
   const { testPlanId } = useParams();
-  const { aggregateReport } = useSelector(state => {
+  const { aggregateReport, changeFlag } = useSelector(state => {
     return {
       aggregateReport: state.Application.aggregateReport,
+      changeFlag: state.Application.changeFlag
     };
   });
 
@@ -73,10 +79,33 @@ export function AggregateReport() {
 
   useEffect(() => {
     dispatch(getAggregateReportByPlanId(testPlanId));
-  }, []);
+  }, [changeFlag]);
+
+  const handleUpdateAggregateReport = () => {
+    dispatch(updateAggregateReport(testPlanId));
+    setTimeout(() => {
+      dispatch({type: "UPDATE_CHANGE_FLAG", data: changeFlag + 1});
+    }, 1000);
+  };
+
+  const handleCreateAggregateReport = () => {
+    dispatch(createAggregateReport(testPlanId));
+    setTimeout(() => {
+      dispatch({type: "UPDATE_CHANGE_FLAG", data: changeFlag + 1});
+    }, 1000);
+  };
 
   return (
-    <Stack direction='row' sx={{ pt: '20px', pb: '40px' }} spacing={2}>
+    <Stack direction='column' sx={{ pb: '40px' }} spacing={2}>
+      {aggregateReport ? (
+        <KubeConfirmButton onClick={handleUpdateAggregateReport}>
+          更新聚合报告
+        </KubeConfirmButton>
+      ) : (
+        <KubeConfirmButton onClick={handleCreateAggregateReport}>
+          创建聚合报告
+        </KubeConfirmButton>
+      )}
       <Stack
         direction='column'
         sx={{

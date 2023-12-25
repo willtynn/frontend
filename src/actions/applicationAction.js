@@ -58,9 +58,10 @@ export const UPDATE_TEST_PLANS = 'UPDATE_TEST_PLANS';
 export const UPDATE_CURRENT_TEST_RESULT = "UPDATE_CURRENT_TEST_RESULT";
 
 export const UPDATE_AGGREGATE_REPORT = "UPDATE_AGGREGATE_REPORT";
+export const UPDATE_CHANGE_FLAG = "UPDATE_CHANGE_FLAG";
 
-const baseURLLink = 'http://192.168.1.104:14447';
-// const baseURLLink = 'http://localhost:8848';
+// const baseURLLink = 'http://192.168.1.104:14447';
+const baseURLLink = 'http://localhost:8848';
 
 const axios_instance = axios.create({
   baseURL: baseURLLink,
@@ -333,7 +334,7 @@ export function updateAggregateReport(planId) {
           setSnackbarMessageAndOpen(
             'stressTesting.aggregateReportUpdateeSuccess',
             {},
-            SEVERITIES.warning
+            SEVERITIES.success
           )
         );
       } else {
@@ -379,7 +380,7 @@ export function createAggregateReport(planId) {
           setSnackbarMessageAndOpen(
             'stressTesting.aggregateReportCreateSuccess',
             {},
-            SEVERITIES.warning
+            SEVERITIES.success
           )
         );
       } else {

@@ -50,6 +50,7 @@ const initState = {
   currentResult: null,
 
   aggregateReport: null,
+  changeFlag: 0,
 };
 
 export default function ApplicationReducer(state = initState, action) {
@@ -313,6 +314,12 @@ export default function ApplicationReducer(state = initState, action) {
       return {
         ...state,
         aggregateReport: data
+      }
+
+    case actions.UPDATE_CHANGE_FLAG:
+      return {
+        ...state,
+        changeFlag: data
       }
 
     default:
