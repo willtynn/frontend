@@ -60,8 +60,8 @@ export const UPDATE_CURRENT_TEST_RESULT = "UPDATE_CURRENT_TEST_RESULT";
 export const UPDATE_AGGREGATE_REPORT = "UPDATE_AGGREGATE_REPORT";
 export const UPDATE_CHANGE_FLAG = "UPDATE_CHANGE_FLAG";
 
-// const baseURLLink = 'http://192.168.1.104:14447';
-const baseURLLink = 'http://localhost:8848';
+const baseURLLink = 'http://192.168.1.104:14447';
+// const baseURLLink = 'http://localhost:8848';
 
 const axios_instance = axios.create({
   baseURL: baseURLLink,
