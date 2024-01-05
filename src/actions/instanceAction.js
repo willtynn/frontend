@@ -178,3 +178,54 @@ export function getInstanceStatus(cluster, namespace) {
     }
   };
 }
+
+export function getResourceHistory(cluster, namespace, podName, begin, end, step=60, cb=()=>{}) {
+  const url = '/instance/resourceHistory';
+  return async dispatch => {
+    try {
+      const res = await axios_instance.post(
+        url,
+        {
+          clusterName: cluster,
+          namespace: namespace,
+          podName: podName,
+          begin: begin,
+          end: end,
+          step: step,
+        },
+        {
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        }
+      );
+      if (res.data.code === 200 || res.data.code === 0) {
+        cb(res.data.data);
+      } else if (res.data.code === 1) {
+        dispatch(
+          setSnackbarMessageAndOpen(
+            'instance.resourceHistorySearchError',
+            {},
+            SEVERITIES.warning
+          )
+        );
+      } else {
+        dispatch(
+          setSnackbarMessageAndOpen(
+            'instance.resourceHistorySearchError',
+            {},
+            SEVERITIES.warning
+          )
+        );
+      }
+    } catch {
+      dispatch(
+        setSnackbarMessageAndOpen(
+          'instance.resourceHistorySearchError',
+          {},
+          SEVERITIES.warning
+        )
+      );
+    }
+  };
+}

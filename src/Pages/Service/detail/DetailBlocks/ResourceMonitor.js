@@ -2,6 +2,7 @@
  * src\Pages\Service\detail\DetailBlocks\ResourceMonitor.js
  */
 import { useState, useEffect } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import { Box, Stack, Tooltip } from '@mui/material';
 import { KubeSimpleCard } from '../../../../components/InfoCard';
 import { TimeAdaptiveAreaChart } from '../../../../components/Charts/AreaChart';
@@ -9,27 +10,79 @@ import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
 import { fontFamily } from '../../../../utils/commonUtils';
 import ActivePod from '@/assets/ActivePod.svg';
-
+import { searchPodsByServiceName } from '@/actions/serviceAction';
 import { serviceMonitorData } from '../data';
+import { getResourceHistory } from '../../../../actions/instanceAction';
+import { formatDatetimeString } from '../../../../utils/commonUtils';
 
-export default function ResourceMonitor() {
+export default function ResourceMonitor(props) {
+  const { service } = props;
+  const dispatch = useDispatch();
+
+  const { pods } = useSelector(state => {
+    return {
+      pods: state.Service.pods,
+    };
+  });
+
+  useEffect(() => {
+    if (service === null || service === undefined) {
+      return;
+    }
+    if (localStorage.getItem('current_cluster')) {
+      dispatch(
+        searchPodsByServiceName(
+          localStorage.getItem('current_cluster'),
+          service.name
+        )
+      );
+    }
+  }, []);
+
   return (
     <KubeSimpleCard title='容器组资源监控'>
       <Stack spacing={1.5} sx={{ mt: '12px' }}>
-        <PodResourceMonitor data={serviceMonitorData} />
+        {pods && pods.length && pods.map((pod, index) => {
+          return (<PodResourceMonitor pod={pod} />);
+        })}
+       
       </Stack>
     </KubeSimpleCard>
   );
 }
 
 function PodResourceMonitor(props) {
-  const { data } = props;
+  const { pod } = props;
 
   const [open, setOpen] = useState(false);
   const [cpuUsage, setCpuUsage] = useState([]);
   const [byteTransmitted, setByteTransmitted] = useState([]);
   const [byteReceived, setByteReceived] = useState([]);
   const [memoryUsage, setMemoryUsage] = useState([]);
+  const [data, setData] = useState(null);
+
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    if (pod === null || pod === undefined) {
+      return;
+    }
+    if (localStorage.getItem('current_cluster')) {
+      dispatch(
+        getResourceHistory(
+          localStorage.getItem('current_cluster'),
+          pod.metadata.namespace,
+          pod.metadata.name,
+          Math.floor(new Date(new Date().getTime() - 24 * 60 * 60 * 1000).getTime() / 1000),
+          Math.floor((new Date().getTime() / 1000)),
+          60,
+          setData
+        )
+      );
+    }
+  }, []);
+
+
 
   useEffect(() => {
     if (data && data.results) {
@@ -118,8 +171,8 @@ function PodResourceMonitor(props) {
             }}
             title={
               <Stack sx={{ padding: '12px' }} spacing={1}>
-                <Box>My Pod</Box>
-                <Box>{`状态：running`}</Box>
+                <Box>{pod.metadata.name}</Box>
+                <Box>{`状态：${pod.status.phase}`}</Box>
               </Stack>
             }
             placement='top'
@@ -139,7 +192,7 @@ function PodResourceMonitor(props) {
                 color: '#242e42',
               }}
             >
-              My Pod
+              {pod.metadata.name}
             </Box>
             <Box
               sx={{
@@ -151,7 +204,7 @@ function PodResourceMonitor(props) {
                 color: '#79879c',
               }}
             >
-              {`创建于 2023-07-09 06:15:11`}
+              {`创建于 ${formatDatetimeString(Date.parse(pod.status.startTime))}`}
             </Box>
           </Stack>
         </Stack>
@@ -168,7 +221,7 @@ function PodResourceMonitor(props) {
               color: '#242e42',
             }}
           >
-            192.168.0.1
+            {pod.status.hostIP}
           </Box>
           <Box
             sx={{
@@ -196,7 +249,7 @@ function PodResourceMonitor(props) {
               color: '#242e42',
             }}
           >
-            192.168.0.1
+            {pod.status.podIP}
           </Box>
           <Box
             sx={{

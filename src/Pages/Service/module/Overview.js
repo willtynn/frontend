@@ -347,9 +347,13 @@ export default function ServiceOverview(props) {
 
   const isSelected = name => selected.indexOf(name) !== -1;
 
+  const encodeId = (id) => {
+    return id.replace(/\//,"___");
+  }
+
   // 点击服务id跳转页面
   const handleClickById = id => {
-    navigate(`/detail/service/${id}`);
+    navigate(`/detail/service/${encodeId(id)}`);
   };
 
   // service/query左侧表格新

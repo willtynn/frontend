@@ -13,8 +13,12 @@ export function ServiceDetail() {
   const { serviceId } = useParams();
   const dispatch = useDispatch();
 
+  const parseId = (id) => {
+    return id.replace(/___/, "/");
+  }
+
   useEffect(() => {
-    dispatch(searchServiceExactlyById(serviceId));
+    dispatch(searchServiceExactlyById(parseId(serviceId)));
   }, []);
   return (
     <Stack
