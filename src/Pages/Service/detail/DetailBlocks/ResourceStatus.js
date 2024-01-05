@@ -22,6 +22,7 @@ import {
   FAILED,
 } from '../../../Cluster/deploy/ServiceStatusTable';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
+import { parseServiceName } from '../../../../utils/commonUtils';
 
 export const IconOfPod = status => {
   if (status === RUNNING) {
@@ -57,7 +58,7 @@ export default function ResourceStatus(props) {
       dispatch(
         searchPodsByServiceName(
           localStorage.getItem('current_cluster'),
-          service.name
+          parseServiceName(service.name)
         )
       );
     }
@@ -83,7 +84,7 @@ export default function ResourceStatus(props) {
     if (service === null) {
       return;
     }
-    dispatch(searchPodsByServiceName(service.name));
+    dispatch(searchPodsByServiceName(localStorage.getItem('current_cluster'), parseServiceName(service.name)));
   };
 
   const handleKeyDown = e => {
@@ -103,22 +104,22 @@ export default function ResourceStatus(props) {
           sx={{
             width: 'calc(100% - 60px)',
             '&.MuiFormControl-root.MuiTextField-root .MuiInputBase-root.MuiOutlinedInput-root':
-              {
-                padding: '0px 0px 0px 12px !important',
-                height: '32px',
-                flexFlow: 'wrap',
-                paddingY: '4px',
-                '& input': {
-                  flexGrow: 1,
-                  width: '10%',
-                  '&:placeholder-shown': {
-                    fontWeight: '400 !important',
-                    fontSize: '12px !important',
-                    lineHeight: 1.67,
-                  },
+            {
+              padding: '0px 0px 0px 12px !important',
+              height: '32px',
+              flexFlow: 'wrap',
+              paddingY: '4px',
+              '& input': {
+                flexGrow: 1,
+                width: '10%',
+                '&:placeholder-shown': {
+                  fontWeight: '400 !important',
+                  fontSize: '12px !important',
+                  lineHeight: 1.67,
                 },
-                bgcolor: '#EFF4F9',
               },
+              bgcolor: '#EFF4F9',
+            },
             '& fieldset': {
               border: '1px solid rgba(0, 0, 0, 0.23) !important',
             },

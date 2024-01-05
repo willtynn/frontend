@@ -101,32 +101,32 @@ export default function InstanceDeploy() {
   const handleConfirmClick = () => {
     if (configFinish === true) {
       //等待后端接口的部署
-      // dispatch(
-      //   deploy(
-      //     (serviceId = serviceId),
-      //     (serviceName = serviceName),
-      //     (namespace = namespace),
-      //     (imageUrl = imageUrl),
-      //     (replicas = replicas),
-      //     (ports = ports),
-      //     (resources = {
-      //       requests: {
-      //         cpu: resources.requests.cpu + '',
-      //         memory:
-      //           resources.requests.memory === ''
-      //             ? ''
-      //             : resources.requests.memory + 'Mi',
-      //       },
-      //       limits: {
-      //         cpu: resources.limits.cpu + '',
-      //         memory:
-      //           resources.limits.memory === ''
-      //             ? ''
-      //             : resources.limits.memory + 'Mi',
-      //       },
-      //     })
-      //   )
-      // );
+      dispatch(
+        deploy(
+          (serviceId = serviceId),
+          (serviceName = serviceName),
+          (namespace = namespace),
+          (imageUrl = imageUrl),
+          (replicas = replicas),
+          (ports = ports),
+          (resources = {
+            requests: {
+              cpu: resources.requests.cpu + '',
+              memory:
+                resources.requests.memory === ''
+                  ? ''
+                  : resources.requests.memory + 'Mi',
+            },
+            limits: {
+              cpu: resources.limits.cpu + '',
+              memory:
+                resources.limits.memory === ''
+                  ? ''
+                  : resources.limits.memory + 'Mi',
+            },
+          })
+        )
+      );
       console.log({
         serviceId: serviceId,
         serviceName: serviceName,

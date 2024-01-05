@@ -13,7 +13,7 @@ import ActivePod from '@/assets/ActivePod.svg';
 import { searchPodsByServiceName } from '@/actions/serviceAction';
 import { serviceMonitorData } from '../data';
 import { getResourceHistory } from '../../../../actions/instanceAction';
-import { formatDatetimeString } from '../../../../utils/commonUtils';
+import { formatDatetimeString, parseServiceName } from '../../../../utils/commonUtils';
 
 export default function ResourceMonitor(props) {
   const { service } = props;
@@ -33,7 +33,7 @@ export default function ResourceMonitor(props) {
       dispatch(
         searchPodsByServiceName(
           localStorage.getItem('current_cluster'),
-          service.name
+          parseServiceName(service.name)
         )
       );
     }

@@ -108,3 +108,11 @@ export const getBoolString = str => {
     return "是"
   }
 }
+
+export const parseServiceName = serviceName => {
+  const terms = serviceName.split("/");
+  if(terms.length <= 0) {
+    return serviceName;
+  }
+  return terms[terms.length - 1];
+}
