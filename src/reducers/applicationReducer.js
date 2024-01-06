@@ -51,6 +51,7 @@ const initState = {
 
   aggregateReport: null,
   changeFlag: 0,
+  startAndEnd: [-1, -1]
 };
 
 export default function ApplicationReducer(state = initState, action) {
@@ -320,6 +321,12 @@ export default function ApplicationReducer(state = initState, action) {
       return {
         ...state,
         changeFlag: data
+      }
+
+    case actions.UPDATE_START_AND_END:
+      return {
+        ...state,
+        startAndEnd: data
       }
 
     default:

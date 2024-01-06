@@ -59,6 +59,7 @@ export const UPDATE_CURRENT_TEST_RESULT = "UPDATE_CURRENT_TEST_RESULT";
 
 export const UPDATE_AGGREGATE_REPORT = "UPDATE_AGGREGATE_REPORT";
 export const UPDATE_CHANGE_FLAG = "UPDATE_CHANGE_FLAG";
+export const UPDATE_START_AND_END = "UPDATE_START_AND_END";
 
 const baseURLLink = 'http://192.168.1.104:14447';
 // const baseURLLink = 'http://localhost:8848';
@@ -492,6 +493,55 @@ export function measure(testPlanId) {
       dispatch(
         setSnackbarMessageAndOpen(
           'stressTesting.testStartError',
+          {},
+          SEVERITIES.warning
+        )
+      );
+    }
+  };
+}
+
+
+export function getStartAndEndOfTest(planId) {
+  const url = "/pressureMeasurement/getStartAndEndOfTest";
+  return async dispatch => {
+    try {
+      const res = await axios_instance.get(
+        url,
+        {
+          params: {
+            planId: planId
+          },
+        },
+        {
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        }
+      );
+      if (res.data.code === 200 || res.data.code === 0) {
+        dispatch({type: UPDATE_START_AND_END, data: res.data.data})
+      } else if (res.data.code === 1) {
+        dispatch(
+          setSnackbarMessageAndOpen(
+            'common.errorMessage',
+            { msg: res.data.message },
+            SEVERITIES.warning
+          )
+        );
+      } else {
+        dispatch(
+          setSnackbarMessageAndOpen(
+            'stressTesting.getStartAndEndFailedMsg',
+            {},
+            SEVERITIES.warning
+          )
+        );
+      }
+    } catch {
+      dispatch(
+        setSnackbarMessageAndOpen(
+          'stressTesting.getStartAndEndFailedMsg',
           {},
           SEVERITIES.warning
         )
