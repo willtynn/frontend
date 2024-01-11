@@ -134,6 +134,8 @@ const composeTestParams = testPlan => {
     functionalMode: testPlan.functionalMode,
     tearDown: testPlan.tearDownOnShutdown,
     comment: testPlan.planComment,
+    namespace: testPlan.namespace,
+    podName: testPlan.podName,
     threadGroupList: testPlan.threadGroups,
   };
 };
@@ -155,6 +157,8 @@ export function TestingProgress(props) {
     functionalMode,
     tearDownOnShutdown,
     serializeThreadgroups,
+    namespace,
+    podName,
     groupEdit,
     currentGroupEditStage,
     threadGroups,
@@ -189,6 +193,8 @@ export function TestingProgress(props) {
       functionalMode: state.Application.functionalMode,
       tearDownOnShutdown: state.Application.tearDownOnShutdown,
       serializeThreadgroups: state.Application.serializeThreadgroups,
+      namespace: state.Application.namespace,
+      podName: state.Application.podName,
       groupEdit: state.Application.groupEdit,
       currentGroupEditStage: state.Application.currentGroupEditStage,
       threadGroups: state.Application.threadGroups,
@@ -345,6 +351,8 @@ export function TestingProgress(props) {
           functionalMode: functionalMode,
           tearDownOnShutdown: tearDownOnShutdown,
           serializeThreadgroups: serializeThreadgroups,
+          namespace: namespace,
+          podName: podName,
           threadGroups: threadGroups,
         });
         // console.log(testPlanData);
