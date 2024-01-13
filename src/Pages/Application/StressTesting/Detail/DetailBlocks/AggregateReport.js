@@ -100,7 +100,7 @@ export function AggregateReport() {
   }, [currentPlan]);
 
   useEffect(() => {
-    if (startAndEnd[0] === -1 || namespace === "" || podName === "") {
+    if (startAndEnd[0] === -1 || !namespace || !podName) {
       return;
     }
     dispatch(
