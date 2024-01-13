@@ -164,7 +164,7 @@ export function TestPlan(props) {
           }}
           id='plan_podName_autocomplete'
           noOptionsText="无可选Pod"
-          options={gottenInstances ? gottenInstances.map((value, index) => { return value.metadata.name }) : []}
+          options={(gottenInstances && gottenInstances.items)? gottenInstances.items.map((value, index) => { return value.metadata.name }) : []}
           filterOptions={(options, params) => {
             const { inputValue } = params;
             return options.filter((option, index) => {

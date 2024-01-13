@@ -56,16 +56,17 @@ function createRow(
 
 export function AggregateReport() {
   const { testPlanId } = useParams();
-  const { aggregateReport, changeFlag, startAndEnd } = useSelector(state => {
+  const { aggregateReport, changeFlag, startAndEnd, currentPlan } = useSelector(state => {
     return {
       aggregateReport: state.Application.aggregateReport,
       changeFlag: state.Application.changeFlag,
       startAndEnd: state.Application.startAndEnd,
+      currentPlan: state.Application.currentPlan,
     };
   });
 
-  const [namespace, setNamespace] = useState("train-ticket");
-  const [podName, setPodName] = useState("ts-train-service-8596567889-554sx");
+  const [namespace, setNamespace] = useState("");
+  const [podName, setPodName] = useState("");
   const [data, setData] = useState(null);
   const [cpuUsage, setCpuUsage] = useState([]);
   const [byteTransmitted, setByteTransmitted] = useState([]);
@@ -94,7 +95,12 @@ export function AggregateReport() {
   }, [changeFlag]);
 
   useEffect(() => {
-    if (startAndEnd[0] === -1) {
+    setNamespace(currentPlan.namespace);
+    setPodName(currentPlan.podName);
+  }, [currentPlan]);
+
+  useEffect(() => {
+    if (startAndEnd[0] === -1 || namespace === "" || podName === "") {
       return;
     }
     dispatch(
@@ -103,12 +109,12 @@ export function AggregateReport() {
         namespace,
         podName,
         startAndEnd[0],
-        startAndEnd[0],
+        startAndEnd[1],
         1,
         setData
       )
     );
-  }, [startAndEnd]);
+  }, [startAndEnd, namespace, podName]);
 
   useEffect(() => {
     if (data && data.results) {
