@@ -273,7 +273,7 @@ export function AggregateReport() {
                         minWidth: headRow[2].minWidth,
                       }}
                     >
-                      {aggregateReport.average}
+                      {`${aggregateReport.average} ms`}
                     </StyledTableBodyCell>
                     <StyledTableBodyCell
                       align={headRow[3].align}
@@ -282,7 +282,7 @@ export function AggregateReport() {
                         minWidth: headRow[3].minWidth,
                       }}
                     >
-                      {aggregateReport.median}
+                      {`${aggregateReport.median} ms`}
                     </StyledTableBodyCell>
                     <StyledTableBodyCell
                       align={headRow[4].align}
@@ -291,7 +291,7 @@ export function AggregateReport() {
                         minWidth: headRow[4].minWidth,
                       }}
                     >
-                      {aggregateReport.min}
+                      {`${aggregateReport.min} ms`}
                     </StyledTableBodyCell>
                     <StyledTableBodyCell
                       align={headRow[5].align}
@@ -300,7 +300,7 @@ export function AggregateReport() {
                         minWidth: headRow[5].minWidth,
                       }}
                     >
-                      {aggregateReport.max}
+                      {`${aggregateReport.max} ms`}
                     </StyledTableBodyCell>
                     <StyledTableBodyCell
                       align={headRow[6].align}
@@ -309,7 +309,7 @@ export function AggregateReport() {
                         minWidth: headRow[6].minWidth,
                       }}
                     >
-                      {aggregateReport.p50}
+                      {`${aggregateReport.p50} ms`}
                     </StyledTableBodyCell>
                     <StyledTableBodyCell
                       align={headRow[7].align}
@@ -318,7 +318,7 @@ export function AggregateReport() {
                         minWidth: headRow[7].minWidth,
                       }}
                     >
-                      {aggregateReport.p95}
+                      {`${aggregateReport.p95} ms`}
                     </StyledTableBodyCell>
                     <StyledTableBodyCell
                       align={headRow[8].align}
@@ -327,7 +327,7 @@ export function AggregateReport() {
                         minWidth: headRow[8].minWidth,
                       }}
                     >
-                      {aggregateReport.p99}
+                      {`${aggregateReport.p99} ms`}
                     </StyledTableBodyCell>
                     <StyledTableBodyCell
                       align={headRow[9].align}
@@ -336,7 +336,7 @@ export function AggregateReport() {
                         minWidth: headRow[9].minWidth,
                       }}
                     >
-                      {aggregateReport.tps}
+                      {`${aggregateReport.tps.toFixed(2)} /s`}
                     </StyledTableBodyCell>
                     <StyledTableBodyCell
                       align={headRow[10].align}
