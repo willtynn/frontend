@@ -22,7 +22,8 @@ import {
   getAggregateReportByPlanId,
   createAggregateReport,
   updateAggregateReport,
-  getStartAndEndOfTest
+  getStartAndEndOfTest,
+  getAggregateExcel
 } from '../../../../../actions/applicationAction';
 import { useParams } from 'react-router';
 import Question from '@/assets/Question.svg';
@@ -30,6 +31,7 @@ import { NormalBoldFont, SmallLightFont } from '@/components/Fonts';
 import { KubeConfirmButton } from '../../../../../components/Button';
 import { getResourceHistory } from '@/actions/instanceAction';
 import { TimeAdaptiveAreaChart } from '@/components/Charts/AreaChart';
+
 function createRow(
   id,
   label,
@@ -69,9 +71,10 @@ export function AggregateReport() {
   const [podName, setPodName] = useState("");
   const [data, setData] = useState(null);
   const [cpuUsage, setCpuUsage] = useState([]);
+  const [memoryUsage, setMemoryUsage] = useState([]);
   const [byteTransmitted, setByteTransmitted] = useState([]);
   const [byteReceived, setByteReceived] = useState([]);
-  const [memoryUsage, setMemoryUsage] = useState([]);
+  
 
   const dispatch = useDispatch();
 
@@ -91,7 +94,7 @@ export function AggregateReport() {
 
   useEffect(() => {
     dispatch(getAggregateReportByPlanId(testPlanId));
-    dispatch(getStartAndEndOfTest(testPlanId))
+    dispatch(getStartAndEndOfTest(testPlanId));
   }, [changeFlag]);
 
   useEffect(() => {
@@ -134,19 +137,28 @@ export function AggregateReport() {
           } else if (result.metric_name === 'pod_net_bytes_transmitted') {
             setByteTransmitted(
               result.data.result[0].values.map((record, index) => {
-                return { name: record[0], flow: (Number(record[1]) / 128).toFixed(2) };
+                return {
+                  name: record[0],
+                  flow: (Number(record[1]) / 128).toFixed(2),
+                };
               })
             );
           } else if (result.metric_name === 'pod_net_bytes_received') {
             setByteReceived(
               result.data.result[0].values.map((record, index) => {
-                return { name: record[0], flow: (Number(record[1]) / 128).toFixed(2) };
+                return {
+                  name: record[0],
+                  flow: (Number(record[1]) / 128).toFixed(2),
+                };
               })
             );
           } else {
             setMemoryUsage(
               result.data.result[0].values.map((record, index) => {
-                return { name: record[0], usage: (Number(record[1]) / 1024 / 1024).toFixed(2) };
+                return {
+                  name: record[0],
+                  usage: (Number(record[1]) / 1024 / 1024).toFixed(2),
+                };
               })
             );
           }
@@ -168,28 +180,53 @@ export function AggregateReport() {
   const handleUpdateAggregateReport = () => {
     dispatch(updateAggregateReport(testPlanId));
     setTimeout(() => {
-      dispatch({ type: "UPDATE_CHANGE_FLAG", data: changeFlag + 1 });
+      dispatch({ type: 'UPDATE_CHANGE_FLAG', data: changeFlag + 1 });
     }, 1000);
   };
 
   const handleCreateAggregateReport = () => {
     dispatch(createAggregateReport(testPlanId));
     setTimeout(() => {
-      dispatch({ type: "UPDATE_CHANGE_FLAG", data: changeFlag + 1 });
+      dispatch({ type: 'UPDATE_CHANGE_FLAG', data: changeFlag + 1 });
     }, 1000);
   };
 
+  const handleExportExcel = () => {
+    dispatch(getAggregateExcel(parseInt(testPlanId), cpuUsage, memoryUsage, byteTransmitted, byteReceived));
+  }
+
   return (
     <Stack direction='column' sx={{ pb: '40px' }} spacing={2}>
-      {aggregateReport ? (
-        <KubeConfirmButton onClick={handleUpdateAggregateReport}>
-          更新聚合报告
+      <Stack direction='row' justifyContent='space-between' spacing={2}>
+        {aggregateReport ? (
+          <KubeConfirmButton
+            sx={{
+              width: '45%',
+            }}
+            onClick={handleUpdateAggregateReport}
+          >
+            更新聚合报告
+          </KubeConfirmButton>
+        ) : (
+          <KubeConfirmButton
+            sx={{
+              width: '45%',
+            }}
+            onClick={handleCreateAggregateReport}
+          >
+            创建聚合报告
+          </KubeConfirmButton>
+        )}
+        <KubeConfirmButton
+          sx={{
+            width: '40%',
+          }}
+          onClick={handleExportExcel}
+        >
+          导出报告 (xls)
         </KubeConfirmButton>
-      ) : (
-        <KubeConfirmButton onClick={handleCreateAggregateReport}>
-          创建聚合报告
-        </KubeConfirmButton>
-      )}
+      </Stack>
+
       <Stack
         direction='column'
         sx={{
@@ -350,85 +387,85 @@ export function AggregateReport() {
                 </TableBody>
               </Table>
             </StyledTableContainer>
-            {data ? <Stack
-              spacing={3}
-              sx={{
-                width: 'calc(100% - 64px)',
-                bgcolor: '#FFFFFF',
-                padding: '12px',
-                borderRadius: "0px 0px 4px 4px",
-                boxShadow: '0 4px 8px 0 rgba(36,46,66,.06)'
-              }}
-            >
-              <Box
+            {data ? (
+              <Stack
+                spacing={3}
                 sx={{
-                  width: '100%',
-                  height: '200px',
+                  width: 'calc(100% - 64px)',
+                  bgcolor: '#FFFFFF',
+                  padding: '12px',
+                  borderRadius: '0px 0px 4px 4px',
+                  boxShadow: '0 4px 8px 0 rgba(36,46,66,.06)',
                 }}
               >
-                <TimeAdaptiveAreaChart
-                  data={cpuUsage}
-                  keyName='name'
-                  valueName='usage'
-                  labelY='CPU 用量 (m)'
-                  labelName='用量'
-                  unitName='m'
-                />
-              </Box>
+                <Box
+                  sx={{
+                    width: '100%',
+                    height: '200px',
+                  }}
+                >
+                  <TimeAdaptiveAreaChart
+                    data={cpuUsage}
+                    keyName='name'
+                    valueName='usage'
+                    labelY='CPU 用量 (m)'
+                    labelName='用量'
+                    unitName='m'
+                  />
+                </Box>
 
-              <Box
-                sx={{
-                  width: '100%',
-                  height: '200px',
-                }}
-              >
-                <TimeAdaptiveAreaChart
-                  data={memoryUsage}
-                  keyName='name'
-                  valueName='usage'
-                  labelY='内存用量 (Mi)'
-                  labelName='用量'
-                  unitName='Mi'
-                />
-              </Box>
+                <Box
+                  sx={{
+                    width: '100%',
+                    height: '200px',
+                  }}
+                >
+                  <TimeAdaptiveAreaChart
+                    data={memoryUsage}
+                    keyName='name'
+                    valueName='usage'
+                    labelY='内存用量 (Mi)'
+                    labelName='用量'
+                    unitName='Mi'
+                  />
+                </Box>
 
-              <Box
-                sx={{
-                  width: '100%',
-                  height: '200px',
-                }}
-              >
-                <TimeAdaptiveAreaChart
-                  data={byteTransmitted}
-                  keyName='name'
-                  valueName='flow'
-                  labelY='出站流量 (Kbps)'
-                  labelName='出站'
-                  unitName='Kbps'
-                />
-              </Box>
+                <Box
+                  sx={{
+                    width: '100%',
+                    height: '200px',
+                  }}
+                >
+                  <TimeAdaptiveAreaChart
+                    data={byteTransmitted}
+                    keyName='name'
+                    valueName='flow'
+                    labelY='出站流量 (Kbps)'
+                    labelName='出站'
+                    unitName='Kbps'
+                  />
+                </Box>
 
-              <Box
-                sx={{
-                  width: '100%',
-                  height: '200px',
-                }}
-              >
-                <TimeAdaptiveAreaChart
-                  data={byteReceived}
-                  keyName='name'
-                  valueName='flow'
-                  labelY='入站流量 (Kbps)'
-                  labelName='入站'
-                  unitName='Kbps'
-                />
-              </Box>
-            </Stack> :
-              <></>}
-
+                <Box
+                  sx={{
+                    width: '100%',
+                    height: '200px',
+                  }}
+                >
+                  <TimeAdaptiveAreaChart
+                    data={byteReceived}
+                    keyName='name'
+                    valueName='flow'
+                    labelY='入站流量 (Kbps)'
+                    labelName='入站'
+                    unitName='Kbps'
+                  />
+                </Box>
+              </Stack>
+            ) : (
+              <></>
+            )}
           </>
-
-
         ) : (
           <Stack
             sx={{
