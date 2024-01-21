@@ -112,6 +112,7 @@ export const messages = {
     aggregateReportCreateError: "聚合报告生成失败，请重试。",
     aggregateReportUpdateeSuccess: "聚合报告已生成。",
     aggregateReportUpdateeError: "聚合报告生成失败，请重试。",
-    getStartAndEndFailedMsg: "测试时间获取失败。"
+    getStartAndEndFailedMsg: "测试时间获取失败。",
+    aggregateExcelExportFailedMsg: "Excel导出失败，请重试..."
   },
 };
