@@ -193,7 +193,6 @@ export function AggregateReport() {
       <Stack
         direction='column'
         sx={{
-          width: '100%',
           borderRadius: '4px',
           bgcolor: '#FFFFFF',
           p: '20px',
@@ -212,7 +211,7 @@ export function AggregateReport() {
                 size='small'
                 sx={{
                   tableLayout: 'auto',
-                  minWidth: '100%',
+                  // minWidth: '100%',
                 }}
               >
                 <TableHead>
