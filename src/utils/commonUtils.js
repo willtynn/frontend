@@ -4,7 +4,7 @@ export const formatDateString = x => (x ? moment(x).format('yyyy-MM-DD') : '');
 export const formatDatetimeString = x =>
   x ? moment(x).utc().format('yyyy-MM-DD HH:mm:ss') : '';
   export const formatDatetimeStringWithoutYear = x =>
-  x ? moment(x).utc().format('MM-DD HH:mm:ss') : '';
+  x ? moment(x * 1000).utc().format('MM-DD HH:mm:ss') : '';
 
 export const fontFamily = 'PingFang SC,Lantinghei SC,Helvetica Neue,Helvetica,Arial,Microsoft YaHei,微软雅黑,STHeitiSC-Light,simsun,宋体,WenQuanYi Zen Hei,WenQuanYi Micro Hei,sans-serif;';
 

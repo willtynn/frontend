@@ -58,16 +58,17 @@ function createRow(
 
 export function AggregateReport() {
   const { testPlanId } = useParams();
-  const { aggregateReport, changeFlag, startAndEnd } = useSelector(state => {
+  const { aggregateReport, changeFlag, startAndEnd, currentPlan } = useSelector(state => {
     return {
       aggregateReport: state.Application.aggregateReport,
       changeFlag: state.Application.changeFlag,
       startAndEnd: state.Application.startAndEnd,
+      currentPlan: state.Application.currentPlan,
     };
   });
 
-  const [namespace, setNamespace] = useState('train-ticket');
-  const [podName, setPodName] = useState('ts-train-service-8596567889-554sx');
+  const [namespace, setNamespace] = useState("");
+  const [podName, setPodName] = useState("");
   const [data, setData] = useState(null);
   const [cpuUsage, setCpuUsage] = useState([]);
   const [memoryUsage, setMemoryUsage] = useState([]);
@@ -97,7 +98,12 @@ export function AggregateReport() {
   }, [changeFlag]);
 
   useEffect(() => {
-    if (startAndEnd[0] === -1) {
+    setNamespace(currentPlan.namespace);
+    setPodName(currentPlan.podName);
+  }, [currentPlan]);
+
+  useEffect(() => {
+    if (startAndEnd[0] === -1 || !namespace || !podName) {
       return;
     }
     dispatch(
@@ -106,12 +112,12 @@ export function AggregateReport() {
         namespace,
         podName,
         startAndEnd[0],
-        startAndEnd[0],
+        startAndEnd[1],
         1,
         setData
       )
     );
-  }, [startAndEnd]);
+  }, [startAndEnd, namespace, podName]);
 
   useEffect(() => {
     if (data && data.results) {
@@ -304,7 +310,7 @@ export function AggregateReport() {
                         minWidth: headRow[2].minWidth,
                       }}
                     >
-                      {aggregateReport.average}
+                      {`${aggregateReport.average} ms`}
                     </StyledTableBodyCell>
                     <StyledTableBodyCell
                       align={headRow[3].align}
@@ -313,7 +319,7 @@ export function AggregateReport() {
                         minWidth: headRow[3].minWidth,
                       }}
                     >
-                      {aggregateReport.median}
+                      {`${aggregateReport.median} ms`}
                     </StyledTableBodyCell>
                     <StyledTableBodyCell
                       align={headRow[4].align}
@@ -322,7 +328,7 @@ export function AggregateReport() {
                         minWidth: headRow[4].minWidth,
                       }}
                     >
-                      {aggregateReport.min}
+                      {`${aggregateReport.min} ms`}
                     </StyledTableBodyCell>
                     <StyledTableBodyCell
                       align={headRow[5].align}
@@ -331,7 +337,7 @@ export function AggregateReport() {
                         minWidth: headRow[5].minWidth,
                       }}
                     >
-                      {aggregateReport.max}
+                      {`${aggregateReport.max} ms`}
                     </StyledTableBodyCell>
                     <StyledTableBodyCell
                       align={headRow[6].align}
@@ -340,7 +346,7 @@ export function AggregateReport() {
                         minWidth: headRow[6].minWidth,
                       }}
                     >
-                      {aggregateReport.p50}
+                      {`${aggregateReport.p50} ms`}
                     </StyledTableBodyCell>
                     <StyledTableBodyCell
                       align={headRow[7].align}
@@ -349,7 +355,7 @@ export function AggregateReport() {
                         minWidth: headRow[7].minWidth,
                       }}
                     >
-                      {aggregateReport.p95}
+                      {`${aggregateReport.p95} ms`}
                     </StyledTableBodyCell>
                     <StyledTableBodyCell
                       align={headRow[8].align}
@@ -358,7 +364,7 @@ export function AggregateReport() {
                         minWidth: headRow[8].minWidth,
                       }}
                     >
-                      {aggregateReport.p99}
+                      {`${aggregateReport.p99} ms`}
                     </StyledTableBodyCell>
                     <StyledTableBodyCell
                       align={headRow[9].align}
@@ -367,7 +373,7 @@ export function AggregateReport() {
                         minWidth: headRow[9].minWidth,
                       }}
                     >
-                      {aggregateReport.tps}
+                      {`${aggregateReport.tps.toFixed(2)} /s`}
                     </StyledTableBodyCell>
                     <StyledTableBodyCell
                       align={headRow[10].align}

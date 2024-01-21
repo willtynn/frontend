@@ -7,6 +7,8 @@ const initState = {
   functionalMode: false,
   tearDownOnShutdown: false,
   serializeThreadgroups: false,
+  namespace: '',
+  podName: '',
 
   // Thread Group
   threadGroups: [],
@@ -327,6 +329,18 @@ export default function ApplicationReducer(state = initState, action) {
       return {
         ...state,
         startAndEnd: data
+      }
+
+    case actions.UPDATE_PLAN_NAMESPACE:
+      return {
+        ...state,
+        namespace: data
+      }
+    
+    case actions.UPDATE_PLAN_PODNAME:
+      return {
+        ...state,
+        podName: data
       }
 
     default:
