@@ -56,10 +56,29 @@ export function RouteTraceCanvas(props) {
       });
 
     // Here we're setting the nodes
+    /*旧方案
     nodes.forEach((item, index) => {
       g.setNode(item.ip, {
         label:
           item.name === '' || item.name.trim() === '' ? item.ip : item.name,
+        labelType: 'html',
+        labelStyle: 'overflow: hidden;text-overflow: ellipsis;',
+        class: 'trace_node',
+        id: item.id,
+      });
+    });*/
+    nodes.forEach((item, index) => {
+      let label = 
+      "<div style=\"width:max-content;text-align: center;\"> \
+      <strong style=\"font-size:16px\">" + item.service + "</strong><br> \
+      <table><tbody> \
+      <tr align=\"left\"><td><em style=\"font-size:14px\">IP&nbsp;&nbsp;&nbsp;</em></td><td>" + item.ip + "</td></tr> \
+      <tr align=\"left\"><td><em>耗时&nbsp;&nbsp;&nbsp;</em></td><td>" + item.duration + "</td></tr> \
+      <tr align=\"left\"><td><em>Host&nbsp;&nbsp;&nbsp;</em></td><td>" + item.host_ip + "</td></tr> \
+      </tbody></table></div>";
+      g.setNode(item.ip, {
+        label:
+          label,
         labelType: 'html',
         labelStyle: 'overflow: hidden;text-overflow: ellipsis;',
         class: 'trace_node',
