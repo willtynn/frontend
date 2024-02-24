@@ -34,6 +34,8 @@ export function ThreeLayerCanvas(props) {
   const [calleeId, setCalleeId] = useState('');
   const [calleePath, setCalleePath] = useState('');
 
+  const [svgWidth, setSvgWidth] = useState(0);
+
   const nodeTooltip = useRef(null);
   const edgeTooltip = useRef(null);
 
@@ -128,9 +130,11 @@ export function ThreeLayerCanvas(props) {
     // Center the graph
     var xCenterOffset =
       (svg.property('width').baseVal.value - graph.graph().width) / 2;
-    svgGroup.attr('transform', 'translate(' + xCenterOffset + ', 50)');
+    // svgGroup.attr('transform', 'translate(' + xCenterOffset + ', 50)');
 
     svg.attr('height', graph.graph().height + 100);
+
+    setSvgWidth(graph.graph().width);
   }, [graph]);
 
   window.onresize = () => {
@@ -147,10 +151,11 @@ export function ThreeLayerCanvas(props) {
         fontFamily: fontFamily,
         width: '100%',
         overflow: 'auto',
+        p: "20px"
         // ...shadowStyle,
       }}
     >
-      <svg style={{ minWidth: '100%' }} id='svg-canvas' height='600'>
+      <svg style={{ minWidth: '100%' }} width={svgWidth ? svgWidth + 40 : "none"} id='svg-canvas' height='600'>
         <g id='g-canvas'></g>
       </svg>
       <Box
@@ -244,6 +249,8 @@ export function EdgeCenterCanvas(props) {
   const [callerPath, setCallerPath] = useState('');
   const [calleeId, setCalleeId] = useState('');
   const [calleePath, setCalleePath] = useState('');
+
+  const [svgWidth, setSvgWidth] = useState(0);
 
   const nodeTooltip = useRef(null);
   const edgeTooltip = useRef(null);
@@ -342,9 +349,11 @@ export function EdgeCenterCanvas(props) {
     // Center the graph
     var xCenterOffset =
       (svg.property('width').baseVal.value - graph.graph().width) / 2;
-    svgGroup.attr('transform', 'translate(' + xCenterOffset + ', 50)');
+    // svgGroup.attr('transform', 'translate(' + xCenterOffset + ', 50)');
 
     svg.attr('height', graph.graph().height + 100);
+
+    setSvgWidth(graph.graph().width);
   }, [graph]);
 
   window.onresize = () => {
@@ -360,9 +369,10 @@ export function EdgeCenterCanvas(props) {
       sx={{
         fontFamily: fontFamily,
         width: '100%',
+        p: "20px"
       }}
     >
-      <svg style={{ minWidth: '100%' }} id='interface_svg-canvas' height='1000'>
+      <svg style={{ minWidth: '100%' }} width={svgWidth ? svgWidth + 40 : "none"} id='interface_svg-canvas' height='1000'>
         <g id='interface_g-canvas'></g>
       </svg>
 
