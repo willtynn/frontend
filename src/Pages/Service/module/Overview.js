@@ -43,6 +43,7 @@ import { EclipseTransparentButton } from '../../../components/Button';
 import { KubeCheckbox } from '../../../components/Checkbox';
 import Question from '@/assets/Question.svg';
 import { NormalBoldFont, SmallLightFont } from '@/components/Fonts';
+import { encodeId } from '../../../utils/commonUtils';
 
 function createRow(
   id,
@@ -346,10 +347,6 @@ export default function ServiceOverview(props) {
   };
 
   const isSelected = name => selected.indexOf(name) !== -1;
-
-  const encodeId = (id) => {
-    return id.replace(/\//,"___");
-  }
 
   // 点击服务id跳转页面
   const handleClickById = id => {

@@ -116,3 +116,11 @@ export const parseServiceName = serviceName => {
   }
   return terms[terms.length - 1];
 }
+
+export const encodeId = (id) => {
+  return id.replace(/\//,"___");
+}
+
+export const parseId = (id) => {
+  return id.replace(/___/, "/");
+}

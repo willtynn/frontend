@@ -38,6 +38,7 @@ import {
 } from '@/components/Tab/CircleTab';
 import InfoAlert from '@/assets/InfoAlert.svg';
 import { KubeAutocomplete } from '../../../components/Input';
+import { encodeId } from '../../../utils/commonUtils';
 
 function ServiceDependency() {
   /**
@@ -398,11 +399,12 @@ function ServiceDependency() {
   };
 
   const handleNodeClick = id => {
-    navigate(`/detail/service/${id}`);
+
+    navigate(`/detail/service/${encodeId(id)}`);
   };
 
   const handleInterfaceNodeClick = id => {
-    navigate(`/detail/service/${id}`);
+    navigate(`/detail/service/${encodeId(id)}`);
   };
 
   const handleInterfaceLinkClick = data => {

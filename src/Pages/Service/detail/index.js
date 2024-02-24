@@ -8,14 +8,11 @@ import { searchServiceExactlyById } from '@/actions/serviceAction';
 import GeneralInfo from './GeneralInfo';
 import { DetailInfo } from './DetailInfo';
 import { useParams } from 'react-router';
+import { parseId } from '../../../utils/commonUtils';
 
 export function ServiceDetail() {
   const { serviceId } = useParams();
   const dispatch = useDispatch();
-
-  const parseId = (id) => {
-    return id.replace(/___/, "/");
-  }
 
   useEffect(() => {
     dispatch(searchServiceExactlyById(parseId(serviceId)));
