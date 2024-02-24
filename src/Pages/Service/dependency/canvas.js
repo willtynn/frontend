@@ -8,6 +8,9 @@ import { useEffect, useState } from 'react';
 import { Box, Stack } from '@mui/material';
 import { fontFamily } from '@/utils/commonUtils';
 import './styles.css';
+import { setSnackbarMessageAndOpen } from '../../../actions/snackbarAction';
+import { SEVERITIES } from '../../../components/CommonSnackbar';
+import { useDispatch } from 'react-redux';
 // import D3Tip from '../../../components/Tip/D3Tip';
 
 const normalEdgeStyle = {
@@ -25,6 +28,8 @@ export function ThreeLayerCanvas(props) {
       })
   );
 
+  const dispatch = useDispatch();
+
   const [id, setId] = useState('');
   const [repo, setRepo] = useState('');
   const [imageUrl, setImageUrl] = useState('');
@@ -38,6 +43,7 @@ export function ThreeLayerCanvas(props) {
 
   const nodeTooltip = useRef(null);
   const edgeTooltip = useRef(null);
+
 
   useEffect(() => {
     var g = new dagreD3.graphlib.Graph({ compound: true })
@@ -74,7 +80,9 @@ export function ThreeLayerCanvas(props) {
     g.nodes().forEach(function (v) {
       var node = g.node(v);
       // Round the corners of the nodes
-      node.rx = node.ry = 5;
+      if (node) {
+        node.rx = node.ry = 5;
+      }
     });
 
     setGraph(g);
@@ -87,7 +95,19 @@ export function ThreeLayerCanvas(props) {
     var svg = d3.select(document.getElementById('svg-canvas'));
     let svgGroup = d3.select(document.getElementById('g-canvas'));
     // Run the renderer. This is what draws the final graph.
-    render(svgGroup, graph);
+    try {
+      render(svgGroup, graph);
+    } catch (error) {
+      if (error.message.includes('Cannot set properties of undefined')) {
+        dispatch(
+          setSnackbarMessageAndOpen(
+            'common.errorMessage',
+            { msg: '若未出现图，请重试' },
+            SEVERITIES.warning
+          )
+        );
+      }
+    }
 
     // if (graph._label.height == undefined || graph._label.height == -Infinity) {
     //   return;
@@ -100,8 +120,8 @@ export function ThreeLayerCanvas(props) {
       });
       service_node.addEventListener('mouseover', e => {
         setId(service_node.id);
-        setRepo(services[service_node.id].repo)
-        setImageUrl(services[service_node.id].imageUrl)
+        setRepo(services[service_node.id].repo);
+        setImageUrl(services[service_node.id].imageUrl);
         nodeTooltip.current.style.display = 'block';
         nodeTooltip.current.style.top = e.clientY + 20 + 'px';
         nodeTooltip.current.style.left = e.clientX + 'px';
@@ -116,9 +136,9 @@ export function ThreeLayerCanvas(props) {
       const service_link_info = JSON.parse(service_link.id);
       service_link.addEventListener('mouseover', e => {
         setCallerId(service_link_info.caller);
-        setCallerPath(service_link_info.callerPath)
-        setCalleeId(service_link_info.callee)
-        setCalleePath(service_link_info.calleePath)
+        setCallerPath(service_link_info.callerPath);
+        setCalleeId(service_link_info.callee);
+        setCalleePath(service_link_info.calleePath);
         edgeTooltip.current.style.display = 'block';
         edgeTooltip.current.style.top = e.clientY + 20 + 'px';
         edgeTooltip.current.style.left = e.clientX + 'px';
@@ -151,11 +171,16 @@ export function ThreeLayerCanvas(props) {
         fontFamily: fontFamily,
         width: '100%',
         overflow: 'auto',
-        p: "20px"
+        p: '20px',
         // ...shadowStyle,
       }}
     >
-      <svg style={{ minWidth: '100%' }} width={svgWidth ? svgWidth + 40 : "none"} id='svg-canvas' height='600'>
+      <svg
+        style={{ minWidth: '100%' }}
+        width={svgWidth ? svgWidth + 40 : 'none'}
+        id='svg-canvas'
+        height='600'
+      >
         <g id='g-canvas'></g>
       </svg>
       <Box
@@ -177,15 +202,15 @@ export function ThreeLayerCanvas(props) {
       >
         <Stack direction='column' spacing={1}>
           <Stack direction='row' spacing={1}>
-            <Box sx={{width: "80px"}}>ID</Box>
+            <Box sx={{ width: '80px' }}>ID</Box>
             <Box>{id}</Box>
           </Stack>
           <Stack direction='row' spacing={1}>
-            <Box sx={{width: "80px"}}>代码仓库地址</Box>
+            <Box sx={{ width: '80px' }}>代码仓库地址</Box>
             <Box>{repo}</Box>
           </Stack>
           <Stack direction='row' spacing={1}>
-            <Box sx={{width: "80px"}}>镜像仓库地址</Box>
+            <Box sx={{ width: '80px' }}>镜像仓库地址</Box>
             <Box>{imageUrl}</Box>
           </Stack>
         </Stack>
@@ -210,19 +235,19 @@ export function ThreeLayerCanvas(props) {
       >
         <Stack direction='column' spacing={1}>
           <Stack direction='row' spacing={1}>
-            <Box sx={{width: "80px"}}>源接口ID</Box>
+            <Box sx={{ width: '80px' }}>源接口ID</Box>
             <Box>{callerId}</Box>
           </Stack>
           <Stack direction='row' spacing={1}>
-            <Box sx={{width: "80px"}}>源接口路径</Box>
+            <Box sx={{ width: '80px' }}>源接口路径</Box>
             <Box>{callerPath}</Box>
           </Stack>
           <Stack direction='row' spacing={1}>
-            <Box sx={{width: "80px"}}>目标接口ID</Box>
+            <Box sx={{ width: '80px' }}>目标接口ID</Box>
             <Box>{calleeId}</Box>
           </Stack>
           <Stack direction='row' spacing={1}>
-            <Box sx={{width: "80px"}}>目标接口路径</Box>
+            <Box sx={{ width: '80px' }}>目标接口路径</Box>
             <Box>{calleePath}</Box>
           </Stack>
         </Stack>
@@ -240,6 +265,8 @@ export function EdgeCenterCanvas(props) {
         return {};
       })
   );
+
+  const dispatch = useDispatch();
 
   const [id, setId] = useState('');
   const [repo, setRepo] = useState('');
@@ -291,7 +318,9 @@ export function EdgeCenterCanvas(props) {
     g.nodes().forEach(function (v) {
       var node = g.node(v);
       // Round the corners of the nodes
-      node.rx = node.ry = 5;
+      if (node) {
+        node.rx = node.ry = 5;
+      }
     });
 
     setGraph(g);
@@ -307,7 +336,20 @@ export function EdgeCenterCanvas(props) {
     let svgGroup = d3.select(document.getElementById('interface_g-canvas'));
 
     // Run the renderer. This is what draws the final graph.
-    render(svgGroup, graph);
+    try {
+      render(svgGroup, graph);
+    } catch (error) {
+      console.log(graph.graph().width)
+      if (error.message.includes('Cannot set properties of undefined') && graph.graph().width == undefined) {
+        dispatch(
+          setSnackbarMessageAndOpen(
+            'common.errorMessage',
+            { msg: '若未出现图，请重试' },
+            SEVERITIES.info
+          )
+        );
+      }
+    }
 
     const service_nodes = document.getElementsByClassName('service_node');
     for (const service_node of service_nodes) {
@@ -316,8 +358,8 @@ export function EdgeCenterCanvas(props) {
       });
       service_node.addEventListener('mouseover', e => {
         setId(service_node.id);
-        setRepo(services[service_node.id].repo)
-        setImageUrl(services[service_node.id].imageUrl)
+        setRepo(services[service_node.id].repo);
+        setImageUrl(services[service_node.id].imageUrl);
         nodeTooltip.current.style.display = 'block';
         nodeTooltip.current.style.top = e.clientY + 20 + 'px';
         nodeTooltip.current.style.left = e.clientX + 'px';
@@ -329,13 +371,12 @@ export function EdgeCenterCanvas(props) {
 
     const service_links = document.getElementsByClassName('service_link');
     for (const service_link of service_links) {
-
       const service_link_info = JSON.parse(service_link.id);
       service_link.addEventListener('mouseover', e => {
         setCallerId(service_link_info.caller);
-        setCallerPath(service_link_info.callerPath)
-        setCalleeId(service_link_info.callee)
-        setCalleePath(service_link_info.calleePath)
+        setCallerPath(service_link_info.callerPath);
+        setCalleeId(service_link_info.callee);
+        setCalleePath(service_link_info.calleePath);
         edgeTooltip.current.style.display = 'block';
         edgeTooltip.current.style.top = e.clientY + 20 + 'px';
         edgeTooltip.current.style.left = e.clientX + 'px';
@@ -343,7 +384,6 @@ export function EdgeCenterCanvas(props) {
       service_link.addEventListener('mouseleave', function () {
         edgeTooltip.current.style.display = 'none';
       });
-
     }
 
     // Center the graph
@@ -369,10 +409,15 @@ export function EdgeCenterCanvas(props) {
       sx={{
         fontFamily: fontFamily,
         width: '100%',
-        p: "20px"
+        p: '20px',
       }}
     >
-      <svg style={{ minWidth: '100%' }} width={svgWidth ? svgWidth + 40 : "none"} id='interface_svg-canvas' height='1000'>
+      <svg
+        style={{ minWidth: '100%' }}
+        width={svgWidth ? svgWidth + 40 : 'none'}
+        id='interface_svg-canvas'
+        height='1000'
+      >
         <g id='interface_g-canvas'></g>
       </svg>
 
@@ -395,15 +440,15 @@ export function EdgeCenterCanvas(props) {
       >
         <Stack direction='column' spacing={1}>
           <Stack direction='row' spacing={1}>
-            <Box sx={{width: "80px"}}>ID</Box>
+            <Box sx={{ width: '80px' }}>ID</Box>
             <Box>{id}</Box>
           </Stack>
           <Stack direction='row' spacing={1}>
-            <Box sx={{width: "80px"}}>代码仓库地址</Box>
+            <Box sx={{ width: '80px' }}>代码仓库地址</Box>
             <Box>{repo}</Box>
           </Stack>
           <Stack direction='row' spacing={1}>
-            <Box sx={{width: "80px"}}>镜像仓库地址</Box>
+            <Box sx={{ width: '80px' }}>镜像仓库地址</Box>
             <Box>{imageUrl}</Box>
           </Stack>
         </Stack>
@@ -428,24 +473,23 @@ export function EdgeCenterCanvas(props) {
       >
         <Stack direction='column' spacing={1}>
           <Stack direction='row' spacing={1}>
-            <Box sx={{width: "80px"}}>源接口ID</Box>
+            <Box sx={{ width: '80px' }}>源接口ID</Box>
             <Box>{callerId}</Box>
           </Stack>
           <Stack direction='row' spacing={1}>
-            <Box sx={{width: "80px"}}>源接口路径</Box>
+            <Box sx={{ width: '80px' }}>源接口路径</Box>
             <Box>{callerPath}</Box>
           </Stack>
           <Stack direction='row' spacing={1}>
-            <Box sx={{width: "80px"}}>目标接口ID</Box>
+            <Box sx={{ width: '80px' }}>目标接口ID</Box>
             <Box>{calleeId}</Box>
           </Stack>
           <Stack direction='row' spacing={1}>
-            <Box sx={{width: "80px"}}>目标接口路径</Box>
+            <Box sx={{ width: '80px' }}>目标接口路径</Box>
             <Box>{calleePath}</Box>
           </Stack>
         </Stack>
       </Box>
-
     </Box>
   );
 }
