@@ -399,7 +399,6 @@ function ServiceDependency() {
   };
 
   const handleNodeClick = id => {
-
     navigate(`/detail/service/${encodeId(id)}`);
   };
 

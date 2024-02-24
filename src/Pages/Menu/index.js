@@ -167,6 +167,10 @@ export default function MiniDrawer() {
     fontFamily: fontFamily,
   };
 
+  const toHomePage = () => {
+    navigate("/cluster/overview");
+  }
+
   return (
     <>
       {/* 顶部导航栏 */}
@@ -189,7 +193,7 @@ export default function MiniDrawer() {
               alignItems='center'
               sx={{ height: '100%', ml: '20px' }}
             >
-              <KubeTransparentButton sx={styledButton}>
+              <KubeTransparentButton onClick={toHomePage} sx={styledButton}>
                 <Gear />
                 <span
                   style={{

@@ -5,7 +5,7 @@ import * as React from 'react';
 import Box from '@mui/material/Box';
 import Divider from '@mui/material/Divider';
 import { Grid, Stack } from '@mui/material';
-import { Outlet } from 'react-router-dom';
+import { Outlet, useNavigate } from 'react-router-dom';
 import CommonSnackBar from '../../components/CommonSnackbar';
 import { useEffect } from 'react';
 import { fontFamily } from '../../utils/commonUtils';
@@ -15,11 +15,17 @@ import { KubeTransparentButton } from '../../components/Button';
 
 export function HeadBar() {
 
+  const navigate = useNavigate();
+
   useEffect(() => {
     if(!localStorage.getItem("current_cluster")) {
       localStorage.setItem("current_cluster", "ices104");
     }
   }, []);
+
+  const toHomePage = () => {
+    navigate("/cluster/overview");
+  }
 
   const styledButton = {
     borderRadius: '100px',
@@ -50,7 +56,7 @@ export function HeadBar() {
               alignItems='center'
               sx={{ height: '100%', ml: '20px' }}
             >
-              <KubeTransparentButton sx={styledButton}>
+              <KubeTransparentButton onClick={toHomePage} sx={styledButton}>
                 <Gear />
                 <span
                   style={{
