@@ -44,7 +44,6 @@ export function ThreeLayerCanvas(props) {
   const nodeTooltip = useRef(null);
   const edgeTooltip = useRef(null);
 
-
   useEffect(() => {
     var g = new dagreD3.graphlib.Graph({ compound: true })
       .setGraph({})
@@ -172,7 +171,6 @@ export function ThreeLayerCanvas(props) {
         width: '100%',
         overflow: 'auto',
         p: '20px',
-        // ...shadowStyle,
       }}
     >
       <svg
@@ -339,8 +337,11 @@ export function EdgeCenterCanvas(props) {
     try {
       render(svgGroup, graph);
     } catch (error) {
-      console.log(graph.graph().width)
-      if (error.message.includes('Cannot set properties of undefined') && graph.graph().width == undefined) {
+      console.log(graph.graph().width);
+      if (
+        error.message.includes('Cannot set properties of undefined') &&
+        graph.graph().width == undefined
+      ) {
         dispatch(
           setSnackbarMessageAndOpen(
             'common.errorMessage',
@@ -409,6 +410,7 @@ export function EdgeCenterCanvas(props) {
       sx={{
         fontFamily: fontFamily,
         width: '100%',
+        overflow: 'auto',
         p: '20px',
       }}
     >
@@ -494,7 +496,6 @@ export function EdgeCenterCanvas(props) {
   );
 }
 
-
 export function FreeCanvas(props) {
   const { nodes, links, handleNodeClick } = props;
   const [graph, setGraph] = useState(
@@ -578,8 +579,11 @@ export function FreeCanvas(props) {
     try {
       render(svgGroup, graph);
     } catch (error) {
-      console.log(graph.graph().width)
-      if (error.message.includes('Cannot set properties of undefined') && graph.graph().width == undefined) {
+      console.log(graph.graph().width);
+      if (
+        error.message.includes('Cannot set properties of undefined') &&
+        graph.graph().width == undefined
+      ) {
         dispatch(
           setSnackbarMessageAndOpen(
             'common.errorMessage',
