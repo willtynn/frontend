@@ -493,3 +493,146 @@ export function EdgeCenterCanvas(props) {
     </Box>
   );
 }
+
+
+export function FreeCanvas(props) {
+  const { nodes, links, handleNodeClick } = props;
+  const [graph, setGraph] = useState(
+    new dagreD3.graphlib.Graph({ compound: true })
+      .setGraph({})
+      .setDefaultEdgeLabel(() => {
+        return {};
+      })
+  );
+
+  const dispatch = useDispatch();
+
+  const [id, setId] = useState('');
+  const [repo, setRepo] = useState('');
+  const [imageUrl, setImageUrl] = useState('');
+
+  const [callerId, setCallerId] = useState('');
+  const [callerPath, setCallerPath] = useState('');
+  const [calleeId, setCalleeId] = useState('');
+  const [calleePath, setCalleePath] = useState('');
+
+  const [svgWidth, setSvgWidth] = useState(0);
+
+  const nodeTooltip = useRef(null);
+  const edgeTooltip = useRef(null);
+
+  useEffect(() => {
+    var g = new dagreD3.graphlib.Graph({ compound: true })
+      .setGraph({})
+      .setDefaultEdgeLabel(() => {
+        return {};
+      });
+
+    // Here we're setting the nodes
+    nodes.forEach((item, index) => {
+      g.setNode(item.id, {
+        label: item.label,
+        class: 'service_node',
+        id: item.id,
+      });
+    });
+
+    links.forEach((item, index) => {
+      if (item.center) {
+        g.setEdge(item.source, item.target, {
+          style: 'stroke: #f66; stroke-width: 3px; fill: none;',
+          arrowheadStyle: 'fill: #f66; width: 3px;',
+          class: 'service_link',
+          id: JSON.stringify(item.invoke_info),
+        });
+      } else {
+        g.setEdge(item.source, item.target, {
+          ...normalEdgeStyle,
+          class: 'service_link',
+          id: JSON.stringify(item.invoke_info),
+        });
+      }
+    });
+
+    g.nodes().forEach(function (v) {
+      var node = g.node(v);
+      // Round the corners of the nodes
+      if (node) {
+        node.rx = node.ry = 5;
+      }
+    });
+
+    setGraph(g);
+  }, [links]);
+
+  useEffect(() => {
+    // Create the renderer
+    var render = new dagreD3.render();
+
+    // Set up an SVG group so that we can translate the final graph.
+
+    let svg = d3.select(document.getElementById('interface_svg-canvas'));
+    let svgGroup = d3.select(document.getElementById('interface_g-canvas'));
+
+    // Run the renderer. This is what draws the final graph.
+    try {
+      render(svgGroup, graph);
+    } catch (error) {
+      console.log(graph.graph().width)
+      if (error.message.includes('Cannot set properties of undefined') && graph.graph().width == undefined) {
+        dispatch(
+          setSnackbarMessageAndOpen(
+            'common.errorMessage',
+            { msg: '若未出现图，请重试' },
+            SEVERITIES.info
+          )
+        );
+      }
+    }
+
+    const service_nodes = document.getElementsByClassName('service_node');
+    for (const service_node of service_nodes) {
+      service_node.addEventListener('click', () => {
+        handleNodeClick(service_node.id);
+      });
+    }
+
+    const service_links = document.getElementsByClassName('service_link');
+
+    // Center the graph
+    var xCenterOffset =
+      (svg.property('width').baseVal.value - graph.graph().width) / 2;
+    // svgGroup.attr('transform', 'translate(' + xCenterOffset + ', 50)');
+
+    svg.attr('height', graph.graph().height + 100);
+
+    setSvgWidth(graph.graph().width);
+  }, [graph]);
+
+  window.onresize = () => {
+    let svg = d3.select(document.getElementById('interface_svg-canvas'));
+    let svgGroup = d3.select(document.getElementById('interface_g-canvas'));
+    var xCenterOffset =
+      (svg.property('width').baseVal.value - graph.graph().width) / 2;
+    svgGroup.attr('transform', 'translate(' + xCenterOffset + ', 50)');
+  };
+
+  return (
+    <Box
+      sx={{
+        fontFamily: fontFamily,
+        width: '100%',
+        p: '20px',
+      }}
+    >
+      <svg
+        style={{ minWidth: '100%' }}
+        width={svgWidth ? svgWidth + 40 : 'none'}
+        id='interface_svg-canvas'
+        height='1000'
+      >
+        <g id='interface_g-canvas'></g>
+      </svg>
+    </Box>
+  );
+}

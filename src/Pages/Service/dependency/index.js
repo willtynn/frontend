@@ -3,7 +3,7 @@
  */
 import React from 'react';
 import { useState, useEffect, useRef } from 'react';
-import { ThreeLayerCanvas, EdgeCenterCanvas } from './canvas';
+import { ThreeLayerCanvas, EdgeCenterCanvas, FreeCanvas } from './canvas';
 import { useDispatch, useSelector } from 'react-redux';
 import {
   Box,
@@ -39,6 +39,330 @@ import {
 import InfoAlert from '@/assets/InfoAlert.svg';
 import { KubeAutocomplete } from '../../../components/Input';
 import { encodeId } from '../../../utils/commonUtils';
+
+const fakeNodes = [
+  {
+    id: 'train-ticket/ts-admin-basic-info-service',
+    label: 'train-ticket/ts-admin-basic-info-service',
+  },
+  {
+    id: 'train-ticket/ts-basic-service',
+    label: 'train-ticket/ts-basic-service',
+  },
+  {
+    id: 'train-ticket/ts-food-service',
+    label: 'train-ticket/ts-food-service',
+  },
+  {
+    id: 'train-ticket/ts-preserve-other-service',
+    label: 'train-ticket/ts-preserve-other-service',
+  },
+  {
+    id: 'train-ticket/ts-preserve-service',
+    label: 'train-ticket/ts-preserve-service',
+  },
+  {
+    id: 'train-ticket/ts-station-service',
+    label: 'train-ticket/ts-station-service',
+  },
+];
+
+const fakeLinks = [
+  {
+    source: 'train-ticket/ts-admin-basic-info-service',
+    target: 'train-ticket/ts-station-service',
+    invoke_info: {
+      caller:
+        'train-ticket/ts-admin-basic-info-service::/api/v1/adminbasicservice/adminbasic/stations:Get',
+      callerPath: '/api/v1/adminbasicservice/adminbasic/stations',
+      callerDetail: {
+        name: 'train-ticket/ts-admin-basic-info-service',
+        repo: 'https://github.com/FudanSELab/train-ticket.git',
+        imageUrl: 'codewisdom/ts-admin-basic-info-service-with-jaeger',
+      },
+      callee:
+        'train-ticket/ts-station-service::/api/v1/stationservice/stations:Get',
+      calleePath: '/api/v1/stationservice/stations',
+      calleeDetail: {
+        name: 'train-ticket/ts-station-service',
+        repo: 'https://github.com/FudanSELab/train-ticket.git',
+        imageUrl: 'codewisdom/ts-station-service-with-jaeger',
+      },
+      requestSize: '0',
+      responseSize: '329',
+    },
+    center: true,
+  },
+  {
+    source: 'train-ticket/ts-basic-service',
+    target: 'train-ticket/ts-station-service',
+    invoke_info: {
+      caller: 'train-ticket/ts-basic-service::/api/v1/basicservice/basic/:Get',
+      callerPath: '/api/v1/basicservice/basic/',
+      callerDetail: {
+        name: 'train-ticket/ts-basic-service',
+        repo: 'https://github.com/FudanSELab/train-ticket.git',
+        imageUrl: 'codewisdom/ts-basic-service-with-jaeger',
+      },
+      callee:
+        'train-ticket/ts-station-service::/api/v1/stationservice/stations:Get',
+      calleePath: '/api/v1/stationservice/stations',
+      calleeDetail: {
+        name: 'train-ticket/ts-station-service',
+        repo: 'https://github.com/FudanSELab/train-ticket.git',
+        imageUrl: 'codewisdom/ts-station-service-with-jaeger',
+      },
+      requestSize: '0',
+      responseSize: '46',
+    },
+    center: true,
+  },
+  {
+    source: 'train-ticket/ts-basic-service',
+    target: 'train-ticket/ts-station-service',
+    invoke_info: {
+      caller:
+        'train-ticket/ts-basic-service::/api/v1/basicservice/basic/travel:Post',
+      callerPath: '/api/v1/basicservice/basic/travel',
+      callerDetail: {
+        name: 'train-ticket/ts-basic-service',
+        repo: 'https://github.com/FudanSELab/train-ticket.git',
+        imageUrl: 'codewisdom/ts-basic-service-with-jaeger',
+      },
+      callee:
+        'train-ticket/ts-station-service::/api/v1/stationservice/stations:Get',
+      calleePath: '/api/v1/stationservice/stations',
+      calleeDetail: {
+        name: 'train-ticket/ts-station-service',
+        repo: 'https://github.com/FudanSELab/train-ticket.git',
+        imageUrl: 'codewisdom/ts-station-service-with-jaeger',
+      },
+      requestSize: '0',
+      responseSize: '46',
+    },
+    center: true,
+  },
+  {
+    source: 'train-ticket/ts-food-service',
+    target: 'train-ticket/ts-station-service',
+    invoke_info: {
+      caller: 'train-ticket/ts-food-service::/api/v1/foodservice/foods/:Get',
+      callerPath: '/api/v1/foodservice/foods/',
+      callerDetail: {
+        name: 'train-ticket/ts-food-service',
+        repo: 'https://github.com/FudanSELab/train-ticket.git',
+        imageUrl: 'codewisdom/ts-food-service-with-jaeger',
+      },
+      callee:
+        'train-ticket/ts-station-service::/api/v1/stationservice/stations:Get',
+      calleePath: '/api/v1/stationservice/stations',
+      calleeDetail: {
+        name: 'train-ticket/ts-station-service',
+        repo: 'https://github.com/FudanSELab/train-ticket.git',
+        imageUrl: 'codewisdom/ts-station-service-with-jaeger',
+      },
+      requestSize: '0',
+      responseSize: '46',
+    },
+    center: true,
+  },
+  {
+    source: 'train-ticket/ts-preserve-other-service',
+    target: 'train-ticket/ts-station-service',
+    invoke_info: {
+      caller:
+        'train-ticket/ts-preserve-other-service::/api/v1/preserveotherservice/preserveOther:Post',
+      callerPath: '/api/v1/preserveotherservice/preserveOther',
+      callerDetail: {
+        name: 'train-ticket/ts-preserve-other-service',
+        repo: 'https://github.com/FudanSELab/train-ticket.git',
+        imageUrl: 'codewisdom/ts-preserve-other-service-with-jaeger',
+      },
+      callee:
+        'train-ticket/ts-station-service::/api/v1/stationservice/stations:Get',
+      calleePath: '/api/v1/stationservice/stations',
+      calleeDetail: {
+        name: 'train-ticket/ts-station-service',
+        repo: 'https://github.com/FudanSELab/train-ticket.git',
+        imageUrl: 'codewisdom/ts-station-service-with-jaeger',
+      },
+      requestSize: '0',
+      responseSize: '46',
+    },
+    center: true,
+  },
+  {
+    source: 'train-ticket/ts-preserve-service',
+    target: 'train-ticket/ts-station-service',
+    invoke_info: {
+      caller:
+        'train-ticket/ts-preserve-service::/api/v1/preserveservice/preserve:Post',
+      callerPath: '/api/v1/preserveservice/preserve',
+      callerDetail: {
+        name: 'train-ticket/ts-preserve-service',
+        repo: 'https://github.com/FudanSELab/train-ticket.git',
+        imageUrl: 'codewisdom/ts-preserve-service-with-jaeger',
+      },
+      callee:
+        'train-ticket/ts-station-service::/api/v1/stationservice/stations:Get',
+      calleePath: '/api/v1/stationservice/stations',
+      calleeDetail: {
+        name: 'train-ticket/ts-station-service',
+        repo: 'https://github.com/FudanSELab/train-ticket.git',
+        imageUrl: 'codewisdom/ts-station-service-with-jaeger',
+      },
+      requestSize: '0',
+      responseSize: '46',
+    },
+    center: true,
+  },
+  // {
+  //   source: 'train-ticket/ts-ticketinfo-service',
+  //   target: 'train-ticket/ts-basic-service',
+  //   invoke_info: {
+  //     caller:
+  //       'train-ticket/ts-ticketinfo-service::/api/v1/ticketinfoservice/ticketinfo/:Get',
+  //     callerPath: '/api/v1/ticketinfoservice/ticketinfo/',
+  //     callerDetail: {
+  //       name: 'train-ticket/ts-ticketinfo-service',
+  //       repo: 'https://github.com/FudanSELab/train-ticket.git',
+  //       imageUrl: 'codewisdom/ts-ticketinfo-service-with-jaeger',
+  //     },
+  //     callee: 'train-ticket/ts-basic-service::/api/v1/basicservice/basic/:Get',
+  //     calleePath: '/api/v1/basicservice/basic/',
+  //     calleeDetail: {
+  //       name: 'train-ticket/ts-basic-service',
+  //       repo: 'https://github.com/FudanSELab/train-ticket.git',
+  //       imageUrl: 'codewisdom/ts-basic-service-with-jaeger',
+  //     },
+  //     requestSize: '0',
+  //     responseSize: '46',
+  //   },
+  //   center: false,
+  // },
+  // {
+  //   source: 'train-ticket/ts-ticketinfo-service',
+  //   target: 'train-ticket/ts-basic-service',
+  //   invoke_info: {
+  //     caller:
+  //       'train-ticket/ts-ticketinfo-service::/api/v1/ticketinfoservice/ticketinfo/:Get',
+  //     callerPath: '/api/v1/ticketinfoservice/ticketinfo/',
+  //     callerDetail: {
+  //       name: 'train-ticket/ts-ticketinfo-service',
+  //       repo: 'https://github.com/FudanSELab/train-ticket.git',
+  //       imageUrl: 'codewisdom/ts-ticketinfo-service-with-jaeger',
+  //     },
+  //     callee:
+  //       'train-ticket/ts-basic-service::/api/v1/basicservice/basic/travel:Post',
+  //     calleePath: '/api/v1/basicservice/basic/travel',
+  //     calleeDetail: {
+  //       name: 'train-ticket/ts-basic-service',
+  //       repo: 'https://github.com/FudanSELab/train-ticket.git',
+  //       imageUrl: 'codewisdom/ts-basic-service-with-jaeger',
+  //     },
+  //     requestSize: '339',
+  //     responseSize: '223',
+  //   },
+  //   center: false,
+  // },
+  // {
+  //   source: 'train-ticket/ts-ticketinfo-service',
+  //   target: 'train-ticket/ts-basic-service',
+  //   invoke_info: {
+  //     caller:
+  //       'train-ticket/ts-ticketinfo-service::/api/v1/ticketinfoservice/ticketinfo:Post',
+  //     callerPath: '/api/v1/ticketinfoservice/ticketinfo',
+  //     callerDetail: {
+  //       name: 'train-ticket/ts-ticketinfo-service',
+  //       repo: 'https://github.com/FudanSELab/train-ticket.git',
+  //       imageUrl: 'codewisdom/ts-ticketinfo-service-with-jaeger',
+  //     },
+  //     callee: 'train-ticket/ts-basic-service::/api/v1/basicservice/basic/:Get',
+  //     calleePath: '/api/v1/basicservice/basic/',
+  //     calleeDetail: {
+  //       name: 'train-ticket/ts-basic-service',
+  //       repo: 'https://github.com/FudanSELab/train-ticket.git',
+  //       imageUrl: 'codewisdom/ts-basic-service-with-jaeger',
+  //     },
+  //     requestSize: '0',
+  //     responseSize: '44',
+  //   },
+  //   center: false,
+  // },
+  // {
+  //   source: 'train-ticket/ts-ticketinfo-service',
+  //   target: 'train-ticket/ts-basic-service',
+  //   invoke_info: {
+  //     caller:
+  //       'train-ticket/ts-ticketinfo-service::/api/v1/ticketinfoservice/ticketinfo:Post',
+  //     callerPath: '/api/v1/ticketinfoservice/ticketinfo',
+  //     callerDetail: {
+  //       name: 'train-ticket/ts-ticketinfo-service',
+  //       repo: 'https://github.com/FudanSELab/train-ticket.git',
+  //       imageUrl: 'codewisdom/ts-ticketinfo-service-with-jaeger',
+  //     },
+  //     callee:
+  //       'train-ticket/ts-basic-service::/api/v1/basicservice/basic/travel:Post',
+  //     calleePath: '/api/v1/basicservice/basic/travel',
+  //     calleeDetail: {
+  //       name: 'train-ticket/ts-basic-service',
+  //       repo: 'https://github.com/FudanSELab/train-ticket.git',
+  //       imageUrl: 'codewisdom/ts-basic-service-with-jaeger',
+  //     },
+  //     requestSize: '336',
+  //     responseSize: '233',
+  //   },
+  //   center: false,
+  // },
+  {
+    source: 'train-ticket/ts-preserve-other-service',
+    target: 'train-ticket/ts-food-service',
+    invoke_info: {
+      caller:
+        'train-ticket/ts-preserve-other-service::/api/v1/preserveotherservice/preserveOther:Post',
+      callerPath: '/api/v1/preserveotherservice/preserveOther',
+      callerDetail: {
+        name: 'train-ticket/ts-preserve-other-service',
+        repo: 'https://github.com/FudanSELab/train-ticket.git',
+        imageUrl: 'codewisdom/ts-preserve-other-service-with-jaeger',
+      },
+      callee: 'train-ticket/ts-food-service::/api/v1/foodservice/orders:Post',
+      calleePath: '/api/v1/foodservice/orders',
+      calleeDetail: {
+        name: 'train-ticket/ts-food-service',
+        repo: 'https://github.com/FudanSELab/train-ticket.git',
+        imageUrl: 'codewisdom/ts-food-service-with-jaeger',
+      },
+      requestSize: '155',
+      responseSize: '226',
+    },
+    center: false,
+  },
+  {
+    source: 'train-ticket/ts-preserve-service',
+    target: 'train-ticket/ts-food-service',
+    invoke_info: {
+      caller:
+        'train-ticket/ts-preserve-service::/api/v1/preserveservice/preserve:Post',
+      callerPath: '/api/v1/preserveservice/preserve',
+      callerDetail: {
+        name: 'train-ticket/ts-preserve-service',
+        repo: 'https://github.com/FudanSELab/train-ticket.git',
+        imageUrl: 'codewisdom/ts-preserve-service-with-jaeger',
+      },
+      callee: 'train-ticket/ts-food-service::/api/v1/foodservice/orders:Post',
+      calleePath: '/api/v1/foodservice/orders',
+      calleeDetail: {
+        name: 'train-ticket/ts-food-service',
+        repo: 'https://github.com/FudanSELab/train-ticket.git',
+        imageUrl: 'codewisdom/ts-food-service-with-jaeger',
+      },
+      requestSize: '155',
+      responseSize: '226',
+    },
+    center: false,
+  },
+];
 
 function ServiceDependency() {
   /**
@@ -348,7 +672,7 @@ function ServiceDependency() {
               center: false,
             });
           }
-          if (path.find((value, index) => value === node) === undefined) {
+          if (path.find((value, index) => value === callee_node) === undefined) {
             _recursive_search(callee_node, isDown, [...path, callee_node]);
           }
         }
@@ -361,6 +685,7 @@ function ServiceDependency() {
       for (const down_node of target_down_nodes) {
         _recursive_search(down_node, true, [down_node]);
       }
+
       for (const node of Object.values(graph_dict)) {
         nodes.push(node);
       }
@@ -494,7 +819,7 @@ function ServiceDependency() {
                       setCurrentService(newValue);
                     }}
                     id='positive_service_autocomplete'
-                    noOptionsText="无可选服务"
+                    noOptionsText='无可选服务'
                     options={Object.keys(positiveServices)}
                     filterOptions={(options, params) => {
                       const { inputValue } = params;
@@ -604,7 +929,7 @@ function ServiceDependency() {
                       setCurrentInterface(newValue);
                     }}
                     id='positive_interface_autocomplete'
-                    noOptionsText="无可选接口"
+                    noOptionsText='无可选接口'
                     options={Object.keys(positiveInterfaces)}
                     filterOptions={(options, params) => {
                       const { inputValue } = params;
@@ -691,6 +1016,12 @@ function ServiceDependency() {
                     </Box>
                   )}
                 </Box>
+
+                {/* <FreeCanvas
+                  nodes={fakeNodes}
+                  links={fakeLinks}
+                  handleNodeClick={() => {}}
+                /> */}
               </Box>
             </StyledTabPanel>
           </Tabs>
