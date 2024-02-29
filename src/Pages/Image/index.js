@@ -324,6 +324,9 @@ export default function ImagesList(props) {
               selectAll={true}
               checkAll={checkAll}
               setCheckAll={setCheckAll}
+              sx={{
+                textTransform: 'none !important'
+              }}
             />
 
             <TableBody>
