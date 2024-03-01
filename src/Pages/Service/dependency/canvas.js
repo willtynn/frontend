@@ -11,7 +11,7 @@ import './styles.css';
 import { setSnackbarMessageAndOpen } from '../../../actions/snackbarAction';
 import { SEVERITIES } from '../../../components/CommonSnackbar';
 import { useDispatch } from 'react-redux';
-import { decodeInterfaceForService } from '../../../utils/commonUtils';
+import { decodeInterfaceForService, decodeInterfaceForInterface } from '../../../utils/commonUtils';
 // import D3Tip from '../../../components/Tip/D3Tip';
 
 const normalEdgeStyle = {
@@ -309,8 +309,10 @@ export function EdgeCenterCanvas(props) {
     });
 
     links.forEach((item, index) => {
+      const calleePath = item.invoke_info.calleePath ?? "";
       if (item.center) {
         g.setEdge(item.source, item.target, {
+          label: calleePath,
           style: 'stroke: #f66; stroke-width: 1.5px; fill: none;',
           arrowheadStyle: 'fill: #f66; width: 1.5px;',
           class: 'service_link',
@@ -318,6 +320,7 @@ export function EdgeCenterCanvas(props) {
         });
       } else {
         g.setEdge(item.source, item.target, {
+          label: calleePath,
           ...normalEdgeStyle,
           class: 'service_link',
           id: JSON.stringify(item.invoke_info),
