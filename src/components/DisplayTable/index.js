@@ -327,7 +327,7 @@ export function GlobalPagination(props) {
 }
 
 export function StyledTableHead(props) {
-  const { headRow, selectAll, order, orderBy, onRequestSort, checkAll, setCheckAll } = props;
+  const { headRow, selectAll, order, orderBy, onRequestSort, checkAll, setCheckAll, sx={} } = props;
 
   const createSortHandler = property => event => {
     onRequestSort(event, property);
@@ -399,6 +399,7 @@ export function StyledTableHead(props) {
               sx={{
                 maxWidth: item.maxWidth,
                 minWidth: item.minWidth,
+                ...sx,
               }}
             >
               {item.label}
