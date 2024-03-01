@@ -14,8 +14,8 @@ import { useDispatch } from 'react-redux';
 // import D3Tip from '../../../components/Tip/D3Tip';
 
 const normalEdgeStyle = {
-  style: 'stroke: #333; stroke-width: 3px; fill: none;',
-  arrowheadStyle: 'fill: #333; width: 3px;',
+  style: 'stroke: #333; stroke-width: 1px; fill: none;',
+  arrowheadStyle: 'fill: #333; width: 1px;',
 };
 
 export function ThreeLayerCanvas(props) {
@@ -299,8 +299,8 @@ export function EdgeCenterCanvas(props) {
     links.forEach((item, index) => {
       if (item.center) {
         g.setEdge(item.source, item.target, {
-          style: 'stroke: #f66; stroke-width: 3px; fill: none;',
-          arrowheadStyle: 'fill: #f66; width: 3px;',
+          style: 'stroke: #f66; stroke-width: 1.5px; fill: none;',
+          arrowheadStyle: 'fill: #f66; width: 1.5px;',
           class: 'service_link',
           id: JSON.stringify(item.invoke_info),
         });
