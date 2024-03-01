@@ -101,6 +101,14 @@ export const decodeInterfaceSymbol = (symbol) => {
   return sub_symbol_arr
 }
 
+export const decodeInterfaceForService = (symbol) => {
+  const sub_symbol_arr = symbol.split("::");
+  if(sub_symbol_arr.length !== 2) {
+    return "";
+  }
+  return sub_symbol_arr[0];
+}
+
 export const getBoolString = str => {
   if(str === false) {
     return "否";

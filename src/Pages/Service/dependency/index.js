@@ -596,6 +596,7 @@ function ServiceDependency() {
   }, [currentService]);
 
   useEffect(() => {
+    // console.log("currentInterface", currentInterface)
     if (currentInterface !== null) {
       if (dependency === null) {
         dispatch(
@@ -994,6 +995,7 @@ function ServiceDependency() {
                       handleNodeClick={handleInterfaceNodeClick}
                       handleLinkClick={handleInterfaceLinkClick}
                       services={positiveServices}
+                      target={currentInterface}
                     />
                   ) : (
                     <Box

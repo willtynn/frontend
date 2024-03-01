@@ -11,6 +11,7 @@ import './styles.css';
 import { setSnackbarMessageAndOpen } from '../../../actions/snackbarAction';
 import { SEVERITIES } from '../../../components/CommonSnackbar';
 import { useDispatch } from 'react-redux';
+import { decodeInterfaceForService } from '../../../utils/commonUtils';
 // import D3Tip from '../../../components/Tip/D3Tip';
 
 const normalEdgeStyle = {
@@ -255,7 +256,7 @@ export function ThreeLayerCanvas(props) {
 }
 
 export function EdgeCenterCanvas(props) {
-  const { nodes, links, handleNodeClick, services } = props;
+  const { nodes, links, handleNodeClick, services, target } = props;
   const [graph, setGraph] = useState(
     new dagreD3.graphlib.Graph({ compound: true })
       .setGraph({})
@@ -280,6 +281,8 @@ export function EdgeCenterCanvas(props) {
   const nodeTooltip = useRef(null);
   const edgeTooltip = useRef(null);
 
+  const service = decodeInterfaceForService(target);
+
   useEffect(() => {
     var g = new dagreD3.graphlib.Graph({ compound: true })
       .setGraph({})
@@ -289,11 +292,20 @@ export function EdgeCenterCanvas(props) {
 
     // Here we're setting the nodes
     nodes.forEach((item, index) => {
-      g.setNode(item.id, {
-        label: item.label,
-        class: 'service_node',
-        id: item.id,
-      });
+      if (item.id == service) {
+        g.setNode(item.id, {
+          label: item.label,
+          class: 'service_node',
+          id: item.id,
+          style: 'fill: #ffd47f',
+        });
+      } else {
+        g.setNode(item.id, {
+          label: item.label,
+          class: 'service_node',
+          id: item.id,
+        });
+      }
     });
 
     links.forEach((item, index) => {
