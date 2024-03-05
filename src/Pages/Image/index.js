@@ -126,7 +126,7 @@ export default function ImagesList(props) {
   const headFirstRow = [
     createRow('name', '镜像名', false, '150px', '170px', true, 1, 1, 'left'),
     createRow('version', '版本', false, '100px', '100px', true, 1, 1, 'center'),
-    createRow('size', '大小（MB）', false, '120px', '130px', true, 1, 1, 'center'),
+    createRow('size', '大小（Bytes）', false, '120px', '130px', true, 1, 1, 'center'),
     createRow('cluster', '所在节点', false, '120px', '130px', true, 1, 1, 'center'),
     createRow('delete', '操作', false, '120px', '130px', true, 1, 1, 'center'),
   ];
