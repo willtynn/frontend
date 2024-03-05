@@ -1,4 +1,4 @@
-import { useEffect, useState, useMemo } from 'react';
+import {useEffect, useState, useMemo, useRef} from 'react';
 import {
   StyledTableContainer,
   StyledTableBodyCell,
@@ -11,7 +11,7 @@ import {
   Typography,
   Tooltip,
   TableBody,
-  Stack, IconButton, TextField,
+  Stack, IconButton, TextField, Modal,
 } from '@mui/material';
 import React from 'react';
 import ServiceQuery from '@/assets/ServiceQuery.svg';
@@ -20,13 +20,25 @@ import { getImageList, deleteImage } from '../../actions/imageAction';
 import GeneralService from '@/assets/GeneralService.svg';
 import { KubeCheckbox } from '../../components/Checkbox';
 import DeleteIcon from "@mui/icons-material/Delete";
-import {EclipseTransparentButton, KubeConfirmButton} from "../../components/Button";
+import {EclipseTransparentButton, KubeCancelButton, KubeConfirmButton} from "../../components/Button";
 import VisibilityIcon from "@mui/icons-material/Visibility";
 import RefreshIcon from "@mui/icons-material/Refresh";
 import {ChipTextField, StyledAutocomplete} from "../../components/Input";
 import SearchIcon from "@mui/icons-material/Search";
 import { fontFamily } from '@/utils/commonUtils';
 import {StyledTableFooter} from "../../components/DisplayTable";
+import DeployProgress from "../Cluster/deploy/DeployProgress";
+import ProgressIndicator from "../Cluster/deploy/DeployProgress/ProgressIndicator";
+import InfoFinished from '@/assets/InfoFinished.svg';
+import InfoWaiting from '@/assets/InfoWaiting.svg';
+import InfoNow from '@/assets/InfoNow.svg';
+import DockerFinished from '@/assets/DockerFinished.svg';
+import DockerWaiting from '@/assets/DockerWaiting.svg';
+import DockerNow from '@/assets/DockerNow.svg';
+import {KubeDeploymentCard} from "../../components/InfoCard";
+import AceEditor from 'react-ace';
+import 'ace-builds/src-noconflict/mode-json';
+import 'ace-builds/src-noconflict/theme-github';
 
 function TextLabel(props) {
   const { text } = props;
@@ -75,6 +87,8 @@ export default function ImagesList(props) {
   const [selectedImageIndex, setSelectedImageIndex] = useState(0);
   const [clusterSelected, setClusterSelected] = useState('ices04');
   const dispatch = useDispatch();
+  const [open, setOpen] = useState(false);
+  const [jsonValue, setJsonValue] = useState('');
 
   const { imageList } = useSelector(state => {
     return {
@@ -159,6 +173,19 @@ export default function ImagesList(props) {
       setImagePage(newPage);
     }
   };
+
+  const handleAddClick = () => {
+    setOpen(true);
+  }
+
+  const handleClose = () => {
+    setOpen(false);
+  }
+
+  const handleInputChange = (value) => {
+    setJsonValue(value);
+  }
+
   return (
     <>
       <Box
@@ -298,7 +325,7 @@ export default function ImagesList(props) {
               </Stack>
               <Stack direction='row' spacing={1}>
                 <KubeConfirmButton
-                  // onClick={handleAddClick}
+                  onClick={handleAddClick}
                   sx={{
                     width: '96px',
                     height: '32px',
@@ -431,6 +458,76 @@ export default function ImagesList(props) {
             pb: '10px',
           }}
         />
+        <Modal open={open} onClose={handleClose}>
+         <Box
+          sx={{
+            position: 'absolute',
+            top: '50%',
+            left: '50%',
+            transform: 'translate(-50%, -50%)',
+            width: '960px',
+            boxShadow: 24,
+            height: 'calc(100% - 120px)',
+            fontFamily: fontFamily,
+          }}
+         >
+           <KubeDeploymentCard
+             title='镜像缓存配置'
+             handleClose={handleClose}
+           >
+             <Stack
+               direction='row'
+               spacing={0}
+               sx={{bgcolor: '#eff4f9', p: '0px 20px'}}
+             >
+               <ProgressIndicator
+                 title='镜像缓存方案'
+                 adornments={[<InfoWaiting/>, <InfoNow/>, <InfoFinished/>]}
+                 stage={1}
+                 // currentStage={currentStage}
+               />
+             </Stack>
+             {/*{currentPage(currentStage)}*/}
+             <AceEditor
+               mode="json"
+               theme="github"
+               onChange={handleInputChange}
+               value={jsonValue}
+               editorProps={{ $blockScrolling: true }}
+               placeholder="Enter JSON here..."
+               width="100%"
+               height="calc(100% - 200px)"
+             />
+             {/* 按钮组 */}
+             <Stack
+               sx={{
+                 mt: '80px',
+                 position: 'absolute',
+                 bottom: '12px',
+                 width: 'calc(100% - 64px)',
+                 bgcolor: '#f9fbfd',
+               }}
+               direction='row'
+               spacing={3}
+               justifyContent='flex-end'
+               alignItems='flex-end'
+             >
+               <KubeCancelButton
+                 sx={{height: '32px', p: '5px 23px'}}
+                 onClick={handleClose}
+               >
+                 取消
+               </KubeCancelButton>
+               <KubeConfirmButton
+                 sx={{height: '32px', p: '5px 23px'}}
+                 onClick={handleClose}
+               >
+                 创建
+               </KubeConfirmButton>
+             </Stack>
+           </KubeDeploymentCard>
+         </Box>
+        </Modal>
       </Box>
     </>
   );

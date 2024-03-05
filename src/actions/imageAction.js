@@ -45,7 +45,10 @@ export function getImageList(cluster) {
             node: cluster,
           }
         })
-        dispatch({ type: UPDATE_LIST, data: data });
+        const newData = data.filter((item) => {
+          return item.imageVersion !=='';
+        })
+        dispatch({ type: UPDATE_LIST, data: newData });
       } else {
         dispatch({ type: UPDATE_LIST, data: [] });
         dispatch(
