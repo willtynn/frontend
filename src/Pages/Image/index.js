@@ -38,7 +38,7 @@ import DockerNow from '@/assets/DockerNow.svg';
 import {KubeDeploymentCard} from "../../components/InfoCard";
 import AceEditor from 'react-ace';
 import 'ace-builds/src-noconflict/mode-json';
-import 'ace-builds/src-noconflict/theme-github';
+import 'ace-builds/src-noconflict/theme-xcode';
 
 function TextLabel(props) {
   const { text } = props;
@@ -126,7 +126,7 @@ export default function ImagesList(props) {
   const headFirstRow = [
     createRow('name', '镜像名', false, '150px', '170px', true, 1, 1, 'left'),
     createRow('version', '版本', false, '100px', '100px', true, 1, 1, 'center'),
-    createRow('size', '大小（Bytes）', false, '120px', '130px', true, 1, 1, 'center'),
+    createRow('size', '大小（MB）', false, '120px', '130px', true, 1, 1, 'center'),
     createRow('cluster', '所在节点', false, '120px', '130px', true, 1, 1, 'center'),
     createRow('delete', '操作', false, '120px', '130px', true, 1, 1, 'center'),
   ];
@@ -490,7 +490,7 @@ export default function ImagesList(props) {
              {/*{currentPage(currentStage)}*/}
              <AceEditor
                mode="json"
-               theme="github"
+               theme="xcode"
                onChange={handleInputChange}
                value={jsonValue}
                editorProps={{ $blockScrolling: true }}
