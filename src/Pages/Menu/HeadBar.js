@@ -12,6 +12,7 @@ import { fontFamily } from '../../utils/commonUtils';
 import Workbench from '@/assets/Workbench.svg';
 import Gear from '@/assets/Gear.svg';
 import { KubeTransparentButton } from '../../components/Button';
+import { LanguageButton } from '../../components/Button/LanguageButton';
 
 export function HeadBar() {
 
@@ -69,19 +70,7 @@ export function HeadBar() {
                   平台管理
                 </span>
               </KubeTransparentButton>
-              <KubeTransparentButton sx={styledButton}>
-                <Workbench />
-                <span
-                  style={{
-                    marginLeft: '12px',
-                    fontStyle: 'normal',
-                    fontSize: '12px',
-                    lineHeight: 1.67,
-                  }}
-                >
-                  工作台
-                </span>
-              </KubeTransparentButton>
+              <LanguageButton />
             </Stack>
           </Grid>
 

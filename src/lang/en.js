@@ -1,4 +1,7 @@
 export const messages = {
+  lang: {
+    language: "Language",
+  },
   serviceOverview: {
 
   },

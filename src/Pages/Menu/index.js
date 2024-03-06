@@ -28,6 +28,7 @@ import Service16 from '@/assets/Service16.svg';
 import Application16 from '@/assets/Application16.svg';
 import Route16 from '@/assets/Route16.svg';
 import Link16 from '@/assets/Link16.svg';
+import { LanguageButton } from '../../components/Button/LanguageButton';
 
 export default function MiniDrawer() {
   // 这部分变量用于控制导航列表打开/关闭
@@ -206,19 +207,7 @@ export default function MiniDrawer() {
                   平台管理
                 </span>
               </KubeTransparentButton>
-              <KubeTransparentButton sx={styledButton}>
-                <Workbench />
-                <span
-                  style={{
-                    marginLeft: '12px',
-                    fontStyle: 'normal',
-                    fontSize: '12px',
-                    lineHeight: 1.67,
-                  }}
-                >
-                  工作台
-                </span>
-              </KubeTransparentButton>
+              <LanguageButton />
             </Stack>
           </Grid>
 

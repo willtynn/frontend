@@ -41,7 +41,7 @@ export function StyledPopover(props) {
           return (
             <Stack
               direction='row'
-              onClick={value[3]}
+              onClick={value[2]}
               sx={{
                 color: '#FFFFFF',
                 '&:hover': {

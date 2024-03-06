@@ -1,4 +1,7 @@
 export const messages = {
+  lang: {
+    language: "语言",
+  },
   menu: {
     clusterMangementDescription:
       '对多集群以及每个集群的基础资源、服务组件和应用资源等的统一管理。',
