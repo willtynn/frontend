@@ -36,9 +36,9 @@ import DockerFinished from '@/assets/DockerFinished.svg';
 import DockerWaiting from '@/assets/DockerWaiting.svg';
 import DockerNow from '@/assets/DockerNow.svg';
 import {KubeDeploymentCard} from "../../components/InfoCard";
-import AceEditor from 'react-ace';
-import 'ace-builds/src-noconflict/mode-json';
-import 'ace-builds/src-noconflict/theme-xcode';
+// import AceEditor from 'react-ace';
+// import 'ace-builds/src-noconflict/mode-json';
+// import 'ace-builds/src-noconflict/theme-xcode';
 
 function TextLabel(props) {
   const { text } = props;
