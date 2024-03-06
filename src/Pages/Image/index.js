@@ -36,9 +36,9 @@ import DockerFinished from '@/assets/DockerFinished.svg';
 import DockerWaiting from '@/assets/DockerWaiting.svg';
 import DockerNow from '@/assets/DockerNow.svg';
 import {KubeDeploymentCard} from "../../components/InfoCard";
-// import AceEditor from 'react-ace';
-// import 'ace-builds/src-noconflict/mode-json';
-// import 'ace-builds/src-noconflict/theme-xcode';
+import AceEditor from 'react-ace';
+import 'ace-builds/src-noconflict/mode-json';
+import 'ace-builds/src-noconflict/theme-xcode';
 
 function TextLabel(props) {
   const { text } = props;
@@ -488,16 +488,16 @@ export default function ImagesList(props) {
                />
              </Stack>
              {/*{currentPage(currentStage)}*/}
-             {/*<AceEditor*/}
-             {/*  mode="json"*/}
-             {/*  theme="xcode"*/}
-             {/*  onChange={handleInputChange}*/}
-             {/*  value={jsonValue}*/}
-             {/*  editorProps={{ $blockScrolling: true }}*/}
-             {/*  placeholder="Enter JSON here..."*/}
-             {/*  width="100%"*/}
-             {/*  height="calc(100% - 200px)"*/}
-             {/*/>*/}
+             <AceEditor
+               mode="json"
+               theme="xcode"
+               onChange={handleInputChange}
+               value={jsonValue}
+               editorProps={{ $blockScrolling: true }}
+               placeholder="Enter JSON here..."
+               width="100%"
+               height="calc(100% - 200px)"
+             />
              {/* 按钮组 */}
              <Stack
                sx={{
