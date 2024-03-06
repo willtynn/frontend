@@ -488,16 +488,16 @@ export default function ImagesList(props) {
                />
              </Stack>
              {/*{currentPage(currentStage)}*/}
-             <AceEditor
-               mode="json"
-               theme="xcode"
-               onChange={handleInputChange}
-               value={jsonValue}
-               editorProps={{ $blockScrolling: true }}
-               placeholder="Enter JSON here..."
-               width="100%"
-               height="calc(100% - 200px)"
-             />
+             {/*<AceEditor*/}
+             {/*  mode="json"*/}
+             {/*  theme="xcode"*/}
+             {/*  onChange={handleInputChange}*/}
+             {/*  value={jsonValue}*/}
+             {/*  editorProps={{ $blockScrolling: true }}*/}
+             {/*  placeholder="Enter JSON here..."*/}
+             {/*  width="100%"*/}
+             {/*  height="calc(100% - 200px)"*/}
+             {/*/>*/}
              {/* 按钮组 */}
              <Stack
                sx={{
