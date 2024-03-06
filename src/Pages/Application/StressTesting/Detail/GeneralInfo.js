@@ -19,7 +19,7 @@ import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
 import { StyledPopover } from '@/components/Popover';
 import { getBoolString } from '../../../../utils/commonUtils';
 import { measure } from '@/actions/applicationAction';
-
+import { useIntl } from 'react-intl';
 
 const labelStyle = {
   fontSize: '12px',
@@ -54,6 +54,7 @@ export default function GeneralInfo(props) {
   const moreOperationOpen = Boolean(moreOperationAnchorEl);
   const [backText, setBackText] = useState("能力测试");
   const dispatch = useDispatch();
+  const intl = useIntl();
 
   const { currentPlan } = useSelector(state => {
     return {
@@ -180,7 +181,7 @@ export default function GeneralInfo(props) {
           <KubeCancelButton sx={{ height: '32px', width: '96px' }} onClick={() => {
             dispatch(measure(currentPlan.id));
           }}>
-            开始测试  
+            {intl.messages["stressTesting.startTest"]}
           </KubeCancelButton>
           <KubeCancelButton
             onClick={handleMoreOperation}

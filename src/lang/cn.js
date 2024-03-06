@@ -85,6 +85,7 @@ export const messages = {
     finished: '已设置',
   },
   stressTesting: {
+    startTest: "开始测试",
     stressTestingDescription:
       '考察当前软件和硬件环境下，系统所能承受的最大负荷，并帮助找出系统的瓶颈所在。',
     planNameDescription:
@@ -116,6 +117,6 @@ export const messages = {
     aggregateReportUpdateeSuccess: "聚合报告已生成。",
     aggregateReportUpdateeError: "聚合报告生成失败，请重试。",
     getStartAndEndFailedMsg: "测试时间获取失败。",
-    aggregateExcelExportFailedMsg: "Excel导出失败，请重试..."
+    aggregateExcelExportFailedMsg: "Excel导出失败，请重试...",
   },
 };
