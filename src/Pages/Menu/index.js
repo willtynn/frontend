@@ -37,6 +37,8 @@ export default function MiniDrawer() {
   const [verticalOpen3, setVerticalOpen3] = useState(false);
   const [verticalOpen4, setVerticalOpen4] = useState(false);
   const [verticalOpen5, setVerticalOpen5] = useState(false);
+  const [verticalOpen6, setVerticalOpen6] = useState(false);
+  const [verticalOpen7, setVerticalOpen7] = useState(false);
 
   // 这部分变量用于控制导航列表按钮字体颜色
   // 集群模块
@@ -58,6 +60,12 @@ export default function MiniDrawer() {
   // 镜像模块
   const [l5, setl5] = useState(false);
   const [l51, setl51] = useState(false);
+  // 模型拆分模块
+  const [l6, setl6] = useState(false);
+  const [l61, setl61] = useState(false);
+
+  const [l7, setl7] = useState(false);
+  const [l71, setl71] = useState(false);
 
   const intl = useIntl();
   const [clusterSelectOpen, setClusterSelectOpen] = useState(false);
@@ -89,6 +97,14 @@ export default function MiniDrawer() {
     setl5(l51);
   }, [l51]);
 
+  useEffect(() => {
+    setl6(l61);
+  }, [l61]);
+
+  useEffect(() => {
+    setl7(l71);
+  }, [l71]);
+
   const setAllFalse = () => {
     setl1(false);
     setl11(false);
@@ -104,6 +120,10 @@ export default function MiniDrawer() {
     setl41(false);
     setl5(false);
     setl51(false);
+    setl6(false);
+    setl61(false);
+    setl7(false);
+    setl71(false);
   };
   const handleClick1 = () => {
     setVerticalOpen1(!verticalOpen1);
@@ -123,6 +143,14 @@ export default function MiniDrawer() {
 
   const handleClick5 = () => {
     setVerticalOpen5(!verticalOpen5);
+  };
+
+  const handleClick6 = () => {
+    setVerticalOpen6(!verticalOpen6);
+  };
+
+  const handleClick7 = () => {
+    setVerticalOpen7(!verticalOpen7);
   };
 
   const handlelClusterSelectClose = () => {
@@ -523,6 +551,76 @@ export default function MiniDrawer() {
                       sx={{ ...styledFont, color: l51 ? '#55bc8a' : '#242e42' }}
                     >
                       镜像列表
+                    </Box>
+                  </ListItemButton>
+                </List>
+              </Collapse>
+            </List>
+            <List sx={{ paddingTop: '0px', paddingBottom: '0px' }}>
+              <ListItemButton
+                sx={{
+                  ...styleListButton,
+                  paddingLeft: '12px',
+                }}
+                onClick={handleClick6}
+              >
+                <Box sx={styledIcon}>
+                  <Service16 />
+                </Box>
+                <Box sx={{ ...styledFont, color: l6 ? '#55bc8a' : '#242e42' }}>
+                  模型拆分
+                </Box>
+                {verticalOpen6 ? <ExpandLess /> : <ExpandMore />}
+              </ListItemButton>
+              <Collapse in={verticalOpen6} timeout='auto' unmountOnExit={true}>
+                <List component='div' disablePadding>
+                  <ListItemButton
+                    sx={styleListButton}
+                    onClick={() => {
+                      setAllFalse();
+                      setl61(true);
+                      navigate('/partition/strategy');
+                    }}
+                  >
+                    <Box
+                      sx={{ ...styledFont, color: l61 ? '#55bc8a' : '#242e42' }}
+                    >
+                      拆分方案管理
+                    </Box>
+                  </ListItemButton>
+                </List>
+              </Collapse>
+            </List>
+            <List sx={{ paddingTop: '0px', paddingBottom: '0px' }}>
+              <ListItemButton
+                sx={{
+                  ...styleListButton,
+                  paddingLeft: '12px',
+                }}
+                onClick={handleClick7}
+              >
+                <Box sx={styledIcon}>
+                  <Service16 />
+                </Box>
+                <Box sx={{ ...styledFont, color: l7 ? '#55bc8a' : '#242e42' }}>
+                  模型管理
+                </Box>
+                {verticalOpen7 ? <ExpandLess /> : <ExpandMore />}
+              </ListItemButton>
+              <Collapse in={verticalOpen7} timeout='auto' unmountOnExit={true}>
+                <List component='div' disablePadding>
+                  <ListItemButton
+                    sx={styleListButton}
+                    onClick={() => {
+                      setAllFalse();
+                      setl71(true);
+                      navigate('/model/overview');
+                    }}
+                  >
+                    <Box
+                      sx={{ ...styledFont, color: l71 ? '#55bc8a' : '#242e42' }}
+                    >
+                      模型列表
                     </Box>
                   </ListItemButton>
                 </List>

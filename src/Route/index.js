@@ -17,6 +17,10 @@ import StressTesting from '../Pages/Application/StressTesting';
 import ImagesList from '../Pages/Image';
 import { TestPlanDetail } from '../Pages/Application/StressTesting/Detail';
 import { ResultDetail } from '../Pages/Application/StressTesting/ResultDetail';
+import PartitionStrategy from '../Pages/Partition/overview';
+import { SubModelPage } from '../Pages/Partition/overview/SubModels';
+import ModelOverview from '../Pages/Model/overview';
+import { ModelDetail } from '../Pages/Model/detail'
 
 export default function MyRoute() {
   return (
@@ -29,6 +33,8 @@ export default function MyRoute() {
         <Route path='testplan/:testPlanId' element={<TestPlanDetail />}/>
         <Route path='planresult/:testResultId' element={<ResultDetail />}/>
         <Route path='trace/:start/:end/:traceId' element={<RouteTraceInfoPage />}/>
+        <Route path='model/:modelId' element={<ModelDetail />}/>
+        <Route path='strategy/:id' element={<SubModelPage />} />
       </Route>
 
       {/* 存在导航栏 */}
@@ -54,6 +60,12 @@ export default function MyRoute() {
         </Route>
         <Route path='images/'>
           <Route path="list" element={<ImagesList />} />
+        </Route>
+        <Route path='partition/'>
+          <Route path='strategy' element={<PartitionStrategy />} />
+        </Route>
+        <Route path='model/'>
+          <Route path='overview' element={<ModelOverview />} />
         </Route>
       </Route>
     </Routes>
