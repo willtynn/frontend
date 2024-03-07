@@ -11,6 +11,8 @@ import { useNavigate } from 'react-router-dom';
 
 import { calculateDuration } from '../functions/func.js';
 
+import { useIntl } from 'react-intl';
+
 const labelStyle = {
   fontSize: '12px',
   fontWeight: 400,
@@ -41,6 +43,7 @@ export default function GeneralInfo(props) {
   const { info } = props;
 
   const navigate = useNavigate();
+  const intl = useIntl();
 
   const handleReturn = () => {
     navigate(-1);
@@ -87,7 +90,7 @@ export default function GeneralInfo(props) {
                 },
               }}
             >
-              路由链路
+              {intl.messages['routeTrace.popWindowTitle']}
             </Box>
           </Stack>
         </KubeCancelButton>
@@ -151,33 +154,33 @@ export default function GeneralInfo(props) {
             mb: '12px',
           }}
         >
-          详情
+          {intl.messages['routeTrace.popWindowDetail']}
         </Box>
 
         {/* Key-Value Pair */}
         <Stack sx={{ margin: '6px 0px' }} direction='column' spacing={1.5}>
           <Stack direction='row' spacing={0.75}>
-            <Box sx={labelStyle}>服务 API</Box>
+            <Box sx={labelStyle}>{intl.messages['routeTrace.popWindowServiceApi']}</Box>
             <Box sx={valueStyle}>{info !== null ? info.api : ''}</Box>
           </Stack>
           <Stack direction='row' spacing={0.75}>
-            <Box sx={labelStyle}>请求数量</Box>
+            <Box sx={labelStyle}>{intl.messages['routeTrace.popWindowRequestCount']}</Box>
             <Box sx={valueStyle}>{info !== null ? info.count : ''}</Box>
           </Stack>
           <Stack direction='row' spacing={0.75}>
-            <Box sx={labelStyle}>Low</Box>
+            <Box sx={labelStyle}>{intl.messages['routeTrace.popWindowLow']}</Box>
             <Box sx={valueStyle}>
               {info !== null ? calculateDuration(info.low) : ''}
             </Box>
           </Stack>
           <Stack direction='row' spacing={0.75}>
-            <Box sx={labelStyle}>95%</Box>
+            <Box sx={labelStyle}>{intl.messages['routeTrace.popWindow95']}</Box>
             <Box sx={valueStyle}>
               {info !== null ? calculateDuration(info.percentile95) : ''}
             </Box>
           </Stack>
           <Stack direction='row' spacing={0.75}>
-            <Box sx={labelStyle}>High</Box>
+            <Box sx={labelStyle}>{intl.messages['routeTrace.popWindowHigh']}</Box>
             <Box sx={valueStyle}>
               {info !== null ? calculateDuration(info.high) : ''}
             </Box>

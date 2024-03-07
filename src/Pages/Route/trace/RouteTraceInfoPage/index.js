@@ -34,44 +34,15 @@ import GeneralInfo from './GeneralInfo';
 
 import { getRouteService, getRouteTrace } from '@/actions/routeAction';
 
-const spanNumPerPage = 10;
+import { useIntl } from 'react-intl';
 
-const traceTableHeaders = [
-  { key: 'service', align: 'left', text: '请求', minWidth: 350, maxWidth: 350 },
-  {
-    key: 'spanNum',
-    align: 'center',
-    text: '链路长度',
-    minWidth: 85,
-    maxWidth: 85,
-  },
-  {
-    key: 'time',
-    align: 'center',
-    text: '开始时间',
-    minWidth: 150,
-    maxWidth: 150,
-  },
-  {
-    key: 'duration',
-    align: 'center',
-    text: '响应时间',
-    minWidth: 80,
-    maxWidth: 80,
-  },
-  {
-    key: 'status',
-    align: 'center',
-    text: '请求状态',
-    minWidth: 75,
-    maxWidth: 75,
-  },
-];
+const spanNumPerPage = 10;
 
 export function RouteTraceInfoPage() {
   const { start, end, traceId } = useParams();
 
   const dispatch = useDispatch();
+  const intl = useIntl();
 
   const [traceRow, setTraceRow] = useState([]);
   const [tracePage, setTracePage] = useState(0);
@@ -86,6 +57,39 @@ export function RouteTraceInfoPage() {
       routeTrace: state.Route.routeTrace,
     };
   });
+  
+
+  const traceTableHeaders = [
+    { key: 'service', align: 'left', text: intl.messages['routeTrace.popWindowTableTitleRequest'], minWidth: 350, maxWidth: 350 },
+    {
+      key: 'spanNum',
+      align: 'center',
+      text: intl.messages['routeTrace.popWindowTableTitleLinkLength'],
+      minWidth: 85,
+      maxWidth: 85,
+    },
+    {
+      key: 'time',
+      align: 'center',
+      text: intl.messages['routeTrace.popWindowTableTitleStartTime'],
+      minWidth: 150,
+      maxWidth: 150,
+    },
+    {
+      key: 'duration',
+      align: 'center',
+      text: intl.messages['routeTrace.popWindowTableTitleResponseTime'],
+      minWidth: 80,
+      maxWidth: 80,
+    },
+    {
+      key: 'status',
+      align: 'center',
+      text: intl.messages['routeTrace.popWindowTableTitleStatus'],
+      minWidth: 75,
+      maxWidth: 75,
+    },
+  ];
 
   const detailVisibleRows = React.useMemo(() => {
     const tmp = (tracePage - 1) * spanNumPerPage;
@@ -176,7 +180,7 @@ export function RouteTraceInfoPage() {
       <Stack sx={{ width: '100%' }}>
         <Tabs defaultValue={1}>
           <StyledTabsList>
-            <StyledTab value={1}>请求信息</StyledTab>
+            <StyledTab value={1}>{intl.messages['routeTrace.modalTitle']}</StyledTab>
           </StyledTabsList>
         </Tabs>
         <Modal open={openModal} onClose={handleCloseModal} closeAfterTransition>
@@ -213,17 +217,17 @@ export function RouteTraceInfoPage() {
                   <div style={{ justifyContent: 'center' }}>
                     <Stack spacing={1}>
                       <Stack direction='row' spacing={20}>
-                        <NormalFont sx={{ width: '60px' }}>服务ID</NormalFont>
+                        <NormalFont sx={{ width: '60px' }}>{intl.messages['routeTrace.modalServiceId']}</NormalFont>
                         <NormalFontBlack>{detailSpan.id}</NormalFontBlack>
                       </Stack>
                       <Stack direction='row' spacing={20}>
-                        <NormalFont sx={{ width: '60px' }}>服务名</NormalFont>
+                        <NormalFont sx={{ width: '60px' }}>{intl.messages['routeTrace.modalServiceName']}</NormalFont>
                         <NormalFontBlack>{detailSpan.service}</NormalFontBlack>
                       </Stack>
                       <Stack direction='row' spacing={20}>
-                        <NormalFont sx={{ width: '60px' }}>时间</NormalFont>
+                        <NormalFont sx={{ width: '60px' }}>{intl.messages['routeTrace.modalTime']}</NormalFont>
                         <NormalFontBlack>
-                          {dayjs(detailSpan.time).format('YYYY-MM-DD HH:mm:ss')}
+                          {dayjs(detailSpan.time).format(intl.messages['routeTrace.timeFormat'])}
                         </NormalFontBlack>
                       </Stack>
                     </Stack>

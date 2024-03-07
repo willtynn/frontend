@@ -119,4 +119,65 @@ export const messages = {
     getStartAndEndFailedMsg: "测试时间获取失败。",
     aggregateExcelExportFailedMsg: "Excel导出失败，请重试...",
   },
+  routeTrace: {
+    title: "路由链路",
+    titleHint: "查看服务的路由链路",
+
+    duration1M: "1分钟内",
+    duration2M: "2分钟内",
+    duration5M: "5分钟内",
+    duration10M: "10分钟内",
+    duration30M: "30分钟内",
+    duration1H: "1小时内",
+    duration3H: "3小时内",
+    duration6H: "6小时内",
+    duration12H: "12小时内",
+    duration1D: "1天内",
+    duration7D: "7天内",
+    durationCustom: "自定义",
+
+    serviceTableButtonSearch: "搜索",
+    serviceTableTitleService: "服务",
+    serviceTableTitleApi: "接口",
+    serviceTableTitleRequestCount: "请求次数",
+    serviceTableTitleLow: "Low",
+    serviceTableTitle05: "0.5",
+    serviceTableTitle095: "0.95",
+    serviceTableTitle099: "0.99",
+    serviceTableTitleHigh: "High",
+    serviceTableContentNoData: "无数据",
+    serviceTableContentNoDataHint: "您可以尝试刷新数据",
+
+    timeFormat: "YYYY-MM-DD HH:mm:ss",
+
+    popWindowTimeConsuming: "耗时",
+    popWindowNoLinkDiagram: "无链路图",
+
+    popWindowToday: "今天",
+    popWindowYesterday: "昨天",
+    popWindowDaysAgo: "天前",
+    popWindowHoursAgo: "小时前",
+    popWindowMinutesAgo: "分钟前",
+    popWindowSecondsAgo: "秒前",
+
+    popWindowTitle: "路由链路",
+    popWindowDetail: "详情",
+    popWindowServiceApi: "服务 API",
+    popWindowRequestCount: "请求数量",
+    popWindowLow: "Low",
+    popWindow95: "95%",
+    popWindowHigh: "High",
+
+    popWindowTableTitleRequest: "请求",
+    popWindowTableTitleLinkLength: "链路长度",
+    popWindowTableTitleStartTime: "开始时间",
+    popWindowTableTitleResponseTime: "响应时间",
+    popWindowTableTitleStatus: "请求状态",
+
+
+    modalTitle: "请求信息",
+    modalServiceId: "服务ID",
+    modalServiceName: "服务名",
+    modalTime: "时间",
+  }
 };

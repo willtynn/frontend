@@ -13,10 +13,14 @@ import {
 
 import {calculateDuration} from '../functions/func.js'
 
+import { useIntl } from 'react-intl';
+
 const defaultMinWidth = ['350px', '30px', '150px', '80px', '40px'];
 
 export function DataRow(props) {
   const { key, rowData, onRowClick, selected, minWidth } = props;
+
+  const intl = useIntl();
   
   let _minWidth = minWidth;
   if (!minWidth) {
@@ -25,7 +29,7 @@ export function DataRow(props) {
 
   if(rowData)
   {
-    let time = dayjs(rowData.time).format('YYYY-MM-DD HH:mm:ss')
+    let time = dayjs(rowData.time).format(intl.messages["timeFormat"])
     let duration = calculateDuration(rowData.duration)
 
     return (
