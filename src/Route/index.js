@@ -21,7 +21,9 @@ import PartitionStrategy from '../Pages/Partition/overview';
 import { SubModelPage } from '../Pages/Partition/overview/SubModels';
 import ModelOverview from '../Pages/Model/overview';
 import { ModelDetail } from '../Pages/Model/detail'
-
+import InferInstanceDeploy from '../Pages/InferApplication';
+import InferRouteTrace from '../Pages/InferRoute/trace';
+import { InferRouteTraceInfoPage } from '../Pages/InferRoute/trace/RouteTraceInfoPage';
 export default function MyRoute() {
   return (
     <Routes>
@@ -33,6 +35,7 @@ export default function MyRoute() {
         <Route path='testplan/:testPlanId' element={<TestPlanDetail />}/>
         <Route path='planresult/:testResultId' element={<ResultDetail />}/>
         <Route path='trace/:start/:end/:traceId' element={<RouteTraceInfoPage />}/>
+        <Route path='infertrace/:start/:end/:traceId' element={<InferRouteTraceInfoPage />}/>
         <Route path='model/:modelId' element={<ModelDetail />}/>
         <Route path='strategy/:id' element={<SubModelPage />} />
       </Route>
@@ -54,9 +57,11 @@ export default function MyRoute() {
         <Route path='route/'>
           <Route path='trace' element={<RouteTrace />} />
           <Route path='controlling' element={<RouteControlling />} />
+          <Route path='infertrace' element={<InferRouteTrace />} />
         </Route>
         <Route path='application/'>
           <Route path="stress_testing" element={<StressTesting />} />
+          <Route path='deploy' element={<InferInstanceDeploy />} />
         </Route>
         <Route path='images/'>
           <Route path="list" element={<ImagesList />} />

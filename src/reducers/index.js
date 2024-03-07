@@ -9,6 +9,8 @@ import ImageReducer from "./imageReducer";
 import LangReducer from './langReducer';
 import PartitionReducer from "./partitionReducer";
 import ModelReducer from './modelReducer';
+import InferApplicationReducer from './inferApplicationReducer';
+import InferRouteReducer from './inferRouteReducer';
 
 const rootReducer = combineReducers({
     Service: ServiceReducer,
@@ -21,6 +23,8 @@ const rootReducer = combineReducers({
     Lang: LangReducer,
     Partition: PartitionReducer,
     Model: ModelReducer,
+    InferInstance: InferApplicationReducer,
+    InferRoute: InferRouteReducer,
 });
 
 export default rootReducer;

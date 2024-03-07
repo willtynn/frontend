@@ -39,6 +39,8 @@ export default function MiniDrawer() {
   const [verticalOpen5, setVerticalOpen5] = useState(false);
   const [verticalOpen6, setVerticalOpen6] = useState(false);
   const [verticalOpen7, setVerticalOpen7] = useState(false);
+  const [verticalOpen8, setVerticalOpen8] = useState(false);
+  const [verticalOpen9, setVerticalOpen9] = useState(false);
 
   // 这部分变量用于控制导航列表按钮字体颜色
   // 集群模块
@@ -66,6 +68,12 @@ export default function MiniDrawer() {
 
   const [l7, setl7] = useState(false);
   const [l71, setl71] = useState(false);
+
+  const [l8, setl8] = useState(false);
+  const [l81, setl81] = useState(false);
+
+  const [l9, setl9] = useState(false);
+  const [l91, setl91] = useState(false);
 
   const intl = useIntl();
   const [clusterSelectOpen, setClusterSelectOpen] = useState(false);
@@ -105,6 +113,14 @@ export default function MiniDrawer() {
     setl7(l71);
   }, [l71]);
 
+  useEffect(() => {
+    setl8(l81);
+  }, [l81]);
+
+  useEffect(() => {
+    setl9(l91);
+  }, [l91]);
+
   const setAllFalse = () => {
     setl1(false);
     setl11(false);
@@ -124,6 +140,10 @@ export default function MiniDrawer() {
     setl61(false);
     setl7(false);
     setl71(false);
+    setl8(false);
+    setl81(false);
+    setl9(false);
+    setl91(false);
   };
   const handleClick1 = () => {
     setVerticalOpen1(!verticalOpen1);
@@ -151,6 +171,14 @@ export default function MiniDrawer() {
 
   const handleClick7 = () => {
     setVerticalOpen7(!verticalOpen7);
+  };
+
+  const handleClick8 = () => {
+    setVerticalOpen8(!verticalOpen8);
+  };
+
+  const handleClick9 = () => {
+    setVerticalOpen9(!verticalOpen9);
   };
 
   const handlelClusterSelectClose = () => {
@@ -621,6 +649,76 @@ export default function MiniDrawer() {
                       sx={{ ...styledFont, color: l71 ? '#55bc8a' : '#242e42' }}
                     >
                       模型列表
+                    </Box>
+                  </ListItemButton>
+                </List>
+              </Collapse>
+            </List>
+            <List sx={{ paddingTop: '0px', paddingBottom: '0px' }}>
+              <ListItemButton
+                sx={{
+                  ...styleListButton,
+                  paddingLeft: '12px',
+                }}
+                onClick={handleClick8}
+              >
+                <Box sx={styledIcon}>
+                  <Service16 />
+                </Box>
+                <Box sx={{ ...styledFont, color: l8 ? '#55bc8a' : '#242e42' }}>
+                  推理实例管理
+                </Box>
+                {verticalOpen8 ? <ExpandLess /> : <ExpandMore />}
+              </ListItemButton>
+              <Collapse in={verticalOpen8} timeout='auto' unmountOnExit={true}>
+                <List component='div' disablePadding>
+                  <ListItemButton
+                    sx={styleListButton}
+                    onClick={() => {
+                      setAllFalse();
+                      setl81(true);
+                      navigate('/application/deploy');
+                    }}
+                  >
+                    <Box
+                      sx={{ ...styledFont, color: l81 ? '#55bc8a' : '#242e42' }}
+                    >
+                      推理实例
+                    </Box>
+                  </ListItemButton>
+                </List>
+              </Collapse>
+            </List>
+            <List sx={{ paddingTop: '0px', paddingBottom: '0px' }}>
+              <ListItemButton
+                sx={{
+                  ...styleListButton,
+                  paddingLeft: '12px',
+                }}
+                onClick={handleClick9}
+              >
+                <Box sx={styledIcon}>
+                  <Link16 />
+                </Box>
+                <Box sx={{ ...styledFont, color: l9 ? '#55bc8a' : '#242e42' }}>
+                  推理请求管理
+                </Box>
+                {verticalOpen9 ? <ExpandLess /> : <ExpandMore />}
+              </ListItemButton>
+              <Collapse in={verticalOpen9} timeout='auto' unmountOnExit={true}>
+                <List component='div' disablePadding>
+                  <ListItemButton
+                    sx={styleListButton}
+                    onClick={() => {
+                      setAllFalse();
+                      setl91(true);
+                      navigate('/route/infertrace');
+                    }}
+                  >
+                    <Box
+                      sx={{ ...styledFont, color: l91 ? '#55bc8a' : '#242e42' }}
+                    >
+                      推理请求
                     </Box>
                   </ListItemButton>
                 </List>
