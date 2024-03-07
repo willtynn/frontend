@@ -13,10 +13,13 @@ import Workbench from '@/assets/Workbench.svg';
 import Gear from '@/assets/Gear.svg';
 import { KubeTransparentButton } from '../../components/Button';
 import { LanguageButton } from '../../components/Button/LanguageButton';
+import { useIntl } from 'react-intl';
 
 export function HeadBar() {
 
   const navigate = useNavigate();
+
+  const intl = useIntl();
 
   useEffect(() => {
     if(!localStorage.getItem("current_cluster")) {
@@ -65,9 +68,10 @@ export function HeadBar() {
                     fontStyle: 'normal',
                     fontSize: '12px',
                     lineHeight: 1.67,
+                    textTransform: "none"
                   }}
                 >
-                  平台管理
+                  {intl.messages['menu.platformManagement']}
                 </span>
               </KubeTransparentButton>
               <LanguageButton />

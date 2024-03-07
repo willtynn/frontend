@@ -202,9 +202,10 @@ export default function MiniDrawer() {
                     fontStyle: 'normal',
                     fontSize: '12px',
                     lineHeight: 1.67,
+                    textTransform: "none"
                   }}
                 >
-                  平台管理
+                  {intl.messages['menu.platformManagement']}
                 </span>
               </KubeTransparentButton>
               <LanguageButton />
