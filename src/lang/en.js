@@ -4,6 +4,11 @@ export const messages = {
     copyboard: 'Copied, please continue.',
     serviceTableContentNoData: 'No data',
     serviceTableContentNoDataHint: 'You can try to refresh the data',
+    cancel: "Cancel",
+    create: "Create",
+    confirm: "Confirm",
+    nextStep: "Next Step",
+    previousStep: "Previous Step"
   },
   lang: {
     language: 'Language',
@@ -72,6 +77,7 @@ export const messages = {
     resourceConflictError: 'Resource reservation cannot exceed the resource limit.',
     namespacesQueryError: 'Failed to retrieve namespace list... Please refresh the page and try again.',
     resourceHistorySearchError: 'Resource history acquisition failed.',
+    jsonConfig: "Instance Deploying JSON Configuration"
   },
   stressTesting: {
     startTest: 'Start Test',

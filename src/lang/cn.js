@@ -1,4 +1,15 @@
 export const messages = {
+  common: {
+    errorMessage: '{msg}',
+    copyboard: '已复制，请您继续接下来的操作。',
+    serviceTableContentNoData: '无数据',
+    serviceTableContentNoDataHint: '您可以尝试刷新数据',
+    cancel: "取消",
+    create: "创建",
+    confirm: "确认",
+    nextStep: "下一步",
+    previousStep: "上一步"
+  },
   lang: {
     language: '语言',
   },
@@ -7,12 +18,7 @@ export const messages = {
       '对多集群以及每个集群的基础资源、服务组件和应用资源等的统一管理。',
     platformManagement: '平台管理',
   },
-  common: {
-    errorMessage: '{msg}',
-    copyboard: '已复制，请您继续接下来的操作。',
-    serviceTableContentNoData: '无数据',
-    serviceTableContentNoDataHint: '您可以尝试刷新数据',
-  },
+  
   serviceOverview: {
     serviceDescription:
       '服务（Service）提供一种抽象的方法，将运行在容器组（Pod）上的应用程序公开为网络服务。',
@@ -71,6 +77,7 @@ export const messages = {
     resourceConflictError: '资源预留不能超过资源限制。',
     namespacesQueryError: '命名空间列表获取失败...请刷新页面重试。',
     resourceHistorySearchError: '资源历史获取失败。',
+    jsonConfig: "实例部署JSON配置",
   },
   image: {
     listQueryError: '镜像列表获取失败...请刷新页面重试。',

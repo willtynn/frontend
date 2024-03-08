@@ -18,18 +18,22 @@ export function StyledPopover(props) {
         horizontal: 'left',
       }}
       sx={{
-        zIndex: 1000,
-        boxShadow: '0 4px 16px 0 rgba(39,50,71,.28)',
-        borderRadius: '4px',
-        mt: '2px !important',
-        ...sx,
+        "& .MuiPaper-root": {
+          borderRadius: '6px',
+          ...sx,
+        },
+        // zIndex: 1000,
+        // boxShadow: '0 4px 16px 0 rgba(39,50,71,.28)',
+        // borderRadius: '6px',
+        // mt: '2px !important',
+        
       }}
     >
       <Stack
         direction='column'
         sx={{
           border: border ?? '1px solid #FAFAFA',
-          width: '100px',
+          minWidth: '100px',
           borderRadius: '5px',
           padding: '8px',
           bgcolor: '#242e42',
