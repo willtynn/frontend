@@ -1,18 +1,13 @@
-import { useEffect, useState, useRef } from 'react';
-import { Box, Stack, Autocomplete, TextField, Typography } from '@mui/material';
-
+import { useEffect, useState } from 'react';
+import { Box, Stack, TextField, Typography } from '@mui/material';
 import { useDispatch, useSelector } from 'react-redux';
-import { ClusterTopology, ClusterTopologyOnlyCanvas } from './ClusterTopology';
-import InstanceList from './InstancesList';
-import { SmallLightFont, SuperLargeBoldFont } from '@/components/Fonts';
-import InfoCard from '@/components/InfoCard';
-import {
-  UPDATE_SELECTED_SERVER,
-} from '@/actions/clusterAction';
-import InstanceInfo from './InstanceInfo';
+import { ClusterTopologyOnlyCanvas } from './ClusterTopology';
+import { UPDATE_SELECTED_SERVER } from '@/actions/clusterAction';
 import ClusterInfo from './ClusterInfo';
 import { useIntl } from 'react-intl';
 import ClusterNode from '@/assets/ClusterNode.svg';
+import { StyledAutocomplete } from '@/components/Input';
+import { fontFamily } from '../../../utils/commonUtils';
 
 const fakeInstancesData = {
   items: [
@@ -190,13 +185,15 @@ export default function ClusterOverview() {
   const dispatch = useDispatch();
   const intl = useIntl();
 
-  const { selectedInstanceName, clusters, selectedServer } = useSelector(state => {
-    return {
-      selectedInstanceName: state.Cluster.selectedInstanceName,
-      clusters: state.Cluster.clusters,
-      selectedServer: state.Cluster.selectedServer,
-    };
-  });
+  const { selectedInstanceName, clusters, selectedServer } = useSelector(
+    state => {
+      return {
+        selectedInstanceName: state.Cluster.selectedInstanceName,
+        clusters: state.Cluster.clusters,
+        selectedServer: state.Cluster.selectedServer,
+      };
+    }
+  );
 
   const fakeClusters = [
     {
@@ -284,13 +281,13 @@ export default function ClusterOverview() {
   }, [clusterList]);
 
   useEffect(() => {
-    if(selectedServer === null) {
+    if (selectedServer === null) {
       return;
     }
     const tmpInstancesData = {};
     selectedServer.items.forEach(instance => {
-      tmpInstancesData[instance.metadata.name] = instance
-    })
+      tmpInstancesData[instance.metadata.name] = instance;
+    });
     setInstancesData(tmpInstancesData);
   }, [selectedServer]);
 
@@ -303,7 +300,7 @@ export default function ClusterOverview() {
   }, [targetCluster]);
 
   const handleNodeClick = id => {
-    dispatch({ type: UPDATE_SELECTED_SERVER, data: fakeInstancesData })
+    dispatch({ type: UPDATE_SELECTED_SERVER, data: fakeInstancesData });
     setCurrentServer(id);
   };
 
@@ -350,45 +347,47 @@ export default function ClusterOverview() {
       </Box>
       <Stack
         direction='row'
-        spacing={2}
+        spacing={1}
         sx={{
-          mb: '40px',
+          mb: '20px',
         }}
       >
-        <Autocomplete
+        <StyledAutocomplete
+          height='32px'
+          padding='6px 5px 5px 12px'
           value={targetCluster}
           onChange={(event, newValue) => {
             setTargetCluster(newValue);
           }}
-          // inputValue={inputValue}
-          // onInputChange={(event, newInputValue) => {
-          //   setInputValue(newInputValue);
-          // }}
-          id='ccp_cluster_list_autocomplete'
+          id='cluster_autocomplete'
           options={clusterList}
-          sx={{ width: 300 }}
-          renderInput={params => <TextField {...params} label='选择集群' />}
+          sx={{
+            width: "100%",
+            color: '#36435c',
+            fontFamily: fontFamily,
+            fontSize: '12px',
+            fontWeight: 600,
+            fontStyle: 'normal',
+            fontStretch: 'normal',
+            lineHeight: 1.67,
+            letterSpacing: 'normal',
+          }}
+          renderInput={params => (
+            <TextField {...params} placeholder='选择集群' />
+          )}
         />
       </Stack>
-      <Stack direction='row' justifyContent='space-between' spacing={4}>
-        <Stack sx={{ width: '48.5%' }} direction='column' spacing={2}>
-          <ClusterTopologyOnlyCanvas
-            clusterId={targetCluster}
-            graph={
-              clusterData[targetCluster] && clusterData[targetCluster].network
-            }
-            handleNodeClick={handleNodeClick}
-          />
-          <ClusterInfo />
-        </Stack>
-        <Stack
-          sx={{
-            width: '48.5%',
-          }}
-          direction='column'
-          spacing={2}
-        >
-          <InstanceList
+      <Stack direction='column' spacing={4}>
+        <ClusterTopologyOnlyCanvas
+          clusterId={targetCluster}
+          graph={
+            clusterData[targetCluster] && clusterData[targetCluster].network
+          }
+          handleNodeClick={handleNodeClick}
+        />
+        <ClusterInfo />
+
+        {/* <InstanceList
             sx={{
               minHeight: "400px"
             }}
@@ -397,8 +396,7 @@ export default function ClusterOverview() {
           />
           <Box>
             <InstanceInfo instance={instancesData[selectedInstanceName]} />
-          </Box>
-        </Stack>
+          </Box> */}
       </Stack>
 
       {/* <Stack direction='row' justifyContent='space-between' spacing={4}>
