@@ -12,6 +12,9 @@ import {
 import { useDispatch } from 'react-redux';
 import { dispatch } from 'd3';
 import { deployWithJson } from '@/actions/instanceAction';
+import json5 from 'json5';
+import { SEVERITIES } from '../../../../components/CommonSnackbar';
+import { setSnackbarMessageAndOpen } from '../../../../actions/snackbarAction';
 
 loader.config({ monaco });
 
@@ -39,19 +42,26 @@ export default function DeployConfig(props) {
   }
 
   const checkJsonConfig = (config) => {
-    const data = JSON.parse(config);
-    return data;
+    try {
+      const data = json5.parse(config);
+      return data;
+    } catch (error) {
+      return null;
+    }
   }
 
   const handleConfirmClick = () => {
-    console.log(jsonConfig);
     const data = checkJsonConfig(jsonConfig);
     if (data === null) {
-
+      dispatch(
+        setSnackbarMessageAndOpen(
+          'instance.jsonConfigError',
+          {},
+          SEVERITIES.error
+        )
+      );
     } else {
-
-      console.log(data);
-      // dispatch(deployWithJson(data));
+      dispatch(deployWithJson(data));
       handleCancelClick();
     }
     

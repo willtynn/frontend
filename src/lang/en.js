@@ -77,7 +77,8 @@ export const messages = {
     resourceConflictError: 'Resource reservation cannot exceed the resource limit.',
     namespacesQueryError: 'Failed to retrieve namespace list... Please refresh the page and try again.',
     resourceHistorySearchError: 'Resource history acquisition failed.',
-    jsonConfig: "Instance Deploying JSON Configuration"
+    jsonConfig: "Instance Deploying JSON Configuration",
+    jsonConfigError: "Check the json configuration format.",
   },
   stressTesting: {
     startTest: 'Start Test',

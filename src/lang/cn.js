@@ -78,6 +78,7 @@ export const messages = {
     namespacesQueryError: '命名空间列表获取失败...请刷新页面重试。',
     resourceHistorySearchError: '资源历史获取失败。',
     jsonConfig: "实例部署JSON配置",
+    jsonConfigError: "请检查json配置格式。",
   },
   image: {
     listQueryError: '镜像列表获取失败...请刷新页面重试。',
