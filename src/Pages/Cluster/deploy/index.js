@@ -256,7 +256,7 @@ export default function InstanceDeploy() {
                 lineHeight: '32px',
               }}
             >
-              服务实例
+              {intl.messages['common.serviceInstance']}
             </Typography>
             <Typography
               sx={{
@@ -282,7 +282,7 @@ export default function InstanceDeploy() {
               width: '120px',
             }}
           >
-            部署
+            {intl.messages['common.deploy']}
           </OutlinedButton>
         }
       />

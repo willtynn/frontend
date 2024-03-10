@@ -47,11 +47,11 @@ export default function ClusterInfo(props) {
   const intl = useIntl();
   const [data, setData] = useState(null);
   const headRow = [
-    createRow('name', '节点名称', false, '70px', '70px', true, 'center'),
-    createRow('ipAddress', 'IP地址', false, '70px', '70px', true, 'center'),
+    createRow('name', intl.messages["cluster.nodeName"], false, '70px', '70px', true, 'center'),
+    createRow('ipAddress', intl.messages["cluster.ipAddress"], false, '70px', '70px', true, 'center'),
     createRow(
       'settedResource',
-      '设定资源量',
+      intl.messages["cluster.settedResource"],
       false,
       '70px',
       '70px',
@@ -60,15 +60,15 @@ export default function ClusterInfo(props) {
     ),
     createRow(
       'usedResource',
-      '使用资源量',
+      intl.messages["cluster.usedResource"],
       false,
       '70px',
       '70px',
       true,
       'center'
     ),
-    createRow('cpuConfig', 'CPU配置', false, '70px', '70px', true, 'center'),
-    createRow('description', '描述', false, '70px', '70px', true, 'center'),
+    createRow('cpuConfig',  intl.messages["cluster.cpuConfig"], false, '70px', '70px', true, 'center'),
+    createRow('description',  intl.messages["cluster.description"], false, '70px', '70px', true, 'center'),
   ];
 
   return (

@@ -8,7 +8,20 @@ export const messages = {
     create: "创建",
     confirm: "确认",
     nextStep: "下一步",
-    previousStep: "上一步"
+    previousStep: "上一步",
+    deploy: "部署",
+    name: "名称",
+    status: "状态",
+    startTime: "启动时间",
+    endTime: "结束时间",
+    serviceInstance: "服务实例",
+    service: "服务",
+    repo: "代码仓库地址",
+    imageUrl: "镜像仓库地址&TAG",
+    serviceVersion: "服务版本",
+    interfaceCollection: "接口集合",
+    serviceName: "服务名称",
+    serviceId: "服务ID",
   },
   lang: {
     language: '语言',
@@ -17,11 +30,13 @@ export const messages = {
     clusterMangementDescription:
       '对多集群以及每个集群的基础资源、服务组件和应用资源等的统一管理。',
     platformManagement: '平台管理',
+    clusterOverview: "集群总览",
   },
   
   serviceOverview: {
     serviceDescription:
       '服务（Service）提供一种抽象的方法，将运行在容器组（Pod）上的应用程序公开为网络服务。',
+    allItems: "全部项目",
   },
   serviceDependency: {
     serviceDependencyNotFound: '所查询服务没有相关调用关系...',
@@ -48,6 +63,13 @@ export const messages = {
     clusterTopology: '集群拓扑结构',
     clusterNodeDescription:
       '集群节点是平台集群中的基础服务器，您可以在此页面查看集群节点信息。',
+    nodeName: "节点名称",
+    ipAddress: "IP地址",
+    settedResource: "设定资源量",
+    usedResource: "使用资源量",
+    cpuConfig: "CPU配置",
+    description: "描述",
+    clusterNode: "集群节点",
   },
   instance: {
     deploySuccess: '实例部署成功！',

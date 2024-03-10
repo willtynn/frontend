@@ -4,11 +4,24 @@ export const messages = {
     copyboard: 'Copied, please continue.',
     serviceTableContentNoData: 'No data',
     serviceTableContentNoDataHint: 'You can try to refresh the data',
-    cancel: "Cancel",
-    create: "Create",
-    confirm: "Confirm",
-    nextStep: "Next Step",
-    previousStep: "Previous Step"
+    cancel: 'Cancel',
+    create: 'Create',
+    confirm: 'Confirm',
+    nextStep: 'Next Step',
+    previousStep: 'Previous Step',
+    deploy: "Deploy",
+    name: "Name",
+    status: "Status",
+    startTime: "Start Time",
+    endTime: "End Time",
+    serviceInstance: "Service Instance",
+    service: "Service",
+    repo: "Code Repository",
+    imageUrl: "Image URL & TAG",
+    serviceVersion: "Version",
+    interfaceCollection: "Interface Collection",
+    serviceName: "Service Name",
+    serviceId: "Service ID",
   },
   lang: {
     language: 'Language',
@@ -17,28 +30,34 @@ export const messages = {
     clusterMangementDescription:
       'Unified management of multiple clusters and basic resources, service components, and application resources of each cluster.',
     platformManagement: 'Platform Management',
+    clusterOverview: "Cluster Overview",
   },
 
   serviceOverview: {
     serviceDescription:
       'A Service provides an abstract way to expose an application running on a group of containers (Pod) as a network service.',
+    allItems: "All Items",
   },
   serviceDependency: {
-    serviceDependencyNotFound: 'The queried service has no associated call relationship...',
-    interfaceDependencyNotFound: 'The queried interface has no related call relationship...',
+    serviceDependencyNotFound:
+      'The queried service has no associated call relationship...',
+    interfaceDependencyNotFound:
+      'The queried interface has no related call relationship...',
     errorMessage: '{msg}',
     searchServiceByIdEmptyError: 'The queried ID has no related service...',
     searchServiceByNameVersionError:
       'No service corresponding to the target service name and version is found...',
     queryError: 'Query error, please try again...',
-    podSearchError: 'Error obtaining container group, please refresh and try again...',
+    podSearchError:
+      'Error obtaining container group, please refresh and try again...',
     serviceDependencyDescription:
       'Service dependency refers to a software system relying on external services or APIs, typically communicating through a network.',
     serviceBasedMsg: 'Please select a service.',
     interfaceBasedMsg: 'Please select an interface.',
   },
   cluster: {
-    clustersSearchError: 'Cluster information acquisition failed, please refresh the page and try again...',
+    clustersSearchError:
+      'Cluster information acquisition failed, please refresh the page and try again...',
     clusterSelectHint: 'Please select a cluster!',
     instanceSelectHint: 'Please select a service instance!',
     serverSelectHint: 'Please select a server!',
@@ -48,19 +67,30 @@ export const messages = {
     clusterTopology: 'Cluster topology',
     clusterNodeDescription:
       'Cluster nodes are the basic servers in the platform cluster, and you can view cluster node information on this page.',
+    nodeName: 'Node Name',
+    ipAddress: 'IP Address',
+    settedResource: 'Preset Resource',
+    usedResource: 'Used Resource',
+    cpuConfig: 'CPU Configuration',
+    description: 'Description',
+    clusterNode: 'Cluster Node',
   },
   instance: {
     deploySuccess: 'Instance deployment successful!',
     deployFailed: 'Instance deployment failed, please try again...',
-    serverIdDescription: 'The unique identifier of a service, where each service ID corresponds to one service.',
+    serverIdDescription:
+      'The unique identifier of a service, where each service ID corresponds to one service.',
     namePatternErrorMsg:
       'The name is invalid. The name can only contain lowercase letters, numbers, and hyphens (-), and must start and end with lowercase letters or numbers, with a maximum length of 253 characters.',
     nameEmptyErrorMsg: 'Please set a name.',
     nameDescription:
       'The name can only contain lowercase letters, numbers, and hyphens (-), and must start and end with lowercase letters or numbers, with a maximum length of 253 characters.',
-    namespaceDescription: 'Select the namespace where the resource will be created.',
-    containerAddDescription: 'Customize container settings to create containers.',
-    containerConfigDescription: 'Set the image, name, type, and computing resources of the container.',
+    namespaceDescription:
+      'Select the namespace where the resource will be created.',
+    containerAddDescription:
+      'Customize container settings to create containers.',
+    containerConfigDescription:
+      'Set the image, name, type, and computing resources of the container.',
     containerInputPlaceHolder:
       'Mirror path, for example 192.168.0.1:5000/namespace/jenkins:latest',
     containerResourceConfigDescription:
@@ -74,11 +104,13 @@ export const messages = {
     namespaceEmptyErrorMsg: 'Please select a namespace',
     containerEmptyError: 'Please set up the container.',
     imageUrlEmptyError: 'Please set the container image path.',
-    resourceConflictError: 'Resource reservation cannot exceed the resource limit.',
-    namespacesQueryError: 'Failed to retrieve namespace list... Please refresh the page and try again.',
+    resourceConflictError:
+      'Resource reservation cannot exceed the resource limit.',
+    namespacesQueryError:
+      'Failed to retrieve namespace list... Please refresh the page and try again.',
     resourceHistorySearchError: 'Resource history acquisition failed.',
-    jsonConfig: "Instance Deploying JSON Configuration",
-    jsonConfigError: "Check the json configuration format.",
+    jsonConfig: 'Instance Deploying JSON Configuration',
+    jsonConfigError: 'Check the json configuration format.',
   },
   stressTesting: {
     startTest: 'Start Test',
@@ -144,5 +176,8 @@ export const messages = {
     modalServiceId: 'Service ID',
     modalServiceName: 'Service Name',
     modalTime: 'Time',
+  },
+  table: {
+    rowsPerPage: 'Rows per page display:',
   },
 };

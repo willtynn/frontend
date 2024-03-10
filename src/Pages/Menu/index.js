@@ -340,7 +340,7 @@ export default function MiniDrawer() {
                     <Box
                       sx={{ ...styledFont, color: l11 ? '#55bc8a' : '#242e42' }}
                     >
-                      集群总览
+                      {intl.messages['menu.clusterOverview']}
                     </Box>
                   </ListItemButton>
 
@@ -355,7 +355,7 @@ export default function MiniDrawer() {
                     <Box
                       sx={{ ...styledFont, color: l13 ? '#55bc8a' : '#242e42' }}
                     >
-                      服务实例
+                      {intl.messages['common.serviceInstance']}
                     </Box>
                   </ListItemButton>
                 </List>

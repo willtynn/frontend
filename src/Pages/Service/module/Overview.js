@@ -44,6 +44,7 @@ import { KubeCheckbox } from '../../../components/Checkbox';
 import Question from '@/assets/Question.svg';
 import { NormalBoldFont, SmallLightFont } from '@/components/Fonts';
 import { encodeId } from '../../../utils/commonUtils';
+import { useIntl } from 'react-intl';
 
 function createRow(
   id,
@@ -88,6 +89,7 @@ export const SUCCEEDED = 'Succeeded';
 
 export default function ServiceOverview(props) {
   const { data, setIndex, selectedIndex } = props;
+  const intl = useIntl();
   const [orderType, setOrderType] = useState('version'); //排序的表头
   const [orderAs, setOrderAs] = useState('asc'); //排序的顺序
   const [selected, setSelected] = useState([]);
@@ -127,10 +129,10 @@ export default function ServiceOverview(props) {
   // service/query左侧表格表头
   const headFirstRow = [
     // createRow('id', '服务ID', false, '150px', '170px', true, 1, 1, 'left'),
-    createRow('name', '服务名称', false, '120px', '130px', true, 1, 1, 'left'),
+    createRow('name', intl.messages['common.serviceName'], false, '120px', '130px', true, 1, 1, 'left'),
     createRow(
       'repo',
-      '代码仓库地址',
+      intl.messages['common.repo'],
       false,
       '220px',
       '240px',
@@ -141,7 +143,7 @@ export default function ServiceOverview(props) {
     ),
     createRow(
       'imageUrl',
-      '镜像仓库地址&Tag',
+      intl.messages['common.imageUrl'],
       false,
       '220px',
       '240px',
@@ -152,7 +154,7 @@ export default function ServiceOverview(props) {
     ),
     createRow(
       'version',
-      '服务版本',
+      intl.messages['common.serviceVersion'],
       false,
       '100px',
       '100px',
@@ -163,7 +165,7 @@ export default function ServiceOverview(props) {
     ),
     createRow(
       'interfaces',
-      '接口集合',
+      intl.messages['common.interfaceCollection'],
       false,
       '100px',
       '100px',
@@ -506,7 +508,7 @@ export default function ServiceOverview(props) {
               letterSpacing: 'normal',
             }}
             renderInput={params => (
-              <TextField {...params} placeholder='全部项目' />
+              <TextField {...params} placeholder={intl.messages['serviceOverview.allItems']} />
             )}
           />
           {/* 搜索栏 */}

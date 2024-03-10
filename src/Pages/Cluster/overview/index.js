@@ -329,7 +329,7 @@ export default function ClusterOverview() {
                 lineHeight: '32px',
               }}
             >
-              集群节点
+              {intl.messages['cluster.clusterNode']}
             </Typography>
             <Typography
               sx={{

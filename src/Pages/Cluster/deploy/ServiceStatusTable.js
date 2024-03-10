@@ -57,6 +57,7 @@ import VisibilityIcon from '@mui/icons-material/Visibility';
 import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
 import { KubeCheckbox } from '../../../components/Checkbox';
 import { NormalBoldFont, SmallLightFont } from '../../../components/Fonts';
+import { useIntl } from 'react-intl';
 
 const data = {
   items: [
@@ -310,11 +311,12 @@ function createRow(
   };
 }
 
-const statusPattern = new RegExp(/^状态:/);
-const namePattern = new RegExp(/^名称:/);
+const statusPattern = new RegExp(/^(状态|Status):/);
+const namePattern = new RegExp(/^(名称|Name):/);
 
 export default function ServiceStatusTable(props) {
   const { embeddingButton } = props;
+  const intl = useIntl();
   const [searchList, setSearchList] = useState([]);
   const [loading, setLoading] = useState(false);
   const [tableData, setTableData] = useState([]);
@@ -325,13 +327,14 @@ export default function ServiceStatusTable(props) {
   const [searchValue, setSearchValue] = useState('');
   const [searchSelectAnchorEl, setSearchSelectAnchorEl] = useState(null);
   const searchSelectOpen = Boolean(searchSelectAnchorEl);
-  const [searchBy, setSearchBy] = useState(['名称', '状态']);
+  const [searchBy, setSearchBy] = useState([intl.messages['common.name'], intl.messages['common.status']]);
 
   const [colDisplay, setColDisplay] = useState([true, true, true, true]);
   const [customContentAnchorEl, setCustomContentAnchorEl] = useState(null);
   const customContentOpen = Boolean(customContentAnchorEl);
 
   const dispatch = useDispatch();
+  
 
   const { gottenInstances, pageSize, pageNum, namespaces, currentNamespace } =
     useSelector(state => {
@@ -379,13 +382,13 @@ export default function ServiceStatusTable(props) {
       return;
     }
     if (searchList.length == 0) {
-      setSearchBy(['名称', '状态']);
+      setSearchBy([intl.messages['common.name'], intl.messages['common.status']]);
       return;
     }
-    if (searchList[0].startsWith('状态:')) {
-      setSearchBy(['名称']);
+    if (searchList[0].startsWith(`${intl.messages['common.status']}:`)) {
+      setSearchBy([intl.messages['common.name']]);
     } else {
-      setSearchBy(['状态']);
+      setSearchBy([intl.messages['common.status']]);
     }
   }, [searchList]);
 
@@ -408,10 +411,10 @@ export default function ServiceStatusTable(props) {
   }, [gottenInstances]);
 
   const headRow = [
-    createRow('name', '名称', true, '100px', '100px', true, 'left'),
+    createRow('name', intl.messages['common.name'], true, '100px', '100px', true, 'left'),
     createRow(
       'phase',
-      '状态',
+      intl.messages['common.status'],
       false,
       '100px',
       '100px',
@@ -438,7 +441,7 @@ export default function ServiceStatusTable(props) {
     ),
     createRow(
       'startTime',
-      '启动时间',
+      intl.messages['common.startTime'],
       true,
       '120px',
       '130px',
@@ -456,11 +459,11 @@ export default function ServiceStatusTable(props) {
   const filtering = () => {
     let tmpData = JSON.parse(JSON.stringify(tableData));
     searchList.forEach((value, _) => {
-      if (value.startsWith('状态:')) {
+      if (value.startsWith(`${intl.messages['common.name']}:`)) {
         tmpData = tmpData.filter((tableRow, _) => {
           return tableRow.phase.includes(value.replace(statusPattern, ''));
         });
-      } else if (value.startsWith('名称:')) {
+      } else if (value.startsWith(`${intl.messages['common.name']}:`)) {
         tmpData = tmpData.filter((tableRow, _) => {
           return tableRow.name.includes(value.replace(namePattern, ''));
         });
