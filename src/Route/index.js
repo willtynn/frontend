@@ -17,6 +17,7 @@ import StressTesting from '../Pages/Application/StressTesting';
 import ImagesList from '../Pages/Image';
 import { TestPlanDetail } from '../Pages/Application/StressTesting/Detail';
 import { ResultDetail } from '../Pages/Application/StressTesting/ResultDetail';
+import SchemeDeploy from '../Pages/Cluster/scheme';
 
 export default function MyRoute() {
   return (
@@ -36,7 +37,7 @@ export default function MyRoute() {
         <Route path='/' element={<Navigate replace to='cluster/overview' />} />
         <Route path='cluster/'>
           <Route path='overview' element={<ClusterOverview />} />
-          <Route path='node' element={<CustomizedTables />} />
+          <Route path='scheme' element={<SchemeDeploy />} />
           <Route path='deploy' element={<InstanceDeploy />} />
         </Route>
         <Route path='service/'>

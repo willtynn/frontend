@@ -22,6 +22,7 @@ export const messages = {
     interfaceCollection: "接口集合",
     serviceName: "服务名称",
     serviceId: "服务ID",
+    schemeDeploy: "方案部署",
   },
   lang: {
     language: '语言',
@@ -63,6 +64,8 @@ export const messages = {
     clusterTopology: '集群拓扑结构',
     clusterNodeDescription:
       '集群节点是平台集群中的基础服务器，您可以在此页面查看集群节点信息。',
+    schemeDeployDescription:
+      '制定特定的计划或方案来服务的实际部署和实施过程。',
     nodeName: "节点名称",
     ipAddress: "IP地址",
     settedResource: "设定资源量",

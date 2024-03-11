@@ -22,6 +22,7 @@ export const messages = {
     interfaceCollection: "Interface Collection",
     serviceName: "Service Name",
     serviceId: "Service ID",
+    schemeDeploy: "Scheme Deploy",
   },
   lang: {
     language: 'Language',
@@ -67,6 +68,8 @@ export const messages = {
     clusterTopology: 'Cluster topology',
     clusterNodeDescription:
       'Cluster nodes are the basic servers in the platform cluster, and you can view cluster node information on this page.',
+    schemeDeployDescription:
+      'Develop specific plans or schemes to serve the actual deployment and implementation process.',
     nodeName: 'Node Name',
     ipAddress: 'IP Address',
     settedResource: 'Preset Resource',

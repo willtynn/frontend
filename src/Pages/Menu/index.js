@@ -348,6 +348,21 @@ export default function MiniDrawer() {
                     sx={styleListButton}
                     onClick={() => {
                       setAllFalse();
+                      setl12(true);
+                      navigate('cluster/scheme');
+                    }}
+                  >
+                    <Box
+                      sx={{ ...styledFont, color: l12 ? '#55bc8a' : '#242e42' }}
+                    >
+                      {intl.messages['common.schemeDeploy']}
+                    </Box>
+                  </ListItemButton>
+
+                  <ListItemButton
+                    sx={styleListButton}
+                    onClick={() => {
+                      setAllFalse();
                       setl13(true);
                       navigate('cluster/deploy');
                     }}
