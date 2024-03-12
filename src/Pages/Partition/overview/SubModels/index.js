@@ -160,17 +160,17 @@ export function SubModelPage() {
         </Box>
         {/* Table */}
         <Stack direction='row' justifyContent='space-between' spacing={2}>
-          <Stack sx={{ width: '20%' }} direction='column' spacing={0}>
-            <StyledTableContainer sx={{ width: '100%' }}>
-              <Table stickyHeader size='small' sx={{ tableLayout: 'auto' }}>
+          <Stack sx={{width: '20%'}} direction='column' spacing={0}>
+            <StyledTableContainer sx={{width: '100%'}}>
+              <Table stickyHeader size='small' sx={{tableLayout: 'auto'}}>
                 <TableHead>
-                  <TableRow sx={{ height: '52px' }}>
+                  <TableRow sx={{height: '52px'}}>
                     {tableHeaders.map(item => {
                       return (
                         <StyledTableRowCell
                           key={item.key}
                           align={item.align}
-                          sx={{ minWidth: item.minWidth }}
+                          sx={{minWidth: item.minWidth}}
                         >
                           {item.text}
                         </StyledTableRowCell>

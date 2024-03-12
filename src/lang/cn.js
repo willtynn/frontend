@@ -119,4 +119,18 @@ export const messages = {
     getStartAndEndFailedMsg: "测试时间获取失败。",
     aggregateExcelExportFailedMsg: "Excel导出失败，请重试...",
   },
+  partition: {
+    tip: '对于某一模型，用户可自定义拆分方案或使用现有方案对模型进行拆分，生成一组子模型以及子模型对应的容器镜像',
+    addError: '请检查拆分策略输入',
+    addSuccess: '创建成功，请刷新列表',
+  },
+  subModel: {
+    title: '子模型信息',
+    graph: '子模型结构',
+    tip: '请选择一个子模型',
+  },
+  modelOverview: {
+    description: "深度学习模型(Model)是一种基于人工神经网络架构的机器学习模型，通过多层次的神经网络结构，能够自动学习和提取高级抽象特征，用于解决复杂的模式识别、数据分析和决策任务。",
+    uploading: "上传中"
+  },
 };

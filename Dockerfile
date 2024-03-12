@@ -1,11 +1,6 @@
+# 手动部署Dockerfile
 # 指定基础映像
 FROM node:18.17.0
-
-# 安装 Yarn
-RUN curl -o- -L https://yarnpkg.com/install.sh | bash
-
-# 设置 Yarn 的可执行路径
-ENV PATH="/root/.yarn/bin:$PATH"
 
 # 设置工作目录
 WORKDIR /app
@@ -14,7 +9,7 @@ WORKDIR /app
 COPY package*.json ./
 
 # 安装项目的依赖
-RUN yarn install
+#RUN npm install
 
 # 将整个项目目录复制到工作目录
 COPY . .
@@ -23,4 +18,5 @@ COPY . .
 EXPOSE 3000
 
 # 运行 React 应用
-CMD ["yarn", "start"]
+ENTRYPOINT ["npm", "run"]
+CMD ["start"]
