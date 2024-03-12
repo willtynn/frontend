@@ -62,18 +62,12 @@ export default function MiniDrawer() {
   // 镜像模块
   const [l5, setl5] = useState(false);
   const [l51, setl51] = useState(false);
-  // 模型拆分模块
+  // DNN协同推理模块
   const [l6, setl6] = useState(false);
   const [l61, setl61] = useState(false);
-
-  const [l7, setl7] = useState(false);
-  const [l71, setl71] = useState(false);
-
-  const [l8, setl8] = useState(false);
-  const [l81, setl81] = useState(false);
-
-  const [l9, setl9] = useState(false);
-  const [l91, setl91] = useState(false);
+  const [l62, setl62] = useState(false);
+  const [l63, setl63] = useState(false);
+  const [l64, setl64] = useState(false);
 
   const intl = useIntl();
   const [clusterSelectOpen, setClusterSelectOpen] = useState(false);
@@ -106,20 +100,8 @@ export default function MiniDrawer() {
   }, [l51]);
 
   useEffect(() => {
-    setl6(l61);
-  }, [l61]);
-
-  useEffect(() => {
-    setl7(l71);
-  }, [l71]);
-
-  useEffect(() => {
-    setl8(l81);
-  }, [l81]);
-
-  useEffect(() => {
-    setl9(l91);
-  }, [l91]);
+    setl6(l61||l62||l63||l64);
+  }, [l61, l62, l63, l64]);
 
   const setAllFalse = () => {
     setl1(false);
@@ -138,12 +120,9 @@ export default function MiniDrawer() {
     setl51(false);
     setl6(false);
     setl61(false);
-    setl7(false);
-    setl71(false);
-    setl8(false);
-    setl81(false);
-    setl9(false);
-    setl91(false);
+    setl62(false);
+    setl63(false);
+    setl64(false);
   };
   const handleClick1 = () => {
     setVerticalOpen1(!verticalOpen1);
@@ -167,18 +146,6 @@ export default function MiniDrawer() {
 
   const handleClick6 = () => {
     setVerticalOpen6(!verticalOpen6);
-  };
-
-  const handleClick7 = () => {
-    setVerticalOpen7(!verticalOpen7);
-  };
-
-  const handleClick8 = () => {
-    setVerticalOpen8(!verticalOpen8);
-  };
-
-  const handleClick9 = () => {
-    setVerticalOpen9(!verticalOpen9);
   };
 
   const handlelClusterSelectClose = () => {
@@ -596,7 +563,7 @@ export default function MiniDrawer() {
                   <Service16 />
                 </Box>
                 <Box sx={{ ...styledFont, color: l6 ? '#55bc8a' : '#242e42' }}>
-                  模型拆分
+                  DNN协同推理模块
                 </Box>
                 {verticalOpen6 ? <ExpandLess /> : <ExpandMore />}
               </ListItemButton>
@@ -617,108 +584,51 @@ export default function MiniDrawer() {
                     </Box>
                   </ListItemButton>
                 </List>
-              </Collapse>
-            </List>
-            <List sx={{ paddingTop: '0px', paddingBottom: '0px' }}>
-              <ListItemButton
-                sx={{
-                  ...styleListButton,
-                  paddingLeft: '12px',
-                }}
-                onClick={handleClick7}
-              >
-                <Box sx={styledIcon}>
-                  <Service16 />
-                </Box>
-                <Box sx={{ ...styledFont, color: l7 ? '#55bc8a' : '#242e42' }}>
-                  模型管理
-                </Box>
-                {verticalOpen7 ? <ExpandLess /> : <ExpandMore />}
-              </ListItemButton>
-              <Collapse in={verticalOpen7} timeout='auto' unmountOnExit={true}>
                 <List component='div' disablePadding>
                   <ListItemButton
                     sx={styleListButton}
                     onClick={() => {
                       setAllFalse();
-                      setl71(true);
+                      setl62(true);
                       navigate('/model/overview');
                     }}
                   >
                     <Box
-                      sx={{ ...styledFont, color: l71 ? '#55bc8a' : '#242e42' }}
+                      sx={{ ...styledFont, color: l62 ? '#55bc8a' : '#242e42' }}
                     >
                       模型列表
                     </Box>
                   </ListItemButton>
                 </List>
-              </Collapse>
-            </List>
-            <List sx={{ paddingTop: '0px', paddingBottom: '0px' }}>
-              <ListItemButton
-                sx={{
-                  ...styleListButton,
-                  paddingLeft: '12px',
-                }}
-                onClick={handleClick8}
-              >
-                <Box sx={styledIcon}>
-                  <Service16 />
-                </Box>
-                <Box sx={{ ...styledFont, color: l8 ? '#55bc8a' : '#242e42' }}>
-                  推理实例管理
-                </Box>
-                {verticalOpen8 ? <ExpandLess /> : <ExpandMore />}
-              </ListItemButton>
-              <Collapse in={verticalOpen8} timeout='auto' unmountOnExit={true}>
                 <List component='div' disablePadding>
                   <ListItemButton
                     sx={styleListButton}
                     onClick={() => {
                       setAllFalse();
-                      setl81(true);
+                      setl63(true);
                       navigate('/application/deploy');
                     }}
                   >
                     <Box
-                      sx={{ ...styledFont, color: l81 ? '#55bc8a' : '#242e42' }}
+                      sx={{ ...styledFont, color: l63 ? '#55bc8a' : '#242e42' }}
                     >
-                      推理实例
+                      推理实例管理
                     </Box>
                   </ListItemButton>
                 </List>
-              </Collapse>
-            </List>
-            <List sx={{ paddingTop: '0px', paddingBottom: '0px' }}>
-              <ListItemButton
-                sx={{
-                  ...styleListButton,
-                  paddingLeft: '12px',
-                }}
-                onClick={handleClick9}
-              >
-                <Box sx={styledIcon}>
-                  <Link16 />
-                </Box>
-                <Box sx={{ ...styledFont, color: l9 ? '#55bc8a' : '#242e42' }}>
-                  推理请求管理
-                </Box>
-                {verticalOpen9 ? <ExpandLess /> : <ExpandMore />}
-              </ListItemButton>
-              <Collapse in={verticalOpen9} timeout='auto' unmountOnExit={true}>
                 <List component='div' disablePadding>
                   <ListItemButton
                     sx={styleListButton}
                     onClick={() => {
                       setAllFalse();
-                      setl91(true);
+                      setl64(true);
                       navigate('/route/infertrace');
                     }}
                   >
                     <Box
-                      sx={{ ...styledFont, color: l91 ? '#55bc8a' : '#242e42' }}
+                      sx={{ ...styledFont, color: l64 ? '#55bc8a' : '#242e42' }}
                     >
-                      推理请求
+                      推理请求管理
                     </Box>
                   </ListItemButton>
                 </List>
