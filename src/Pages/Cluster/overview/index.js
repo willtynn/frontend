@@ -373,7 +373,7 @@ export default function ClusterOverview() {
             letterSpacing: 'normal',
           }}
           renderInput={params => (
-            <TextField {...params} placeholder='选择集群' />
+            <TextField {...params} placeholder={intl.messages['common.selectCluster']} />
           )}
         />
       </Stack>

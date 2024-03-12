@@ -155,9 +155,9 @@ export default function ClusterInfo(props) {
                     }}
                   >
                     <Question />
-                    <NormalBoldFont>无数据</NormalBoldFont>
+                    <NormalBoldFont>{intl.messages['common.serviceTableContentNoData']}</NormalBoldFont>
 
-                    <SmallLightFont>您可以尝试刷新数据</SmallLightFont>
+                    <SmallLightFont>{intl.messages['common.serviceTableContentNoDataHint']}</SmallLightFont>
                   </TableCell>
                 </TableRow>
               </TableBody>
