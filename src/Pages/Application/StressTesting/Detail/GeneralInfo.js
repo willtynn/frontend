@@ -188,7 +188,7 @@ export default function GeneralInfo(props) {
             sx={{ height: '32px', width: '96px' }}
           >
             <Stack direction='row' alignItems='center' justifyContent='center'>
-              <Box sx={{ ml: '4px' }}>更多操作</Box>
+              <Box sx={{ ml: '4px' }}>{intl.messages['common.moreOperation']}</Box>
               <ArrowDropDownIcon fontSize='small' />
             </Stack>
           </KubeCancelButton>
@@ -217,25 +217,25 @@ export default function GeneralInfo(props) {
             mb: '12px',
           }}
         >
-          详情
+          {intl.messages['common.details']}
         </Box>
 
         {/* Key-Value Pair */}
         <Stack sx={{ margin: '6px 0px' }} direction='column' spacing={1.5}>
           <Stack direction='row' spacing={0.75}>
-            <Box sx={labelStyle}>状态</Box>
+            <Box sx={labelStyle}>{intl.messages['common.status']}</Box>
             <Box sx={valueStyle}>
               {currentPlan !== null ? currentPlan.status : ''}
             </Box>
           </Stack>
           <Stack direction='row' spacing={0.75}>
-            <Box sx={labelStyle}>序列化</Box>
+            <Box sx={labelStyle}>{intl.messages['common.serialized']}</Box>
             <Box sx={valueStyle}>
               {currentPlan !== null ? getBoolString(currentPlan.serialized) : ''}
             </Box>
           </Stack>
           <Stack direction='row' spacing={0.75}>
-            <Box sx={labelStyle}>函数模式</Box>
+            <Box sx={labelStyle}>{intl.messages['common.functionMode']}</Box>
             <Box sx={valueStyle}>
               {currentPlan !== null ? getBoolString(currentPlan.functionalMode) : ''}
             </Box>
@@ -247,7 +247,7 @@ export default function GeneralInfo(props) {
             </Box>
           </Stack>
           <Stack direction='row' spacing={0.75}>
-            <Box sx={labelStyle}>描述</Box>
+            <Box sx={labelStyle}>{intl.messages['common.description']}</Box>
             <Box sx={valueStyle}>
               {currentPlan !== null ? currentPlan.comment : ''}
             </Box>

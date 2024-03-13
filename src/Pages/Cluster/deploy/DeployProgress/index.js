@@ -4,7 +4,6 @@
 import { useState, useEffect } from 'react';
 import { Box, Stack } from '@mui/material';
 import { KubeDeploymentCard } from '@/components/InfoCard';
-import { ContainedButton, OutlinedButton } from '../../../../components/Button';
 import { fontFamily } from '../../../../utils/commonUtils';
 import InfoFinished from '@/assets/InfoFinished.svg';
 import InfoWaiting from '@/assets/InfoWaiting.svg';
@@ -60,7 +59,7 @@ export default function DeployProgress(props) {
   return (
     <Box sx={style}>
       <KubeDeploymentCard
-        title='创建Deployment'
+        title={intl.messages['cluster.makeDeployment']}
         handleClose={handleCancelClick}
       >
         <Stack
@@ -69,13 +68,13 @@ export default function DeployProgress(props) {
           sx={{ bgcolor: '#eff4f9', p: '0px 20px' }}
         >
           <ProgressIndicator
-            title='基本信息'
+            title={intl.messages['common.basicInfo']}
             adornments={[<InfoWaiting />, <InfoNow />, <InfoFinished />]}
             stage={1}
             currentStage={currentStage}
           />
           <ProgressIndicator
-            title='容器组设置'
+            title={intl.messages['cluster.podSetting']}
             adornments={[<DockerWaiting />, <DockerNow />, <DockerFinished />]}
             stage={2}
             currentStage={currentStage}
@@ -101,14 +100,14 @@ export default function DeployProgress(props) {
             sx={{ height: '32px', p: '5px 23px' }}
             onClick={handleCancelClick}
           >
-            取消
+            {intl.messages['common.cancel']}
           </KubeCancelButton>
           {currentStage > 1 ? (
             <KubeCancelButton
               sx={{ height: '32px', p: '5px 23px' }}
               onClick={previousStep}
             >
-              上一步
+              {intl.messages['common.previousStep']}
             </KubeCancelButton>
           ) : (
             <></>
@@ -118,7 +117,7 @@ export default function DeployProgress(props) {
               sx={{ height: '32px', p: '5px 23px' }}
               onClick={nextStep}
             >
-              下一步
+              {intl.messages['common.nextStep']}
             </KubeConfirmButton>
           ) : (
             <KubeConfirmButton
@@ -126,7 +125,7 @@ export default function DeployProgress(props) {
               onClick={handleConfirmClick}
               disabled={isConfig}
             >
-              创建
+              {intl.messages['common.create']}
             </KubeConfirmButton>
           )}
         </Stack>

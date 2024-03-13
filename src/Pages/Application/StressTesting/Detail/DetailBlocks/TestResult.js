@@ -175,11 +175,27 @@ export function TestResult() {
 
   const headRow = [
     createRow('cnt', '#', true, '100px', '100px', true, 'left'),
-    createRow('startTime', '开始时间', true, '100px', '100px', true, 'left'),
-    createRow('endTime', '结束时间', true, '100px', '100px', true, 'left'),
+    createRow(
+      'startTime',
+      intl.messages['common.beginTime'],
+      true,
+      '100px',
+      '100px',
+      true,
+      'left'
+    ),
+    createRow(
+      'endTime',
+      intl.messages['common.endTime'],
+      true,
+      '100px',
+      '100px',
+      true,
+      'left'
+    ),
     createRow(
       'status',
-      '状态',
+      intl.messages['common.status'],
       false,
       '100px',
       '100px',
@@ -188,7 +204,7 @@ export function TestResult() {
     ),
     createRow(
       'latency',
-      '延迟',
+      intl.messages['common.delay'],
       false,
       '120px',
       '130px',
@@ -291,7 +307,7 @@ export function TestResult() {
             }}
             onClick={() => {}}
           >
-            启动测试
+            {intl.messages['stressTesting.startTest']}
           </KubeConfirmButton>
         </Stack>
       </Box>
@@ -419,9 +435,13 @@ export function TestResult() {
                   }}
                 >
                   <Question />
-                  <NormalBoldFont>无数据</NormalBoldFont>
+                  <NormalBoldFont>
+                    {intl.messages['common.serviceTableContentNoData']}
+                  </NormalBoldFont>
 
-                  <SmallLightFont>您可以尝试刷新数据</SmallLightFont>
+                  <SmallLightFont>
+                    {intl.messages['common.serviceTableContentNoDataHint']}
+                  </SmallLightFont>
                 </TableCell>
               </TableRow>
             ) : (

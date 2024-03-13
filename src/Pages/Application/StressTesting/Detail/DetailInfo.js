@@ -9,9 +9,11 @@ import {
 import { Information } from './DetailBlocks/Information';
 import { TestResult } from './DetailBlocks/TestResult';
 import { AggregateReport } from './DetailBlocks/AggregateReport';
-import { useSelector } from 'react-redux';
+import { useIntl } from 'react-intl';
 
 export default function DetailInfo() {
+
+  const intl = useIntl();
 
   return (
     <Box
@@ -22,9 +24,9 @@ export default function DetailInfo() {
     >
       <Tabs defaultValue={1}>
         <StyledTabsList>
-          <StyledTab value={1}>详细信息</StyledTab>
-          <StyledTab value={2}>测试结果</StyledTab>
-          <StyledTab value={3}>聚合报告</StyledTab>
+          <StyledTab value={1}>{intl.messages['common.detailedInfo']}</StyledTab>
+          <StyledTab value={2}>{intl.messages['stressTesting.testResult']}</StyledTab>
+          <StyledTab value={3}>{intl.messages['stressTesting.aggregateReport']}</StyledTab>
         </StyledTabsList>
         <StyledTabPanel value={1}>
           <Information />
