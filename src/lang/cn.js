@@ -235,4 +235,8 @@ export const messages = {
     modalServiceName: '服务名',
     modalTime: '时间',
   },
+  evolution: {
+    evolution: '演化',
+    evolutionPlan: '演化计划',
+  },
 };

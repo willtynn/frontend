@@ -202,4 +202,8 @@ export const messages = {
   table: {
     rowsPerPage: 'Rows per page display:',
   },
+  evolution: {
+    evolution: 'Evolution',
+    evolutionPlan: 'Evolution Plan',
+  },
 };
