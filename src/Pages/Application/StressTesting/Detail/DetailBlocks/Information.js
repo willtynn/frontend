@@ -1,22 +1,14 @@
-import { useState, useEffect, useMemo } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+import { useState, useEffect } from 'react';
+import { useSelector } from 'react-redux';
 import {
   Stack,
   Box,
-  InputAdornment,
-  Tooltip,
-  Popover,
   Table,
   TableBody,
   TableRow,
   TableCell,
   TableHead,
 } from '@mui/material';
-import {
-  KubeConfirmButton,
-  KubeCancelButton,
-  EclipseTransparentButton,
-} from '@/components/Button';
 import API from '@/assets/API.svg';
 import WhiteAPI from '@/assets/WhiteAPI.svg';
 import { fontFamily } from '@/utils/commonUtils';
@@ -28,6 +20,7 @@ import {
 import Question from '@/assets/Question.svg';
 import { NormalBoldFont, SmallLightFont } from '@/components/Fonts';
 import { getBoolString } from '@/utils/commonUtils';
+import { useIntl } from 'react-intl';
 
 const labelStyle = {
   fontSize: '12px',
@@ -81,7 +74,7 @@ function createRow(
 
 export function Information() {
   const [currentThreadGroup, setCurrentThreadGroup] = useState(null);
-
+  const intl = useIntl();
   const { currentPlan } = useSelector(state => {
     return {
       currentPlan: state.Application.currentPlan,
@@ -89,21 +82,21 @@ export function Information() {
   });
 
   const parameterHeadRow = [
-    createRow('key', '键', false, '70px', '70px', true, 'center'),
-    createRow('value', '值', false, '70px', '70px', true, 'center'),
+    createRow('key', intl.messages['common.key'], false, '70px', '70px', true, 'center'),
+    createRow('value', intl.messages['common.value'], false, '70px', '70px', true, 'center'),
   ];
 
   const requestHeadHeadRow = [
-    createRow('key', '键', false, '70px', '70px', true, 'center'),
-    createRow('value', '值', false, '70px', '70px', true, 'center'),
+    createRow('key', intl.messages['common.key'], false, '70px', '70px', true, 'center'),
+    createRow('value', intl.messages['common.value'], false, '70px', '70px', true, 'center'),
   ];
 
   const timerHeadRow = [
-    createRow('name', '名称', false, '70px', '70px', true, 'center'),
-    createRow('threadDelay', '线程延迟', false, '70px', '70px', true, 'center'),
+    createRow('name', intl.messages['common.name'], false, '70px', '70px', true, 'center'),
+    createRow('threadDelay', intl.messages['stressTesting.threadDelay'], false, '70px', '70px', true, 'center'),
     createRow(
       'constantDelayOffset',
-      '恒定延迟偏移',
+      intl.messages['stressTesting.constantDelayOffset'],
       false,
       '70px',
       '70px',
@@ -112,7 +105,7 @@ export function Information() {
     ),
     createRow(
       'randomDelayMaximum',
-      '延迟最大值',
+      intl.messages['stressTesting.randomDelayMaximum'],
       false,
       '70px',
       '70px',
@@ -245,7 +238,7 @@ export function Information() {
                   fontWeight: 600,
                 }}
               >
-                基本信息
+                {intl.messages['common.basicInfo']}
               </Box>
               <Stack
                 sx={{
@@ -257,7 +250,7 @@ export function Information() {
                 spacing={1.5}
               >
                 <Stack direction='row' spacing={3}>
-                  <Box sx={labelStyle}>名称</Box>
+                  <Box sx={labelStyle}>{intl.messages['common.name']}</Box>
                   <Box sx={valueStyle}>
                     {currentPlan &&
                     currentPlan.threadGroupList[currentThreadGroup] !== null
@@ -267,7 +260,7 @@ export function Information() {
                   </Box>
                 </Stack>
                 <Stack direction='row' spacing={3}>
-                  <Box sx={labelStyle}>线程数</Box>
+                  <Box sx={labelStyle}>{intl.messages['common.threadNum']}</Box>
                   <Box sx={valueStyle}>
                     {currentPlan &&
                     currentPlan.threadGroupList[currentThreadGroup] !== null
@@ -286,7 +279,7 @@ export function Information() {
                   </Box>
                 </Stack>
                 <Stack direction='row' spacing={3}>
-                  <Box sx={labelStyle}>循环次数</Box>
+                  <Box sx={labelStyle}>{intl.messages['common.cycleIndex']}</Box>
                   <Box sx={valueStyle}>
                     {currentPlan &&
                     currentPlan.threadGroupList[currentThreadGroup] !== null
@@ -305,7 +298,7 @@ export function Information() {
                   fontWeight: 600,
                 }}
               >
-                HTTP请求
+                {intl.messages['common.httpRequest']}
               </Box>
               <Stack
                 sx={{
@@ -317,7 +310,7 @@ export function Information() {
                 spacing={1.5}
               >
                 <Stack direction='row' spacing={3}>
-                  <Box sx={labelStyle}>主机地址</Box>
+                  <Box sx={labelStyle}>{intl.messages['common.hostIP']}</Box>
                   <Box sx={valueStyle}>
                     {currentPlan &&
                     currentPlan.threadGroupList[currentThreadGroup] !== null
@@ -327,7 +320,7 @@ export function Information() {
                   </Box>
                 </Stack>
                 <Stack direction='row' spacing={3}>
-                  <Box sx={labelStyle}>协议</Box>
+                  <Box sx={labelStyle}>{intl.messages['common.protocol']}</Box>
                   <Box sx={valueStyle}>
                     {currentPlan &&
                     currentPlan.threadGroupList[currentThreadGroup] !== null
@@ -337,7 +330,7 @@ export function Information() {
                   </Box>
                 </Stack>
                 <Stack direction='row' spacing={3}>
-                  <Box sx={labelStyle}>路径</Box>
+                  <Box sx={labelStyle}>{intl.messages['common.path']}</Box>
                   <Box sx={valueStyle}>
                     {currentPlan &&
                     currentPlan.threadGroupList[currentThreadGroup] !== null
@@ -347,7 +340,7 @@ export function Information() {
                   </Box>
                 </Stack>
                 <Stack direction='row' spacing={3}>
-                  <Box sx={labelStyle}>端口</Box>
+                  <Box sx={labelStyle}>{intl.messages['common.port']}</Box>
                   <Box sx={valueStyle}>
                     {currentPlan &&
                     currentPlan.threadGroupList[currentThreadGroup] !== null
@@ -357,7 +350,7 @@ export function Information() {
                   </Box>
                 </Stack>
                 <Stack direction='row' spacing={3}>
-                  <Box sx={labelStyle}>请求方法</Box>
+                  <Box sx={labelStyle}>{intl.messages['common.requestMethod']}</Box>
                   <Box sx={valueStyle}>
                     {currentPlan &&
                     currentPlan.threadGroupList[currentThreadGroup] !== null
@@ -393,7 +386,7 @@ export function Information() {
                 currentPlan.threadGroupList[currentThreadGroup]
                   .httpSamplerProxyVO ? (
                   <Stack direction='row' spacing={3}>
-                    <Box sx={labelStyle}>请求体</Box>
+                    <Box sx={labelStyle}>{intl.messages['common.requestBody']}</Box>
                     <Box sx={valueStyle}>
                       {
                         currentPlan.threadGroupList[currentThreadGroup]
@@ -415,7 +408,7 @@ export function Information() {
                     .httpSamplerProxyVO.arguments
                 ).length > 0 ? (
                   <Stack direction='row' spacing={3}>
-                    <Box sx={labelStyle}>请求参数</Box>
+                    <Box sx={labelStyle}>{intl.messages['common.requestParameters']}</Box>
                     <Box sx={valueStyle}>
                       <StyledTableContainer sx={{ maxHeight: '680px' }}>
                         <Table
@@ -506,7 +499,7 @@ export function Information() {
                     .headerManagerVO.headerList
                 ).length > 0 ? (
                   <Stack direction='row' spacing={3}>
-                    <Box sx={labelStyle}>请求头</Box>
+                    <Box sx={labelStyle}>{intl.messages['common.requestHeader']}</Box>
                     <Box sx={valueStyle}>
                       <StyledTableContainer sx={{ maxHeight: '680px' }}>
                         <Table
@@ -596,7 +589,7 @@ export function Information() {
                   fontWeight: 600,
                 }}
               >
-                定时器
+                {intl.messages['common.timer']}
               </Box>
               <Stack
                 sx={{
@@ -734,10 +727,10 @@ export function Information() {
                               }}
                             >
                               <Question />
-                              <NormalBoldFont>无数据</NormalBoldFont>
+                              <NormalBoldFont>{intl.messages['common.serviceTableContentNoData']}</NormalBoldFont>
 
                               <SmallLightFont>
-                                您可以尝试刷新数据
+                                {intl.messages['common.serviceTableContentNoDataHint']}
                               </SmallLightFont>
                             </TableCell>
                           </TableRow>
