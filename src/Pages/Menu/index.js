@@ -225,9 +225,10 @@ export default function MiniDrawer() {
                     fontStyle: 'normal',
                     fontSize: '12px',
                     lineHeight: 1.67,
+                    textTransform: "none"
                   }}
                 >
-                  平台管理
+                  {intl.messages['menu.platformManagement']}
                 </span>
               </KubeTransparentButton>
               <LanguageButton />
@@ -362,7 +363,22 @@ export default function MiniDrawer() {
                     <Box
                       sx={{ ...styledFont, color: l11 ? '#55bc8a' : '#242e42' }}
                     >
-                      集群总览
+                      {intl.messages['menu.clusterOverview']}
+                    </Box>
+                  </ListItemButton>
+
+                  <ListItemButton
+                    sx={styleListButton}
+                    onClick={() => {
+                      setAllFalse();
+                      setl12(true);
+                      navigate('cluster/scheme');
+                    }}
+                  >
+                    <Box
+                      sx={{ ...styledFont, color: l12 ? '#55bc8a' : '#242e42' }}
+                    >
+                      {intl.messages['common.schemeDeploy']}
                     </Box>
                   </ListItemButton>
 
@@ -377,7 +393,7 @@ export default function MiniDrawer() {
                     <Box
                       sx={{ ...styledFont, color: l13 ? '#55bc8a' : '#242e42' }}
                     >
-                      服务实例
+                      {intl.messages['common.serviceInstance']}
                     </Box>
                   </ListItemButton>
                 </List>

@@ -320,7 +320,7 @@ export default function ServiceQuery() {
                 lineHeight: '32px',
               }}
             >
-              服务
+              {intl.messages['common.service']}
             </Typography>
             <Typography
               sx={{

@@ -148,7 +148,7 @@ export function PortConfigRow(props) {
               borderRight: '0px',
             }}
           >
-            协议
+            {intl.messages["common.protocol"]}
             <Tooltip
               PopperProps={{
                 sx: {
@@ -215,7 +215,7 @@ export function PortConfigRow(props) {
               width: '45px',
             }}
           >
-            名称
+            {intl.messages['common.name']}
           </Box>
           <KubeTextField
             sx={{
@@ -247,7 +247,7 @@ export function PortConfigRow(props) {
               width: '50px',
             }}
           >
-            容器端口
+            {intl.messages['common.containerPort']}
           </Box>
           <KubeTextField
             sx={{
@@ -509,7 +509,7 @@ export default function ContainerAddBlock(props) {
             lineHeight: 1.67,
           }}
         >
-          添加容器
+          {intl.messages['cluster.addContainer']}
         </Typography>
       </Stack>
       {/* 容器设置模块 */}
@@ -530,7 +530,7 @@ export default function ContainerAddBlock(props) {
             lineHeight: 1.67,
           }}
         >
-          容器设置
+          {intl.messages['cluster.containerSetting']}
         </Typography>
 
         <Typography
@@ -552,7 +552,7 @@ export default function ContainerAddBlock(props) {
               lineHeight: 1.67,
             }}
           >
-            镜像
+            {intl.messages["common.image"]}
           </Typography>
           <Typography
             sx={{
@@ -639,13 +639,13 @@ export default function ContainerAddBlock(props) {
                       color: '#242e42',
                     }}
                   >
-                    CPU预留
+                    {intl.messages['cluster.cpuReserved']}
                   </Typography>
                   <KubeEndAdornmentTextField
                     sx={{
                       width: '200px',
                     }}
-                    placeholder='不预留'
+                    placeholder={intl.messages['cluster.noReserved']}
                     InputProps={{
                       endAdornment: (
                         <InputAdornment
@@ -683,13 +683,13 @@ export default function ContainerAddBlock(props) {
                       color: '#242e42',
                     }}
                   >
-                    CPU限制
+                    {intl.messages['cluster.cpuLimited']}
                   </Typography>
                   <KubeEndAdornmentTextField
                     sx={{
                       width: '200px',
                     }}
-                    placeholder='不限制'
+                    placeholder={intl.messages['cluster.noLimited']}
                     InputProps={{
                       endAdornment: (
                         <InputAdornment
@@ -736,13 +736,13 @@ export default function ContainerAddBlock(props) {
                       color: '#242e42',
                     }}
                   >
-                    内存预留
+                    {intl.messages['cluster.memReserved']}
                   </Typography>
                   <KubeEndAdornmentTextField
                     sx={{
                       width: '200px',
                     }}
-                    placeholder='不预留'
+                    placeholder={intl.messages['common.noReserved']}
                     InputProps={{
                       endAdornment: (
                         <InputAdornment
@@ -780,13 +780,13 @@ export default function ContainerAddBlock(props) {
                       color: '#242e42',
                     }}
                   >
-                    内存限制
+                    {intl.messages['cluster.memLimited']}
                   </Typography>
                   <KubeEndAdornmentTextField
                     sx={{
                       width: '200px',
                     }}
-                    placeholder='不限制'
+                    placeholder={intl.messages['cluster.noLimited']}
                     InputProps={{
                       endAdornment: (
                         <InputAdornment
@@ -855,7 +855,7 @@ export default function ContainerAddBlock(props) {
             lineHeight: 1.67,
           }}
         >
-          端口设置
+          {intl.messages['cluster.portSetting']}
         </Typography>
 
         <Typography
@@ -916,7 +916,7 @@ export default function ContainerAddBlock(props) {
               onClick={handlePortAdd}
               disabled={portsError.includes(true)}
             >
-              添加端口
+              {intl.messages['cluster.addPort']}
             </KubeCancelButton>
           </Box>
         </Box>

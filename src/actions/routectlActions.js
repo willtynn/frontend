@@ -5,6 +5,8 @@ import { RouteRule, RouteRuleId } from '../models/RouteControlling';
 import { BaseResponse } from '../models/BaseResponse';
 import { Dispatch, AnyAction } from 'redux';
 
+export const UPDATE_CURRENT_SERVICE='UPDATE_CURRENT_SERVICE';
+
 export const UPDATE_ROUTERULES = 'UPDATE_ROUTERULES';
 export const UPDATE_ROUTERULE = 'UPDATE_ROUTERULE';
 const baseURLLink = 'http://192.168.1.104:30760';
@@ -37,7 +39,7 @@ export function getAllRouteRules(
  * @param {RouteRuleId} searchInfo
  */
 export function getRouteRules(searchInfo) {
-  const url = '/route-rules/getRouteRules?exact=false';
+  const url = '/route-rules/all?exact=false';
 
   return async (dispatch) => {
     try {

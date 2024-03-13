@@ -11,8 +11,12 @@ import { fontFamily } from '@/utils/commonUtils';
 import './styles.css';
 import { getRouteTraceDetail } from '@/actions/routeAction';
 
+import { useIntl } from 'react-intl';
+
 export function RouteTraceCanvas(props) {
   const dispatch = useDispatch();
+  const intl = useIntl();
+
   const { id } = props;
 
   const [noData, setNoData] = React.useState(false);
@@ -73,7 +77,7 @@ export function RouteTraceCanvas(props) {
       <strong style=\"font-size:16px\">" + item.service + "</strong><br> \
       <table><tbody> \
       <tr align=\"left\"><td><em style=\"font-size:14px\">IP&nbsp;&nbsp;&nbsp;</em></td><td>" + item.ip + "</td></tr> \
-      <tr align=\"left\"><td><em>耗时&nbsp;&nbsp;&nbsp;</em></td><td>" + item.duration + "</td></tr> \
+      <tr align=\"left\"><td><em>" + intl.messages['routeTrace.popWindowTimeConsuming'] + "&nbsp;&nbsp;&nbsp;</em></td><td>" + item.duration + "</td></tr> \
       <tr align=\"left\"><td><em>Host&nbsp;&nbsp;&nbsp;</em></td><td>" + item.host_ip + "</td></tr> \
       </tbody></table></div>";
       g.setNode(item.ip, {
@@ -200,7 +204,7 @@ export function RouteTraceCanvas(props) {
             boxShadow: '2px 0px 8px rgba(35,45,65,.28)',
           }}
         >
-          <span sx={{}}>无链路图</span>
+          <span>{intl.messages['routeTrace.popWindowNoLinkDiagram']}</span>
         </Box>
       ) : (
         <svg

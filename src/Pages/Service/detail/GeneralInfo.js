@@ -20,6 +20,7 @@ import NavigateBeforeIcon from '@mui/icons-material/NavigateBefore';
 import { useNavigate, useParams } from 'react-router-dom';
 import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
 import { StyledPopover } from '../../../components/Popover';
+import { useIntl } from 'react-intl';
 
 const labelStyle = {
   fontSize: '12px',
@@ -49,7 +50,7 @@ const valueStyle = {
 
 export default function GeneralInfo(props) {
   const navigate = useNavigate();
-
+  const intl = useIntl();
   const [moreOperationAnchorEl, setMoreOperationAnchorEl] = useState(null);
   const moreOperationOpen = Boolean(moreOperationAnchorEl);
   const [backText, setBackText] = useState("服务");
@@ -232,25 +233,25 @@ export default function GeneralInfo(props) {
         {/* Key-Value Pair */}
         <Stack sx={{ margin: '6px 0px' }} direction='column' spacing={1.5}>
           <Stack direction='row' spacing={0.75}>
-            <Box sx={labelStyle}>服务ID</Box>
+            <Box sx={labelStyle}>{intl.messages['common.serviceId']}</Box>
             <Box sx={valueStyle}>
               {exactService !== null ? exactService.id : ''}
             </Box>
           </Stack>
           <Stack direction='row' spacing={0.75}>
-            <Box sx={labelStyle}>服务名称</Box>
+            <Box sx={labelStyle}>{intl.messages['common.serviceName']}</Box>
             <Box sx={valueStyle}>
               {exactService !== null ? exactService.name : ''}
             </Box>
           </Stack>
           <Stack direction='row' spacing={0.75}>
-            <Box sx={labelStyle}>代码仓库地址</Box>
+            <Box sx={labelStyle}>{intl.messages['common.repo']}</Box>
             <Box sx={valueStyle}>
               {exactService !== null ? exactService.repo : ''}
             </Box>
           </Stack>
           <Stack direction='row' spacing={0.75}>
-            <Box sx={labelStyle}>镜像仓库地址&Tag</Box>
+            <Box sx={labelStyle}>{intl.messages['common.imageUrl']}</Box>
             <Box sx={valueStyle}>
               {exactService !== null ? exactService.imageUrl : ''}
             </Box>

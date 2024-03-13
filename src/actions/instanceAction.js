@@ -17,6 +17,56 @@ const axios_instance = axios.create({
   crossDomain: true,
 });
 
+export function deployWithJson(data) {
+  const url = '/instance/deploy';
+  return async dispatch => {
+    try {
+      const res = await axios_instance.post(
+        url,
+        data,
+        {
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        }
+      );
+      if (res.data.code === 200 || res.data.code === 0) {
+        dispatch(
+          setSnackbarMessageAndOpen(
+            'instance.deploySuccess',
+            {},
+            SEVERITIES.success
+          )
+        );
+      } else if (res.data.code === 1) {
+        dispatch(
+          setSnackbarMessageAndOpen(
+            'instance.deployFailed',
+            {},
+            SEVERITIES.warning
+          )
+        );
+      } else {
+        dispatch(
+          setSnackbarMessageAndOpen(
+            'instance.deployFailed',
+            {},
+            SEVERITIES.warning
+          )
+        );
+      }
+    } catch {
+      dispatch(
+        setSnackbarMessageAndOpen(
+          'instance.deployFailed',
+          {},
+          SEVERITIES.warning
+        )
+      );
+    }
+  };
+}
+
 export function deploy(
   serviceId,
   serviceName,

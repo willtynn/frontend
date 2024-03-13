@@ -16,27 +16,15 @@ import {
     Divider,
     CardActionArea
   } from "@mui/material";
-  import {
-    SmallLightFont,
-    NormalFontBlack,
-  } from "@/components/Fonts";
+import {
+  SmallLightFont,
+  NormalFontBlack,
+} from "@/components/Fonts";
 
+
+import { useIntl } from 'react-intl';
 //fuctions-start
 //#region
-function getDate(stamp){
-  const date = new Date(stamp / 1000);
-  //如果是今天或者昨天，直接返回是哪天，否则返回具体日期
-  const now = new Date();
-  const diff = now.getTime() - date.getTime();
-  const days = Math.floor(diff / (24 * 3600 * 1000));
-  if(days === 0){
-    return 'Today';
-  }else if(days === 1){
-    return 'Yesterday';
-  }else{
-    return date.toLocaleDateString();
-  }
-}
 
 function getTime(stamp){
   const date = new Date(stamp / 1000);
@@ -46,35 +34,6 @@ function getTime(stamp){
   return hour.toString().padStart(2,0) + ':' + minute.toString().padStart(2,0) + ':' + second.toString().padStart(2,0);
 }
 
-function calculateTimeInterval(stamp){
-  const now = new Date();
-  const time = new Date(stamp / 1000);
-  const diff = now.getTime() - time.getTime();
-  const days = Math.floor(diff / (24 * 3600 * 1000));
-  if(days > 0){
-    let result = `${days} days ago`;
-    return result;
-  }
-  const leave1 = diff % (24 * 3600 * 1000);
-  const hours = Math.floor(leave1 / (3600 * 1000));
-  if(hours > 0){
-    let result = `${hours} hours ago`;
-    return result;
-  }
-  const leave2 = leave1 % (3600 * 1000);
-  const minutes = Math.floor(leave2 / (60 * 1000));
-  if(minutes > 0){
-    let result = `${minutes} minutes ago`;
-    return result;
-  }
-  const leave3 = leave2 % (60 * 1000);
-  const seconds = Math.round(leave3 / 1000);
-  if(seconds > 0){
-    let result = `${seconds} seconds ago`;
-    return result;
-  }
-  return 'NaN';
-}
 
 //#endregion
 //fuctions-end
@@ -82,6 +41,54 @@ function calculateTimeInterval(stamp){
 
 export function RouteTraceCard(props) {
   const { nodeID, traceID, spanNum, timeStamp, duration, progress, action} = props;
+
+  const intl = useIntl();
+
+
+  function getDate(stamp){
+    const date = new Date(stamp / 1000);
+    //如果是今天或者昨天，直接返回是哪天，否则返回具体日期
+    const now = new Date();
+    const diff = now.getTime() - date.getTime();
+    const days = Math.floor(diff / (24 * 3600 * 1000));
+    if(days === 0){
+      return intl.messages["popWindowToday"];
+    }else if(days === 1){
+      return intl.messages["popWindowYesterday"];
+    }else{
+      return date.toLocaleDateString();
+    }
+  }
+  
+  function calculateTimeInterval(stamp){
+    const now = new Date();
+    const time = new Date(stamp / 1000);
+    const diff = now.getTime() - time.getTime();
+    const days = Math.floor(diff / (24 * 3600 * 1000));
+    if(days > 0){
+      let result = `${days} ` + intl.messages["popWindowDaysAgo"];
+      return result;
+    }
+    const leave1 = diff % (24 * 3600 * 1000);
+    const hours = Math.floor(leave1 / (3600 * 1000));
+    if(hours > 0){
+      let result = `${hours} ` + intl.messages["popWindowHoursAgo"];
+      return result;
+    }
+    const leave2 = leave1 % (3600 * 1000);
+    const minutes = Math.floor(leave2 / (60 * 1000));
+    if(minutes > 0){
+      let result = `${minutes} ` + intl.messages["popWindowMinutesAgo"];
+      return result;
+    }
+    const leave3 = leave2 % (60 * 1000);
+    const seconds = Math.round(leave3 / 1000);
+    if(seconds > 0){
+      let result = `${seconds} ` + intl.messages["popWindowSecondsAgo"];
+      return result;
+    }
+    return 'NaN';
+  }
 
   const styleSpanNum = 
     {

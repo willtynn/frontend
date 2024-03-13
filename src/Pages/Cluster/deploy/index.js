@@ -19,6 +19,10 @@ import ContainerConfig from './DeployProgress/ContainerConfig';
 import TaskIcon from '@/assets/TaskIcon.svg';
 import { useIntl } from 'react-intl';
 import { deploy } from '../../../actions/instanceAction';
+import DeployConfig from './DeployConfig';
+import { StyledPopover } from '@/components/Popover';
+import DataObjectIcon from '@mui/icons-material/DataObject';
+import ContentPasteIcon from '@mui/icons-material/ContentPaste';
 
 const formControlStyle = {
   // height: "45px",
@@ -72,11 +76,35 @@ export default function InstanceDeploy() {
   const [isConfig, setIsConfig] = useState(false);
   const [configFinish, setConfigFinish] = useState(false);
 
+  const [openConfig, setOpenConfig] = useState(false);
+  const [methodSelectOpenEl, setMethodSelectOpenEl] = useState(null);
+  const methodSelectOpen = Boolean(methodSelectOpenEl);
+
   const intl = useIntl();
   const dispatch = useDispatch();
 
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
+
+  const handleConfigOpen = () => setOpenConfig(true);
+  const handleConfigClose = () => setOpenConfig(false);
+
+  const items = [
+    [
+      <ContentPasteIcon />,
+      intl.messages['cluster.panelConfiguration'],
+      handleOpen,
+    ],
+    [
+      <DataObjectIcon />,
+      intl.messages['cluster.jsonConfiguration'],
+      handleConfigOpen,
+    ],
+  ];
+
+  const handleMethodSelection = e => {
+    setMethodSelectOpenEl(e.currentTarget);
+  };
 
   const resetParam = () => {
     setServiceId('');
@@ -228,7 +256,7 @@ export default function InstanceDeploy() {
                 lineHeight: '32px',
               }}
             >
-              服务实例
+              {intl.messages['common.serviceInstance']}
             </Typography>
             <Typography
               sx={{
@@ -248,13 +276,13 @@ export default function InstanceDeploy() {
       <ServiceStatusTable
         embeddingButton={
           <OutlinedButton
-            onClick={handleOpen}
+            onClick={handleMethodSelection}
             sx={{
               borderRadius: '20px !important',
               width: '120px',
             }}
           >
-            部署
+            {intl.messages['common.deploy']}
           </OutlinedButton>
         }
       />
@@ -269,6 +297,26 @@ export default function InstanceDeploy() {
           isConfig={isConfig}
         />
       </Modal>
+
+      <Modal open={openConfig} onClose={handleConfigClose}>
+        <DeployConfig 
+          handleCancelClick={handleConfigClose}
+        />
+      </Modal>
+
+      <StyledPopover
+        id='deploy-method-popover'
+        open={methodSelectOpen}
+        anchorEl={methodSelectOpenEl}
+        handleClose={() => setMethodSelectOpenEl(null)}
+        items={items}
+        sx={{
+          mt: '8px !important',
+          boxShadow: 'inset 0 4px 8px 0 rgba(36,46,66,.12) !important',
+          overflow: "hidden !important",
+        }}
+        border='none'
+      />
     </Box>
   );
 }

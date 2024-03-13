@@ -12,6 +12,7 @@ import { setSnackbarMessageAndOpen } from '../../../actions/snackbarAction';
 import { SEVERITIES } from '../../../components/CommonSnackbar';
 import { useDispatch } from 'react-redux';
 import { decodeInterfaceForService, decodeInterfaceForInterface } from '../../../utils/commonUtils';
+import { useIntl } from 'react-intl';
 // import D3Tip from '../../../components/Tip/D3Tip';
 
 const normalEdgeStyle = {
@@ -21,6 +22,7 @@ const normalEdgeStyle = {
 
 export function ThreeLayerCanvas(props) {
   const { nodes, links, handleNodeClick, services } = props;
+  const intl = useIntl();
   const [graph, setGraph] = useState(
     new dagreD3.graphlib.Graph({ compound: true })
       .setGraph({})
@@ -205,11 +207,11 @@ export function ThreeLayerCanvas(props) {
             <Box>{id}</Box>
           </Stack>
           <Stack direction='row' spacing={1}>
-            <Box sx={{ width: '80px' }}>代码仓库地址</Box>
+            <Box sx={{ width: '80px' }}>{intl.messages['common.codeRepository']}</Box>
             <Box>{repo}</Box>
           </Stack>
           <Stack direction='row' spacing={1}>
-            <Box sx={{ width: '80px' }}>镜像仓库地址</Box>
+            <Box sx={{ width: '80px' }}>{intl.messages['common.imageUrl']}</Box>
             <Box>{imageUrl}</Box>
           </Stack>
         </Stack>
@@ -257,6 +259,7 @@ export function ThreeLayerCanvas(props) {
 
 export function EdgeCenterCanvas(props) {
   const { nodes, links, handleNodeClick, services, target } = props;
+  const intl = useIntl();
   const [graph, setGraph] = useState(
     new dagreD3.graphlib.Graph({ compound: true })
       .setGraph({})
@@ -461,11 +464,11 @@ export function EdgeCenterCanvas(props) {
             <Box>{id}</Box>
           </Stack>
           <Stack direction='row' spacing={1}>
-            <Box sx={{ width: '80px' }}>代码仓库地址</Box>
+            <Box sx={{ width: '80px' }}>{intl.messages['common.codeRepository']}</Box>
             <Box>{repo}</Box>
           </Stack>
           <Stack direction='row' spacing={1}>
-            <Box sx={{ width: '80px' }}>镜像仓库地址</Box>
+            <Box sx={{ width: '80px' }}>{intl.messages['common.imageUrl']}</Box>
             <Box>{imageUrl}</Box>
           </Stack>
         </Stack>

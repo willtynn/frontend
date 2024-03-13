@@ -48,63 +48,13 @@ import {
   clearFailed,
 } from '@/actions/routeAction';
 
+import { useIntl } from 'react-intl';
+
 //#endregion
 //import
 
 //Constants
 //#region
-const selectMenuItems = [
-  'last 1 min',
-  'last 2 min',
-  'last 5 min',
-  'last 10 min',
-  'last 30 min',
-  'last 1 hour',
-  'last 3 hours',
-  'last 6 hours',
-  'last 12 hours',
-  'last 1 day',
-  'last 7 days',
-  'Custom',
-];
-const durationList = [
-  60, 120, 300, 600, 1800, 3600, 10800, 21600, 43200, 86400, 604800,
-];
-
-const serviceTableHeaders = [
-  { key: 'service', align: 'left', text: '服务', minWidth: 200, maxWidth: 200 },
-  { key: 'api', align: 'center', text: '接口', minWidth: 100, maxWidth: 150 },
-  {
-    key: 'count',
-    align: 'center',
-    text: '请求次数',
-    minWidth: 85,
-    maxWidth: 85,
-  },
-  { key: 'low', align: 'center', text: 'Low', minWidth: 60, maxWidth: 60 },
-  {
-    key: 'percentile50',
-    align: 'center',
-    text: '0.5',
-    minWidth: 60,
-    maxWidth: 60,
-  },
-  {
-    key: 'percentile95',
-    align: 'center',
-    text: '0.95',
-    minWidth: 60,
-    maxWidth: 60,
-  },
-  {
-    key: 'percentile99',
-    align: 'center',
-    text: '0.99',
-    minWidth: 60,
-    maxWidth: 60,
-  },
-  { key: 'high', align: 'center', text: 'High', minWidth: 60, maxWidth: 60 },
-];
 
 const serviceNumPerPage = 10;
 //#endregion
@@ -113,6 +63,66 @@ const serviceNumPerPage = 10;
 export default function RouteTrace() {
   //定义-开始
   //#region
+
+  
+  const intl = useIntl();
+
+  const selectMenuItems = [
+    intl.messages['routeTrace.duration1M'],
+    intl.messages['routeTrace.duration2M'],
+    intl.messages['routeTrace.duration5M'],
+    intl.messages['routeTrace.duration10M'],
+    intl.messages['routeTrace.duration30M'],
+    intl.messages['routeTrace.duration1H'],
+    intl.messages['routeTrace.duration3H'],
+    intl.messages['routeTrace.duration6H'],
+    intl.messages['routeTrace.duration12H'],
+    intl.messages['routeTrace.duration1D'],
+    intl.messages['routeTrace.duration7D'],
+    intl.messages['routeTrace.durationCustom'],
+  ];
+  const durationList = [
+    60, 120, 300, 600, 1800, 3600, 10800, 21600, 43200, 86400, 604800,
+  ];
+
+  const serviceTableHeaders = [
+    { key: 'service', align: 'left', text: intl.messages['routeTrace.serviceTableTitleService'], minWidth: 200, maxWidth: 200 },
+    { key: 'api', align: 'center', text: intl.messages['routeTrace.serviceTableTitleApi'], minWidth: 100, maxWidth: 150 },
+    {
+      key: 'count',
+      align: 'center',
+      text: intl.messages['routeTrace.serviceTableTitleRequestCount'],
+      minWidth: 85,
+      maxWidth: 85,
+    },
+    { key: 'low', align: 'center', text: intl.messages['routeTrace.serviceTableTitleLow'], minWidth: 60, maxWidth: 60 },
+    {
+      key: 'percentile50',
+      align: 'center',
+      text: intl.messages['routeTrace.serviceTableTitle05'],
+      minWidth: 60,
+      maxWidth: 60,
+    },
+    {
+      key: 'percentile95',
+      align: 'center',
+      text: intl.messages['routeTrace.serviceTableTitle095'],
+      minWidth: 60,
+      maxWidth: 60,
+    },
+    {
+      key: 'percentile99',
+      align: 'center',
+      text: intl.messages['routeTrace.serviceTableTitle099'],
+      minWidth: 60,
+      maxWidth: 60,
+    },
+    { key: 'high', align: 'center', text: intl.messages['routeTrace.serviceTableTitleHigh'], minWidth: 60, maxWidth: 60 },
+  ];
+
+
+
+
   const navigate = useNavigate();
 
   const [durationSelectIndex, setDurationSelectIndex] = useState(5);
@@ -437,7 +447,7 @@ export default function RouteTrace() {
                   lineHeight: '32px',
                 }}
               >
-                路由链路
+                {intl.messages['routeTrace.title']}
               </Typography>
               <Typography
                 sx={{
@@ -448,7 +458,7 @@ export default function RouteTrace() {
                   lineHeight: 1.67,
                 }}
               >
-                查看服务的路由链路
+                {intl.messages['routeTrace.titleHint']}
               </Typography>
             </Box>
           </Stack>
@@ -545,7 +555,7 @@ export default function RouteTrace() {
                   }}
                   style={{ top: '6px' }}
                 >
-                  搜索
+                  {intl.messages['routeTrace.serviceTableButtonSearch']}
                 </KubeConfirmButton>
               </Stack>
             </Stack>
@@ -602,9 +612,9 @@ export default function RouteTrace() {
                             }}
                           >
                             <Question />
-                            <NormalBoldFont>无数据</NormalBoldFont>
+                            <NormalBoldFont>{intl.messages['routeTrace.serviceTableContentNoData']}</NormalBoldFont>
 
-                            <SmallLightFont>您可以尝试刷新数据</SmallLightFont>
+                            <SmallLightFont>{intl.messages['routeTrace.serviceTableContentNoDataHint']}</SmallLightFont>
                           </TableCell>
                         </TableRow>
                       ) : (
