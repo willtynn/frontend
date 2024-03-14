@@ -130,12 +130,12 @@ export function RequestDefaults(props) {
   }, [parameterDeletedRows]);
 
   const headRow = [
-    createRow('name', '名称', false, '150px', '150px', true, 'center'),
-    createRow('value', '值', false, '150px', '150px', true, 'center'),
-    createRow('urlEncode', '编码?', false, '50px', '50px', true, 'center'),
+    createRow('name', intl.messages['common.name'], false, '150px', '150px', true, 'center'),
+    createRow('value', intl.messages['common.value'], false, '150px', '150px', true, 'center'),
+    createRow('urlEncode', `${intl.messages['common.encode']}?`, false, '50px', '50px', true, 'center'),
     createRow(
       'contentType',
-      '内容类型',
+      intl.messages['common.contentType'],
       false,
       '120px',
       '130px',
@@ -144,7 +144,7 @@ export function RequestDefaults(props) {
     ),
     createRow(
       'includeEquals',
-      '包含等于?',
+      `${intl.messages['common.includeEquals']}?`,
       false,
       '70px',
       '70px',
@@ -239,51 +239,45 @@ export function RequestDefaults(props) {
     <Box sx={{ p: '12px' }}>
       <Stack direction='column' spacing={1.5}>
         <KubeSubCard
-          title='Web服务器'
+          title={intl.messages['common.webServer']}
           description={intl.messages['stressTesting.webServerDescription']}
         >
           <Stack direction='row' spacing={1}>
             <Box sx={{ width: '30%' }}>
               <KubeInput
-                label='协议'
+                label={intl.messages['common.protocol']}
                 requried={false}
                 id='thread-group-web-server-protocol-input'
                 variant='outlined'
                 value={webServerProtocol}
                 onChange={handleWebServerProtocolChange}
-                // error={groupNameError && showError}
-                // errorMessage={intl.messages['stressTesting.nameEmptyErrorMsg']}
               />
             </Box>
             <Box sx={{ width: '50%' }}>
               <KubeInput
-                label='服务器名称或IP'
+                label={intl.messages['stressTesting.serverNameOrIP']}
                 requried={false}
                 id='thread-group-web-server-name-input'
                 variant='outlined'
                 value={webServerNameOrIP}
                 onChange={handlehandleWebServerNameOrIPChange}
-                // error={groupNameError && showError}
-                // errorMessage={intl.messages['stressTesting.nameEmptyErrorMsg']}
               />
             </Box>
             <Box sx={{ width: '20%' }}>
               <KubeInput
-                label='端口号'
+                label={intl.messages['common.port']}
                 requried={false}
                 id='thread-group-web-server-port-input'
                 variant='outlined'
                 value={webServerPort}
                 onChange={handlehandleWebServerPortChange}
-                // error={groupNameError && showError}
-                // errorMessage={intl.messages['stressTesting.nameEmptyErrorMsg']}
               />
             </Box>
           </Stack>
         </KubeSubCard>
 
         <KubeSubCard
-          title='HTTP请求'
+          title={intl.messages['common.httpRequest']}
           description={intl.messages['stressTesting.httpRequestDescription']}
         >
           <Stack direction='row' spacing={1}>
@@ -296,7 +290,7 @@ export function RequestDefaults(props) {
                   fontWeight: 400,
                 }}
               >
-                请求方法
+                {intl.messages['common.requestMethod']}
               </Typography>
               <KubeSelect
                 sx={{
@@ -328,26 +322,22 @@ export function RequestDefaults(props) {
             </Stack>
             <Box sx={{ width: '58%' }}>
               <KubeInput
-                label='路径'
+                label={intl.messages['common.path']}
                 requried={false}
                 id='thread-group-http-request-path-input'
                 variant='outlined'
                 value={httpRequestPath}
                 onChange={handleHttpRequestPathChange}
-                // error={groupNameError && showError}
-                // errorMessage={intl.messages['stressTesting.nameEmptyErrorMsg']}
               />
             </Box>
             <Box sx={{ width: '25%' }}>
               <KubeInput
-                label='内容编码'
+                label={intl.messages['common.contentEncoding']}
                 requried={false}
                 id='thread-group-http-request-content-encoding-input'
                 variant='outlined'
                 value={httpRequestContentEncoding}
                 onChange={handleHttpRequestContentEncodingChange}
-                // error={groupNameError && showError}
-                // errorMessage={intl.messages['stressTesting.nameEmptyErrorMsg']}
               />
             </Box>
           </Stack>
@@ -362,8 +352,8 @@ export function RequestDefaults(props) {
         >
           <StyledRadioGroup
             data={[
-              [true, '参数'],
-              [false, '消息体数据'],
+              [true, intl.messages['common.parameters']],
+              [false, intl.messages['common.requestBodyData']],
             ]}
             value={isSettingParameters}
             setValue={flag => setIsSettingParameters(flag === 'true')}
@@ -376,12 +366,12 @@ export function RequestDefaults(props) {
               lineHeight: 1.67,
             }}
           >
-            （2选1）
+            {` (${intl.messages['common.choose1from2']})`}
           </Typography>
         </Stack>
 
         {isSettingParameters === true ? (
-          <KubeSubCard title='参数'>
+          <KubeSubCard title={intl.messages['common.parameters']}>
             <Stack
               sx={{ minHeight: '300px' }}
               direction='column'
@@ -527,7 +517,7 @@ export function RequestDefaults(props) {
                             fontStyle: 'normal',
                           }}
                         >
-                          暂无参数
+                          {intl.messages['stressTesting.noParametersCurrently']}
                         </TableCell>
                       </TableRow>
                     )}
@@ -547,19 +537,19 @@ export function RequestDefaults(props) {
                   sx={{ height: '32px', width: '84px' }}
                   onClick={handleParameterAdd}
                 >
-                  添加
+                  {intl.messages['common.add']}
                 </KubeConfirmButton>
                 <KubeCancelButton
                   sx={{ height: '32px', width: '84px' }}
                   onClick={handleParameterDelete}
                 >
-                  删除
+                  {intl.messages['common.delete']}
                 </KubeCancelButton>
               </Stack>
             </Stack>
           </KubeSubCard>
         ) : (
-          <KubeSubCard title='消息体数据'>
+          <KubeSubCard title={intl.messages['common.requestBodyData']}>
             <Box>
               <Editor
                 height='300px'

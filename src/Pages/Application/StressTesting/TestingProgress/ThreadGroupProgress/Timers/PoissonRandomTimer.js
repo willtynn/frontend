@@ -1,8 +1,12 @@
 import { Stack } from '@mui/material';
 import { KubeInput } from '../../../../../../components/Input';
+import { useIntl } from 'react-intl';
 
 export function PoissonRandomTimer(props) {
   const { lambda, setLambda, constantDelayOffset, setConstantDelayOffset } = props;
+
+  const intl = useIntl();
+
   const handleLambdanChange = e => {
     setLambda(e.target.value);
   }
@@ -14,7 +18,7 @@ export function PoissonRandomTimer(props) {
   return (
     <Stack direction="column" spacing={1}>
       <KubeInput
-        label='Lambda（毫秒）'
+        label={intl.messages['stressTesting.msLambda']}
         // decription={intl.messages['stressTesting.groupCommentDescription']}
         requried={true}
         id='poisson-timer-lambda-input'
@@ -23,7 +27,7 @@ export function PoissonRandomTimer(props) {
         onChange={handleLambdanChange}
       />
       <KubeInput
-        label='固定延迟偏移（毫秒）'
+        label={intl.messages['stressTesting.constantMsDelayOffset']}
         // decription={intl.messages['stressTesting.groupCommentDescription']}
         requried={true}
         id='poisson-timer-constantDelayOffset-input'

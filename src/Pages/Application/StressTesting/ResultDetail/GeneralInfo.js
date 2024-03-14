@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import { Box, Stack, Tooltip } from '@mui/material';
+import { Box, Stack } from '@mui/material';
 import { KubeCancelButton } from '@/components/Button';
 import { fontFamily } from '@/utils/commonUtils';
 import DetailBG from '@/assets/DetailBG.svg';
@@ -8,10 +8,10 @@ import Service21 from '@/assets/Service21.svg';
 import EditService from '@/assets/EditService.svg';
 import Delete16 from '@/assets/Delete16.svg';
 import NavigateBeforeIcon from '@mui/icons-material/NavigateBefore';
-import { useNavigate, useParams } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
 import { StyledPopover } from '@/components/Popover';
-import { getBoolString } from '@/utils/commonUtils';
+import { useIntl } from 'react-intl';
 
 const labelStyle = {
   fontSize: '12px',
@@ -41,10 +41,10 @@ const valueStyle = {
 
 export default function GeneralInfo(props) {
   const navigate = useNavigate();
-
+  const intl = useIntl();
   const [moreOperationAnchorEl, setMoreOperationAnchorEl] = useState(null);
   const moreOperationOpen = Boolean(moreOperationAnchorEl);
-  const [backText, setBackText] = useState('测试计划');
+  const [backText, setBackText] = useState(intl.messages['common.testPlan']);
   const dispatch = useDispatch();
 
   const { currentResult } = useSelector(state => {
@@ -54,8 +54,8 @@ export default function GeneralInfo(props) {
   });
 
   const items = [
-    [<EditService />, '编辑', () => {}],
-    [<Delete16 />, '删除', () => {}],
+    [<EditService />, intl.messages['common.edit'], () => {}],
+    [<Delete16 />, intl.messages['common.delete'], () => {}],
   ];
 
   const handleReturn = () => {
@@ -155,14 +155,14 @@ export default function GeneralInfo(props) {
           alignItems='center'
         >
           <KubeCancelButton sx={{ height: '32px', width: '96px' }}>
-            删除结果
+            {intl.messages['stressTesting.deleteResult']}
           </KubeCancelButton>
           <KubeCancelButton
             onClick={handleMoreOperation}
             sx={{ height: '32px', width: '96px' }}
           >
             <Stack direction='row' alignItems='center' justifyContent='center'>
-              <Box sx={{ ml: '4px' }}>更多操作</Box>
+              <Box sx={{ ml: '4px' }}>{intl.messages['common.moreOperation']}</Box>
               <ArrowDropDownIcon fontSize='small' />
             </Stack>
           </KubeCancelButton>
@@ -191,19 +191,19 @@ export default function GeneralInfo(props) {
             mb: '12px',
           }}
         >
-          详情
+          {intl.messages['common.details']}
         </Box>
 
         {/* Key-Value Pair */}
         <Stack sx={{ margin: '6px 0px' }} direction='column' spacing={1.5}>
           <Stack direction='row' spacing={0.75}>
-            <Box sx={labelStyle}>开始时间</Box>
+            <Box sx={labelStyle}>{intl.messages['common.beginTime']}</Box>
             <Box sx={valueStyle}>
               {currentResult !== null ? currentResult.startTime : ''}
             </Box>
           </Stack>
           <Stack direction='row' spacing={0.75}>
-            <Box sx={labelStyle}>结束时间</Box>
+            <Box sx={labelStyle}>{intl.messages['common.endTime']}</Box>
             <Box sx={valueStyle}>
               {currentResult !== null
                 ? currentResult.endTime
