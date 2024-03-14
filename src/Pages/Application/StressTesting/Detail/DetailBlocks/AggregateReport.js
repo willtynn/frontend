@@ -3,16 +3,11 @@ import { useDispatch, useSelector } from 'react-redux';
 import {
   Stack,
   Box,
-  InputAdornment,
-  Tooltip,
-  Popover,
   Table,
   TableBody,
   TableRow,
-  TableCell,
   TableHead,
 } from '@mui/material';
-import { fontFamily } from '@/utils/commonUtils';
 import {
   StyledTableBodyCell,
   StyledTableRowCell,
@@ -31,6 +26,7 @@ import { NormalBoldFont, SmallLightFont } from '@/components/Fonts';
 import { KubeConfirmButton } from '../../../../../components/Button';
 import { getResourceHistory } from '@/actions/instanceAction';
 import { TimeAdaptiveAreaChart } from '@/components/Charts/AreaChart';
+import { useIntl } from 'react-intl';
 
 function createRow(
   id,
@@ -58,6 +54,7 @@ function createRow(
 
 export function AggregateReport() {
   const { testPlanId } = useParams();
+  const intl = useIntl();
   const { aggregateReport, changeFlag, startAndEnd, currentPlan } = useSelector(state => {
     return {
       aggregateReport: state.Application.aggregateReport,
@@ -205,7 +202,7 @@ export function AggregateReport() {
             }}
             onClick={handleUpdateAggregateReport}
           >
-            更新聚合报告
+            {intl.messages['stressTesting.updateAggregateReport']}
           </KubeConfirmButton>
         ) : (
           <KubeConfirmButton
@@ -214,7 +211,7 @@ export function AggregateReport() {
             }}
             onClick={handleCreateAggregateReport}
           >
-            创建聚合报告
+            {intl.messages['stressTesting.createAggregateReport']}
           </KubeConfirmButton>
         )}
         <KubeConfirmButton
@@ -223,7 +220,7 @@ export function AggregateReport() {
           }}
           onClick={handleExportExcel}
         >
-          导出报告 (xls)
+          {intl.messages['stressTesting.exportXlsReport']}
         </KubeConfirmButton>
       </Stack>
 
@@ -408,8 +405,8 @@ export function AggregateReport() {
                     data={cpuUsage}
                     keyName='name'
                     valueName='usage'
-                    labelY='CPU 用量 (m)'
-                    labelName='用量'
+                    labelY={intl.messages['stressTesting.cpuUsage']}
+                    labelName={intl.messages['common.usage']}
                     unitName='m'
                   />
                 </Box>
@@ -424,8 +421,8 @@ export function AggregateReport() {
                     data={memoryUsage}
                     keyName='name'
                     valueName='usage'
-                    labelY='内存用量 (Mi)'
-                    labelName='用量'
+                    labelY={intl.messages['stressTesting.memUsage']}
+                    labelName={intl.messages['common.usage']}
                     unitName='Mi'
                   />
                 </Box>
@@ -440,8 +437,8 @@ export function AggregateReport() {
                     data={byteTransmitted}
                     keyName='name'
                     valueName='flow'
-                    labelY='出站流量 (Kbps)'
-                    labelName='出站'
+                    labelY={intl.messages['stressTesting.transferredFlow']}
+                    labelName={intl.messages['common.transferred']}
                     unitName='Kbps'
                   />
                 </Box>
@@ -456,8 +453,8 @@ export function AggregateReport() {
                     data={byteReceived}
                     keyName='name'
                     valueName='flow'
-                    labelY='入站流量 (Kbps)'
-                    labelName='入站'
+                    labelY={intl.messages['stressTesting.receivedFlow']}
+                    labelName={intl.messages['common.received']}
                     unitName='Kbps'
                   />
                 </Box>
@@ -475,9 +472,9 @@ export function AggregateReport() {
             alignItems='center'
           >
             <Question />
-            <NormalBoldFont>无数据</NormalBoldFont>
+            <NormalBoldFont>{intl.messages['common.serviceTableContentNoData']}</NormalBoldFont>
 
-            <SmallLightFont>您可以尝试刷新数据</SmallLightFont>
+            <SmallLightFont>{intl.messages['common.serviceTableContentNoDataHint']}</SmallLightFont>
           </Stack>
         )}
       </Stack>

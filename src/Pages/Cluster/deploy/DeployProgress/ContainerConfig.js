@@ -134,7 +134,7 @@ export default function ContainerConfig(props) {
                     letterSpacing: 'normal',
                   }}
                 >
-                  实例副本数量
+                  {intl.messages['cluster.instanceReplicas']}
                 </Typography>
                 <Stack direction='row' spacing={0}>
                   <KubeTransparentButton
@@ -179,7 +179,7 @@ export default function ContainerConfig(props) {
                 letterSpacing: 'normal',
               }}
             >
-              容器
+              {intl.messages['common.container']}
             </Typography>
             <Box
               sx={{
@@ -227,7 +227,7 @@ export default function ContainerConfig(props) {
                             color: '#242e42',
                           }}
                         >
-                          镜像地址:
+                          {intl.messages['cluster.imageAddress']}:
                         </Box>
                         <Box
                           sx={{
@@ -304,7 +304,7 @@ export default function ContainerConfig(props) {
                         pt: '8px',
                       }}
                     >
-                      添加容器
+                      {intl.messages['cluster.addContainer']}
                     </Typography>
 
                     <Typography

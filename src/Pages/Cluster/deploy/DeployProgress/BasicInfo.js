@@ -92,7 +92,7 @@ export default function BasicInfo(props) {
 
   const deployValues = [
     <KubeInput
-      label='服务ID'
+      label={intl.messages['common.serviceId']}
       decription={intl.messages['instance.serverIdDescription']}
       requried={true}
       id='deploy-service-id'
@@ -103,7 +103,7 @@ export default function BasicInfo(props) {
       errorMessage={intl.messages["instance.serviceIdEmptyError"]}
     />,
     <KubeInput
-      label='名称'
+      label={intl.messages['common.name']}
       decription={intl.messages['instance.nameDescription']}
       requried={true}
       id='deploy-service-name'
@@ -114,7 +114,7 @@ export default function BasicInfo(props) {
       errorMessage={nameErrorType === 0 ? intl.messages['instance.nameEmptyErrorMsg'] : intl.messages['instance.namePatternErrorMsg']}
     />,
     <KubeInput
-      label='命名空间'
+      label={intl.messages['common.namespace']}
       decription={intl.messages['instance.namespaceDescription']}
       requried={true}
       id='deploy-service-namespace'
