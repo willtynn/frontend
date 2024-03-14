@@ -223,7 +223,7 @@ export const messages = {
   routeTrace: {
     title: 'Route Trace',
     //查看服务的路由链路
-    titleHint: 'View the route trace of the service',
+    titleHint: 'View the route trace of the service (This page will automatically load the previous search results. If you need to query fresh data, please click the search button first)',
 
     duration1M: 'Last 1 minute',
     duration2M: 'Last 2 minutes',

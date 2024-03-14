@@ -20,7 +20,7 @@ const defaultminWidth = [
 ];
 
 export function ServiceRow(props) {
-  const { key, rowData, onRowClick, selected, minWidth, showRows } = props;
+  const { rowData, onRowClick, selected, minWidth, showRows } = props;
   let _minWidth = minWidth;
   if (!minWidth) {
     _minWidth = defaultminWidth;
@@ -38,7 +38,6 @@ export function ServiceRow(props) {
           onClick={onRowClick}
           hover
           selected={selected}
-          key={key}
           sx={{
             position: 'sticky',
             backgroundColor: '#FFFFFF',
