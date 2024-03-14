@@ -272,7 +272,7 @@ export const messages = {
   },
   routeTrace: {
     title: '路由链路',
-    titleHint: '查看服务的路由链路',
+    titleHint: '查看服务的路由链路（页面会自动加载上一次搜索的内容，如果需要查询新的数据，请先点击一次搜索按钮）',
 
     duration1M: '1分钟内',
     duration2M: '2分钟内',
@@ -329,5 +329,9 @@ export const messages = {
     modalServiceId: '服务ID',
     modalServiceName: '服务名',
     modalTime: '时间',
+  },
+  evolution: {
+    evolution: '演化',
+    evolutionPlan: '演化计划',
   },
 };

@@ -257,14 +257,23 @@ export default function RouteTrace() {
   }, [serviceVisibleRows, selectedServiceIndex, serviceColumnDisplay]);
 
   useEffect(() => {
-    let now = dayjs();
-    let startTmp = now - 3600000,
+    setDurationSelectIndex(localStorage.getItem('route_trace_duration') || 5);
+    setServiceColumnDisplay(JSON.parse(localStorage.getItem('route_trace_service_column_display')) || [true, true, true, true, true, false, true, true]);
+
+    let startTmp = localStorage.getItem('route_trace_start_time');
+    let endTmp = localStorage.getItem('route_trace_end_time');
+    if (!startTmp || !endTmp) {
+      let now = dayjs();
+      startTmp = now - 3600000;
       endTmp = now.valueOf();
+    }
     setStartTime(startTmp);
     setEndTime(endTmp);
-    clearPage();
+
+    startLoading();
     dispatch(getRouteService(startTmp, endTmp));
     dispatch(clearRouteTrace());
+    clearPage();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
   //#endregion
@@ -282,12 +291,15 @@ export default function RouteTrace() {
       if (durationSelectIndex >= 0 && durationSelectIndex < 11) {
         duration = durationList[durationSelectIndex];
       } else {
-        console.warn('handleTraceSearchClick durationIndex failure');
+        console.warn('!!!! handleTraceSearchClick durationIndex failure');
         return;
       }
       let now = dayjs();
       startTmp = now - duration * 1000;
       endTmp = now.valueOf();
+
+      handleStartTimeChange(startTmp);
+      handleEndTimeChange(endTmp);
     }
     //Custom
     else {
@@ -299,18 +311,22 @@ export default function RouteTrace() {
     setEndTime(endTmp);
     dispatch(getRouteService(startTmp, endTmp));
     dispatch(clearRouteTrace());
+    clearPage();
   };
 
   const handleDurationSelectChange = e => {
     setDurationSelectIndex(e.target.value);
+    localStorage.setItem('route_trace_duration', e.target.value); // TODO
   };
 
   const handleStartTimeChange = newValue => {
     setStartTimeValue(newValue);
+    localStorage.setItem('route_trace_start_time', newValue); // TODO
   };
 
   const handleEndTimeChange = newValue => {
     setEndTimeValue(newValue);
+    localStorage.setItem('route_trace_end_time', newValue); // TODO
   };
 
   const handleServiceChangePage = (_, newPage) => {
@@ -335,6 +351,7 @@ export default function RouteTrace() {
       tmpDisplay[index] = !tmpDisplay[index];
       return tmpDisplay;
     });
+    localStorage.setItem('route_trace_service_column_display', JSON.stringify(serviceColumnDisplay)); // TODO
   };
 
   const handleServiceColumnChooseClick = event =>
@@ -382,6 +399,7 @@ export default function RouteTrace() {
           {serviceTableHeaders.slice(1).map((value, index) => {
             return (
               <Stack
+                key={index}
                 direction='row'
                 onClick={() => handleServiceColumnChooseItemClick(index + 1)}
                 sx={{

@@ -37,6 +37,7 @@ export default function MiniDrawer() {
   const [verticalOpen3, setVerticalOpen3] = useState(false);
   const [verticalOpen4, setVerticalOpen4] = useState(false);
   const [verticalOpen5, setVerticalOpen5] = useState(false);
+  const [verticalOpen6, setVerticalOpen6] = useState(false);
 
   // 这部分变量用于控制导航列表按钮字体颜色
   // 集群模块
@@ -58,6 +59,9 @@ export default function MiniDrawer() {
   // 镜像模块
   const [l5, setl5] = useState(false);
   const [l51, setl51] = useState(false);
+  // 演化模块
+  const [l6, setl6] = useState(false);
+  const [l61, setl61] = useState(false);
 
   const intl = useIntl();
   const [clusterSelectOpen, setClusterSelectOpen] = useState(false);
@@ -89,6 +93,10 @@ export default function MiniDrawer() {
     setl5(l51);
   }, [l51]);
 
+  useEffect(() => {
+    setl6(l61);
+  }, [l61]);
+
   const setAllFalse = () => {
     setl1(false);
     setl11(false);
@@ -104,6 +112,8 @@ export default function MiniDrawer() {
     setl41(false);
     setl5(false);
     setl51(false);
+    setl6(false);
+    setl61(false);
   };
   const handleClick1 = () => {
     setVerticalOpen1(!verticalOpen1);
@@ -123,6 +133,10 @@ export default function MiniDrawer() {
 
   const handleClick5 = () => {
     setVerticalOpen5(!verticalOpen5);
+  };
+
+  const handleClick6 = () => {
+    setVerticalOpen6(!verticalOpen6);
   };
 
   const handlelClusterSelectClose = () => {
@@ -539,6 +553,41 @@ export default function MiniDrawer() {
                       sx={{ ...styledFont, color: l51 ? '#55bc8a' : '#242e42' }}
                     >
                       镜像列表
+                    </Box>
+                  </ListItemButton>
+                </List>
+              </Collapse>
+            </List>
+            <List sx={{ paddingTop: '0px', paddingBottom: '0px' }}>
+              <ListItemButton
+                sx={{
+                  ...styleListButton,
+                  paddingLeft: '12px',
+                }}
+                onClick={handleClick6}
+              >
+                <Box sx={styledIcon}>
+                  <Route16 />
+                </Box>
+                <Box sx={{ ...styledFont, color: l6 ? '#55bc8a' : '#242e42' }}>
+                  {intl.messages['evolution.evolution']}
+                </Box>
+                {verticalOpen6 ? <ExpandLess /> : <ExpandMore />}
+              </ListItemButton>
+              <Collapse in={verticalOpen6} timeout='auto' unmountOnExit={true}>
+                <List component='div' disablePadding>
+                  <ListItemButton
+                    sx={styleListButton}
+                    onClick={() => {
+                      setAllFalse();
+                      setl61(true);
+                      navigate('/evolution/plan');
+                    }}
+                  >
+                    <Box
+                      sx={{ ...styledFont, color: l61 ? '#55bc8a' : '#242e42' }}
+                    >
+                      {intl.messages['evolution.evolutionPlan']}
                     </Box>
                   </ListItemButton>
                 </List>

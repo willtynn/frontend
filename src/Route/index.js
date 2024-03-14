@@ -18,6 +18,7 @@ import ImagesList from '../Pages/Image';
 import { TestPlanDetail } from '../Pages/Application/StressTesting/Detail';
 import { ResultDetail } from '../Pages/Application/StressTesting/ResultDetail';
 import SchemeDeploy from '../Pages/Cluster/scheme';
+import EvolutionPlan from '../Pages/Evolution';
 
 export default function MyRoute() {
   return (
@@ -55,6 +56,9 @@ export default function MyRoute() {
         </Route>
         <Route path='images/'>
           <Route path="list" element={<ImagesList />} />
+        </Route>
+        <Route path='evolution/'>
+          <Route path="plan" element={<EvolutionPlan />} />
         </Route>
       </Route>
     </Routes>
