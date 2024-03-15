@@ -82,7 +82,7 @@ export default function InstanceInfo(props) {
               <LargeBoldFont sx={{ mb: '8px' }}>
                 Metadata.labels
                 {instance.metadata.labels.app ? (
-                  <Tooltip title='查看依赖'>
+                  <Tooltip title={intl.messages['common.lookupDependency']}>
                     <IconButton
                       onClick={() => {
                         navigate(
@@ -110,7 +110,7 @@ export default function InstanceInfo(props) {
             </Box>
 
             <Box>
-              <LargeBoldFont sx={{ mb: '8px' }}>Status</LargeBoldFont>
+              <LargeBoldFont sx={{ mb: '8px' }}>{intl.messages['common.status']}</LargeBoldFont>
               <LabelAndValue
                 id='serviceQueryInfo'
                 labels={statusLabels}

@@ -92,12 +92,12 @@ export default function InstanceDeploy() {
   const items = [
     [
       <ContentPasteIcon />,
-      '面板配置',
+      intl.messages['cluster.panelConfiguration'],
       handleOpen,
     ],
     [
       <DataObjectIcon />,
-      'Json配置',
+      intl.messages['cluster.jsonConfiguration'],
       handleConfigOpen,
     ],
   ];

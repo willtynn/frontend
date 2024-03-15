@@ -1,9 +1,12 @@
 import { Box } from '@mui/material';
 import { KubeInput } from '../../../../../../components/Input';
+import { useIntl } from 'react-intl';
 
 export function ConstantTimer(props) {
 
   const { threadDelay, setThreadDelay } = props;
+
+  const intl = useIntl();
 
   const handleThreadDelayChange = e => {
     setThreadDelay(e.target.value);
@@ -11,7 +14,7 @@ export function ConstantTimer(props) {
   return (
     <Box>
       <KubeInput
-        label='线程延迟（毫秒）'
+        label={intl.messages['stressTesting.threadMsDelay']}
         // decription={intl.messages['stressTesting.groupCommentDescription']}
         requried={true}
         id='constant-timer-delay-input'

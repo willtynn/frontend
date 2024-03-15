@@ -1,8 +1,11 @@
 import { Stack } from '@mui/material';
 import { KubeInput } from '../../../../../../components/Input';
+import { useIntl } from 'react-intl';
 
 export function GaussianRandomTimer(props) {
   const {deviation, setDeviation, constantDelayOffset, setConstantDelayOffset} = props;
+
+  const intl = useIntl();
 
   const handleDeviationChange = e => {
     setDeviation(e.target.value);
@@ -15,7 +18,7 @@ export function GaussianRandomTimer(props) {
   return (
     <Stack direction="column" spacing={1}>
       <KubeInput
-        label='偏差（毫秒）'
+        label={intl.messages['stressTesting.msDeviation']}
         // decription={intl.messages['stressTesting.groupCommentDescription']}
         requried={true}
         id='gaussian-timer-deviation-input'
@@ -24,7 +27,7 @@ export function GaussianRandomTimer(props) {
         onChange={handleDeviationChange}
       />
       <KubeInput
-        label='固定延迟偏移（毫秒）'
+        label={intl.messages['stressTesting.constantMsDelayOffset']}
         // decription={intl.messages['stressTesting.groupCommentDescription']}
         requried={true}
         id='gaussian-timer-constantDelayOffset-input'

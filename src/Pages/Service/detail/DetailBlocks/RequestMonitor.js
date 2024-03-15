@@ -44,6 +44,7 @@ import { KubeDatePicker } from '../../../../components/DatePicker';
 import { calculateDuration } from '../../../Route/trace/functions/func';
 import Question from '@/assets/Question.svg';
 import { NormalBoldFont, SmallLightFont } from '@/components/Fonts';
+import { useIntl } from 'react-intl';
 
 const RangeCandidate = [
   ['最近10分钟', -10, 'minute'],
@@ -118,7 +119,7 @@ function stableSort(array, comparator) {
 
 export default function RequestMonitor(props) {
   const { service } = props;
-
+  const intl = useIntl();
   const [apiSearchValue, setApiSearchValue] = useState('');
   const [rangeIndex, setRangeIndex] = useState(4);
   const [start, setStart] = useState(dayjs().add(-2, 'hour'));
@@ -666,9 +667,13 @@ export default function RequestMonitor(props) {
                   }}
                 >
                   <Question />
-                  <NormalBoldFont>无数据</NormalBoldFont>
+                  <NormalBoldFont>
+                      {intl.messages['common.serviceTableContentNoData']}
+                    </NormalBoldFont>
 
-                  <SmallLightFont>您可以尝试刷新数据</SmallLightFont>
+                    <SmallLightFont>
+                      {intl.messages['common.serviceTableContentNoDataHint']}
+                    </SmallLightFont>
                 </TableCell>
               </TableRow>
               ) : (

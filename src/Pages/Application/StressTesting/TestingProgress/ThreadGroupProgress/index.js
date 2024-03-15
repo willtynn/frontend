@@ -1,10 +1,8 @@
 /**
  * src\Pages\Application\StressTesting\TestingProgress\ThreadGroupProgress\index.js
  */
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { Box, Stack, Typography } from '@mui/material';
-import { KubeDeploymentCard } from '@/components/InfoCard';
-import { fontFamily } from '@/utils/commonUtils';
 import InfoFinished from '@/assets/InfoFinished.svg';
 import InfoWaiting from '@/assets/InfoWaiting.svg';
 import InfoNow from '@/assets/InfoNow.svg';
@@ -13,14 +11,16 @@ import KubeNormalReturn from '@/assets/KubeNormalReturn.svg';
 import KubeHoverReturn from '@/assets/KubeHoverReturn.svg';
 import { RequestDefaults } from './RequestDefaults';
 import { HeaderManager } from './HeaderManager';
-import { HttpRequest } from './HttpRequest';
 import { Timer } from './Timer';
 import { Result } from './Result';
 import { ThreadConfig } from './ThreadConfig';
 import { useSelector } from 'react-redux';
+import { useIntl } from 'react-intl';
 
 export function ThreadGroupProgress(props) {
   const { handleReturn, showError, setThreadConfigError } = props;
+
+  const intl = useIntl();
 
   const [returnHover, setReturnHover] = useState(false);
   const { currentGroupEditStage } = useSelector(state => {
@@ -63,25 +63,25 @@ export function ThreadGroupProgress(props) {
         sx={{ bgcolor: '#eff4f9', p: '0px 20px', overflow: 'auto' }}
       >
         <ProgressIndicator
-          title='线程组设置'
+          title={intl.messages['stressTesting.threadGroupSetting']}
           adornments={[<InfoWaiting />, <InfoNow />, <InfoFinished />]}
           stage={1}
           currentStage={currentGroupEditStage}
         />
         <ProgressIndicator
-          title='请求默认值'
+          title={intl.messages['stressTesting.requestDefaults']}
           adornments={[<InfoWaiting />, <InfoNow />, <InfoFinished />]}
           stage={2}
           currentStage={currentGroupEditStage}
         />
         <ProgressIndicator
-          title='请求头管理'
+          title={intl.messages['stressTesting.headerManager']}
           adornments={[<InfoWaiting />, <InfoNow />, <InfoFinished />]}
           stage={3}
           currentStage={currentGroupEditStage}
         />
         <ProgressIndicator
-          title='定时器'
+          title={intl.messages['common.timer']}
           adornments={[<InfoWaiting />, <InfoNow />, <InfoFinished />]}
           stage={4}
           currentStage={currentGroupEditStage}
@@ -123,7 +123,7 @@ export function ThreadGroupProgress(props) {
               lineHeight: 1.67,
             }}
           >
-            添加线程组
+            {intl.messages['common.addThreadGroup']}
           </Typography>
         </Stack>
         {currentPage(currentGroupEditStage)}

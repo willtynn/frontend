@@ -1,5 +1,8 @@
 import * as actions from "../actions/routeAction";
 import dayjs from 'dayjs';
+import {UPDATE_CURRENT_NAMESPACE, UPDATE_NAMESPACES} from "../actions/instanceAction";
+import * as routectl from "../actions/routectlActions"
+import {UPDATE_SEARCH_SERVICE} from "../actions/serviceAction";
 
 const initState = {
   routeService: null,
@@ -8,6 +11,13 @@ const initState = {
   routeFailed: false, // Failed 标志虽然在下一次成功调用后会被清除，但应该在处理后立刻清除
   pageNum: 1,
   pageSize: 10,
+  // For RouteCtl
+  rules: [],
+  // namespaces: [],
+  // currentNamespace: null,
+  services: [],
+  currentService: null,
+
 }
 
 const orderRouteTrace = (data) => {
@@ -67,6 +77,32 @@ export default function RouteReducer(state = initState, action) {
       return {
         ...state,
         pageSize: data
+      }
+      // For RouteCtl
+    // case UPDATE_NAMESPACES:
+    //   return {
+    //     ...state,
+    //     namespaces: data
+    //   }
+    // case UPDATE_CURRENT_NAMESPACE:
+    //   return {
+    //     ...state,
+    //     currentNamespace: data
+    //   }
+    case UPDATE_SEARCH_SERVICE:
+      return {
+        ...state,
+        services: data?.map(s=>s?.name)
+      }
+    case routectl.UPDATE_CURRENT_SERVICE:
+      return {
+        ...state,
+        currentService: data
+      }
+    case routectl.UPDATE_ROUTERULES:
+      return {
+        ...state,
+        rules: data
       }
     default:
       return state;

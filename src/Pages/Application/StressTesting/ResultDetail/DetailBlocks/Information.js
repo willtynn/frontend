@@ -1,33 +1,9 @@
-import { useState, useEffect, useMemo } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+import { useSelector } from 'react-redux';
 import {
   Stack,
   Box,
-  InputAdornment,
-  Tooltip,
-  Popover,
-  Table,
-  TableBody,
-  TableRow,
-  TableCell,
-  TableHead,
 } from '@mui/material';
-import {
-  KubeConfirmButton,
-  KubeCancelButton,
-  EclipseTransparentButton,
-} from '@/components/Button';
-import API from '@/assets/API.svg';
-import WhiteAPI from '@/assets/WhiteAPI.svg';
-import { fontFamily } from '@/utils/commonUtils';
-import {
-  StyledTableBodyCell,
-  StyledTableRowCell,
-  StyledTableContainer,
-} from '@/components/DisplayTable';
-import Question from '@/assets/Question.svg';
-import { NormalBoldFont, SmallLightFont } from '@/components/Fonts';
-import { getBoolString } from '@/utils/commonUtils';
+import { useIntl } from 'react-intl';
 
 const labelStyle = {
   fontSize: '12px',
@@ -56,13 +32,14 @@ const valueStyle = {
 };
 
 export function Information() {
-  const dispatch = useDispatch();
 
   const { currentResult } = useSelector(state => {
     return {
       currentResult: state.Application.currentResult,
     };
   });
+
+  const intl = useIntl();
 
   return (
     <Stack
@@ -89,7 +66,7 @@ export function Information() {
                 fontWeight: 600,
               }}
             >
-              基本结果
+              {intl.messages['common.basicResult']}
             </Box>
             <Stack
               sx={{
@@ -101,91 +78,91 @@ export function Information() {
               spacing={1.5}
             >
               <Stack direction='row' spacing={3}>
-                <Box sx={labelStyle}>开始时间</Box>
+                <Box sx={labelStyle}>{intl.messages['common.beginTime']}</Box>
                 <Box sx={valueStyle}>
                   {currentResult ? currentResult.startTime : ''}
                 </Box>
               </Stack>
 
               <Stack direction='row' spacing={3}>
-                <Box sx={labelStyle}>结束时间</Box>
+                <Box sx={labelStyle}>{intl.messages['common.endTime']}</Box>
                 <Box sx={valueStyle}>
                   {currentResult ? currentResult.endTime : ''}
                 </Box>
               </Stack>
 
               <Stack direction='row' spacing={3}>
-                <Box sx={labelStyle}>空闲时间</Box>
+                <Box sx={labelStyle}>{intl.messages['common.idleTime']}</Box>
                 <Box sx={valueStyle}>
                   {currentResult ? currentResult.idleTime : ''}
                 </Box>
               </Stack>
 
               <Stack direction='row' spacing={3}>
-                <Box sx={labelStyle}>连接时间</Box>
+                <Box sx={labelStyle}>{intl.messages['common.idleTime']}</Box>
                 <Box sx={valueStyle}>
                   {currentResult ? currentResult.connectTime : ''}
                 </Box>
               </Stack>
 
               <Stack direction='row' spacing={3}>
-                <Box sx={labelStyle}>延迟</Box>
+                <Box sx={labelStyle}>{intl.messages['common.delay']}</Box>
                 <Box sx={valueStyle}>
                   {currentResult ? currentResult.latency : ''}
                 </Box>
               </Stack>
 
               <Stack direction='row' spacing={3}>
-                <Box sx={labelStyle}>响应码</Box>
+                <Box sx={labelStyle}>{intl.messages['common.responseCode']}</Box>
                 <Box sx={valueStyle}>
                   {currentResult ? currentResult.responseCode : ''}
                 </Box>
               </Stack>
 
               <Stack direction='row' spacing={3}>
-                <Box sx={labelStyle}>响应数据</Box>
+                <Box sx={labelStyle}>{intl.messages['common.responseData']}</Box>
                 <Box sx={valueStyle}>
                   {currentResult ? currentResult.responseData : ''}
                 </Box>
               </Stack>
 
               <Stack direction='row' spacing={3}>
-                <Box sx={labelStyle}>响应Message</Box>
+                <Box sx={labelStyle}>{intl.messages['common.responseMessage']}</Box>
                 <Box sx={valueStyle}>
-                  {currentResult ? (currentResult.resposneMessage ?? "无数据") : ''}
+                  {currentResult ? (currentResult.resposneMessage ?? intl.messages['common.serviceTableContentNoData']) : ''}
                 </Box>
               </Stack>
 
               <Stack direction='row' spacing={3}>
-                <Box sx={labelStyle}>响应头</Box>
+                <Box sx={labelStyle}>{intl.messages['common.responseHeader']}</Box>
                 <Box sx={valueStyle}>
                   {currentResult ? currentResult.responseHeaders : ''}
                 </Box>
               </Stack>
 
               <Stack direction='row' spacing={3}>
-                <Box sx={labelStyle}>字节数</Box>
+                <Box sx={labelStyle}>{intl.messages['common.byteNum']}</Box>
                 <Box sx={valueStyle}>
                   {currentResult ? currentResult.bytes : ''}
                 </Box>
               </Stack>
 
               <Stack direction='row' spacing={3}>
-                <Box sx={labelStyle}>头字节数</Box>
+                <Box sx={labelStyle}>{intl.messages['common.headByteNum']}</Box>
                 <Box sx={valueStyle}>
                   {currentResult ? currentResult.headersSize : ''}
                 </Box>
               </Stack>
 
               <Stack direction='row' spacing={3}>
-                <Box sx={labelStyle}>体字节数</Box>
+                <Box sx={labelStyle}>{intl.messages['common.headByteNum']}</Box>
                 <Box sx={valueStyle}>
                   {currentResult ? currentResult.bodySize : ''}
                 </Box>
               </Stack>
 
               <Stack direction='row' spacing={3}>
-                <Box sx={labelStyle}>发送字节数</Box>
+                <Box sx={labelStyle}>{intl.messages['common.sendByteNum']}</Box>
                 <Box sx={valueStyle}>
                   {currentResult ? currentResult.sentBytes : ''}
                 </Box>

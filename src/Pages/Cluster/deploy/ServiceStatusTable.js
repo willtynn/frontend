@@ -459,7 +459,7 @@ export default function ServiceStatusTable(props) {
   const filtering = () => {
     let tmpData = JSON.parse(JSON.stringify(tableData));
     searchList.forEach((value, _) => {
-      if (value.startsWith(`${intl.messages['common.name']}:`)) {
+      if (value.startsWith(`${intl.messages['common.status']}:`)) {
         tmpData = tmpData.filter((tableRow, _) => {
           return tableRow.phase.includes(value.replace(statusPattern, ''));
         });
@@ -690,7 +690,7 @@ export default function ServiceStatusTable(props) {
               letterSpacing: 'normal',
             }}
             renderInput={params => (
-              <TextField {...params} placeholder='全部命名空间' />
+              <TextField {...params} placeholder={intl.messages['common.allNamespaces']} />
             )}
           />
           <ChipTextField
@@ -752,8 +752,6 @@ export default function ServiceStatusTable(props) {
           {embeddingButton}
         </Stack>
       </Box>
-
-      {/* <StyledTableBox> */}
       <StyledTableContainer sx={{ bgcolor: '#FFF' }}>
         <Table
           stickyHeader
@@ -884,9 +882,9 @@ export default function ServiceStatusTable(props) {
                   }}
                 >
                   <Question />
-                  <NormalBoldFont>无数据</NormalBoldFont>
+                  <NormalBoldFont>{intl.messages['common.serviceTableContentNoData']}</NormalBoldFont>
 
-                  <SmallLightFont>您可以尝试刷新数据</SmallLightFont>
+                  <SmallLightFont>{intl.messages['common.serviceTableContentNoDataHint']}</SmallLightFont>
                 </TableCell>
               </TableRow>
             ) : (
@@ -907,7 +905,6 @@ export default function ServiceStatusTable(props) {
           pb: '12px',
         }}
       />
-      {/* </StyledTableBox> */}
     </Box>
   );
 }

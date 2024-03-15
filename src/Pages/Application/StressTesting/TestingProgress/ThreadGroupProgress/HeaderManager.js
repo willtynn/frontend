@@ -71,8 +71,8 @@ export function HeaderManager(props) {
   });
 
   const headRow = [
-    createRow('name', '名称', false, '300px', '300px', true, 'center'),
-    createRow('value', '值', false, '300px', '300px', true, 'center'),
+    createRow('name', intl.messages['common.name'], false, '300px', '300px', true, 'center'),
+    createRow('value', intl.messages['common.value'], false, '300px', '300px', true, 'center'),
   ];
 
   useEffect(() => {
@@ -130,7 +130,7 @@ export function HeaderManager(props) {
 
   return (
     <Box sx={{ p: '12px' }}>
-      <KubeSubCard title='信息头存储在信息头管理器中'>
+      <KubeSubCard title={intl.messages['stressTesting.headerStorage']}>
         <Stack
           sx={{ height: "320px" }}
           direction='column'
@@ -236,7 +236,7 @@ export function HeaderManager(props) {
                         fontStyle: 'normal',
                       }}
                     >
-                      暂无参数
+                      {intl.messages['stressTesting.noParametersCurrently']}
                     </TableCell>
                   </TableRow>
                 )}
@@ -257,13 +257,13 @@ export function HeaderManager(props) {
               sx={{ height: '32px', width: '84px' }}
               onClick={handleParameterAdd}
             >
-              添加
+              {intl.messages['common.add']}
             </KubeConfirmButton>
             <KubeCancelButton
               sx={{ height: '32px', width: '84px' }}
               onClick={handleParameterDelete}
             >
-              删除
+              {intl.messages['common.delete']}
             </KubeCancelButton>
           </Stack>
         </Stack>

@@ -54,6 +54,7 @@ export default function ServiceReducer(state = initState, action) {
         ...state,
         pods: data
       }
+
     default:
       return state
   }

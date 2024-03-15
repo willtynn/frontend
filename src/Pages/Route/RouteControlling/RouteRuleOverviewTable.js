@@ -1,49 +1,40 @@
 /**
  * src\Pages\Route\RouteControlling\RouteRuleOverviewTable.js
  */
-import { useEffect, useState, useMemo } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import {
   Box,
-  Stack,
-  TextField,
-  Table,
-  TableRow,
   Checkbox,
+  Popover,
+  Popper,
+  Stack,
+  Table,
   TableBody,
   TableCell,
-  Popper,
-  Popover,
+  TableRow,
+  TextField,
 } from '@mui/material';
 
 import { useDispatch, useSelector } from 'react-redux';
 import {
-  getNamaspaces,
+  CHANGE_PAGE_NUM,
+  CHANGE_PAGE_SIZE,
   UPDATE_CURRENT_NAMESPACE,
 } from '../../../actions/instanceAction';
 
-import {
-  searchServiceById,
-  UPDATE_SEARCH_SERVICE,
-} from '../../../actions/serviceAction';
+import { searchServiceById } from '../../../actions/serviceAction';
 
 import {
-  StyledTableContainer,
   StyledTableBodyCell,
+  StyledTableContainer,
   StyledTableFooter,
   StyledTableHead,
 } from '../../../components/DisplayTable';
-import {
-  StyledAutocomplete,
-  ChipTextField,
-} from '../../../components/Input';
+import { ChipTextField, StyledAutocomplete } from '../../../components/Input';
 import { EclipseTransparentButton } from '../../../components/Button';
 import SearchIcon from '@mui/icons-material/Search';
 import RefreshIcon from '@mui/icons-material/Refresh';
 import { formatDatetimeString } from '../../../utils/commonUtils';
-import {
-  CHANGE_PAGE_NUM,
-  CHANGE_PAGE_SIZE,
-} from '../../../actions/instanceAction';
 import { fontFamily } from '@/utils/commonUtils';
 import Task from '@/assets/Task.svg';
 import RunningIcon from '@/assets/RunningIcon.svg';
@@ -52,10 +43,14 @@ import FailedIcon from '@/assets/FailedIcon.svg';
 import SucceededIcon from '@/assets/SucceededIcon.svg';
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
-import { getRouteRules } from '../../../actions/routectlActions';
+import {
+  getRouteRules,
+  UPDATE_CURRENT_SERVICE,
+} from '../../../actions/routectlActions';
 import { RouteRule } from '@/models/RouteControlling';
 import Question from '@/assets/Question.svg';
 import { NormalBoldFont, SmallLightFont } from '../../../components/Fonts';
+import { useIntl } from 'react-intl';
 
 function descendingComparator(a, b, orderBy) {
   if (b[orderBy] < a[orderBy]) {
@@ -136,6 +131,7 @@ const namePattern = new RegExp(/^名称:/);
 
 export default function RouteRuleOverviewTable(props) {
   const { embeddingButton } = props;
+  const intl = useIntl();
   const [searchList, setSearchList] = useState([]);
   const [loading, setLoading] = useState(false);
   const [tableData, setTableData] = useState([]);
@@ -154,65 +150,72 @@ export default function RouteRuleOverviewTable(props) {
 
   const dispatch = useDispatch();
   const {
-    gottenRules,
+    rules,
     pageSize,
     pageNum,
-    namespaces,
-    currentNamespace,
+    // namespaces,
+    // currentNamespace,
     services,
     currentService,
   } = useSelector(state => {
     return {
-      gottenRules: state.Instance.gottenRules,
-      pageSize: state.Instance.pageSize,
-      pageNum: state.Instance.pageNum,
-      namespaces: state.Instance.namespaces,
-      currentNamespace: state.Instance.currentNamespace,
-      services: state.Instance.services,
-      currentService: state.Instance.currentService,
+      rules: state.Route.rules,
+      pageSize: state.Route.pageSize,
+      pageNum: state.Route.pageNum,
+      // namespaces: state.Route.namespaces,
+      // currentNamespace: state.Route.currentNamespace,
+      services: state.Route.services,
+      currentService: state.Route.currentService,
     };
   });
 
-  // 获取全部服务
+  // 获取全部项目
+  // useEffect(() => {
+  //   if (localStorage.getItem('current_cluster')) {
+  //     dispatch(getNamaspaces(localStorage.getItem('current_cluster')));
+  //   }
+  // }, []);
+  //
+  // // namespaces变化时，更新当前的namespace
+  // useEffect(() => {
+  //   if (namespaces && namespaces.length > 0) {
+  //     dispatch({ type: UPDATE_CURRENT_NAMESPACE, data: namespaces[0] });
+  //   }
+  // }, [namespaces]);
+
   useEffect(() => {
     dispatch(searchServiceById(''));
-    // TODO 不知道这里要干嘛 ref::src\Pages\Service\query\index.js
-    return () => {
-      dispatch({ type: UPDATE_SEARCH_SERVICE, data: null });
-      //dispatch({ type: UPDATE_EXACT_SERVICE, data: null });
-    };
-  }, []);
-  useEffect(() => {
-    if (localStorage.getItem('current_cluster')) {
-      dispatch(getNamaspaces(localStorage.getItem('current_cluster')));
-    }
   }, []);
 
   useEffect(() => {
-    if (namespaces && namespaces.length > 0) {
-      dispatch({ type: UPDATE_CURRENT_NAMESPACE, data: namespaces[0] });
+    if (services && services.length > 0) {
+      dispatch({ type: UPDATE_CURRENT_SERVICE, data: services[0] });
     }
-  }, [namespaces]);
-
+  }, [services]);
+  // TODO：当前namespace和service变化时，获取数据
   useEffect(() => {
     if (
       localStorage.getItem('current_cluster') &&
-      currentNamespace &&
-      currentNamespace !== '' &&
       currentService &&
       currentService !== ''
     ) {
+      const metadata = currentService.split('/', 2);
+      const currentNamespace = metadata.length === 2 ? metadata[0] : 'default';
+      const currentServiceName =
+        metadata.length === 2 ? metadata[1] : metadata[0];
       dispatch(
         getRouteRules({
-          Namespace: currentNamespace,
-          DesService: currentService,
+          namespace: currentNamespace,
+          desService: currentServiceName,
+          name: '',
         })
       );
     }
 
     // dispatch({ type: GET_INSTANCES, data: data });
-  }, [currentNamespace, currentService]);
+  }, [currentService]);
 
+  // 筛选器
   useEffect(() => {
     if (searchList.length == 2) {
       setSearchBy([]);
@@ -230,22 +233,22 @@ export default function RouteRuleOverviewTable(props) {
   }, [searchList]);
 
   useEffect(() => {
-    if (!gottenRules) {
+    if (!rules) {
       return;
     }
     /** @type {RouteRule[]} */
-    const items = gottenRules;
+    const items = rules;
     const tmpData = items.map((value, _) => {
       return {
-        name: value.Name,
-        srcPods: value.SrcPods.map((v, _) => v).join(),
-        desPods: value.DesPods.map((v, _) => v).join(),
-        endPoints: value.EndpointControls.map((v, _) => v.Uri).join(),
+        name: value.name,
+        srcPods: value.srcPods.map((v, _) => v.name).join(),
+        desPods: value.desPods.map((v, _) => v.name).join(),
+        endPoints: value.endpointControls.map((v, _) => v.uri).join(),
       };
     });
     setCount(tmpData.length);
     setTableData(tmpData);
-  }, [gottenRules]);
+  }, [rules]);
 
   const headRow = [
     createRow('name', '名称', true, '100px', '100px', true, 'left'),
@@ -275,7 +278,7 @@ export default function RouteRuleOverviewTable(props) {
       '130px',
       colDisplay[2],
       'center'
-    )
+    ),
   ];
 
   const handleRequestSort = (event, property) => {
@@ -493,12 +496,12 @@ export default function RouteRuleOverviewTable(props) {
           <StyledAutocomplete
             height='32px'
             padding='6px 5px 5px 12px'
-            value={currentNamespace}
+            value={currentService}
             onChange={(event, newValue) => {
-              dispatch({ type: UPDATE_CURRENT_NAMESPACE, data: newValue });
+              dispatch({ type: UPDATE_CURRENT_SERVICE, data: newValue });
             }}
             id='instance_status_table_autocomplete'
-            options={namespaces}
+            options={services}
             sx={{
               width: 300,
               color: '#36435c',
@@ -511,7 +514,7 @@ export default function RouteRuleOverviewTable(props) {
               letterSpacing: 'normal',
             }}
             renderInput={params => (
-              <TextField {...params} placeholder='全部命名空间' />
+              <TextField {...params} placeholder='全部服务' />
             )}
           />
           <ChipTextField
@@ -632,7 +635,7 @@ export default function RouteRuleOverviewTable(props) {
                       }}
                     >
                       <Stack alignItems='center' direction='row' spacing={2}>
-                        <Task />
+                        {/*<Task/>*/}
                         <span
                           style={{
                             height: '30px',
@@ -655,14 +658,14 @@ export default function RouteRuleOverviewTable(props) {
                         justifyContent='center'
                         spacing={2}
                       >
-                        {StatusIcon(row.phase)}
+                        {/*{StatusIcon(row.phase)}*/}
                         <span
                           style={{
                             height: '30px',
                             lineHeight: '30px',
                           }}
                         >
-                          {/*StatusText(row.phase)*/}
+                          {row.srcPods}
                         </span>
                       </Stack>
                     </StyledTableBodyCell>
@@ -671,22 +674,22 @@ export default function RouteRuleOverviewTable(props) {
                       align={'center'}
                       sx={{ display: headRow[2].show ? 'table-cell' : 'none' }}
                     >
-                      {row.hostIP}
+                      {row.desPods}
                     </StyledTableBodyCell>
 
                     <StyledTableBodyCell
                       align={'center'}
                       sx={{ display: headRow[3].show ? 'table-cell' : 'none' }}
                     >
-                      {row.podIP}
+                      {row.endPoints}
                     </StyledTableBodyCell>
 
-                    <StyledTableBodyCell
-                      align={'center'}
-                      sx={{ display: headRow[4].show ? 'table-cell' : 'none' }}
-                    >
-                      {formatDatetimeString(row.startTime)}
-                    </StyledTableBodyCell>
+                    {/*<StyledTableBodyCell*/}
+                    {/*    align={'center'}*/}
+                    {/*    sx={{display: headRow[3].show ? 'table-cell' : 'none'}}*/}
+                    {/*>*/}
+                    {/*    {formatDatetimeString(row.startTime)}*/}
+                    {/*</StyledTableBodyCell>*/}
                   </TableRow>
                 );
               })
@@ -694,8 +697,9 @@ export default function RouteRuleOverviewTable(props) {
               <TableRow style={{ height: '220px' }}>
                 <TableCell
                   colSpan={colDisplay.reduce(
-                    (accumulator, currentValue) => accumulator + (currentValue === true),
-                    2,
+                    (accumulator, currentValue) =>
+                      accumulator + (currentValue === true),
+                    2
                   )}
                   sx={{
                     textAlign: 'center',
@@ -705,9 +709,13 @@ export default function RouteRuleOverviewTable(props) {
                   }}
                 >
                   <Question />
-                  <NormalBoldFont>无数据</NormalBoldFont>
+                  <NormalBoldFont>
+                    {intl.messages['common.serviceTableContentNoData']}
+                  </NormalBoldFont>
 
-                  <SmallLightFont>您可以尝试刷新数据</SmallLightFont>
+                  <SmallLightFont>
+                    {intl.messages['common.serviceTableContentNoDataHint']}
+                  </SmallLightFont>
                 </TableCell>
               </TableRow>
             ) : (
