@@ -103,8 +103,8 @@ export function ThreeLayerCanvas(props) {
       if (error.message.includes('Cannot set properties of undefined')) {
         dispatch(
           setSnackbarMessageAndOpen(
-            'common.errorMessage',
-            { msg: '若未出现图，请重试' },
+            'serviceDependency.graphNotFound',
+            {},
             SEVERITIES.warning
           )
         );

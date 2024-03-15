@@ -54,6 +54,7 @@ export const messages = {
       'Service dependency refers to a software system relying on external services or APIs, typically communicating through a network.',
     serviceBasedMsg: 'Please select a service.',
     interfaceBasedMsg: 'Please select an interface.',
+    graphNotFound: "If the picture does not appear, please try again.",
   },
   cluster: {
     clustersSearchError:

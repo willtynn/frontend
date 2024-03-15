@@ -51,6 +51,7 @@ export const messages = {
       '服务依赖是指一个软件系统依赖于外部的服务或API，通常通过网络进行通信。',
     serviceBasedMsg: '请选择一个服务。',
     interfaceBasedMsg: '请选择一个接口。',
+    graphNotFound: "若未出现图，请重试",
   },
   cluster: {
     clustersSearchError: '集群信息获取失败，请刷新页面重试...',
