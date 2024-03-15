@@ -25,6 +25,7 @@ import { SEVERITIES } from '@/components/CommonSnackbar';
 import { useDispatch } from 'react-redux';
 import Question from '@/assets/Question.svg';
 import { NormalBoldFont, SmallLightFont } from '@/components/Fonts';
+import { useIntl } from 'react-intl';
 
 function createRow(
   id,
@@ -52,6 +53,7 @@ function createRow(
 
 export default function Information(props) {
   const { service } = props;
+  const intl = useIntl();
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
@@ -252,9 +254,13 @@ export default function Information(props) {
                     }}
                   >
                     <Question />
-                    <NormalBoldFont>无数据</NormalBoldFont>
+                    <NormalBoldFont>
+                      {intl.messages['common.serviceTableContentNoData']}
+                    </NormalBoldFont>
 
-                    <SmallLightFont>您可以尝试刷新数据</SmallLightFont>
+                    <SmallLightFont>
+                      {intl.messages['common.serviceTableContentNoDataHint']}
+                    </SmallLightFont>
                   </TableCell>
                 </TableRow>
               )}
@@ -401,9 +407,13 @@ export default function Information(props) {
                     }}
                   >
                     <Question />
-                    <NormalBoldFont>无数据</NormalBoldFont>
+                    <NormalBoldFont>
+                      {intl.messages['common.serviceTableContentNoData']}
+                    </NormalBoldFont>
 
-                    <SmallLightFont>您可以尝试刷新数据</SmallLightFont>
+                    <SmallLightFont>
+                      {intl.messages['common.serviceTableContentNoDataHint']}
+                    </SmallLightFont>
                   </TableCell>
                 </TableRow>
               </TableBody>

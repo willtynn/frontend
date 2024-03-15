@@ -80,6 +80,8 @@ export const messages = {
     continue: "继续",
     annotation: "注释",
     forever: "永远",
+    yes: '是',
+    no: "否",
   },
   lang: {
     language: '语言',
@@ -269,6 +271,12 @@ export const messages = {
     gaussianRandomTimer: '高斯随机定时器',
     editTimer: "修改定时器",
     addTimer: "添加定时器",
+    createTestPlan: "创建测试计划",
+    editThreadGroup: "修改线程组",
+    noOptionalNamespace: "无可选命名空间",
+    noOptionalPod: "无可选Pod",
+    planName: "测试名称",
+    performancePressureTest: "性能压测",
   },
   routeTrace: {
     title: '路由链路',

@@ -8,7 +8,7 @@ import {
   Table,
   TableBody,
   TableCell,
-  TableRow
+  TableRow,
 } from '@mui/material';
 import { useDispatch, useSelector } from 'react-redux';
 import { ContainedButton, KubeConfirmButton } from '@/components/Button';
@@ -22,9 +22,7 @@ import {
   StyledTableFooter,
   StyledTableHead,
 } from '@/components/DisplayTable';
-import {
-  ChipTextField,
-} from '@/components/Input';
+import { ChipTextField } from '@/components/Input';
 import StressTestingIcon from '@/assets/StressTesting.svg';
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
@@ -49,7 +47,7 @@ import {
   RESET_PLAN,
   UPDATE_TEST_PLAN_PAGE_NUM,
   UPDATE_TEST_PLAN_PAGE_SIZE,
-  getTestPlans
+  getTestPlans,
 } from '../../../actions/applicationAction';
 
 export const RUNNING = 'Running';
@@ -141,8 +139,8 @@ function createRow(
   };
 }
 
-const statusPattern = new RegExp(/^状态:/);
-const namePattern = new RegExp(/^名称:/);
+const statusPattern = new RegExp(/^(状态|Status):/);
+const namePattern = new RegExp(/^(名称|Name):/);
 
 export default function StressTesting() {
   const intl = useIntl();
@@ -158,7 +156,10 @@ export default function StressTesting() {
   const [searchValue, setSearchValue] = useState('');
   const [searchSelectAnchorEl, setSearchSelectAnchorEl] = useState(null);
   const searchSelectOpen = Boolean(searchSelectAnchorEl);
-  const [searchBy, setSearchBy] = useState(['名称', '状态']);
+  const [searchBy, setSearchBy] = useState([
+    intl.messages['common.name'],
+    intl.messages['common.status'],
+  ]);
 
   const [colDisplay, setColDisplay] = useState([true, true, true, true, true]);
   const [customContentAnchorEl, setCustomContentAnchorEl] = useState(null);
@@ -166,14 +167,13 @@ export default function StressTesting() {
 
   const [searchList, setSearchList] = useState([]);
 
-  const { pageSize, pageNum, testPlans } =
-    useSelector(state => {
-      return {
-        pageSize: state.Application.pageSize,
-        pageNum: state.Application.pageNum,
-        testPlans: state.Application.testPlans
-      };
-    });
+  const { pageSize, pageNum, testPlans } = useSelector(state => {
+    return {
+      pageSize: state.Application.pageSize,
+      pageNum: state.Application.pageNum,
+      testPlans: state.Application.testPlans,
+    };
+  });
 
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -187,10 +187,18 @@ export default function StressTesting() {
   }, [testPlans]);
 
   const headRow = [
-    createRow('testPlanName', '测试名称', true, '100px', '100px', true, 'left'),
+    createRow(
+      'testPlanName',
+      intl.messages['stressTesting.testName'],
+      true,
+      '100px',
+      '100px',
+      true,
+      'left'
+    ),
     createRow(
       'status',
-      '状态',
+      intl.messages['common.status'],
       false,
       '100px',
       '100px',
@@ -199,7 +207,7 @@ export default function StressTesting() {
     ),
     createRow(
       'serialized',
-      '序列化',
+      intl.messages['common.serialized'],
       false,
       '120px',
       '130px',
@@ -208,7 +216,7 @@ export default function StressTesting() {
     ),
     createRow(
       'functionalMode',
-      '函数模式',
+      intl.messages['common.funtionMode'],
       false,
       '120px',
       '130px',
@@ -226,7 +234,7 @@ export default function StressTesting() {
     ),
     createRow(
       'comment',
-      '描述',
+      intl.messages['common.description'],
       false,
       '120px',
       '130px',
@@ -245,11 +253,11 @@ export default function StressTesting() {
     let tmpData = JSON.parse(JSON.stringify(tableData));
     setCount(tableData.length);
     searchList.forEach((value, _) => {
-      if (value.startsWith('状态:')) {
+      if (value.startsWith(`${intl.messages['common.status']}:`)) {
         tmpData = tmpData.filter((tableRow, _) => {
           return tableRow.status.includes(value.replace(statusPattern, ''));
         });
-      } else if (value.startsWith('名称:')) {
+      } else if (value.startsWith(`${intl.messages['common.name']}:`)) {
         tmpData = tmpData.filter((tableRow, _) => {
           return tableRow.testPlanName.includes(value.replace(namePattern, ''));
         });
@@ -378,7 +386,7 @@ export default function StressTesting() {
                 lineHeight: '32px',
               }}
             >
-              性能压测
+              {intl.messages['stressTesting.performancePressureTest']}
             </Typography>
             <Typography
               sx={{
@@ -394,8 +402,6 @@ export default function StressTesting() {
           </Box>
         </Stack>
       </Box>
-
-
 
       <Box>
         {/* 条件过滤悬浮框 */}
@@ -577,10 +583,13 @@ export default function StressTesting() {
             >
               <VisibilityIcon />
             </EclipseTransparentButton>
-            <KubeConfirmButton sx={{
-              width: "200px"
-            }} onClick={handlePlanClick}>
-              创建测试计划
+            <KubeConfirmButton
+              sx={{
+                width: '200px',
+              }}
+              onClick={handlePlanClick}
+            >
+              {intl.messages['stressTesting.createTestPlan']}
             </KubeConfirmButton>
           </Stack>
         </Box>
@@ -665,7 +674,9 @@ export default function StressTesting() {
 
                       <StyledTableBodyCell
                         align={'center'}
-                        sx={{ display: headRow[1].show ? 'table-cell' : 'none' }}
+                        sx={{
+                          display: headRow[1].show ? 'table-cell' : 'none',
+                        }}
                       >
                         <Stack
                           alignItems='center'
@@ -687,27 +698,41 @@ export default function StressTesting() {
 
                       <StyledTableBodyCell
                         align={'center'}
-                        sx={{ display: headRow[2].show ? 'table-cell' : 'none' }}
+                        sx={{
+                          display: headRow[2].show ? 'table-cell' : 'none',
+                        }}
                       >
-                        {row.serialized ? "是" : "否"}
+                        {row.serialized
+                          ? intl.messages['common.yes']
+                          : intl.messages['common.no']}
                       </StyledTableBodyCell>
 
                       <StyledTableBodyCell
                         align={'center'}
-                        sx={{ display: headRow[3].show ? 'table-cell' : 'none' }}
+                        sx={{
+                          display: headRow[3].show ? 'table-cell' : 'none',
+                        }}
                       >
-                        {row.functionalMode ? "是" : "否"}
+                        {row.functionalMode
+                          ? intl.messages['common.yes']
+                          : intl.messages['common.no']}
                       </StyledTableBodyCell>
 
                       <StyledTableBodyCell
                         align={'center'}
-                        sx={{ display: headRow[4].show ? 'table-cell' : 'none' }}
+                        sx={{
+                          display: headRow[4].show ? 'table-cell' : 'none',
+                        }}
                       >
-                        {row.tearDown ? "是" : "否"}
+                        {row.tearDown
+                          ? intl.messages['common.yes']
+                          : intl.messages['common.no']}
                       </StyledTableBodyCell>
                       <StyledTableBodyCell
                         align={'center'}
-                        sx={{ display: headRow[4].show ? 'table-cell' : 'none' }}
+                        sx={{
+                          display: headRow[4].show ? 'table-cell' : 'none',
+                        }}
                       >
                         {row.comment}
                       </StyledTableBodyCell>
@@ -718,8 +743,9 @@ export default function StressTesting() {
                 <TableRow style={{ height: '220px' }}>
                   <TableCell
                     colSpan={colDisplay.reduce(
-                      (accumulator, currentValue) => accumulator + (currentValue === true),
-                      2,
+                      (accumulator, currentValue) =>
+                        accumulator + (currentValue === true),
+                      2
                     )}
                     sx={{
                       textAlign: 'center',
@@ -729,9 +755,13 @@ export default function StressTesting() {
                     }}
                   >
                     <Question />
-                    <NormalBoldFont>无数据</NormalBoldFont>
+                    <NormalBoldFont>
+                      {intl.messages['common.serviceTableContentNoData']}
+                    </NormalBoldFont>
 
-                    <SmallLightFont>您可以尝试刷新数据</SmallLightFont>
+                    <SmallLightFont>
+                      {intl.messages['common.serviceTableContentNoDataHint']}
+                    </SmallLightFont>
                   </TableCell>
                 </TableRow>
               ) : (

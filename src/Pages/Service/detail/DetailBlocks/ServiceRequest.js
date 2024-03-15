@@ -48,6 +48,7 @@ import { KubeDatePicker } from '../../../../components/DatePicker';
 import { calculateDuration } from '../../../Route/trace/functions/func';
 import Question from '@/assets/Question.svg';
 import { NormalBoldFont, SmallLightFont } from '@/components/Fonts';
+import { useIntl } from 'react-intl';
 
 const RangeCandidate = [
   ['最近10分钟', -10, 'minute'],
@@ -122,7 +123,7 @@ function stableSort(array, comparator) {
 
 export default function ServiceRequest(props) {
   const { service } = props;
-
+  const intl = useIntl();
   const [apiSearchValue, setApiSearchValue] = useState('');
   const [rangeIndex, setRangeIndex] = useState(4);
   const [start, setStart] = useState(dayjs().add(-2, 'hour'));
@@ -253,7 +254,7 @@ export default function ServiceRequest(props) {
     setRangeIndex(4);
     setTmpStart(dayjs().add(-2, 'hour'));
     setTmpEnd(dayjs());
-  }
+  };
 
   //改变每页的数量
   const handlePerPageChange = pageSize => {
@@ -278,7 +279,7 @@ export default function ServiceRequest(props) {
     setStart(tmpStart);
     setEnd(tmpEnd);
     handleClose();
-  }
+  };
 
   const handleKeyDown = e => {
     if (typeof e.target.value === 'string' && e.keyCode === 13) {
@@ -455,10 +456,16 @@ export default function ServiceRequest(props) {
               spacing={1.5}
               sx={{ mt: '32px' }}
             >
-              <KubeCancelButton sx={{ height: '32px', width: '84px' }} onClick={handleClose}>
+              <KubeCancelButton
+                sx={{ height: '32px', width: '84px' }}
+                onClick={handleClose}
+              >
                 取消
               </KubeCancelButton>
-              <KubeConfirmButton sx={{ height: '32px', width: '84px' }} onClick={handleRangeConfirm}>
+              <KubeConfirmButton
+                sx={{ height: '32px', width: '84px' }}
+                onClick={handleRangeConfirm}
+              >
                 确定
               </KubeConfirmButton>
             </Stack>
@@ -580,7 +587,7 @@ export default function ServiceRequest(props) {
             overflowY: 'auto',
           }}
         >
-          <Stack direction='column' spacing={1} >
+          <Stack direction='column' spacing={1}>
             {visibleAPI.map((api, index) => {
               return (
                 <Stack
@@ -772,21 +779,25 @@ export default function ServiceRequest(props) {
                   })
                 ) : !loading ? (
                   <TableRow style={{ height: '220px' }}>
-                <TableCell
-                  colSpan={6}
-                  sx={{
-                    textAlign: 'center',
-                    fontSize: '20px',
-                    fontFamily: fontFamily,
-                    fontStyle: 'normal',
-                  }}
-                >
-                  <Question />
-                  <NormalBoldFont>无数据</NormalBoldFont>
+                    <TableCell
+                      colSpan={6}
+                      sx={{
+                        textAlign: 'center',
+                        fontSize: '20px',
+                        fontFamily: fontFamily,
+                        fontStyle: 'normal',
+                      }}
+                    >
+                      <Question />
+                      <NormalBoldFont>
+                        {intl.messages['common.serviceTableContentNoData']}
+                      </NormalBoldFont>
 
-                  <SmallLightFont>您可以尝试刷新数据</SmallLightFont>
-                </TableCell>
-              </TableRow>
+                      <SmallLightFont>
+                        {intl.messages['common.serviceTableContentNoDataHint']}
+                      </SmallLightFont>
+                    </TableCell>
+                  </TableRow>
                 ) : (
                   <div></div>
                 )}

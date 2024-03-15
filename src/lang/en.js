@@ -80,6 +80,8 @@ export const messages = {
     continue: "Continue",
     annotation: "Annotation",
     forever: "Forever",
+    yes: 'Yes',
+    no: "No",
   },
   lang: {
     language: 'Language',
@@ -263,6 +265,12 @@ export const messages = {
     gaussianRandomTimer: 'Gaussian Random Timer',
     editTimer: "Edit Timer",
     addTimer: "Add Timer",
+    createTestPlan: "Create Test Plan",
+    editThreadGroup: "Edit Thread Group",
+    noOptionalNamespace: "No optional namespace",
+    noOptionalPod: "No Optional Pod",
+    planName: "Plan Name",
+    performancePressureTest: "Performance Pressure Test",
   },
   routeTrace: {
     title: 'Route Trace',
