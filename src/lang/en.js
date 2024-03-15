@@ -115,6 +115,16 @@ export const messages = {
     serviceBasedMsg: 'Please select a service.',
     interfaceBasedMsg: 'Please select an interface.',
     graphNotFound: "If the picture does not appear, please try again.",
+    sourceInterfaceId: "Source Interface ID",
+    sourceInterfacePath: "Source Interface Path",
+    targetInterfaceId: "Target Interface ID",
+    targetInterfacePath: "Target Interface Path",
+    serviceDependency: "Service Dependency",
+    interfaceDependency: "Interface Dependency",
+    noOptionalService: "No Optional Service",
+    optionalService: "Optional Service",
+    noOptionalInterface: "No Optional Interface",
+    optionalInterface: "Optional Interface",
   },
   cluster: {
     clustersSearchError:
