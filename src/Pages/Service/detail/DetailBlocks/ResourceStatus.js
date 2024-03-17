@@ -23,6 +23,7 @@ import {
 } from '../../../Cluster/deploy/ServiceStatusTable';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import { parseServiceName } from '../../../../utils/commonUtils';
+import { useIntl } from 'react-intl';
 
 export const IconOfPod = status => {
   if (status === RUNNING) {
@@ -39,6 +40,7 @@ export const IconOfPod = status => {
 
 export default function ResourceStatus(props) {
   const { service } = props;
+  const intl = useIntl();
   const [podSearchValue, setPodSearchValue] = useState('');
   const [enter, setEnter] = useState(0);
 
@@ -94,7 +96,7 @@ export default function ResourceStatus(props) {
   };
 
   return (
-    <KubeSimpleCard title='容器组'>
+    <KubeSimpleCard title={intl.messages['serviceOverview.pod']}>
       <Stack direction='row' spacing={1.5} justifyContent='space-between'>
         {/* 搜索框 */}
         <KubeAdornmentTextField
@@ -146,7 +148,7 @@ export default function ResourceStatus(props) {
               </InputAdornment>
             ),
           }}
-          placeholder='按名称搜索'
+          placeholder={intl.messages['common.searchByName']}
           inputProps={{}}
         />
 
@@ -203,7 +205,7 @@ export default function ResourceStatus(props) {
                     title={
                       <Stack sx={{ padding: '12px' }} spacing={1}>
                         <Box>{pod.metadata.name}</Box>
-                        <Box>{`状态：${pod.status.phase}`}</Box>
+                        <Box>{`${intl.messages['common.status']}：${pod.status.phase}`}</Box>
                       </Stack>
                     }
                     placement='top'
@@ -235,7 +237,7 @@ export default function ResourceStatus(props) {
                         color: '#79879c',
                       }}
                     >
-                      {`创建于 ${formatDatetimeString(pod.status.startTime)}`}
+                      {`${intl.messages['common.createdOn']} ${formatDatetimeString(pod.status.startTime)}`}
                     </Box>
                   </Stack>
                 </Stack>
@@ -264,7 +266,7 @@ export default function ResourceStatus(props) {
                       color: '#79879c',
                     }}
                   >
-                    主机IP地址
+                    {intl.messages['common.hostIP']}
                   </Box>
                 </Stack>
 
@@ -292,7 +294,7 @@ export default function ResourceStatus(props) {
                       color: '#79879c',
                     }}
                   >
-                    容器组IP地址
+                    {intl.messages['serviceOverview.podIP']}
                   </Box>
                 </Stack>
 
@@ -318,7 +320,7 @@ export default function ResourceStatus(props) {
               color: '#242E42',
             }}
           >
-            未发现资源
+            {intl.messages['serviceOverview.resourceNotFound']}
           </Box>
         )}
       </Stack>
@@ -337,7 +339,7 @@ export default function ResourceStatus(props) {
           mt: '12px',
         }}
       >
-        {`总数：${pods.length}`}
+        {`${intl.messages['serviceOverview.total']} : ${pods.length}`}
       </Box>
     </KubeSimpleCard>
   );

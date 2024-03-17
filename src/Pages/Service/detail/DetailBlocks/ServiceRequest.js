@@ -145,20 +145,20 @@ export default function ServiceRequest(props) {
   const [currentAPI, setCurrentAPI] = useState('');
 
   const headRow = [
-    createRow('request', '请求', false, '200px', '400px', true, 'left'),
-    createRow('length', '链路长度', false, '50px', '80px', true, 'center'),
-    createRow('startTime', '开始时间', true, '100px', '100px', true, 'center'),
+    createRow('request', intl.messages['common.request'], false, '200px', '400px', true, 'left'),
+    createRow('length', intl.messages['serviceOverview.linkLength'], false, '50px', '80px', true, 'center'),
+    createRow('startTime', intl.messages['common.beginTime'], true, '100px', '100px', true, 'center'),
     createRow(
       'responseTime',
-      '响应时间',
+      intl.messages['common.responseTime'],
       true,
       '100px',
       '100px',
       true,
       'center'
     ),
-    createRow('method', '请求方法', false, '50px', '80px', true, 'center'),
-    createRow('code', '响应码', false, '50px', '80px', true, 'center'),
+    createRow('method', intl.messages['common.requestMethod'], false, '50px', '80px', true, 'center'),
+    createRow('code', intl.messages['common.responseCode'], false, '50px', '80px', true, 'center'),
   ];
 
   const { routeService, routeTrace, pageSize, pageNum } = useSelector(state => {
@@ -306,7 +306,7 @@ export default function ServiceRequest(props) {
   };
 
   return (
-    <KubeSimpleCard title='服务接口请求'>
+    <KubeSimpleCard title={intl.messages['serviceOverview.serviceRequestInterface']}>
       <Popover
         id='instance-status-table-custom-content-popover'
         open={rangeSelectOpen}
@@ -351,7 +351,7 @@ export default function ServiceRequest(props) {
                 mb: '12px',
               }}
             >
-              选择时间范围
+              {intl.messages['serviceOverview.selectTimeRange']}
             </Box>
             <Stack direction='row'>
               {[0, 1, 2].map(value => {
@@ -411,7 +411,7 @@ export default function ServiceRequest(props) {
                 mb: '12px',
               }}
             >
-              自定义时间范围
+              {intl.messages['serviceOverview.customTimeRange']}
             </Box>
 
             {/* 两个Datetime Picker */}
@@ -427,7 +427,7 @@ export default function ServiceRequest(props) {
                     color: '#36435c',
                   }}
                 >
-                  开始时间
+                  {intl.messages['serviceOverview.beginTime']}
                 </Box>
                 <KubeDatePicker value={tmpStart} setValue={setTmpStart} />
               </Box>
@@ -443,7 +443,7 @@ export default function ServiceRequest(props) {
                     color: '#36435c',
                   }}
                 >
-                  结束时间
+                  {intl.messages['serviceOverview.endTime']}
                 </Box>
                 <KubeDatePicker value={tmpEnd} setValue={setTmpEnd} />
               </Box>
@@ -460,13 +460,13 @@ export default function ServiceRequest(props) {
                 sx={{ height: '32px', width: '84px' }}
                 onClick={handleClose}
               >
-                取消
+                {intl.messages['common.cancel']}
               </KubeCancelButton>
               <KubeConfirmButton
                 sx={{ height: '32px', width: '84px' }}
                 onClick={handleRangeConfirm}
               >
-                确定
+                {intl.messages['common.confirm']}
               </KubeConfirmButton>
             </Stack>
           </Box>
@@ -524,7 +524,7 @@ export default function ServiceRequest(props) {
               </InputAdornment>
             ),
           }}
-          placeholder='按名称搜索'
+          placeholder={intl.messages['common.searchByName']}
           inputProps={{}}
         />
 
