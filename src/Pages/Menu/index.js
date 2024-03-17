@@ -319,7 +319,7 @@ export default function MiniDrawer() {
                     textAlign: 'center',
                   }}
                 >
-                  集群
+                  {intl.messages['common.cluster']}
                 </Box>
               </Stack>
             </Stack>
@@ -337,7 +337,7 @@ export default function MiniDrawer() {
                   <Cluster16 />
                 </Box>
                 <Box sx={{ ...styledFont, color: l1 ? '#55bc8a' : '#242e42' }}>
-                  集群
+                  {intl.messages['common.cluster']}
                 </Box>
                 {verticalOpen1 ? <ExpandLess /> : <ExpandMore />}
               </ListItemButton>
@@ -402,7 +402,7 @@ export default function MiniDrawer() {
                   <Service16 />
                 </Box>
                 <Box sx={{ ...styledFont, color: l2 ? '#55bc8a' : '#242e42' }}>
-                  服务
+                  {intl.messages['common.service']}
                 </Box>
                 {verticalOpen2 ? <ExpandLess /> : <ExpandMore />}
               </ListItemButton>
@@ -419,7 +419,7 @@ export default function MiniDrawer() {
                     <Box
                       sx={{ ...styledFont, color: l21 ? '#55bc8a' : '#242e42' }}
                     >
-                      服务集合
+                      {intl.messages['common.serviceCollection']}
                     </Box>
                   </ListItemButton>
                   <ListItemButton
@@ -433,7 +433,7 @@ export default function MiniDrawer() {
                     <Box
                       sx={{ ...styledFont, color: l22 ? '#55bc8a' : '#242e42' }}
                     >
-                      服务依赖
+                      {intl.messages['serviceDependency.serviceDependency']}
                     </Box>
                   </ListItemButton>
                 </List>
@@ -451,7 +451,7 @@ export default function MiniDrawer() {
                   <Link16 />
                 </Box>
                 <Box sx={{ ...styledFont, color: l3 ? '#55bc8a' : '#242e42' }}>
-                  路由
+                  {intl.messages['common.route']}
                 </Box>
                 {verticalOpen3 ? <ExpandLess /> : <ExpandMore />}
               </ListItemButton>
@@ -468,7 +468,7 @@ export default function MiniDrawer() {
                     <Box
                       sx={{ ...styledFont, color: l31 ? '#55bc8a' : '#242e42' }}
                     >
-                      路由链路
+                      {intl.messages['common.routeLink']}
                     </Box>
                   </ListItemButton>
                   <ListItemButton
@@ -482,7 +482,7 @@ export default function MiniDrawer() {
                     <Box
                       sx={{ ...styledFont, color: l32 ? '#55bc8a' : '#242e42' }}
                     >
-                      路由控制
+                      {intl.messages['common.routeControl']}
                     </Box>
                   </ListItemButton>
                 </List>
@@ -500,7 +500,7 @@ export default function MiniDrawer() {
                   <Application16 />
                 </Box>
                 <Box sx={{ ...styledFont, color: l4 ? '#55bc8a' : '#242e42' }}>
-                  应用模块
+                  {intl.messages['common.application']}
                 </Box>
                 {verticalOpen4 ? <ExpandLess /> : <ExpandMore />}
               </ListItemButton>
@@ -517,7 +517,7 @@ export default function MiniDrawer() {
                     <Box
                       sx={{ ...styledFont, color: l41 ? '#55bc8a' : '#242e42' }}
                     >
-                      服务能力自动测试
+                      {intl.messages['common.serviceCapabilityAutomaticTesting']}
                     </Box>
                   </ListItemButton>
                 </List>
@@ -535,7 +535,7 @@ export default function MiniDrawer() {
                   <Route16 />
                 </Box>
                 <Box sx={{ ...styledFont, color: l5 ? '#55bc8a' : '#242e42' }}>
-                  镜像管理
+                  {intl.messages['common.imageManagement']}
                 </Box>
                 {verticalOpen5 ? <ExpandLess /> : <ExpandMore />}
               </ListItemButton>
@@ -552,7 +552,7 @@ export default function MiniDrawer() {
                     <Box
                       sx={{ ...styledFont, color: l51 ? '#55bc8a' : '#242e42' }}
                     >
-                      镜像列表
+                      {intl.messages['common.imageList']}
                     </Box>
                   </ListItemButton>
                 </List>

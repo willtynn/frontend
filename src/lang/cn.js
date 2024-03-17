@@ -20,6 +20,7 @@ export const messages = {
     repo: "代码仓库地址",
     imageUrl: "镜像仓库地址&TAG",
     serviceVersion: "服务版本",
+    serviceCollection: "服务集合",
     interfaceCollection: "接口集合",
     serviceName: "服务名称",
     serviceId: "服务ID",
@@ -86,6 +87,14 @@ export const messages = {
     createdOn: "创建于",
     request: "请求",
     responseTime: "响应时间",
+    cluster: "集群",
+    route: "路由",
+    routeLink: "路由链路",
+    routeControl: "路由控制",
+    application: "应用模块",
+    serviceCapabilityAutomaticTesting: "服务能力自动测试",
+    imageManagement: "镜像管理",
+    imageList: "镜像列表",
   },
   lang: {
     language: '语言',
@@ -95,6 +104,7 @@ export const messages = {
       '对多集群以及每个集群的基础资源、服务组件和应用资源等的统一管理。',
     platformManagement: '平台管理',
     clusterOverview: "集群总览",
+    nodeNum: "节点数量"
   },
   
   serviceOverview: {
@@ -140,7 +150,7 @@ export const messages = {
     resourceMonitor: "资源监控",
     editService: "编辑服务",
     editInfo: "编辑信息",
-    
+
   },
   serviceDependency: {
     serviceDependencyNotFound: '所查询服务没有相关调用关系...',

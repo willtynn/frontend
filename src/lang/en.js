@@ -20,6 +20,7 @@ export const messages = {
     repo: "Code Repository",
     imageUrl: "Image URL & TAG",
     serviceVersion: "Version",
+    serviceCollection: "Service Collection",
     interfaceCollection: "Interface Collection",
     serviceName: "Service Name",
     serviceId: "Service ID",
@@ -86,6 +87,14 @@ export const messages = {
     createdOn: "Created on",
     request: "Request",
     responseTime: "Response Time",
+    cluster: "Cluster",
+    route: "Route",
+    routeLink: "Route Link",
+    routeControl: "Route Control",
+    application: "Application",
+    serviceCapabilityAutomaticTesting: "Service Capability Automatic Testing",
+    imageManagement: "Image Management",
+    imageList: "Image List",
   },
   lang: {
     language: 'Language',
@@ -95,6 +104,7 @@ export const messages = {
       'Unified management of multiple clusters and basic resources, service components, and application resources of each cluster.',
     platformManagement: 'Platform Management',
     clusterOverview: "Cluster Overview",
+    nodeNum: "Node Number"
   },
 
   serviceOverview: {
