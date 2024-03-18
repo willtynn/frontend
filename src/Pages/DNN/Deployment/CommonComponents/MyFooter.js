@@ -1,7 +1,5 @@
 import { Box, Stack } from '@mui/material';
 import { useState } from 'react';
-import NextButton from './NextButton';
-import BackButton from './BackButton';
 import {
   KubeCancelButton,
   KubeConfirmButton,

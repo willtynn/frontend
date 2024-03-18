@@ -47,13 +47,29 @@ export default function ModelDeploymentPage() {
       }}
     />
   );
+
+  const getContainer = active => {
+    switch (active) {
+      case 0:
+        return steps[activeStep];
+      case 1:
+        return steps[activeStep];
+      case 2:
+        return steps[activeStep];
+      case 3:
+        return steps[activeStep];
+      default:
+        return 'defalut';
+    }
+  };
+  
   return (
     <MainPageFramework
       id={`updateSI_mainPage`}
       actionBar={actionBar}
       stepper={stepper}
     >
-      {steps[activeStep]}
+      {getContainer(activeStep)}
     </MainPageFramework>
   );
 }
