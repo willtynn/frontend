@@ -68,6 +68,7 @@ export default function MiniDrawer() {
   const [l62, setl62] = useState(false);
   const [l63, setl63] = useState(false);
   const [l64, setl64] = useState(false);
+  const [l65, setl65] = useState(false);
 
   const intl = useIntl();
   const [clusterSelectOpen, setClusterSelectOpen] = useState(false);
@@ -645,6 +646,22 @@ export default function MiniDrawer() {
                       sx={{ ...styledFont, color: l64 ? '#55bc8a' : '#242e42' }}
                     >
                       推理请求管理
+                    </Box>
+                  </ListItemButton>
+                </List>
+                <List component='div' disablePadding>
+                  <ListItemButton
+                    sx={styleListButton}
+                    onClick={() => {
+                      setAllFalse();
+                      setl65(true);
+                      navigate('detail/model/deployment');
+                    }}
+                  >
+                    <Box
+                      sx={{ ...styledFont, color: l65 ? '#55bc8a' : '#242e42' }}
+                    >
+                      timeline test
                     </Box>
                   </ListItemButton>
                 </List>

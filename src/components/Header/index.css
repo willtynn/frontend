@@ -1,0 +1,12 @@
+.HelpText {
+  /* Components/Button */
+  font-style: normal;
+  font-weight: 600;
+  font-size: 14px;
+  line-height: 20px;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+
+  /* White Transparent/100 */
+  color: #ffffff;
+}

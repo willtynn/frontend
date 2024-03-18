@@ -25,6 +25,8 @@ import { ModelDetail } from '../Pages/DNN/Model/detail'
 import InferInstanceDeploy from '../Pages/DNN/InferApplication';
 import InferRouteTrace from '../Pages/DNN/InferRoute/trace';
 import { InferRouteTraceInfoPage } from '../Pages/DNN/InferRoute/trace/RouteTraceInfoPage';
+import ModelDeploymentPage from '../Pages/DNN/Deployment/index'
+
 export default function MyRoute() {
   return (
     <Routes>
@@ -39,6 +41,7 @@ export default function MyRoute() {
         <Route path='infertrace/:start/:end/:traceId' element={<InferRouteTraceInfoPage />}/>
         <Route path='model/:modelId' element={<ModelDetail />}/>
         <Route path='strategy/:id' element={<SubModelPage />} />
+        <Route path='model/deployment' element={<ModelDeploymentPage />} />
       </Route>
 
       {/* 存在导航栏 */}
