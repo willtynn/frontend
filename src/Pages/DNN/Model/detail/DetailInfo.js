@@ -7,7 +7,7 @@ import {
   StyledTab,
   StyledTabsList,
   StyledTabPanel,
-} from '../../../components/Tab';
+} from '@/components/Tab';
 import PartitionInfo from './DetailBlocks/Information';
 import ServiceRequest from './DetailBlocks/ServiceRequest';
 import { useSelector } from 'react-redux';

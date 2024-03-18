@@ -7,7 +7,7 @@ import {
   Typography,
   Stack,
 } from '@mui/material';
-import { OutlinedButton } from '../../../components/Button';
+import { OutlinedButton } from '../../../../components/Button';
 import RouteRuleOverviewTable from './RouteRuleOverviewTable';
 import TaskIcon from '@/assets/TaskIcon.svg';
 import { useIntl } from 'react-intl';

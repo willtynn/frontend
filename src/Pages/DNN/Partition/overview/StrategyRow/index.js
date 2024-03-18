@@ -9,7 +9,7 @@ import DialogTitle from "@mui/material/DialogTitle";
 import DialogContent from "@mui/material/DialogContent";
 import DialogContentText from "@mui/material/DialogContentText";
 import DialogActions from "@mui/material/DialogActions";
-import {StyledModal} from "../../../../components/Modal";
+import {StyledModal} from "../../../../../components/Modal/index.js";
 
 const defaultMinWidth = ['100px', '100px', '300px', '300px', '50px', '200px', '50px'];
 

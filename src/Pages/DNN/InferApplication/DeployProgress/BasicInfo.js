@@ -3,8 +3,8 @@
  */
 import { useState, useEffect } from 'react';
 import { Box, Stack } from '@mui/material';
-import { fontFamily } from '../../../utils/commonUtils';
-import { KubeInput } from '../../../components/Input';
+import { fontFamily } from '@/utils/commonUtils';
+import { KubeInput } from '@/components/Input';
 import { useIntl } from 'react-intl';
 
 export default function BasicInfo(props) {

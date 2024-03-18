@@ -1,4 +1,4 @@
-import { axios_instance } from '@/Pages/Partition/overview/functions/axios_trace.js';
+import { axios_instance } from '@/Pages/DNN/Partition/overview/functions/axios_trace.js';
 import {setSnackbarMessageAndOpen} from "./snackbarAction";
 import {SEVERITIES} from "../components/CommonSnackbar";
 import {UPDATE_SEARCH_SERVICE} from "./modelAction";

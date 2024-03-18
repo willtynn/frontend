@@ -28,7 +28,7 @@ import Delete16 from '@/assets/Delete16.svg';
 import NavigateBeforeIcon from '@mui/icons-material/NavigateBefore';
 import { useNavigate, useParams } from 'react-router-dom';
 import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
-import { StyledPopover } from '../../../components/Popover';
+import { StyledPopover } from '@/components/Popover';
 
 const labelStyle = {
   fontSize: '12px',

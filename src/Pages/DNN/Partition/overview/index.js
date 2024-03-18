@@ -16,7 +16,7 @@ import {
 } from '@mui/material';
 import RouteIcon from '@/assets/RouteIcon.svg';
 import Question from '@/assets/Question.svg';
-import { StyledModal } from '../../../components/Modal';
+import { StyledModal } from '@/components/Modal';
 import {
   KubeConfirmButton,
   EclipseTransparentButton,
@@ -47,10 +47,10 @@ import {
   addPartition,
 } from '@/actions/partitionAction';
 import {AddProgress} from "./AddPartition";
-import {ChipTextField} from "../../../components/Input";
+import {ChipTextField} from "@/components/Input";
 import SearchIcon from "@mui/icons-material/Search";
 import RefreshIcon from "@mui/icons-material/Refresh";
-import {CLEAR_SUB_MODELS, deletePartitionStrategy, UPDATE_TEMP_STRATEGY_INFO} from "../../../actions/partitionAction";
+import {CLEAR_SUB_MODELS, deletePartitionStrategy, UPDATE_TEMP_STRATEGY_INFO} from "@/actions/partitionAction";
 import {type} from "@testing-library/user-event/dist/type";
 
 const serviceTableHeaders = [

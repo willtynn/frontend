@@ -18,13 +18,13 @@ import ImagesList from '../Pages/Image';
 import { TestPlanDetail } from '../Pages/Application/StressTesting/Detail';
 import { ResultDetail } from '../Pages/Application/StressTesting/ResultDetail';
 import SchemeDeploy from '../Pages/Cluster/scheme';
-import PartitionStrategy from '../Pages/Partition/overview';
-import { SubModelPage } from '../Pages/Partition/overview/SubModels';
-import ModelOverview from '../Pages/Model/overview';
-import { ModelDetail } from '../Pages/Model/detail'
-import InferInstanceDeploy from '../Pages/InferApplication';
-import InferRouteTrace from '../Pages/InferRoute/trace';
-import { InferRouteTraceInfoPage } from '../Pages/InferRoute/trace/RouteTraceInfoPage';
+import PartitionStrategy from '../Pages/DNN/Partition/overview';
+import { SubModelPage } from '../Pages/DNN/Partition/overview/SubModels';
+import ModelOverview from '../Pages/DNN/Model/overview';
+import { ModelDetail } from '../Pages/DNN/Model/detail'
+import InferInstanceDeploy from '../Pages/DNN/InferApplication';
+import InferRouteTrace from '../Pages/DNN/InferRoute/trace';
+import { InferRouteTraceInfoPage } from '../Pages/DNN/InferRoute/trace/RouteTraceInfoPage';
 export default function MyRoute() {
   return (
     <Routes>

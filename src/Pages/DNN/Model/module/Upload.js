@@ -4,14 +4,14 @@ import { useDispatch, useSelector, Provider } from 'react-redux';
 import { legacy_createStore as createStore } from 'redux'
 import ReactDOM from 'react-dom';
 import { shadowStyle } from '@/utils/commonUtils';
-import { fontFamily } from '../../../utils/commonUtils';
+import { fontFamily } from '../../../../utils/commonUtils';
 import KubeClose from '@/assets/KubeClose.svg';
-import { KubeInput } from '../../../components/Input';
+import { KubeInput } from '../../../../components/Input';
 import { useIntl } from 'react-intl';
 import {
 	KubeCancelButton,
 	KubeConfirmButton,
-} from '../../../components/Button';
+} from '../../../../components/Button';
 
 
 const style = {

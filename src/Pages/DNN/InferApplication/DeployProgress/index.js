@@ -4,7 +4,7 @@
 import { useState } from 'react';
 import { Box, Stack } from '@mui/material';
 import { KubeDeploymentCard } from '@/components/InfoCard';
-import { fontFamily } from '../../../utils/commonUtils';
+import { fontFamily } from '@/utils/commonUtils';
 import InfoFinished from '@/assets/InfoFinished.svg';
 import InfoWaiting from '@/assets/InfoWaiting.svg';
 import InfoNow from '@/assets/InfoNow.svg';
@@ -16,7 +16,7 @@ import { useIntl } from 'react-intl';
 import {
   KubeCancelButton,
   KubeConfirmButton,
-} from '../../../components/Button';
+} from '@/components/Button';
 
 const style = {
   position: 'absolute',

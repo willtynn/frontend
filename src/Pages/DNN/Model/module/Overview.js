@@ -49,14 +49,14 @@ import {
   StyledAutocomplete,
   StyledTextFiled,
   ChipTextField,
-} from '../../../components/Input';
+} from '@/components/Input';
 import {
   CHANGE_PAGE_NUM,
   CHANGE_PAGE_SIZE,
-} from '../../../actions/modelAction';
-import { formatDatetimeString } from '../../../utils/commonUtils';
-import { UPDATE_SEARCH_SERVICE } from '../../../actions/modelAction';
-import { EclipseTransparentButton } from '../../../components/Button';
+} from '@/actions/modelAction';
+import { formatDatetimeString } from '@/utils/commonUtils';
+import { UPDATE_SEARCH_SERVICE } from '@/actions/modelAction';
+import { EclipseTransparentButton } from '@/components/Button';
 import Upload from './Upload'
 import {
   uploadModel,

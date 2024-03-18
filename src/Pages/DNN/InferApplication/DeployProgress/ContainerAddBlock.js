@@ -14,13 +14,13 @@ import {
   Tooltip,
 } from '@mui/material';
 import { useIntl } from 'react-intl';
-import { KubeTextField } from '../../../components/Input';
+import { KubeTextField } from '@/components/Input';
 import CPU from '@/assets/CPU.svg';
 import Memory from '@/assets/Memory.svg';
 import {
   KubeEndAdornmentTextField,
   KubeSelect,
-} from '../../../components/Input';
+} from '@/components/Input';
 import './ContainerAddBlock.css';
 import HelpOutlineIcon from '@mui/icons-material/HelpOutline';
 import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline';
@@ -28,7 +28,7 @@ import {
   KubeCancelButton,
   KubeTransparentButton,
   KubeRectTransparentButton,
-} from '../../../components/Button';
+} from '@/components/Button';
 import CheckIcon from '@mui/icons-material/Check';
 import CloseIcon from '@mui/icons-material/Close';
 

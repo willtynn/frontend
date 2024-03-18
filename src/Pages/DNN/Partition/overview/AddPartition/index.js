@@ -8,7 +8,7 @@ import InfoNow from '@/assets/InfoNow.svg';
 import { KubeCancelButton, KubeConfirmButton } from '@/components/Button';
 import ProgressIndicator from './ProgressIndicator';
 import { useSelector, useDispatch } from 'react-redux';
-import {EDIT_JSON_DATA, EDIT_ORIGIN_MODEL_NAME, EDIT_STRATEGY_NAME} from "../../../../actions/partitionAction";
+import {EDIT_JSON_DATA, EDIT_ORIGIN_MODEL_NAME, EDIT_STRATEGY_NAME} from "@/actions/partitionAction";
 import {EditBox} from "./EditBox";
 
 const style = {
