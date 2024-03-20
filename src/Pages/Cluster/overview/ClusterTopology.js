@@ -3,8 +3,7 @@ import { Box, Stack } from '@mui/material';
 import ArrowDown from '@/assets/ArrowDown.svg';
 import ArrowUp from '@/assets/ArrowUp.svg';
 import { useState, useEffect } from 'react';
-import { NormalBoldFont, YaHeiLargeFont } from '@/components/Fonts';
-import { shadowStyle } from '@/utils/commonUtils';
+import { YaHeiLargeFont } from '@/components/Fonts';
 import InfoCard from '@/components/InfoCard';
 import { useIntl } from 'react-intl';
 import InfoAlert from '@/assets/InfoAlert.svg';
@@ -12,6 +11,7 @@ import { fontFamily } from "@/utils/commonUtils";
 
 export function ClusterTopology(props) {
   const { clusterId, graph, handleNodeClick } = props;
+  const intl = useIntl();
 
   const [open, setOpen] = useState(false);
   const [nodes, setNodes] = useState([]);
@@ -22,11 +22,14 @@ export function ClusterTopology(props) {
     let tmpLinks = [];
     let tmpNodes = [];
     for (const link of graph) {
+      
       nodeSet.add(link.srcId);
       nodeSet.add(link.desId);
+      const linkLabel = `${intl.messages['common.bandwidth']}:${link.bandwidth} Kbps;\n${intl.messages['common.delay']}: ${link.delay} ms`;
       tmpLinks.push({
         source: link.srcId,
         target: link.desId,
+        label: linkLabel
       });
     }
     for (const node of nodeSet) {
@@ -111,9 +114,11 @@ export function ClusterTopologyOnlyCanvas(props) {
       for (const link of graph) {
         nodeSet.add(link.srcId);
         nodeSet.add(link.desId);
+        const linkLabel = `${intl.messages['common.bandwidth']}:${link.bandwidth} Kbps;\n${intl.messages['common.delay']}: ${link.delay} ms`;
         tmpLinks.push({
           source: link.srcId,
           target: link.desId,
+          label: linkLabel
         });
       }
       for (const node of nodeSet) {

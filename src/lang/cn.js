@@ -95,6 +95,7 @@ export const messages = {
     serviceCapabilityAutomaticTesting: "服务能力自动测试",
     imageManagement: "镜像管理",
     imageList: "镜像列表",
+    bandwidth: "带宽",
   },
   lang: {
     language: '语言',

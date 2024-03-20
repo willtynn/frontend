@@ -95,6 +95,7 @@ export const messages = {
     serviceCapabilityAutomaticTesting: "Service Capability Automatic Testing",
     imageManagement: "Image Management",
     imageList: "Image List",
+    bandwidth: "Bandwidth",
   },
   lang: {
     language: 'Language',
