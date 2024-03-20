@@ -45,7 +45,6 @@ export function ClusterCanvas(props) {
     });
 
     links.forEach((item, index) => {
-      console.log("label", item.label, links)
       g.setEdge(item.source, item.target, {
         label: item.label,
         arrowhead: 'vee',
