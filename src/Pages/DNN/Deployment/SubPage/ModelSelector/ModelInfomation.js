@@ -21,7 +21,7 @@ import {
     KubeAutocomplete
 } from '@/components/Input';
 // import RouteIcon from '@/assets/RouteIcon.svg';
-import ModelInfo from "@/Pages/DNN/Partition/overview/SubModels/modelInfo";
+import ModelInfo from "./modelInfo";
 import { DataRow } from './DataRow';
 import { fontFamily } from '@/utils/commonUtils';
 import {
