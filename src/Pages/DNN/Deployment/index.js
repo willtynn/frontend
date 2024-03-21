@@ -3,6 +3,7 @@ import { Box } from '@mui/material';
 import CreateAndUpdateHeader from './CommonComponents/MyHeader';
 import MainPageFramework from './CommonComponents/MainPageFramework'
 import CreateAndUpdateFooter from './CommonComponents/MyFooter'
+import ModelInfomation from './SubPage/ModelSelector/ModelInfomation';
 
 export default function ModelDeploymentPage() {
   const steps = ['选择模型', '选择服务器', '生成分区方案', '生成部署方案'];
@@ -51,7 +52,9 @@ export default function ModelDeploymentPage() {
   const getContainer = active => {
     switch (active) {
       case 0:
-        return steps[activeStep];
+        return (<ModelInfomation>
+
+        </ModelInfomation>);
       case 1:
         return steps[activeStep];
       case 2:

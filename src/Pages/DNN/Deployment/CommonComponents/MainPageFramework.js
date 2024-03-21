@@ -134,15 +134,15 @@ export default function MainPageFramework(props) {
         {/* 内容区，也是文档高度的贡献区 */}
         <Box sx={{ backgroundColor: '#ffffff', minHeight: window.innerHeight,width:'100%',minWidth:'1041px' }}>
           {/* fake header 这两个box是用来顶替上面两个fixed的header的，因为我们希望两个header占领一部分的文档的高度 */}
-          <Box id='my-header' sx={{ width: '100%', height: '56px' }} />
-          {stepper && <Box sx={{ width: '100%', height: '60px' }} />}
+          {/* <Box id='my-header' sx={{ width: '100%', height: '56px' }} /> */}
+          {/* {stepper && <Box sx={{ width: '100%', height: '60px' }} />} */}
           {/* 真正的内容区 */}
           <Box
             sx={{
               ...contentSX,
               padding: '20px 0px 32px 0px',
               ...AllCentered,
-              paddingTop: stepper ? '20px' : '59px',
+              paddingTop: stepper ? '10px' : '59px',
             }}
           >
             {props.children}
