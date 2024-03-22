@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { createContext, useContext } from 'react';
 import { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useParams } from 'react-router-dom';
@@ -25,6 +25,7 @@ import {
 import ModelInfo from "./modelInfo";
 import { DataRow } from './DataRow';
 import { fontFamily } from '@/utils/commonUtils';
+import { json, map } from 'd3';
 
 const tableHeaders = [
     { key: 'models', align: 'center', text: '已选择模型列表', minWidth: 50, maxWidth: 50 },
@@ -32,14 +33,11 @@ const tableHeaders = [
 
 const spanNumPerPage = 15;
 
-
-
 export default function ModelInfomation() {
 
-    const { id } = useParams();
+    // const MyContext = createContext();
 
     const dispatch = useDispatch();
-
     const [row, setRow] = useState([]);
     const [tracePage, setTracePage] = useState(0);
     const [selectedIndex, setSelectedIndex] = useState(-1);
@@ -52,14 +50,23 @@ export default function ModelInfomation() {
 
     const { models } =
         useSelector(state => {
-            return {
-                models: state.InferPipeline.queryResult,
-            };
+            var allModels = state.InferPipeline.queryResult
+            modelList.map((item, index) => {
+                allModels = allModels.filter(model => model.id !== item.id)
+            });
+            return {models: allModels}
         });
 
     useEffect(() => {
         dispatch(searchModelByName(''));
-        setModelList([])
+        const stored = localStorage.getItem('modelList');
+        console.log(stored)
+        if (stored) {
+            var localModelList = JSON.parse(stored)
+            setModelList(localModelList)
+        } else {
+            setModelList([])
+        }
     }, []);
 
     useEffect(() => {
@@ -88,8 +95,9 @@ export default function ModelInfomation() {
             setSelectedIndex(-1)
             modelList.push(value)
             updateRow()
+            localStorage.setItem('modelList', JSON.stringify(modelList));
             dispatch({ type: PIPELINE_SEARCH, data: models.filter(item => item !== value) })
-            // console.log(modelNames)
+            console.log(modelList)
         }
     }
 
@@ -119,7 +127,9 @@ export default function ModelInfomation() {
     };
 
     const handleSpanDeleteClick = index => {
-        setModelList(modelList.filter(item => item !== modelList[index]))
+        var udpateModelList = modelList.filter(item => item !== modelList[index])
+        setModelList(udpateModelList)
+        localStorage.setItem('modelList', JSON.stringify(udpateModelList))
         models.push(modelList[index])
         dispatch({ type: PIPELINE_SEARCH, data: models })
         setSelectedIndex(-1);

@@ -1,14 +1,15 @@
-import * as React from 'react';
 import { Box } from '@mui/material';
 import CreateAndUpdateHeader from './CommonComponents/MyHeader';
 import MainPageFramework from './CommonComponents/MainPageFramework'
 import CreateAndUpdateFooter from './CommonComponents/MyFooter'
 import ModelInfomation from './SubPage/ModelSelector/ModelInfomation';
+import React, { createContext, useState, useContext } from 'react';
 
 export default function ModelDeploymentPage() {
+
   const steps = ['选择模型', '选择服务器', '生成分区方案', '生成部署方案'];
 
-  const [activeStep, setActiveStep] = React.useState(0);
+  const [activeStep, setActiveStep] = useState(0);
 
   const handleItemClick = (stage) => {
     console.log(`Clicked on ${stage}`);
@@ -52,9 +53,7 @@ export default function ModelDeploymentPage() {
   const getContainer = active => {
     switch (active) {
       case 0:
-        return (<ModelInfomation>
-
-        </ModelInfomation>);
+        return (<ModelInfomation></ModelInfomation>);
       case 1:
         return steps[activeStep];
       case 2:
