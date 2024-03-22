@@ -11,6 +11,7 @@ import PartitionReducer from "./partitionReducer";
 import ModelReducer from './modelReducer';
 import InferApplicationReducer from './inferApplicationReducer';
 import InferRouteReducer from './inferRouteReducer';
+import InferPipelineReducer from './InferPipelineReducer'
 
 const rootReducer = combineReducers({
     Service: ServiceReducer,
@@ -25,6 +26,7 @@ const rootReducer = combineReducers({
     Model: ModelReducer,
     InferInstance: InferApplicationReducer,
     InferRoute: InferRouteReducer,
+    InferPipeline:InferPipelineReducer,
 });
 
 export default rootReducer;

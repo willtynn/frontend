@@ -1,15 +1,15 @@
 import React from 'react';
 import dayjs from 'dayjs';
-import {IconButton, TableRow, Tooltip} from '@mui/material';
+import { IconButton, Stack, TableRow, Tooltip } from '@mui/material';
 import { StyledTableBodyCell } from '@/components/DisplayTable';
 
 import { calculateDuration } from '@/Pages/DNN/Partition/overview/functions/func.js';
 import PolylineIcon from "@mui/icons-material/Polyline";
-
+import DeleteIcon from '@mui/icons-material/Delete';
 const defaultMinWidth = ['100px'];
 
 export function DataRow(props) {
-  const { key, rowData, onRowClick, selected, minWidth } = props;
+  const { key, rowData, onRowClick, onDelete, selected, minWidth } = props;
   let _minWidth = minWidth;
   if (!minWidth) {
     _minWidth = defaultMinWidth;
@@ -18,10 +18,9 @@ export function DataRow(props) {
   if (rowData != null) {
     return (
       <React.Fragment>
-        <TableRow
-          onClick={onRowClick}
+        <TableRow  
           hover
-          selected={selected}
+          selected={false}
           key={key}
           sx={{
             position: 'sticky',
@@ -29,14 +28,30 @@ export function DataRow(props) {
           }}
         >
           <StyledTableBodyCell
+            onClick={onRowClick}
             component='th'
             scope='row'
             align='center'
-            sx={{ minWidth: _minWidth[0] }}
+            width="100%"
           >
             <Tooltip title={rowData} placement='top-end'>
               <>{rowData}</>
             </Tooltip>
+          </StyledTableBodyCell>
+          {/* 删除模型 */}
+          <StyledTableBodyCell
+            component='th'
+            scope='row'
+            align='center'
+          >
+            <Tooltip title="Delete">
+              <IconButton aria-label="delete">
+                <DeleteIcon onClick={onDelete}
+                  size='small'
+                  color='primary' />
+              </IconButton>
+            </Tooltip>
+
           </StyledTableBodyCell>
         </TableRow>
       </React.Fragment>
@@ -45,6 +60,13 @@ export function DataRow(props) {
     return (
       <React.Fragment>
         <TableRow onClick={onRowClick} sx={{ backgroundColor: '#FFFFFF' }}>
+          <StyledTableBodyCell
+            component='th'
+            scope='row'
+            sx={{ color: 'transparent' }}
+          >
+            -
+          </StyledTableBodyCell>
           <StyledTableBodyCell
             component='th'
             scope='row'

@@ -36,40 +36,24 @@ export default function ModelInfo(props) {
                   </Stack>
                   <Stack direction='row' spacing={10}>
                     <NormalFont sx={{width: '100px'}}>
-                      拆分策略ID
-                    </NormalFont>
-                    <NormalFontBlack>
-                      {info.partition_id}
-                    </NormalFontBlack>
-                  </Stack>
-                  <Stack direction='row' spacing={10}>
-                    <NormalFont sx={{width: '100px'}}>
                       模型名称
                     </NormalFont>
                     <NormalFontBlack>
-                      {info.model_name}
+                      {info.name}
                     </NormalFontBlack>
                   </Stack>
                   <Stack direction='row' spacing={10}>
                     <NormalFont sx={{width: '100px'}}>
                       模型路径
                     </NormalFont>
-                    <NormalFontBlack>{info.model_path}</NormalFontBlack>
+                    <NormalFontBlack>{info.file}</NormalFontBlack>
                   </Stack>
                   <Stack direction='row' spacing={10}>
                     <NormalFont sx={{width: '100px'}}>
-                      输入
+                      模型大小(KB)
                     </NormalFont>
                     <NormalFontBlack>
-                      {info.input}
-                    </NormalFontBlack>
-                  </Stack>
-                  <Stack direction='row' spacing={10}>
-                    <NormalFont sx={{width: '100px'}}>
-                      输出
-                    </NormalFont>
-                    <NormalFontBlack>
-                      {info.output}
+                      {info.size}
                     </NormalFontBlack>
                   </Stack>
                 </Stack>
@@ -98,7 +82,7 @@ export default function ModelInfo(props) {
                   border: 'none',
                 }}
                 height={'435px'}
-                src={'http://192.168.1.104:32589/static?modelPath=' + info.model_path}
+                src={'http://192.168.1.104:32589/static?modelPath=/models/' + info.file}
               />
             </Stack> :
             <Stack sx={{pt: "80px"}} direction="row" spacing={2} alignItems="center" justifyContent="center">
