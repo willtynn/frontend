@@ -15,6 +15,7 @@ export const messages = {
     startTime: "Start Time",
     beginTime: "Start Time",
     endTime: "End Time",
+    time: "Time",
     serviceInstance: "Service Instance",
     service: "Service",
     repo: "Code Repository",
@@ -107,7 +108,12 @@ export const messages = {
     clusterOverview: "Cluster Overview",
     nodeNum: "Node Number"
   },
-
+  scheme: {
+    addSuccess: "The deployment scheme is successfully added.",
+    addFail: "Failed to add the deployment scheme.",
+    getFail: "The deployment scheme fails to be obtained.",
+    addScheme: "Add Scheme",
+  },
   serviceOverview: {
     serviceDescription:
       'A Service provides an abstract way to expose an application running on a group of containers (Pod) as a network service.',

@@ -15,6 +15,7 @@ export const messages = {
     startTime: "启动时间",
     beginTime: "开始时间",
     endTime: "结束时间",
+    time: "时间",
     serviceInstance: "服务实例",
     service: "服务",
     repo: "代码仓库地址",
@@ -107,7 +108,12 @@ export const messages = {
     clusterOverview: "集群总览",
     nodeNum: "节点数量"
   },
-  
+  scheme: {
+    addSuccess: "部署方案添加成功",
+    addFail: "部署方案添加失败",
+    getFail: "部署方案获取失败",
+    addScheme: "添加方案",
+  },
   serviceOverview: {
     serviceDescription:
       '服务（Service）提供一种抽象的方法，将运行在容器组（Pod）上的应用程序公开为网络服务。',

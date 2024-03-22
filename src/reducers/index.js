@@ -7,6 +7,7 @@ import InstanceReducer from './instanceReducer';
 import ApplicationReducer from './applicationReducer';
 import ImageReducer from "./imageReducer";
 import LangReducer from './langReducer';
+import SchemeReducer from './schemeReducer';
 const rootReducer = combineReducers({
     Service: ServiceReducer,
     Cluster: ClusterReducer,
@@ -15,7 +16,8 @@ const rootReducer = combineReducers({
     Instance: InstanceReducer,
     Application: ApplicationReducer,
     Image: ImageReducer,
-    Lang: LangReducer
+    Lang: LangReducer,
+    Scheme: SchemeReducer
 });
 
 export default rootReducer;

@@ -6,9 +6,10 @@ import { useIntl } from 'react-intl';
 import ClusterNode from '@/assets/ClusterNode.svg';
 import { StyledAutocomplete } from '@/components/Input';
 import { fontFamily } from '../../../utils/commonUtils';
+import SchemeOverview from './Overview';
+import { OutlinedButton } from '@/components/Button';
 
 export default function SchemeDeploy() {
-
   const intl = useIntl();
 
   return (
@@ -52,6 +53,19 @@ export default function SchemeDeploy() {
           </Box>
         </Stack>
       </Box>
+      <SchemeOverview
+        embeddingButton={
+          <OutlinedButton
+            onClick={() => {}}
+            sx={{
+              borderRadius: '20px !important',
+              width: '120px',
+            }}
+          >
+            {intl.messages['scheme.addScheme']}
+          </OutlinedButton>
+        }
+      />
     </Box>
   );
 }
