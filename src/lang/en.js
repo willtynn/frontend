@@ -97,6 +97,8 @@ export const messages = {
     imageManagement: "Image Management",
     imageList: "Image List",
     bandwidth: "Bandwidth",
+    nameFormatError: "The name format is incorrect, please check.",
+    namespaceEmptyError: "Please select a namespace."    
   },
   lang: {
     language: 'Language',

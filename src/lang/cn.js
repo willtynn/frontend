@@ -97,6 +97,8 @@ export const messages = {
     imageManagement: "镜像管理",
     imageList: "镜像列表",
     bandwidth: "带宽",
+    nameFormatError: "名称格式有误，请检查。",
+    namespaceEmptyError: "请选择一个命名空间。"
   },
   lang: {
     language: '语言',
