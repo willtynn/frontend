@@ -205,6 +205,22 @@ export default function ClusterOverview() {
             x: 63,
             y: 84,
           },
+          hostname: '192.168.1.144',
+          ip: '192.168.1.144',
+          configuredRes: {
+            cpu: 1,
+            memory: 100,
+          },
+          usedRes: {
+            cpu: 1,
+            memory: 50,
+          },
+          totalRes: {
+            cpu: 1,
+            memory: 100,
+          },
+          cpuInfo: '无',
+          description: 'Description',
         },
         {
           id: 'cluster1::h2',
@@ -212,6 +228,22 @@ export default function ClusterOverview() {
             x: 60,
             y: 58,
           },
+          hostname: '192.168.1.145',
+          ip: '192.168.1.145',
+          configuredRes: {
+            cpu: 1,
+            memory: 100,
+          },
+          usedRes: {
+            cpu: 1,
+            memory: 50,
+          },
+          totalRes: {
+            cpu: 1,
+            memory: 100,
+          },
+          cpuInfo: '无',
+          description: 'Description',
         },
       ],
       network: [
@@ -233,6 +265,22 @@ export default function ClusterOverview() {
             x: 63,
             y: 84,
           },
+          hostname: '192.168.1.146',
+          ip: '192.168.1.146',
+          configuredRes: {
+            cpu: 1,
+            memory: 100,
+          },
+          usedRes: {
+            cpu: 1,
+            memory: 50,
+          },
+          totalRes: {
+            cpu: 1,
+            memory: 100,
+          },
+          cpuInfo: '无',
+          description: 'Description',
         },
         {
           id: 'cluster2::h2',
@@ -240,6 +288,22 @@ export default function ClusterOverview() {
             x: 60,
             y: 58,
           },
+          hostname: '192.168.1.147',
+          ip: '192.168.1.147',
+          configuredRes: {
+            cpu: 1,
+            memory: 100,
+          },
+          usedRes: {
+            cpu: 1,
+            memory: 50,
+          },
+          totalRes: {
+            cpu: 1,
+            memory: 100,
+          },
+          cpuInfo: '无',
+          description: 'Description',
         },
       ],
       network: [
@@ -362,7 +426,7 @@ export default function ClusterOverview() {
           id='cluster_autocomplete'
           options={clusterList}
           sx={{
-            width: "100%",
+            width: '100%',
             color: '#36435c',
             fontFamily: fontFamily,
             fontSize: '12px',
@@ -373,7 +437,10 @@ export default function ClusterOverview() {
             letterSpacing: 'normal',
           }}
           renderInput={params => (
-            <TextField {...params} placeholder={intl.messages['common.selectCluster']} />
+            <TextField
+              {...params}
+              placeholder={intl.messages['common.selectCluster']}
+            />
           )}
         />
       </Stack>
@@ -385,7 +452,7 @@ export default function ClusterOverview() {
           }
           handleNodeClick={handleNodeClick}
         />
-        <ClusterInfo />
+        <ClusterInfo data={clusterData[targetCluster]} />
 
         {/* <InstanceList
             sx={{

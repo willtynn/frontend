@@ -98,7 +98,8 @@ export const messages = {
     imageList: "镜像列表",
     bandwidth: "带宽",
     nameFormatError: "名称格式有误，请检查。",
-    namespaceEmptyError: "请选择一个命名空间。"
+    namespaceEmptyError: "请选择一个命名空间。",
+    memory: "内存",
   },
   lang: {
     language: '语言',

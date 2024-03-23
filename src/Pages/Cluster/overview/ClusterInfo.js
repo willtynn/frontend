@@ -5,7 +5,7 @@ import {
   TableRow,
   TableBody,
   TableCell,
-  Table
+  Table,
 } from '@mui/material';
 import { useEffect, useState } from 'react';
 import InfoCard from '@/components/InfoCard';
@@ -44,14 +44,13 @@ function createRow(
 }
 
 export default function ClusterInfo(props) {
+  const { data } = props;
   const intl = useIntl();
-  const [data, setData] = useState(null);
+
   const headRow = [
-    createRow('name', intl.messages["cluster.nodeName"], false, '70px', '70px', true, 'center'),
-    createRow('ipAddress', intl.messages["cluster.ipAddress"], false, '70px', '70px', true, 'center'),
     createRow(
-      'settedResource',
-      intl.messages["cluster.settedResource"],
+      'id',
+      intl.messages['cluster.nodeName'],
       false,
       '70px',
       '70px',
@@ -59,17 +58,57 @@ export default function ClusterInfo(props) {
       'center'
     ),
     createRow(
-      'usedResource',
-      intl.messages["cluster.usedResource"],
+      'ip',
+      intl.messages['cluster.ipAddress'],
       false,
       '70px',
       '70px',
       true,
       'center'
     ),
-    createRow('cpuConfig',  intl.messages["cluster.cpuConfig"], false, '70px', '70px', true, 'center'),
-    createRow('description',  intl.messages["cluster.description"], false, '70px', '70px', true, 'center'),
+    createRow(
+      'configuredRes',
+      intl.messages['cluster.settedResource'],
+      false,
+      '70px',
+      '70px',
+      true,
+      'center'
+    ),
+    createRow(
+      'usedRes',
+      intl.messages['cluster.usedResource'],
+      false,
+      '70px',
+      '70px',
+      true,
+      'center'
+    ),
+    createRow(
+      'cpuInfo',
+      intl.messages['cluster.cpuConfig'],
+      false,
+      '70px',
+      '70px',
+      true,
+      'center'
+    ),
+    createRow(
+      'description',
+      intl.messages['cluster.description'],
+      false,
+      '70px',
+      '70px',
+      true,
+      'center'
+    ),
   ];
+
+  useEffect(() => {
+    if (!data) {
+      return;
+    }
+  }, []);
 
   return (
     <InfoCard title={intl.messages['cluster.clusterInfo']}>
@@ -107,9 +146,9 @@ export default function ClusterInfo(props) {
                 ))}
               </TableRow>
             </TableHead>
-            {data !== null ? (
+            {data && data.servers ? (
               <TableBody>
-                {data.map(row => {
+                {data.servers.map(row => {
                   return (
                     <TableRow
                       aria-checked={false}
@@ -126,18 +165,34 @@ export default function ClusterInfo(props) {
                       }}
                       selected={false}
                     >
-                      {headRow.map((item, index) => (
-                        <StyledTableBodyCell
-                          align='center'
-                          sx={{
-                            maxWidth: item.maxWidth,
-                            minWidth: item.minWidth,
-                          }}
-                          key={item.id}
-                        >
-                          {row[item.id]}
-                        </StyledTableBodyCell>
-                      ))}
+                      {headRow.map((item, index) => {
+                        if (item.id === "configuredRes" || item.id === "usedRes") {
+                          return (
+                            <StyledTableBodyCell
+                              align='center'
+                              sx={{
+                                maxWidth: item.maxWidth,
+                                minWidth: item.minWidth,
+                              }}
+                              key={item.id}
+                            >
+                              {`CPU: ${row[item.id].cpu}; ${intl.messages['common.memory']}: ${row[item.id].memory} Mi`}
+                            </StyledTableBodyCell>
+                          );
+                        }
+                        return (
+                          <StyledTableBodyCell
+                            align='center'
+                            sx={{
+                              maxWidth: item.maxWidth,
+                              minWidth: item.minWidth,
+                            }}
+                            key={item.id}
+                          >
+                            {row[item.id]}
+                          </StyledTableBodyCell>
+                        );
+                      })}
                     </TableRow>
                   );
                 })}
@@ -155,9 +210,13 @@ export default function ClusterInfo(props) {
                     }}
                   >
                     <Question />
-                    <NormalBoldFont>{intl.messages['common.serviceTableContentNoData']}</NormalBoldFont>
+                    <NormalBoldFont>
+                      {intl.messages['common.serviceTableContentNoData']}
+                    </NormalBoldFont>
 
-                    <SmallLightFont>{intl.messages['common.serviceTableContentNoDataHint']}</SmallLightFont>
+                    <SmallLightFont>
+                      {intl.messages['common.serviceTableContentNoDataHint']}
+                    </SmallLightFont>
                   </TableCell>
                 </TableRow>
               </TableBody>
