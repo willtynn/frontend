@@ -53,6 +53,7 @@ export const messages = {
     value: "值",
     delay: "延迟",
     detailedInfo: "详细信息",
+    operation: "操作",
     moreOperation: "更多操作",
     details: "详情",
     serialized: "序列化",
@@ -100,6 +101,7 @@ export const messages = {
     nameFormatError: "名称格式有误，请检查。",
     namespaceEmptyError: "请选择一个命名空间。",
     memory: "内存",
+    execute: "执行",
   },
   lang: {
     language: '语言',
@@ -351,8 +353,7 @@ export const messages = {
     noOptionalNamespace: "无可选命名空间",
     noOptionalPod: "无可选Pod",
     planName: "测试名称",
-    performancePressureTest: "性能压测",
-    
+    performancePressureTest: "性能压测"
   },
   routeTrace: {
     title: '路由链路',

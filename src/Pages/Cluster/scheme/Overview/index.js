@@ -13,7 +13,7 @@ import {
   Checkbox,
   TableBody,
   TableCell,
-  Typography,
+  Tooltip,
   Popper,
   Popover,
 } from '@mui/material';
@@ -53,9 +53,8 @@ import {
   UPDATE_SCHEMES,
   UPDATE_CURRENT_NAMESPACE,
 } from '../../../../actions/schemeAction';
-import {
-  getNamaspaces,
-} from '@/actions/instanceAction';
+import { getNamaspaces } from '@/actions/instanceAction';
+import PlayCircleOutlineIcon from '@mui/icons-material/PlayCircleOutline';
 
 const data = [
   {
@@ -267,6 +266,15 @@ export default function SchemeOverview(props) {
       '120px',
       '130px',
       colDisplay[2],
+      'center'
+    ),
+    createRow(
+      'operation',
+      intl.messages['common.operation'],
+      false,
+      '120px',
+      '130px',
+      true,
       'center'
     ),
   ];
@@ -680,6 +688,38 @@ export default function SchemeOverview(props) {
                       sx={{ display: headRow[3].show ? 'table-cell' : 'none' }}
                     >
                       {formatDatetimeString(row.time)}
+                    </StyledTableBodyCell>
+
+                    <StyledTableBodyCell align={'center'}>
+                      <Tooltip
+                        PopperProps={{
+                          sx: {
+                            '& .MuiTooltip-tooltip': {
+                              backgroundColor: '#242e42',
+                            },
+                            '& .MuiTooltip-arrow': {
+                              color: '#242e42',
+                            },
+                          },
+                        }}
+                        title={intl.messages['common.execute']}
+                        placement='right'
+                      >
+                        <EclipseTransparentButton
+                          sx={{
+                            bgcolor: '#FFFFFF !important',
+                            '&:hover': {
+                              bgcolor: '#f9fbfd !important',
+                            },
+                            '& svg': {
+                              color: '#3d3b4f',
+                            },
+                            height: '32px',
+                          }}
+                        >
+                          <PlayCircleOutlineIcon />
+                        </EclipseTransparentButton>
+                      </Tooltip>
                     </StyledTableBodyCell>
                   </TableRow>
                 );

@@ -52,6 +52,7 @@ export const messages = {
     value: "Value",
     delay: "Delay",
     detailedInfo: "Detailed Information",
+    operation: "Operation",
     moreOperation: "More Operation",
     details: "Details",
     serialized: "Serialized",
@@ -99,7 +100,8 @@ export const messages = {
     bandwidth: "Bandwidth",
     nameFormatError: "The name format is incorrect, please check.",
     namespaceEmptyError: "Please select a namespace.",
-    memory: "Memory",  
+    memory: "Memory",
+    execute: "Execute",
   },
   lang: {
     language: 'Language',

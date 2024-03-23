@@ -390,7 +390,7 @@ export function TestingProgress(props) {
             currentStage={currentStage}
           />
           <ProgressIndicator
-            title={intl.messages['stressTesting.threadGroupTesting']}
+            title={intl.messages['stressTesting.threadGroupSetting']}
             adornments={[<DockerWaiting />, <DockerNow />, <DockerFinished />]}
             stage={2}
             currentStage={currentStage}
