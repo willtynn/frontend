@@ -131,7 +131,7 @@ export default function Information(props) {
               </TableRow>
             </TableHead>
             <TableBody>
-              {service !== null ? (
+              {(service && service.interfaces && service.interfaces.length) ? (
                 service.interfaces.map((row, index) => (
                   <TableRow
                     key={row.id + '' + index}
@@ -245,7 +245,7 @@ export default function Information(props) {
               ) : (
                 <TableRow style={{ height: '220px' }}>
                   <TableCell
-                    colSpan={5}
+                    colSpan={6}
                     sx={{
                       textAlign: 'center',
                       fontSize: '20px',
@@ -257,10 +257,6 @@ export default function Information(props) {
                     <NormalBoldFont>
                       {intl.messages['common.serviceTableContentNoData']}
                     </NormalBoldFont>
-
-                    <SmallLightFont>
-                      {intl.messages['common.serviceTableContentNoDataHint']}
-                    </SmallLightFont>
                   </TableCell>
                 </TableRow>
               )}
