@@ -29,7 +29,7 @@ export function DataRow(props) {
 
   if(rowData)
   {
-    let time = dayjs(rowData.time).format(intl.messages["timeFormat"])
+    let time = dayjs(rowData.time).format(intl.messages["routeTrace.timeFormat"])
     let duration = calculateDuration(rowData.duration)
 
     return (
