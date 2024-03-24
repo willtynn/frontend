@@ -18,6 +18,8 @@ import {
   parseServiceName,
 } from '../../../../utils/commonUtils';
 import { useIntl } from 'react-intl';
+import Question from '@/assets/Question.svg';
+import { NormalBoldFont, SmallLightFont } from '@/components/Fonts';
 
 export default function ResourceMonitor(props) {
   const { service } = props;
@@ -49,11 +51,25 @@ export default function ResourceMonitor(props) {
       title={intl.messages['serviceOverview.containerGroupResourceMonitoring']}
     >
       <Stack spacing={1.5} sx={{ mt: '12px' }}>
-        {pods &&
-          pods.length &&
+        {pods && pods.length ? (
           pods.map((pod, index) => {
             return <PodResourceMonitor pod={pod} />;
-          })}
+          })
+        ) : (
+          <Stack
+            direction='column'
+            justifyContent='center'
+            alignItems='center'
+            sx={{
+              height: '300px',
+            }}
+          >
+            <Question />
+            <NormalBoldFont>
+              {intl.messages['common.serviceTableContentNoData']}
+            </NormalBoldFont>
+          </Stack>
+        )}
       </Stack>
     </KubeSimpleCard>
   );

@@ -139,7 +139,7 @@ export const messages = {
     duration20M: '最近20分钟',
     duration30M: '最近30分钟',
     duration1H: '最近1小时',
-    duration3H: '最近2小时',
+    duration2H: '最近2小时',
     duration3H: '最近3小时',
     duration5H: '最近5小时',
     duration12H: '最近12小时',
