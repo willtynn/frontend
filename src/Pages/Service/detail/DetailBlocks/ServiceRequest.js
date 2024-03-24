@@ -145,9 +145,33 @@ export default function ServiceRequest(props) {
   const [currentAPI, setCurrentAPI] = useState('');
 
   const headRow = [
-    createRow('request', intl.messages['common.request'], false, '200px', '400px', true, 'left'),
-    createRow('length', intl.messages['serviceOverview.linkLength'], false, '50px', '80px', true, 'center'),
-    createRow('startTime', intl.messages['common.beginTime'], true, '100px', '100px', true, 'center'),
+    createRow(
+      'request',
+      intl.messages['common.request'],
+      false,
+      '200px',
+      '400px',
+      true,
+      'left'
+    ),
+    createRow(
+      'length',
+      intl.messages['serviceOverview.linkLength'],
+      false,
+      '50px',
+      '80px',
+      true,
+      'center'
+    ),
+    createRow(
+      'startTime',
+      intl.messages['common.beginTime'],
+      true,
+      '100px',
+      '100px',
+      true,
+      'center'
+    ),
     createRow(
       'responseTime',
       intl.messages['common.responseTime'],
@@ -157,8 +181,24 @@ export default function ServiceRequest(props) {
       true,
       'center'
     ),
-    createRow('method', intl.messages['common.requestMethod'], false, '50px', '80px', true, 'center'),
-    createRow('code', intl.messages['common.responseCode'], false, '50px', '80px', true, 'center'),
+    createRow(
+      'method',
+      intl.messages['common.requestMethod'],
+      false,
+      '50px',
+      '80px',
+      true,
+      'center'
+    ),
+    createRow(
+      'code',
+      intl.messages['common.responseCode'],
+      false,
+      '50px',
+      '80px',
+      true,
+      'center'
+    ),
   ];
 
   const { routeService, routeTrace, pageSize, pageNum } = useSelector(state => {
@@ -306,7 +346,9 @@ export default function ServiceRequest(props) {
   };
 
   return (
-    <KubeSimpleCard title={intl.messages['serviceOverview.serviceRequestInterface']}>
+    <KubeSimpleCard
+      title={intl.messages['serviceOverview.serviceRequestInterface']}
+    >
       <Popover
         id='instance-status-table-custom-content-popover'
         open={rangeSelectOpen}
@@ -579,245 +621,265 @@ export default function ServiceRequest(props) {
           <RefreshIcon fontSize='small' />
         </EclipseTransparentButton>
       </Stack>
-      <Stack direction='row' sx={{ mt: '20px' }} spacing={2}>
-        {/* 左侧api列表 */}
-        <Box
-          sx={{
-            maxHeight: '660px',
-            overflowY: 'auto',
-          }}
-        >
-          <Stack direction='column' spacing={1}>
-            {visibleAPI.map((api, index) => {
-              return (
-                <Stack
-                  sx={{
-                    padding: '8px 20px',
-                    width: '200px',
-                    height: '52px',
-                    borderRadius: '4px',
-                    bgcolor: currentAPI === api.api ? '#55bc8a' : '#FFFFFF',
-                    color: currentAPI === api.api ? '#FFFFFF' : '#242E42',
-                    '&:hover': {
-                      bgcolor: '#55bc8a',
-                      color: '#FFFFFF',
-                    },
-                    cursor: 'pointer',
-                    overflow: 'hidden',
-                    textOverflow: 'ellipsis',
-                    whiteSpace: 'nowrap',
-                  }}
-                  onClick={handleApiChange.bind(this, api.api)}
-                  direction='row'
-                  alignItems='center'
-                  spacing={2.5}
-                >
-                  <Box>{currentAPI === api.api ? <WhiteAPI /> : <API />}</Box>
-
-                  <Box
+      {visibleAPI && visibleAPI.length > 0 ? (
+        <Stack direction='row' sx={{ mt: '20px' }} spacing={2}>
+          {/* 左侧api列表 */}
+          <Box
+            sx={{
+              maxHeight: '660px',
+              overflowY: 'auto',
+            }}
+          >
+            <Stack direction='column' spacing={1}>
+              {visibleAPI.map((api, index) => {
+                return (
+                  <Stack
                     sx={{
-                      width: '100%',
+                      padding: '8px 20px',
+                      width: '200px',
+                      height: '52px',
+                      borderRadius: '4px',
+                      bgcolor: currentAPI === api.api ? '#55bc8a' : '#FFFFFF',
+                      color: currentAPI === api.api ? '#FFFFFF' : '#242E42',
+                      '&:hover': {
+                        bgcolor: '#55bc8a',
+                        color: '#FFFFFF',
+                      },
+                      cursor: 'pointer',
                       overflow: 'hidden',
                       textOverflow: 'ellipsis',
                       whiteSpace: 'nowrap',
                     }}
+                    onClick={handleApiChange.bind(this, api.api)}
+                    direction='row'
+                    alignItems='center'
+                    spacing={2.5}
                   >
+                    <Box>{currentAPI === api.api ? <WhiteAPI /> : <API />}</Box>
+
                     <Box
                       sx={{
-                        fontSize: '12px',
-                        fontFamily: fontFamily,
-                        fontStyle: 'normal',
-                        fontWeight: 700,
-                        lineHeight: 1.67,
-                        color: '#242e42',
+                        width: '100%',
                         overflow: 'hidden',
                         textOverflow: 'ellipsis',
                         whiteSpace: 'nowrap',
                       }}
                     >
-                      {api.api}
-                    </Box>
-                    <Box
-                      sx={{
-                        fontSize: '12px',
-                        fontFamily: fontFamily,
-                        fontStyle: 'normal',
-                        fontWeight: 400,
-                        lineHeight: 1.67,
-                        color: '#79879c',
-                      }}
-                    >
-                      API
-                    </Box>
-                  </Box>
-                </Stack>
-              );
-            })}
-          </Stack>
-        </Box>
-
-        {/* 右侧请求详情 */}
-        <Box sx={{ width: 'calc(100% - 256px)' }}>
-          <StyledTableContainer sx={{ bgcolor: '#FFF', width: '100%' }}>
-            <Table
-              stickyHeader
-              size='small'
-              sx={{
-                tableLayout: 'auto',
-                width: '100%',
-              }}
-            >
-              <StyledTableHead
-                headRow={headRow}
-                selectAll={false}
-                order={order}
-                orderBy={orderBy}
-                onRequestSort={handleRequestSort}
-              />
-
-              <TableBody>
-                {!loading &&
-                visibleRows !== null &&
-                visibleRows.length !== 0 ? (
-                  visibleRows.map((row, index) => {
-                    return (
-                      <TableRow
-                        key={row.id + '' + index}
-                        aria-checked={false}
+                      <Box
                         sx={{
-                          '&:last-child td, &:last-child th': {
-                            border: 0,
-                          },
-                          fontWeight: 600,
-                          maxWidth: '110px',
-                          position: 'sticky',
-                          left: 0,
-                          zIndex: 6,
+                          fontSize: '12px',
+                          fontFamily: fontFamily,
+                          fontStyle: 'normal',
+                          fontWeight: 700,
+                          lineHeight: 1.67,
+                          color: '#242e42',
+                          overflow: 'hidden',
+                          textOverflow: 'ellipsis',
+                          whiteSpace: 'nowrap',
                         }}
-                        selected={false}
                       >
-                        <StyledTableBodyCell
-                          align={'left'}
-                          sx={{
-                            padding: '6px 16px !important',
-                            minWidth: headRow[0].minWidth,
-                            maxWidth: headRow[0].maxWidth,
-                          }}
-                        >
-                          <Box>
-                            <Tooltip title={row.request}>
-                              <Box
-                                component='div'
-                                sx={{
-                                  textOverflow: 'ellipsis',
-                                  whiteSpace: 'nowrap',
-                                  overflow: 'hidden',
-                                }}
-                              >
-                                {row.request}
-                              </Box>
-                            </Tooltip>
-                          </Box>
-                        </StyledTableBodyCell>
+                        {api.api}
+                      </Box>
+                      <Box
+                        sx={{
+                          fontSize: '12px',
+                          fontFamily: fontFamily,
+                          fontStyle: 'normal',
+                          fontWeight: 400,
+                          lineHeight: 1.67,
+                          color: '#79879c',
+                        }}
+                      >
+                        API
+                      </Box>
+                    </Box>
+                  </Stack>
+                );
+              })}
+            </Stack>
+          </Box>
 
-                        <StyledTableBodyCell
-                          align={'center'}
-                          sx={{
-                            display: headRow[1].show ? 'table-cell' : 'none',
-                            minWidth: headRow[1].minWidth,
-                            maxWidth: headRow[1].maxWidth,
-                          }}
-                        >
-                          {row.length}
-                        </StyledTableBodyCell>
+          {/* 右侧请求详情 */}
+          <Box sx={{ width: 'calc(100% - 256px)' }}>
+            <StyledTableContainer sx={{ bgcolor: '#FFF', width: '100%' }}>
+              <Table
+                stickyHeader
+                size='small'
+                sx={{
+                  tableLayout: 'auto',
+                  width: '100%',
+                }}
+              >
+                <StyledTableHead
+                  headRow={headRow}
+                  selectAll={false}
+                  order={order}
+                  orderBy={orderBy}
+                  onRequestSort={handleRequestSort}
+                />
 
-                        <StyledTableBodyCell
-                          align={'center'}
+                <TableBody>
+                  {!loading &&
+                  visibleRows !== null &&
+                  visibleRows.length !== 0 ? (
+                    visibleRows.map((row, index) => {
+                      return (
+                        <TableRow
+                          key={row.id + '' + index}
+                          aria-checked={false}
                           sx={{
-                            display: headRow[2].show ? 'table-cell' : 'none',
-                            minWidth: headRow[2].minWidth,
-                            maxWidth: headRow[2].maxWidth,
+                            '&:last-child td, &:last-child th': {
+                              border: 0,
+                            },
+                            fontWeight: 600,
+                            maxWidth: '110px',
+                            position: 'sticky',
+                            left: 0,
+                            zIndex: 6,
                           }}
+                          selected={false}
                         >
-                          {formatDatetimeString(row.startTime)}
-                        </StyledTableBodyCell>
+                          <StyledTableBodyCell
+                            align={'left'}
+                            sx={{
+                              padding: '6px 16px !important',
+                              minWidth: headRow[0].minWidth,
+                              maxWidth: headRow[0].maxWidth,
+                            }}
+                          >
+                            <Box>
+                              <Tooltip title={row.request}>
+                                <Box
+                                  component='div'
+                                  sx={{
+                                    textOverflow: 'ellipsis',
+                                    whiteSpace: 'nowrap',
+                                    overflow: 'hidden',
+                                  }}
+                                >
+                                  {row.request}
+                                </Box>
+                              </Tooltip>
+                            </Box>
+                          </StyledTableBodyCell>
 
-                        <StyledTableBodyCell
-                          align={'center'}
-                          sx={{
-                            display: headRow[3].show ? 'table-cell' : 'none',
-                            minWidth: headRow[3].minWidth,
-                            maxWidth: headRow[3].maxWidth,
-                          }}
-                        >
-                          {calculateDuration(row.responseTime)}
-                        </StyledTableBodyCell>
+                          <StyledTableBodyCell
+                            align={'center'}
+                            sx={{
+                              display: headRow[1].show ? 'table-cell' : 'none',
+                              minWidth: headRow[1].minWidth,
+                              maxWidth: headRow[1].maxWidth,
+                            }}
+                          >
+                            {row.length}
+                          </StyledTableBodyCell>
 
-                        <StyledTableBodyCell
-                          align={'center'}
-                          sx={{
-                            display: headRow[4].show ? 'table-cell' : 'none',
-                            minWidth: headRow[4].minWidth,
-                            maxWidth: headRow[4].maxWidth,
-                          }}
-                        >
-                          {row.method}
-                        </StyledTableBodyCell>
+                          <StyledTableBodyCell
+                            align={'center'}
+                            sx={{
+                              display: headRow[2].show ? 'table-cell' : 'none',
+                              minWidth: headRow[2].minWidth,
+                              maxWidth: headRow[2].maxWidth,
+                            }}
+                          >
+                            {formatDatetimeString(row.startTime)}
+                          </StyledTableBodyCell>
 
-                        <StyledTableBodyCell
-                          align={'center'}
-                          sx={{
-                            display: headRow[5].show ? 'table-cell' : 'none',
-                            minWidth: headRow[5].minWidth,
-                            maxWidth: headRow[5].maxWidth,
-                          }}
-                        >
-                          {row.code}
-                        </StyledTableBodyCell>
-                      </TableRow>
-                    );
-                  })
-                ) : !loading ? (
-                  <TableRow style={{ height: '220px' }}>
-                    <TableCell
-                      colSpan={6}
-                      sx={{
-                        textAlign: 'center',
-                        fontSize: '20px',
-                        fontFamily: fontFamily,
-                        fontStyle: 'normal',
-                      }}
-                    >
-                      <Question />
-                      <NormalBoldFont>
-                        {intl.messages['common.serviceTableContentNoData']}
-                      </NormalBoldFont>
+                          <StyledTableBodyCell
+                            align={'center'}
+                            sx={{
+                              display: headRow[3].show ? 'table-cell' : 'none',
+                              minWidth: headRow[3].minWidth,
+                              maxWidth: headRow[3].maxWidth,
+                            }}
+                          >
+                            {calculateDuration(row.responseTime)}
+                          </StyledTableBodyCell>
 
-                      <SmallLightFont>
-                        {intl.messages['common.serviceTableContentNoDataHint']}
-                      </SmallLightFont>
-                    </TableCell>
-                  </TableRow>
-                ) : (
-                  <div></div>
-                )}
-              </TableBody>
-            </Table>
-          </StyledTableContainer>
-          <StyledTableFooter
-            pageNum={pageNum}
-            pageSize={pageSize}
-            // perPageList={[]}
-            count={count}
-            handlePerPageChange={handlePerPageChange}
-            handlePageChange={handlePageChange}
-            sx={{
-              pt: '12px',
-              pb: '12px',
-            }}
-          />
-        </Box>
-      </Stack>
+                          <StyledTableBodyCell
+                            align={'center'}
+                            sx={{
+                              display: headRow[4].show ? 'table-cell' : 'none',
+                              minWidth: headRow[4].minWidth,
+                              maxWidth: headRow[4].maxWidth,
+                            }}
+                          >
+                            {row.method}
+                          </StyledTableBodyCell>
+
+                          <StyledTableBodyCell
+                            align={'center'}
+                            sx={{
+                              display: headRow[5].show ? 'table-cell' : 'none',
+                              minWidth: headRow[5].minWidth,
+                              maxWidth: headRow[5].maxWidth,
+                            }}
+                          >
+                            {row.code}
+                          </StyledTableBodyCell>
+                        </TableRow>
+                      );
+                    })
+                  ) : !loading ? (
+                    <TableRow style={{ height: '220px' }}>
+                      <TableCell
+                        colSpan={6}
+                        sx={{
+                          textAlign: 'center',
+                          fontSize: '20px',
+                          fontFamily: fontFamily,
+                          fontStyle: 'normal',
+                        }}
+                      >
+                        <Question />
+                        <NormalBoldFont>
+                          {intl.messages['common.serviceTableContentNoData']}
+                        </NormalBoldFont>
+
+                        <SmallLightFont>
+                          {
+                            intl.messages[
+                              'common.serviceTableContentNoDataHint'
+                            ]
+                          }
+                        </SmallLightFont>
+                      </TableCell>
+                    </TableRow>
+                  ) : (
+                    <div></div>
+                  )}
+                </TableBody>
+              </Table>
+            </StyledTableContainer>
+            <StyledTableFooter
+              pageNum={pageNum}
+              pageSize={pageSize}
+              // perPageList={[]}
+              count={count}
+              handlePerPageChange={handlePerPageChange}
+              handlePageChange={handlePageChange}
+              sx={{
+                pt: '12px',
+                pb: '12px',
+              }}
+            />
+          </Box>
+        </Stack>
+      ) : (
+        <Stack
+          direction='column'
+          justifyContent='center'
+          alignItems='center'
+          sx={{
+            height: '300px',
+          }}
+        >
+          <Question />
+          <NormalBoldFont>
+            {intl.messages['common.serviceTableContentNoData']}
+          </NormalBoldFont>
+        </Stack>
+      )}
     </KubeSimpleCard>
   );
 }
