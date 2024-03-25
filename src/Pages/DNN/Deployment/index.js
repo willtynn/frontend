@@ -3,6 +3,7 @@ import CreateAndUpdateHeader from './CommonComponents/MyHeader';
 import MainPageFramework from './CommonComponents/MainPageFramework'
 import CreateAndUpdateFooter from './CommonComponents/MyFooter'
 import ModelInfomation from './SubPage/ModelSelector/ModelInfomation';
+import ServerInformation from './SubPage/ServerSelector/ServerInformation';
 import React, { createContext, useState, useContext } from 'react';
 
 export default function ModelDeploymentPage() {
@@ -24,7 +25,7 @@ export default function ModelDeploymentPage() {
   };
 
   const handleNext = active => {
-    if(activeStep !== steps.length - 1){
+    if (activeStep !== steps.length - 1) {
       setActiveStep(prevActiveStep => prevActiveStep + 1)
     }
     console.log(active);
@@ -55,7 +56,7 @@ export default function ModelDeploymentPage() {
       case 0:
         return (<ModelInfomation></ModelInfomation>);
       case 1:
-        return steps[activeStep];
+        return (<ServerInformation></ServerInformation>);;
       case 2:
         return steps[activeStep];
       case 3:
@@ -64,7 +65,7 @@ export default function ModelDeploymentPage() {
         return 'defalut';
     }
   };
-  
+
   return (
     <MainPageFramework
       id={`updateSI_mainPage`}

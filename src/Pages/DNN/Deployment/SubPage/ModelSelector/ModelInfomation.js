@@ -51,10 +51,14 @@ export default function ModelInfomation() {
     const { models } =
         useSelector(state => {
             var allModels = state.InferPipeline.queryResult
-            modelList.map((item, index) => {
-                allModels = allModels.filter(model => model.id !== item.id)
-            });
-            return {models: allModels}
+            if (allModels){
+                modelList.map((item, index) => {
+                    allModels = allModels.filter(model => model.id !== item.id)
+                });
+                return {models: allModels}
+            }else{
+                return {models: []}
+            }
         });
 
     useEffect(() => {
