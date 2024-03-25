@@ -399,16 +399,20 @@ export const messages = {
     popWindow95: '95%',
     popWindowHigh: 'High',
 
+    popWindowTableTitle: 'Request Information',
     popWindowTableTitleRequest: 'Request',
     popWindowTableTitleLinkLength: 'Link Length',
     popWindowTableTitleStartTime: 'Start Time',
     popWindowTableTitleResponseTime: 'Response Time',
     popWindowTableTitleStatus: 'Status',
 
-    modalTitle: 'Request Information',
+    modalTitle: 'Link Diagram',
     modalServiceId: 'Service ID',
     modalServiceName: 'Service Name',
     modalTime: 'Time',
+
+    modalEmpty: 'No data',
+    modalEmptyHint: 'Please click the request information row to view its link diagram'
   },
   table: {
     rowsPerPage: 'Rows per page display:',

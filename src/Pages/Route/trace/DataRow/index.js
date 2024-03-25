@@ -15,16 +15,22 @@ import {calculateDuration} from '../functions/func.js'
 
 import { useIntl } from 'react-intl';
 
-const defaultMinWidth = ['350px', '30px', '150px', '80px', '40px'];
+const defaultMinWidth = ['100px', '30px', '150px', '60px', '40px'];
+const defaultMaxWidth = ['350px', '30px', '150px', '60px', '40px']
 
 export function DataRow(props) {
-  const { key, rowData, onRowClick, selected, minWidth } = props;
+  const { key, rowData, onRowClick, selected, minWidth, maxWidth } = props;
 
   const intl = useIntl();
   
   let _minWidth = minWidth;
   if (!minWidth) {
     _minWidth = defaultMinWidth;
+  }
+  
+  let _maxWidth = maxWidth;
+  if (!maxWidth) {
+    _maxWidth = defaultMaxWidth;
   }
 
   if(rowData)
@@ -39,27 +45,27 @@ export function DataRow(props) {
           position: 'sticky',
           backgroundColor: '#FFFFFF',
         }}>
-          <StyledTableBodyCell component="th" scope="row" sx={{ minWidth: _minWidth[0] }}>
+          <StyledTableBodyCell component="th" scope="row" sx={{ minWidth: _minWidth[0], maxWidth: _maxWidth[0] }}>
             <Tooltip title={rowData.service} placement="top-end">
               <>{rowData.service}</>
             </Tooltip>
           </StyledTableBodyCell>
-          <StyledTableBodyCell align="center" sx={{ minWidth: _minWidth[1] }}>
+          <StyledTableBodyCell align="center" sx={{ minWidth: _minWidth[1], maxWidth: _maxWidth[1] }}>
             <Tooltip title={rowData.spanNum} placement="top-end">
               <>{rowData.spanNum}</>
             </Tooltip>
           </StyledTableBodyCell>
-          <StyledTableBodyCell align="center" sx={{ minWidth: _minWidth[2] }}>
+          <StyledTableBodyCell align="center" sx={{ minWidth: _minWidth[2], maxWidth: _maxWidth[2] }}>
             <Tooltip title={time} placement="top-end">
               <>{time}</>
             </Tooltip>
           </StyledTableBodyCell>
-          <StyledTableBodyCell align="center" sx={{ minWidth: _minWidth[3] }}>
+          <StyledTableBodyCell align="center" sx={{ minWidth: _minWidth[3], maxWidth: _maxWidth[3] }}>
             <Tooltip title={duration} placement="top-end">
               <>{duration}</>
             </Tooltip>
           </StyledTableBodyCell>
-          <StyledTableBodyCell align="center" sx={{ minWidth: _minWidth[4] }}>
+          <StyledTableBodyCell align="center" sx={{ minWidth: _minWidth[4], maxWidth: _maxWidth[4] }}>
             <Tooltip title={rowData.status} placement="top-end">
               <>{rowData.status}</>
             </Tooltip>
