@@ -123,18 +123,20 @@ export function StyledTableFooter(props) {
             page={pageNum}
           />
         </Grid>
-        <Grid item md={3} alignItems='center' justifyContent='center'>
-          {perPageList ? (
-            <PageSizePopper
-              id='pageSelectPopper'
-              pageSize={pageSize}
-              handlePageSizeChange={handlePerPageChange}
-              pageSizeList={perPageList}
-            />
-          ) : (
-            <Box> </Box>
-          )}
-        </Grid>
+        {perPageList ? (
+          <Grid item md={3} alignItems='center' justifyContent='center'>
+            
+              <PageSizePopper
+                id='pageSelectPopper'
+                pageSize={pageSize}
+                handlePageSizeChange={handlePerPageChange}
+                pageSizeList={perPageList}
+              />
+
+          </Grid>
+        ) : (
+          <> </>
+        )}
       </Stack>
     </Box>
   );
