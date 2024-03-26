@@ -119,8 +119,6 @@ export function ClusterCanvas(props) {
         for (let i = 0; i < polygon_texts.length; i++) {
           polygon_texts[i].style.left = `${-polygon_texts[i].clientWidth / 2}px`
         }
-        console.log(server_node.id)
-        console.log(selectedServerID)
         handleNodeClick(server_node.id);
       };
     }

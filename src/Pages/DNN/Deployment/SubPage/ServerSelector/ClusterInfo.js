@@ -5,7 +5,8 @@ import {
   TableRow,
   TableBody,
   TableCell,
-  Table
+  Table,
+  Button
 } from '@mui/material';
 import { useEffect, useState } from 'react';
 import InfoCard from '@/components/InfoCard';
@@ -45,7 +46,7 @@ function createRow(
 }
 
 export default function ClusterInfo(props) {
-  const {data} = props;
+  const {data,handleNodeClick} = props;
   const intl = useIntl();
   // const [data, setData] = useState(null);
   const headRow = [

@@ -1,4 +1,5 @@
-import { useEffect, useState } from 'react';
+import { Component } from 'react';
+import { connect } from 'react-redux';
 import { Box, Button, Stack, TextField, Typography } from '@mui/material';
 import { useDispatch, useSelector } from 'react-redux';
 import { ClusterTopologyOnlyCanvas } from './ClusterTopology';
@@ -8,6 +9,7 @@ import { useIntl } from 'react-intl';
 import ClusterNode from '@/assets/ClusterNode.svg';
 import { StyledAutocomplete } from '@/components/Input';
 import { fontFamily } from '@/utils/commonUtils';
+import { th } from 'date-fns/locale';
 
 const fakeInstancesData = {
     items: [
@@ -173,213 +175,181 @@ const fakeInstancesData = {
     valueMap: {},
 };
 
-export default function ServerInformation() {
-    const [clusterData, setClusterData] = useState({});
-    const [targetCluster, setTargetCluster] = useState('');
-    // cluster id 构成的数组
-    const [clusterList, setClusterList] = useState([]);
-    // const currentServer = useRef('');
-    const [selectedServer, setSelectedServer] = useState([]);
-    const [selectedServerID, setSelectedServerID] = useState([]);
-    // const selectedServerID = [];
-    // const selectedServer = []
+const fakeClusters = [
+    {
+        id: 'cluster1',
+        servers: [
+            {
+                id: 'cluster1::h1',
+                pos: {
+                    x: 63,
+                    y: 84,
+                },
+            },
+            {
+                id: 'cluster1::h2',
+                pos: {
+                    x: 60,
+                    y: 58,
+                },
+            },
+        ],
+        network: [
+            {
+                srcId: 'cluster1::h1',
+                desId: 'cluster1::h2',
+                bandwidth: 77,
+                delay: 28,
+                hip: 89,
+            },
+        ],
+    },
+    {
+        id: 'cluster2',
+        servers: [
+            {
+                id: 'cluster2::h1',
+                pos: {
+                    x: 63,
+                    y: 84,
+                },
+            },
+            {
+                id: 'cluster2::h2',
+                pos: {
+                    x: 60,
+                    y: 58,
+                },
+            },
+        ],
+        network: [
+            {
+                srcId: 'cluster2::h1',
+                desId: 'cluster2::h2',
+                bandwidth: 77,
+                delay: 28,
+                hip: 89,
+            },
+        ],
+    },
+];
 
-    const [data, setData] = useState([])
+class ServerInformation extends Component {
 
-    const [testServer, setTestServer] = useState('');
-    
-    const dispatch = useDispatch();
-    const intl = useIntl();
-
-    const {clusters} = useSelector(
-        state => {
-            return {
-                clusters: state.Cluster.clusters,
-            };
+    constructor(props) {
+        super(props)
+        this.state = {
+            clusterData: this.props.clusterData,
+            targetCluster: this.props.clusterList[0],
+            clusterList: this.props.clusterList,
+            selectedServer: [],
+            selectedServerID: []
         }
-    );
+        console.log(props)
+    }
 
-    const fakeClusters = [
-        {
-            id: 'cluster1',
-            servers: [
-                {
-                    id: 'cluster1::h1',
-                    pos: {
-                        x: 63,
-                        y: 84,
-                    },
-                },
-                {
-                    id: 'cluster1::h2',
-                    pos: {
-                        x: 60,
-                        y: 58,
-                    },
-                },
-            ],
-            network: [
-                {
-                    srcId: 'cluster1::h1',
-                    desId: 'cluster1::h2',
-                    bandwidth: 77,
-                    delay: 28,
-                    hip: 89,
-                },
-            ],
-        },
-        {
-            id: 'cluster2',
-            servers: [
-                {
-                    id: 'cluster2::h1',
-                    pos: {
-                        x: 63,
-                        y: 84,
-                    },
-                },
-                {
-                    id: 'cluster2::h2',
-                    pos: {
-                        x: 60,
-                        y: 58,
-                    },
-                },
-            ],
-            network: [
-                {
-                    srcId: 'cluster2::h1',
-                    desId: 'cluster2::h2',
-                    bandwidth: 77,
-                    delay: 28,
-                    hip: 89,
-                },
-            ],
-        },
-    ];
-
-    useEffect(() => {
-        // dispatch(searchAllClusters());
-        dispatch({ type: 'UPDATE_CLUSTERS', data: fakeClusters });
-    }, []);
-
-    useEffect(() => {
-        if (clusters === null) return;
-        const tmpClusterData = {};
-        const tmpClusterList = [];
-        clusters.forEach(cluster => {
-            tmpClusterData[cluster.id] = {
-                servers: cluster.servers,
-                network: cluster.network,
-            };
-            tmpClusterList.push(cluster.id);
-        });
-        setClusterData(tmpClusterData);
-        setClusterList(tmpClusterList);
-    }, [clusters]);
-
-    useEffect(() => {
-        if (clusterList && clusterList.length !== 0) {
-            setTargetCluster(clusterList[0]);
-        }
-    }, [clusterList]);
-
-    useEffect(() => {
-        console.log(selectedServerID)
-        console.log(selectedServer)
-    }, [selectedServerID]);
-
-    useEffect(() => {
-        // setCurrentServer(null);
-        // setInstancesData({});
-        dispatch({ type: 'UPDATE_SELECTED_SERVER', data: null });
-        dispatch({ type: 'SELECT_SERVER', data: null });
-        dispatch({ type: 'SELECT_INSTANCE', data: null });
-    }, [targetCluster]);
-
-    const handleNodeClick = () => {
-        const id = 1
-        console.log(selectedServerID)
-        const index = selectedServerID.indexOf(id);
-        console.log(id)
-        console.log(index)
-        if (index !== -1){
-            // selectedServerID.splice(index,1)
-            // selectedServer.splice(index,1)
-            const updateSelectedServerID = selectedServerID.filter(item => item !== id)
-            const updateSelectedServer = selectedServer.filter(item => item.name !== id)
-            setSelectedServerID(updateSelectedServerID)
-            setSelectedServer(updateSelectedServer)
-        }else{
-            // selectedServerID.push(id)
-            // selectedServer.push({'name': id})
-            setSelectedServerID([...selectedServerID, id])
-            setSelectedServer([...selectedServer, {'name': id}])
+    handleNodeClick = (id) => {
+        const index = this.state.selectedServerID.indexOf(id);
+        if (index !== -1) {
+            this.setState(prevState => {
+                console.log(prevState);
+                return ({
+                    selectedServerID: prevState.selectedServerID.filter(item => item !== id),
+                    selectedServer: prevState.selectedServer.filter(item => item.name !== id)
+                })
+            });
+            // const updateSelectedServerID = this.state.selectedServerID.filter(item => item !== id)
+            // const updateSelectedServer = this.state.selectedServer.filter(item => item.name !== id)
+        } else {
+            this.setState(prevState => {
+                console.log(prevState);
+                return ({
+                    selectedServerID: [...prevState.selectedServerID, id],
+                    selectedServer: [...prevState.selectedServer, { 'name': id }]
+                })
+            });
+            // this.state.selectedServerID.push(id)
+            // this.state.selectedServer.push({ 'name': id })
+            // setSelectedServerID([...selectedServerID, id])
+            // setSelectedServer([...selectedServer, { 'name': id }])
             // console.log([...selectedServerID, id])
             console.log('save')
         }
-        // setData(selectedServer)
     };
 
-    const handleNodeClickTemp = () =>{
-        console.log(selectedServerID)
-    }
-
-    return (
-        <Stack sx={{ width: '100%' }}>
-            <Stack direction='row' justifyContent='space-between' spacing={2}>
-                <Stack
-                    direction='column'
-                    spacing={0}
-                    sx={{
-                        width: '30%'
-                    }}
-                >
-                    <StyledAutocomplete
-                        height='32px'
-                        padding='6px 5px 5px 12px'
-                        value={targetCluster}
-                        onChange={(event, newValue) => {
-                            setTargetCluster(newValue);
-                        }}
-                        id='cluster_autocomplete'
-                        options={clusterList}
+    render() {
+        return (
+            <Stack sx={{ width: '100%' }}>
+                <Stack direction='row' justifyContent='space-between' spacing={2}>
+                    <Stack
+                        direction='column'
+                        spacing={0}
                         sx={{
-                            width: "100%",
-                            color: '#36435c',
-                            fontFamily: fontFamily,
-                            fontSize: '12px',
-                            fontWeight: 600,
-                            fontStyle: 'normal',
-                            fontStretch: 'normal',
-                            lineHeight: 1.67,
-                            letterSpacing: 'normal',
+                            width: '30%'
                         }}
-                        renderInput={params => (
-                            <TextField {...params} placeholder={intl.messages['common.selectCluster']} />
-                        )}
-                    />
-                    <ClusterTopologyOnlyCanvas
-                        clusterId={targetCluster}
-                        graph={
-                            clusterData[targetCluster] && clusterData[targetCluster].network
-                        }
-                        handleNodeClick={handleNodeClick}
-                        selectedServerID = {selectedServerID}
-                    />
-                </Stack>
-                <Stack sx={{ width: '68%' }} direction='column'>
-                    <Button onClick={handleNodeClickTemp}>
-                            test
-                    </Button>
-                    <Button onClick={handleNodeClick}>
-                            test11
-                    </Button>
-                    <ClusterInfo 
-                        data = {selectedServer}                        
-                    />
+                    >
+                        <StyledAutocomplete
+                            height='32px'
+                            padding='6px 5px 5px 12px'
+                            value={this.state.targetCluster}
+                            onChange={(event, newValue) => {
+                                this.state.targetCluster = newValue;
+                            }}
+                            id='cluster_autocomplete'
+                            options={this.state.clusterList}
+                            sx={{
+                                width: "100%",
+                                color: '#36435c',
+                                fontFamily: fontFamily,
+                                fontSize: '12px',
+                                fontWeight: 600,
+                                fontStyle: 'normal',
+                                fontStretch: 'normal',
+                                lineHeight: 1.67,
+                                letterSpacing: 'normal',
+                            }}
+                            renderInput={params => (
+                                <TextField {...params} placeholder={'test'} />
+                            )}
+                        />
+                        <ClusterTopologyOnlyCanvas
+                            clusterId={this.state.targetCluster}
+                            graph={
+                                this.state.clusterData[this.state.targetCluster] && this.state.clusterData[this.state.targetCluster].network
+                            }
+                            handleNodeClick={this.handleNodeClick}
+                        />
+                    </Stack>
+                    <Stack sx={{ width: '68%' }} direction='column'>
+                        <ClusterInfo
+                            data={this.state.selectedServer}
+                            handleNodeClick={this.handleNodeClick}
+                        />
+                    </Stack>
                 </Stack>
             </Stack>
-        </Stack>
-    );
+        );
+    }
+
 }
+
+
+const mapStateToProps = state => {
+    const tmpClusterData = {};
+    const tmpClusterList = [];
+    fakeClusters.forEach(cluster => {
+        tmpClusterData[cluster.id] = {
+            servers: cluster.servers,
+            network: cluster.network,
+        };
+        tmpClusterList.push(cluster.id);
+    });
+    return {
+        clusters: fakeClusters,
+        clusterData: tmpClusterData,
+        clusterList: tmpClusterList
+    };
+};
+
+
+export default connect(mapStateToProps)(ServerInformation);
