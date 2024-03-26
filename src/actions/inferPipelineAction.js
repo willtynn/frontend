@@ -4,6 +4,7 @@ import { SEVERITIES } from '../components/CommonSnackbar';
 
 // For pipeline 
 export const PIPELINE_SEARCH = 'PIPELINE_SEARCH';
+export const GET_SUBMODEL = 'GET_SUBMODEL';
 
 
 const baseURLLink = 'http://192.168.1.104:32589';

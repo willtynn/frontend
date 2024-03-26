@@ -33,7 +33,7 @@ const tableHeaders = [
 
 const spanNumPerPage = 15;
 
-export default function ModelInfomation() {
+export default function ModelInformation() {
 
     // const MyContext = createContext();
 

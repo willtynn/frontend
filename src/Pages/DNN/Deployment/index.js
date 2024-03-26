@@ -2,8 +2,9 @@ import { Box } from '@mui/material';
 import CreateAndUpdateHeader from './CommonComponents/MyHeader';
 import MainPageFramework from './CommonComponents/MainPageFramework'
 import CreateAndUpdateFooter from './CommonComponents/MyFooter'
-import ModelInfomation from './SubPage/ModelSelector/ModelInfomation';
+import ModelInformation from './SubPage/ModelSelector/ModelInformation';
 import ServerInformation from './SubPage/ServerSelector/ServerInformation';
+import PartitionInformation from './SubPage/PartitionView//PartitionInformation';
 import React, { createContext, useState, useContext } from 'react';
 
 export default function ModelDeploymentPage() {
@@ -54,11 +55,11 @@ export default function ModelDeploymentPage() {
   const getContainer = active => {
     switch (active) {
       case 0:
-        return (<ModelInfomation></ModelInfomation>);
+        return (<ModelInformation></ModelInformation>);
       case 1:
-        return (<ServerInformation></ServerInformation>);;
+        return (<ServerInformation></ServerInformation>);
       case 2:
-        return steps[activeStep];
+        return (<PartitionInformation></PartitionInformation>);
       case 3:
         return steps[activeStep];
       default:
