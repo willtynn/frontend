@@ -9,7 +9,7 @@ import React, { createContext, useState, useContext } from 'react';
 
 export default function ModelDeploymentPage() {
 
-  const steps = ['选择模型', '选择服务器', '生成分区方案', '生成部署方案'];
+  const steps = ['选择模型', '选择服务器', '分区部署算法配置', '生成分区方案', '生成部署方案'];
 
   const [activeStep, setActiveStep] = useState(0);
 
@@ -59,8 +59,10 @@ export default function ModelDeploymentPage() {
       case 1:
         return (<ServerInformation></ServerInformation>);
       case 2:
-        return (<PartitionInformation></PartitionInformation>);
+        return steps[activeStep]; 
       case 3:
+        return (<PartitionInformation></PartitionInformation>);
+      case 4:
         return steps[activeStep];
       default:
         return 'defalut';
