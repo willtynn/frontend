@@ -406,16 +406,20 @@ export const messages = {
     popWindow95: '95%',
     popWindowHigh: 'High',
 
+    popWindowTableTitle: '请求信息',
     popWindowTableTitleRequest: '请求',
     popWindowTableTitleLinkLength: '链路长度',
     popWindowTableTitleStartTime: '开始时间',
     popWindowTableTitleResponseTime: '响应时间',
     popWindowTableTitleStatus: '请求状态',
 
-    modalTitle: '请求信息',
+    modalTitle: '链路图',
     modalServiceId: '服务ID',
     modalServiceName: '服务名',
     modalTime: '时间',
+
+    modalEmpty: '无数据',
+    modalEmptyHint: '请点击右侧的请求信息以查看其链路图'
   },
   evolution: {
     evolution: '演化',
