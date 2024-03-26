@@ -102,6 +102,8 @@ export const messages = {
     namespaceEmptyError: "Please select a namespace.",
     memory: "Memory",
     execute: "Execute",
+    description: "Description",
+    interface:'Interface',
   },
   lang: {
     language: 'Language',

@@ -102,6 +102,8 @@ export const messages = {
     namespaceEmptyError: "请选择一个命名空间。",
     memory: "内存",
     execute: "执行",
+    description: "描述",
+    interface:'接口',
   },
   lang: {
     language: '语言',

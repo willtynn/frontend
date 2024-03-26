@@ -245,7 +245,7 @@ export default function Information(props) {
               ) : (
                 <TableRow style={{ height: '220px' }}>
                   <TableCell
-                    colSpan={6}
+                    colSpan={7}
                     sx={{
                       textAlign: 'center',
                       fontSize: '20px',

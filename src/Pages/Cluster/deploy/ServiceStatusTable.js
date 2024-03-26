@@ -793,13 +793,13 @@ export default function ServiceStatusTable(props) {
                         p: '0px 16px !important',
                       }}
                     >
-                      <KubeCheckbox
+                      {/* <KubeCheckbox
                         sx={{
                           bgcolor: 'transparent !important',
                         }}
                         disableRipple
                         size='small'
-                      />
+                      /> */}
                     </StyledTableBodyCell>
 
                     <StyledTableBodyCell

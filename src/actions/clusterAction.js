@@ -12,7 +12,7 @@ export const SELECT_INSTANCE = "SELECT_INSTANCE";
 
 export const UPDATE_CURRENT_CLUSTER = "UPDATE_CURRENT_CLUSTER";
 
-const baseURLLink = 'http://192.168.1.104:32454';
+const baseURLLink = 'http://10.1.1.104:32454';
 
 const axios_instance = axios.create({
   baseURL: baseURLLink,

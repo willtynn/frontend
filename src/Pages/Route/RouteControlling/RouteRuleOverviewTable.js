@@ -251,7 +251,7 @@ export default function RouteRuleOverviewTable(props) {
   }, [rules]);
 
   const headRow = [
-    createRow('name', '名称', true, '100px', '100px', true, 'left'),
+    createRow('name', '名称', true, '100px', '100px', true, 'center'),
     createRow(
       'srcPods',
       '起始节点',
@@ -613,7 +613,7 @@ export default function RouteRuleOverviewTable(props) {
                     }}
                     selected={false}
                   >
-                    <StyledTableBodyCell
+                    {/* <StyledTableBodyCell
                       align='center'
                       sx={{
                         p: '0px 16px !important',
@@ -626,10 +626,10 @@ export default function RouteRuleOverviewTable(props) {
                         disableRipple
                         size='small'
                       />
-                    </StyledTableBodyCell>
+                    </StyledTableBodyCell> */}
 
                     <StyledTableBodyCell
-                      align={'left'}
+                      align={'center'}
                       sx={{
                         padding: '6px 16px !important',
                       }}

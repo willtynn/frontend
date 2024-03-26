@@ -341,13 +341,13 @@ export function StyledTableHead(props) {
       }}>
         {selectAll === true ? (
           <StyledTableRowCell
-            align='center'
+            align='left'
             sx={{
-              maxWidth: "30px",
-              minWidth: "30px",
+              maxWidth: "0px",
+              minWidth: "0px",
             }}
           >
-            <KubeCheckbox
+            {/* <KubeCheckbox
               sx={{
                 bgcolor: 'transparent !important',
               }}
@@ -355,7 +355,7 @@ export function StyledTableHead(props) {
               size="small"
               checked={checkAll}
               onChange={(e) => setCheckAll(e.target.checked)}
-            />
+            /> */}
           </StyledTableRowCell>
         ) : (
           <></>

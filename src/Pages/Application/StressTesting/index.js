@@ -189,12 +189,12 @@ export default function StressTesting() {
   const headRow = [
     createRow(
       'testPlanName',
-      intl.messages['stressTesting.testName'],
+      intl.messages['stressTesting.planName'],
       true,
       '100px',
       '100px',
       true,
-      'left'
+      'center'
     ),
     createRow(
       'status',
@@ -216,7 +216,7 @@ export default function StressTesting() {
     ),
     createRow(
       'functionalMode',
-      intl.messages['common.funtionMode'],
+      intl.messages['common.functionMode'],
       false,
       '120px',
       '130px',
@@ -630,7 +630,7 @@ export default function StressTesting() {
                       }}
                       selected={false}
                     >
-                      <StyledTableBodyCell
+                      {/* <StyledTableBodyCell
                         align='center'
                         sx={{
                           p: '0px 16px !important',
@@ -643,15 +643,15 @@ export default function StressTesting() {
                           disableRipple
                           size='small'
                         />
-                      </StyledTableBodyCell>
+                      </StyledTableBodyCell> */}
 
                       <StyledTableBodyCell
-                        align={'left'}
+                        align={'center'}
                         sx={{
                           padding: '6px 16px !important',
                         }}
                       >
-                        <Stack alignItems='center' direction='row' spacing={2}>
+                        <Stack alignItems='center' justifyContent={'center'} direction='row' spacing={2}>
                           <Task />
                           <Box
                             sx={{
