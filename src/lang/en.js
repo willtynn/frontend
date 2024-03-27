@@ -442,5 +442,10 @@ export const messages = {
     planConfigurationDescription: 'Planning configuration',
     executeConfiguration: 'Execute configuration',
     executeConfigurationDescription: 'Execute configuration',
+    executeEvolution:'Execute Evolution',
+    evolutionGoal:'Evolution Goal',
+    triggerCondition:'Trigger Condition',
+    evolutionMean:'Evolution Mean',
+    evolutionAlgorithm:'Evolution Algorithm'
   },
 };

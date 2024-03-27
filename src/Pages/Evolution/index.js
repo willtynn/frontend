@@ -266,20 +266,32 @@ export default function EvolutionPlan() {
     return tmpData;
   };
 
-  const visibleRows = useMemo(() => {
-    const tmpData = filtering();
-    if (pageSize * (pageNum - 1) > count) {
-      dispatch({ type: UPDATE_TEST_PLAN_PAGE_NUM, data: 1 });
-      return stableSort(tmpData, getComparator(order, orderBy)).slice(
-        0,
-        pageSize
-      );
+  // const visibleRows = useMemo(() => {
+  //   const tmpData = filtering();
+  //   if (pageSize * (pageNum - 1) > count) {
+  //     dispatch({ type: UPDATE_TEST_PLAN_PAGE_NUM, data: 1 });
+  //     return stableSort(tmpData, getComparator(order, orderBy)).slice(
+  //       0,
+  //       pageSize
+  //     );
+  //   }
+  //   return stableSort(tmpData, getComparator(order, orderBy)).slice(
+  //     (pageNum - 1) * pageSize,
+  //     (pageNum - 1) * pageSize + pageSize
+  //   );
+  // }, [order, orderBy, pageNum, pageSize, tableData, searchList]);
+
+  const visibleRows = [
+    {
+      id: 1,
+      evolutionPlanName: '演示计划1',
+      createTime: '2024-03-27 09:27:35',
+      executionNumber: 51,
+      lastExecutionTime: '2024-03-27 09:27:35',
+      enableOrDisable: true,
+      remark: 'none'
     }
-    return stableSort(tmpData, getComparator(order, orderBy)).slice(
-      (pageNum - 1) * pageSize,
-      (pageNum - 1) * pageSize + pageSize
-    );
-  }, [order, orderBy, pageNum, pageSize, tableData, searchList]);
+  ]
 
   const handlePlanClick = () => {
     setPlanOpen(true);
@@ -627,12 +639,18 @@ export default function EvolutionPlan() {
                       selected={false}
                     >
                       <StyledTableBodyCell
+                        align='center'
+                        sx={{
+                          p: '0px 16px !important',
+                        }}
+                      />
+                      <StyledTableBodyCell
                         align={'center'}
                         sx={{
                           padding: '6px 16px !important',
                         }}
                       >
-                        <Stack alignItems='center' justifyContent={'center'} direction='row' spacing={2}>
+                        <Stack alignItems='center' direction='row' spacing={2}>
                           <Task />
                           <Box
                             sx={{
@@ -645,69 +663,36 @@ export default function EvolutionPlan() {
                               },
                             }}
                             onClick={() => {
-                              navigate(`/detail/testplan/${row.id}`);
+                              navigate(`/detail/evolutionplan/${row.id}`);
                             }}
                           >
-                            {row.testPlanName}
+                            {row.evolutionPlanName}
                           </Box>
                         </Stack>
                       </StyledTableBodyCell>
-
                       <StyledTableBodyCell
                         align={'center'}
                         sx={{
                           display: headRow[1].show ? 'table-cell' : 'none',
                         }}
                       >
-                        <Stack
-                          alignItems='center'
-                          direction='row'
-                          justifyContent='center'
-                          spacing={2}
-                        >
-                          {StatusIcon(row.status)}
-                          <span
-                            style={{
-                              height: '30px',
-                              lineHeight: '30px',
-                            }}
-                          >
-                            {StatusText(row.status)}
-                          </span>
-                        </Stack>
+                        {row.createTime}
                       </StyledTableBodyCell>
-
                       <StyledTableBodyCell
                         align={'center'}
                         sx={{
                           display: headRow[2].show ? 'table-cell' : 'none',
                         }}
                       >
-                        {row.serialized
-                          ? intl.messages['common.yes']
-                          : intl.messages['common.no']}
+                        {row.executionNumber}
                       </StyledTableBodyCell>
-
                       <StyledTableBodyCell
                         align={'center'}
                         sx={{
                           display: headRow[3].show ? 'table-cell' : 'none',
                         }}
                       >
-                        {row.functionalMode
-                          ? intl.messages['common.yes']
-                          : intl.messages['common.no']}
-                      </StyledTableBodyCell>
-
-                      <StyledTableBodyCell
-                        align={'center'}
-                        sx={{
-                          display: headRow[4].show ? 'table-cell' : 'none',
-                        }}
-                      >
-                        {row.tearDown
-                          ? intl.messages['common.yes']
-                          : intl.messages['common.no']}
+                        {row.lastExecutionTime}
                       </StyledTableBodyCell>
                       <StyledTableBodyCell
                         align={'center'}
@@ -715,7 +700,17 @@ export default function EvolutionPlan() {
                           display: headRow[4].show ? 'table-cell' : 'none',
                         }}
                       >
-                        {row.comment}
+                        {row.enableOrDisable
+                          ? intl.messages['common.yes']
+                          : intl.messages['common.no']}
+                      </StyledTableBodyCell>
+                      <StyledTableBodyCell
+                        align={'center'}
+                        sx={{
+                          display: headRow[5].show ? 'table-cell' : 'none',
+                        }}
+                      >
+                        {row.remark}
                       </StyledTableBodyCell>
                     </TableRow>
                   );
@@ -766,7 +761,7 @@ export default function EvolutionPlan() {
       </Box>
       <StyledModal open={planOpen} onClose={handleClose}>
         <EvolutionProgress
-          handleConfirmClick={() => {}}
+          handleConfirmClick={() => { }}
           handleCancelClick={handleCancelClick}
           showError={showError}
           setShowError={setShowError}

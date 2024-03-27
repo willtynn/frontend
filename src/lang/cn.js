@@ -443,5 +443,10 @@ export const messages = {
     planConfigurationDescription: '规划配置(接算法)',
     executeConfiguration: '执行配置',
     executeConfigurationDescription: '执行配置(直接执行/通知等)',
+    executeEvolution:'执行演化',
+    evolutionGoal:'演化目标',
+    triggerCondition:'触发条件',
+    evolutionMean:'演化手段',
+    evolutionAlgorithm:'演化算法'
   },
 };

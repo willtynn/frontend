@@ -75,7 +75,7 @@ const axios_instance = axios.create({
   crossDomain: true,
 });
 
-export function getTestResultByResultId(testResultId) {
+export function getEvolutionResultByResultId(evolutionResultId) {
   const url = '/pressureMeasurement/getTestResultByResultId';
   return async dispatch => {
     try {
@@ -83,7 +83,7 @@ export function getTestResultByResultId(testResultId) {
         url,
         {
           params: {
-            testResultId: testResultId,
+            evolutionResultId: evolutionResultId,
           },
         },
         {
@@ -171,7 +171,7 @@ export function getTestResultsByID(testPlanId) {
   };
 }
 
-export function getTestPlanById(testPlanId) {
+export function getEvolutionPlanById(testPlanId) {
   const url = '/pressureMeasurement/getTestPlanById';
   return async dispatch => {
     try {
