@@ -593,8 +593,6 @@ export default function StressTesting() {
             </KubeConfirmButton>
           </Stack>
         </Box>
-
-        {/* <StyledTableBox> */}
         <StyledTableContainer sx={{ bgcolor: '#FFF' }}>
           <Table
             stickyHeader

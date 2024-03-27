@@ -1,64 +1,114 @@
-import {useEffect, useState, useMemo, useRef} from 'react';
+import { useEffect, useState, useMemo } from 'react';
+import {
+  Box,
+  Typography,
+  Stack,
+  Popper,
+  Popover,
+  Table,
+  TableBody,
+  TableCell,
+  TableRow,
+} from '@mui/material';
+import { useDispatch, useSelector } from 'react-redux';
+import { KubeConfirmButton } from '@/components/Button';
+import { fontFamily } from '@/utils/commonUtils';
 import {
   StyledTableContainer,
   StyledTableBodyCell,
+  StyledTableFooter,
   StyledTableHead,
 } from '@/components/DisplayTable';
-import {
-  TableRow,
-  Box,
-  Table,
-  Typography,
-  Tooltip,
-  TableBody,
-  Stack, IconButton, TextField, Modal,
-} from '@mui/material';
-import React from 'react';
-import ServiceQuery from '@/assets/ServiceQuery.svg';
-import { useDispatch, useSelector } from 'react-redux';
-import { getImageList, deleteImage } from '../../actions/imageAction';
-import GeneralService from '@/assets/GeneralService.svg';
-import { KubeCheckbox } from '../../components/Checkbox';
-import DeleteIcon from "@mui/icons-material/Delete";
-import {EclipseTransparentButton, KubeCancelButton, KubeConfirmButton} from "../../components/Button";
-import VisibilityIcon from "@mui/icons-material/Visibility";
-import RefreshIcon from "@mui/icons-material/Refresh";
-import {ChipTextField, StyledAutocomplete} from "../../components/Input";
-import SearchIcon from "@mui/icons-material/Search";
-import { fontFamily } from '@/utils/commonUtils';
-import {StyledTableFooter} from "../../components/DisplayTable";
-import DeployProgress from "../Cluster/deploy/DeployProgress";
-import ProgressIndicator from "../Cluster/deploy/DeployProgress/ProgressIndicator";
-import InfoFinished from '@/assets/InfoFinished.svg';
-import InfoWaiting from '@/assets/InfoWaiting.svg';
-import InfoNow from '@/assets/InfoNow.svg';
-import DockerFinished from '@/assets/DockerFinished.svg';
-import DockerWaiting from '@/assets/DockerWaiting.svg';
-import DockerNow from '@/assets/DockerNow.svg';
-import {KubeDeploymentCard} from "../../components/InfoCard";
-import AceEditor from 'react-ace';
-import 'ace-builds/src-noconflict/mode-json';
-import 'ace-builds/src-noconflict/theme-xcode';
+import { ChipTextField } from '@/components/Input';
+import StressTestingIcon from '@/assets/StressTesting.svg';
+import VisibilityIcon from '@mui/icons-material/Visibility';
+import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
 import { useIntl } from 'react-intl';
+import SearchIcon from '@mui/icons-material/Search';
+import RefreshIcon from '@mui/icons-material/Refresh';
+import { EclipseTransparentButton } from '@/components/Button';
+import RunningIcon from '@/assets/RunningIcon.svg';
+import PendingIcon from '@/assets/PendingIcon.svg';
+import FailedIcon from '@/assets/FailedIcon.svg';
+import SucceededIcon from '@/assets/SucceededIcon.svg';
+import Question from '@/assets/Question.svg';
+import Task from '@/assets/Task.svg';
+import { NormalBoldFont, SmallLightFont } from '@/components/Fonts';
+import { useNavigate } from 'react-router-dom';
+import {
+  UPDATE_GROUP_EDIT,
+  RESET_GROUP,
+  RESET_PLAN,
+  UPDATE_TEST_PLAN_PAGE_NUM,
+  UPDATE_TEST_PLAN_PAGE_SIZE,
+  getTestPlans,
+} from '../../actions/applicationAction';
+import { StyledModal } from '../../components/Modal';
+import { TestingProgress } from './TestingProgress';
 
-function TextLabel(props) {
-  const { text } = props;
-  return (
-    <Box>
-      <Tooltip title={text}>
-        <Box
-          component='div'
-          sx={{
-            textOverflow: 'ellipsis',
-            whiteSpace: 'nowrap',
-            overflow: 'hidden',
-          }}
-        >
-          {text}
-        </Box>
-      </Tooltip>
-    </Box>
-  );
+export const RUNNING = 'Running';
+export const PENDING = 'Pending';
+export const FAILED = 'Failed';
+export const SUCCEEDED = 'Succeeded';
+
+const StatusIcon = phase => {
+  if (phase === RUNNING) {
+    return <RunningIcon />;
+  }
+  if (phase === PENDING) {
+    return <PendingIcon />;
+  }
+  if (phase === FAILED) {
+    return <FailedIcon />;
+  }
+  return <SucceededIcon />;
+};
+
+const StatusText = phase => {
+  if (phase === RUNNING) {
+    return <span>Running&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>;
+  }
+  if (phase === PENDING) {
+    return <span>Pending&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>;
+  }
+  if (phase === FAILED) {
+    return (
+      <span>Failed&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
+    );
+  }
+  return <span>Succeeded</span>;
+};
+
+function descendingComparator(a, b, orderBy) {
+  if (b[orderBy] < a[orderBy]) {
+    return -1;
+  }
+  if (b[orderBy] > a[orderBy]) {
+    return 1;
+  }
+  return 0;
+}
+
+function getComparator(order, orderBy) {
+  return order === 'desc'
+    ? (a, b) => descendingComparator(a, b, orderBy)
+    : (a, b) => -descendingComparator(a, b, orderBy);
+}
+
+// Since 2020 all major browsers ensure sort stability with Array.prototype.sort().
+// stableSort() brings sort stability to non-modern browsers (notably IE11). If you
+// only support modern browsers you can replace stableSort(exampleArray, exampleComparator)
+// with exampleArray.slice().sort(exampleComparator)
+function stableSort(array, comparator) {
+  const stabilizedThis = array.map((el, index) => [el, index]);
+  stabilizedThis.sort((a, b) => {
+    const order = comparator(a[0], b[0]);
+    if (order !== 0) {
+      return order;
+    }
+    return a[1] - b[1];
+  });
+  return stabilizedThis.map(el => el[0]);
 }
 
 function createRow(
@@ -66,103 +116,223 @@ function createRow(
   label,
   isOrder = true,
   minWidth = '110px',
-  maxWidth = '120px',
+  maxWidth = '220px',
   show = true,
-  colSpan = 1,
-  rowSpan = 1,
   align,
+  colSpan = 1,
+  rowSpan = 1
 ) {
-  return { id, label, isOrder, minWidth, maxWidth, show, colSpan, rowSpan, align };
+  return {
+    id,
+    label,
+    isOrder,
+    minWidth,
+    maxWidth,
+    show,
+    align,
+    colSpan,
+    rowSpan,
+  };
 }
 
-export default function EvolutionPlan(props) {
-  const { data, setIndex, selectedIndex } = props;
+const statusPattern = new RegExp(/^(状态|Status):/);
+const namePattern = new RegExp(/^(名称|Name):/);
+
+export default function EvolutionPlan() {
+  const intl = useIntl();
+  const [planOpen, setPlanOpen] = useState(false);
+  const [showError, setShowError] = useState(false);
+
+  const [loading, setLoading] = useState(false);
   const [tableData, setTableData] = useState([]);
   const [count, setCount] = useState(0);
-  const [searchSelectAnchorEl, setSearchSelectAnchorEl] = useState(null);
-  const [searchBy, setSearchBy] = useState(['名称', 'ID']);
-  const [checkAll, setCheckAll] = useState(false);
+  const [order, setOrder] = useState('asc');
+  const [orderBy, setOrderBy] = useState('evolutionPlanName');
+
   const [searchValue, setSearchValue] = useState('');
+  const [searchSelectAnchorEl, setSearchSelectAnchorEl] = useState(null);
+  const searchSelectOpen = Boolean(searchSelectAnchorEl);
+  const [searchBy, setSearchBy] = useState([
+    intl.messages['common.name'],
+    intl.messages['common.createTime'],
+  ]);
+
+  const [colDisplay, setColDisplay] = useState([true, true, true, true, true]);
+  const [customContentAnchorEl, setCustomContentAnchorEl] = useState(null);
+  const customContentOpen = Boolean(customContentAnchorEl);
+
   const [searchList, setSearchList] = useState([]);
-  const [imagePage, setImagePage] = useState(0);
-  const [selectedImageIndex, setSelectedImageIndex] = useState(0);
-  const [clusterSelected, setClusterSelected] = useState('ices04');
-  const dispatch = useDispatch();
-  const [open, setOpen] = useState(false);
-  const [jsonValue, setJsonValue] = useState('');
 
-  const intl = useIntl();
-
-  const { imageList } = useSelector(state => {
+  const { pageSize, pageNum, evolutionPlans } = useSelector(state => {
     return {
-      imageList: state.Image.imageList
+      pageSize: state.Evolution.pageSize,
+      pageNum: state.Evolution.pageNum,
+      evolutionPlans: state.Evolution.evolutionPlans,
     };
   });
 
-  const rows = imageList;
-  const imageNumPerPage = 10;
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
 
-  const clearPage = () => {
-    setSelectedImageIndex(-1);
-    setImagePage(1);
+  useEffect(() => {
+    dispatch(getTestPlans());
+  }, []);
+
+  useEffect(() => {
+    setTableData(evolutionPlans);
+  }, [evolutionPlans]);
+
+  const headRow = [
+    createRow(
+      'evolutionPlanName',
+      intl.messages['evolution.evolutionPlanName'],
+      true,
+      '100px',
+      '100px',
+      true,
+      'center'
+    ),
+    createRow(
+      'createTime',
+      intl.messages['common.createTime'],
+      false,
+      '100px',
+      '100px',
+      colDisplay[0],
+      'center'
+    ),
+    createRow(
+      'executionNumber',
+      intl.messages['common.executionNumber'],
+      false,
+      '120px',
+      '130px',
+      colDisplay[1],
+      'center'
+    ),
+    createRow(
+      'lastExecutionTime',
+      intl.messages['common.lastExecutionTime'],
+      false,
+      '120px',
+      '130px',
+      colDisplay[2],
+      'center'
+    ),
+    createRow(
+      'enableOrDisable',
+      intl.messages['common.enableOrDisable'],
+      false,
+      '120px',
+      '130px',
+      colDisplay[3],
+      'center'
+    ),
+    createRow(
+      'remark',
+      intl.messages['common.remark'],
+      false,
+      '120px',
+      '130px',
+      colDisplay[4],
+      'center'
+    ),
+  ];
+
+  const handleRequestSort = (event, property) => {
+    const isAsc = orderBy === property && order === 'asc';
+    setOrder(isAsc ? 'desc' : 'asc');
+    setOrderBy(property);
   };
 
   const filtering = () => {
-    let tmpData = JSON.parse(JSON.stringify(imageList));
+    let tmpData = JSON.parse(JSON.stringify(tableData));
+    setCount(tableData.length);
     searchList.forEach((value, _) => {
-      tmpData = tmpData.filter((tableRow, _) => {
-        return tableRow.imageName.includes(value);
-      });
+      if (value.startsWith(`${intl.messages['common.status']}:`)) {
+        tmpData = tmpData.filter((tableRow, _) => {
+          return tableRow.status.includes(value.replace(statusPattern, ''));
+        });
+      } else if (value.startsWith(`${intl.messages['common.name']}:`)) {
+        tmpData = tmpData.filter((tableRow, _) => {
+          return tableRow.testPlanName.includes(value.replace(namePattern, ''));
+        });
+      } else {
+        tmpData = tmpData.filter((tableRow, _) => {
+          return tableRow.testPlanName.includes(value);
+        });
+      }
     });
     return tmpData;
   };
 
-  const visibleRows = React.useMemo(() => {
-    return ['演化计划1', '演化计划2', '演化计划3'];
-    if (!imageList || imageList.length === 0) {
-      return [];
-    }
+  const visibleRows = useMemo(() => {
     const tmpData = filtering();
-    const tmp = (imagePage - 1) * imageNumPerPage;
-    return tmpData.slice(tmp, tmp + imageNumPerPage);
-  }, [imageList, imagePage, searchList]);
-
-  const headFirstRow = [
-    createRow('name', intl.messages['evolution.evolutionPlan'], false, '150px', '170px', true, 1, 1, 'left'),
-    // createRow('version', '版本', false, '100px', '100px', true, 1, 1, 'center'),
-    // createRow('size', '大小（MB）', false, '120px', '130px', true, 1, 1, 'center'),
-    // createRow('cluster', '所在节点', false, '120px', '130px', true, 1, 1, 'center'),
-    // createRow('delete', '操作', false, '120px', '130px', true, 1, 1, 'center'),
-  ];
-
-  useEffect(() => {
-    dispatch(getImageList(clusterSelected));
-    clearPage();
-  }, []);
-
-  useEffect(() => {
-    if (!imageList) {
-      return;
+    if (pageSize * (pageNum - 1) > count) {
+      dispatch({ type: UPDATE_TEST_PLAN_PAGE_NUM, data: 1 });
+      return stableSort(tmpData, getComparator(order, orderBy)).slice(
+        0,
+        pageSize
+      );
     }
-    const items = rows
-    const tmpData = items.map((value, index) => {
-      return {
-        name: value.name,
-        version: value.version,
-      };
-    });
-    if (tmpData) {
-      setCount(tmpData.length);
-      setTableData(tmpData);
-    }
-  }, [imageList]);
+    return stableSort(tmpData, getComparator(order, orderBy)).slice(
+      (pageNum - 1) * pageSize,
+      (pageNum - 1) * pageSize + pageSize
+    );
+  }, [order, orderBy, pageNum, pageSize, tableData, searchList]);
 
-  const deleteClick = (name, cluster, version) => {
-    dispatch(deleteImage(name, cluster, version));
-    dispatch(getImageList(cluster));
-  }
+  const handlePlanClick = () => {
+    setPlanOpen(true);
+  };
+
+  //改变每页的数量
+  const handlePerPageChange = pageSize => {
+    dispatch({ type: UPDATE_TEST_PLAN_PAGE_SIZE, data: pageSize });
+  };
+
+  //改变页码
+  const handlePageChange = (_event, newPage) => {
+    dispatch({ type: UPDATE_TEST_PLAN_PAGE_NUM, data: newPage });
+  };
+
+  const handleSearchByClick = by => {
+    setSearchValue(by + ':');
+    var text = document.getElementById('instance-status-search-input');
+    text.focus();
+  };
+
+  const resetParameters = () => {
+    dispatch({ type: UPDATE_GROUP_EDIT, data: false });
+    dispatch({ type: RESET_PLAN });
+    dispatch({ type: RESET_GROUP });
+  };
+
   const isDuplicate = () => {
     return false;
+  };
+
+  const handleClose = () => {
+    resetParameters();
+    setPlanOpen(false);
+  };
+
+  const handleCancelClick = () => {
+    resetParameters();
+    setPlanOpen(false);
+  };
+
+  const handleConfirmClick = () => {
+    resetParameters();
+    setPlanOpen(false);
+  };
+
+  const handleSearchFocus = event => {
+    if (searchBy.length === 0) {
+      return;
+    }
+    if (searchValue === '') {
+      setSearchSelectAnchorEl(event.currentTarget);
+    }
   };
 
   const handleSearchBlur = () => {
@@ -171,27 +341,24 @@ export default function EvolutionPlan(props) {
     }, 300);
   };
 
-  const handleChangePage = (_, newPage) => {
-    if (imagePage !== newPage) {
-      setSelectedImageIndex(-1);
-      setImagePage(newPage);
-    }
+  const handleEyeClick = event => {
+    setCustomContentAnchorEl(event.currentTarget);
   };
 
-  const handleAddClick = () => {
-    setOpen(true);
-  }
+  const handleEyeClose = () => {
+    setCustomContentAnchorEl(null);
+  };
 
-  const handleClose = () => {
-    setOpen(false);
-  }
-
-  const handleInputChange = (value) => {
-    setJsonValue(value);
-  }
+  const handleColEyeClick = index => {
+    setColDisplay(prevDisplay => {
+      let tmpDisplay = JSON.parse(JSON.stringify(prevDisplay));
+      tmpDisplay[index] = !tmpDisplay[index];
+      return tmpDisplay;
+    });
+  };
 
   return (
-    <>
+    <Stack>
       <Box
         sx={{
           borderRadius: '4px',
@@ -203,7 +370,7 @@ export default function EvolutionPlan(props) {
         }}
       >
         <Stack direction='row' spacing={1}>
-        <GeneralService />
+          <StressTestingIcon />
           <Box>
             <Typography
               sx={{
@@ -215,7 +382,6 @@ export default function EvolutionPlan(props) {
                 lineHeight: '32px',
               }}
             >
-              {/* 演化计划 */}
               {intl.messages['evolution.evolutionPlan']}
             </Typography>
             <Typography
@@ -227,19 +393,205 @@ export default function EvolutionPlan(props) {
                 lineHeight: 1.67,
               }}
             >
-              {/* 演化计划 */}
               {intl.messages['evolution.evolutionPlan']}
             </Typography>
           </Box>
         </Stack>
       </Box>
-      <Box
-        sx={{
-          width: '100%',
-          minWidth: '600px',
-        }}
-      >
-        <StyledTableContainer sx={{ backgroundColor: '#FFF' }}>
+
+      <Box>
+        {/* 条件过滤悬浮框 */}
+        <Popper
+          id='instance-status-table-search-popper'
+          open={searchSelectOpen}
+          anchorEl={searchSelectAnchorEl}
+          placement='bottom-start'
+          sx={{
+            zIndex: 1000,
+            boxShadow: '0 4px 16px 0 rgba(39,50,71,.28)',
+            borderRadius: '4px',
+            mt: '2px !important',
+          }}
+        >
+          <Stack
+            direction='column'
+            sx={{
+              border: '1px solid #FAFAFA',
+              width: '90px',
+              borderRadius: '5px',
+              padding: '8px',
+              bgcolor: '#242e42',
+              fontSize: '12px',
+              fontFamily: fontFamily,
+            }}
+          >
+            {searchBy.map((value, index) => {
+              return (
+                <Box
+                  sx={{
+                    '&:hover': {
+                      bgcolor: '#36435c',
+                    },
+                    color: '#FFFFFF',
+                    cursor: 'pointer',
+                    textAlign: 'center',
+                    height: '30px',
+                    lineHeight: '30px',
+                    fontWeight: 600,
+                  }}
+                  onClick={handleSearchByClick.bind(this, value)}
+                >
+                  {value}
+                </Box>
+              );
+            })}
+          </Stack>
+        </Popper>
+
+        {/* 定制内容悬浮框 */}
+        <Popover
+          id='instance-status-table-custom-content-popover'
+          open={customContentOpen}
+          anchorEl={customContentAnchorEl}
+          onClose={handleEyeClose}
+          anchorOrigin={{
+            vertical: 'bottom',
+            horizontal: 'left',
+          }}
+          sx={{
+            zIndex: 1000,
+            boxShadow: '0 4px 16px 0 rgba(39,50,71,.28)',
+            borderRadius: '4px',
+            mt: '2px !important',
+          }}
+        >
+          <Stack
+            direction='column'
+            sx={{
+              width: '150px',
+              borderRadius: '5px',
+              padding: '8px',
+              bgcolor: '#242e42',
+              fontSize: '12px',
+              fontFamily: fontFamily,
+            }}
+          >
+            {colDisplay.map((value, index) => {
+              return (
+                <Stack
+                  direction='row'
+                  onClick={handleColEyeClick.bind(this, index)}
+                  sx={{
+                    color: '#FFFFFF',
+                    '&:hover': {
+                      bgcolor: '#36435c',
+                    },
+                    p: '0px 8px',
+                  }}
+                  justifyContent='flex-start'
+                  alignItems='center'
+                  spacing={1}
+                >
+                  {value === true ? (
+                    <VisibilityIcon fontSize='small' />
+                  ) : (
+                    <VisibilityOffIcon fontSize='small' />
+                  )}
+                  <Box
+                    sx={{
+                      color: '#FFFFFF',
+                      cursor: 'pointer',
+                      height: '30px',
+                      lineHeight: '30px',
+                      fontWeight: 600,
+                      letterSpacing: '0.04em',
+                    }}
+                  >
+                    {headRow[index + 1].label}
+                  </Box>
+                </Stack>
+              );
+            })}
+          </Stack>
+        </Popover>
+
+        <Box
+          sx={{
+            height: '32px',
+            padding: '10px 30px 10px 30px',
+            bgcolor: '#f9fbfd',
+          }}
+        >
+          <Stack direction='row' spacing={2}>
+            <ChipTextField
+              value={searchValue}
+              setValue={setSearchValue}
+              contentList={searchList}
+              setContentList={setSearchList}
+              isDuplicate={isDuplicate}
+              startAdornment={<SearchIcon />}
+              sx={{
+                width: 'calc(100% - 600px)',
+                '& .MuiOutlinedInput-input.MuiInputBase-input': {
+                  // padding: '6px 12px !important',
+                  fontSize: '12px',
+                  fontWeight: 600,
+                  fontStyle: 'normal',
+                  fontStretch: 'normal',
+                  lineHeight: 1.67,
+                  letterSpacing: 'normal',
+                  color: '#36435c',
+                  height: '20px',
+                },
+              }}
+              onFocus={handleSearchFocus}
+              onBlur={handleSearchBlur}
+              enterBlur={true}
+              id='instance-status-search-input'
+            />
+            <EclipseTransparentButton
+              sx={{
+                bgcolor: '#f9fbfd !important',
+                '&:hover': {
+                  bgcolor: '#FFFFFF !important',
+                },
+                '& svg': {
+                  color: '#3d3b4f',
+                },
+                height: '32px',
+              }}
+            >
+              <RefreshIcon />
+            </EclipseTransparentButton>
+
+            <EclipseTransparentButton
+              sx={{
+                bgcolor: '#f9fbfd !important',
+                '&:hover': {
+                  bgcolor: '#FFFFFF !important',
+                },
+                '& svg': {
+                  color: '#3d3b4f',
+                },
+                height: '32px',
+              }}
+              onClick={handleEyeClick}
+            >
+              <VisibilityIcon />
+            </EclipseTransparentButton>
+            <KubeConfirmButton
+              sx={{
+                width: '200px',
+              }}
+              onClick={handlePlanClick}
+            >
+              {intl.messages['evolution.createEvolutionPlan']}
+            </KubeConfirmButton>
+          </Stack>
+        </Box>
+
+        {/* <StyledTableBox> */}
+        <StyledTableContainer sx={{ bgcolor: '#FFF' }}>
           <Table
             stickyHeader
             size='small'
@@ -248,19 +600,19 @@ export default function EvolutionPlan(props) {
             }}
           >
             <StyledTableHead
-              headRow={headFirstRow}
+              headRow={headRow}
               selectAll={true}
-              checkAll={checkAll}
-              setCheckAll={setCheckAll}
-              sx={{
-                textTransform: 'none !important'
-              }}
+              order={order}
+              orderBy={orderBy}
+              onRequestSort={handleRequestSort}
             />
 
             <TableBody>
-              {visibleRows.map((row) => (
+              {!loading && visibleRows !== null && visibleRows.length !== 0 ? (
+                visibleRows.map((row, index) => {
+                  return (
                     <TableRow
-                      key={row}
+                      key={row.id + '' + index}
                       aria-checked={false}
                       sx={{
                         '&:last-child td, &:last-child th': {
@@ -275,64 +627,151 @@ export default function EvolutionPlan(props) {
                       selected={false}
                     >
                       <StyledTableBodyCell
-                        align='center'
+                        align={'center'}
                         sx={{
-                          p: '0px 16px !important',
+                          padding: '6px 16px !important',
                         }}
                       >
-                        <KubeCheckbox
-                          sx={{
-                            backgroundColor: 'transparent !important',
-                          }}
-                          disableRipple
-                          size="small"
-                        />
-                      </StyledTableBodyCell>
-
-                      {/* image name */}
-                      <StyledTableBodyCell
-                        align='left'
-                        sx={{ padding: '6px 16px !important' }}
-                      >
-                        <Stack alignItems='center' direction='row' spacing={2}>
-                          {/* <Task /> */}
-                          <ServiceQuery />
-                          {/* <button >点击跳转</button> */}
+                        <Stack alignItems='center' justifyContent={'center'} direction='row' spacing={2}>
+                          <Task />
                           <Box
                             sx={{
                               height: '30px',
                               lineHeight: '30px',
                               fontWeight: 600,
-                              cursor: "pointer",
-                              ":hover": {
-                                color: "#55bc8a"
-                              }
+                              cursor: 'pointer',
+                              '&:hover': {
+                                color: '#55bc8a',
+                              },
                             }}
-                            onClick={() => {}}
+                            onClick={() => {
+                              navigate(`/detail/testplan/${row.id}`);
+                            }}
                           >
-                            {row}
+                            {row.testPlanName}
                           </Box>
                         </Stack>
                       </StyledTableBodyCell>
 
-                    
+                      <StyledTableBodyCell
+                        align={'center'}
+                        sx={{
+                          display: headRow[1].show ? 'table-cell' : 'none',
+                        }}
+                      >
+                        <Stack
+                          alignItems='center'
+                          direction='row'
+                          justifyContent='center'
+                          spacing={2}
+                        >
+                          {StatusIcon(row.status)}
+                          <span
+                            style={{
+                              height: '30px',
+                              lineHeight: '30px',
+                            }}
+                          >
+                            {StatusText(row.status)}
+                          </span>
+                        </Stack>
+                      </StyledTableBodyCell>
+
+                      <StyledTableBodyCell
+                        align={'center'}
+                        sx={{
+                          display: headRow[2].show ? 'table-cell' : 'none',
+                        }}
+                      >
+                        {row.serialized
+                          ? intl.messages['common.yes']
+                          : intl.messages['common.no']}
+                      </StyledTableBodyCell>
+
+                      <StyledTableBodyCell
+                        align={'center'}
+                        sx={{
+                          display: headRow[3].show ? 'table-cell' : 'none',
+                        }}
+                      >
+                        {row.functionalMode
+                          ? intl.messages['common.yes']
+                          : intl.messages['common.no']}
+                      </StyledTableBodyCell>
+
+                      <StyledTableBodyCell
+                        align={'center'}
+                        sx={{
+                          display: headRow[4].show ? 'table-cell' : 'none',
+                        }}
+                      >
+                        {row.tearDown
+                          ? intl.messages['common.yes']
+                          : intl.messages['common.no']}
+                      </StyledTableBodyCell>
+                      <StyledTableBodyCell
+                        align={'center'}
+                        sx={{
+                          display: headRow[4].show ? 'table-cell' : 'none',
+                        }}
+                      >
+                        {row.comment}
+                      </StyledTableBodyCell>
                     </TableRow>
-                  ))}
+                  );
+                })
+              ) : !loading ? (
+                <TableRow style={{ height: '220px' }}>
+                  <TableCell
+                    colSpan={colDisplay.reduce(
+                      (accumulator, currentValue) =>
+                        accumulator + (currentValue === true),
+                      2
+                    )}
+                    sx={{
+                      textAlign: 'center',
+                      fontSize: '20px',
+                      fontFamily: fontFamily,
+                      fontStyle: 'normal',
+                    }}
+                  >
+                    <Question />
+                    <NormalBoldFont>
+                      {intl.messages['common.serviceTableContentNoData']}
+                    </NormalBoldFont>
+
+                    <SmallLightFont>
+                      {intl.messages['common.serviceTableContentNoDataHint']}
+                    </SmallLightFont>
+                  </TableCell>
+                </TableRow>
+              ) : (
+                <div></div>
+              )}
             </TableBody>
           </Table>
         </StyledTableContainer>
         <StyledTableFooter
-          // pageSize={imageNumPerPage}
-          // pageNum={imagePage}
-          // count={imageList ? imageList.length : 0}
-          // handlePageChange={handleChangePage}
+          pageNum={pageNum}
+          pageSize={pageSize}
+          perPageList={[10, 20, 50, 100]}
+          count={count}
+          handlePerPageChange={handlePerPageChange}
+          handlePageChange={handlePageChange}
           sx={{
-            width: '100%',
-            pt: '10px',
-            pb: '10px',
+            pt: '12px',
+            pb: '12px',
           }}
         />
       </Box>
-    </>
+      <StyledModal open={planOpen} onClose={handleClose}>
+        <TestingProgress
+          handleConfirmClick={handleConfirmClick}
+          handleCancelClick={handleCancelClick}
+          showError={showError}
+          setShowError={setShowError}
+        />
+      </StyledModal>
+    </Stack>
   );
 }

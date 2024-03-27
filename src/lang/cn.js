@@ -1,5 +1,10 @@
 export const messages = {
   common: {
+    executionNumber: '执行次数',
+    createTime: '创建时间',
+    lastExecutionTime: '最后一次执行时间',
+    enableOrDisable: '启用/禁用',
+    remark: '备注',
     errorMessage: '{msg}',
     copyboard: '已复制，请您继续接下来的操作。',
     serviceTableContentNoData: '无数据',
@@ -103,7 +108,7 @@ export const messages = {
     memory: "内存",
     execute: "执行",
     description: "描述",
-    interface:'接口',
+    interface: '接口',
   },
   lang: {
     language: '语言',
@@ -424,5 +429,7 @@ export const messages = {
   evolution: {
     evolution: '演化',
     evolutionPlan: '演化计划',
+    evolutionPlanName: '演化计划名称',
+    createEvolutionPlan:'创建演化计划'
   },
 };

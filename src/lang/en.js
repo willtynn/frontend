@@ -1,5 +1,10 @@
 export const messages = {
   common: {
+    executionNumber: 'Execution Number',
+    createTime: 'Create Time',
+    lastExecutionTime: 'Last Execution Time',
+    enableOrDisable: 'Enable/Disable',
+    remark: 'Remark',
     errorMessage: '{msg}',
     copyboard: 'Copied, please continue.',
     serviceTableContentNoData: 'No data',
@@ -103,7 +108,7 @@ export const messages = {
     memory: "Memory",
     execute: "Execute",
     description: "Description",
-    interface:'Interface',
+    interface: 'Interface',
   },
   lang: {
     language: 'Language',
@@ -348,7 +353,7 @@ export const messages = {
     noOptionalPod: "No Optional Pod",
     planName: "Plan Name",
     performancePressureTest: "Performance Pressure Test",
-    
+
   },
   routeTrace: {
     title: 'Route Trace',
@@ -422,5 +427,7 @@ export const messages = {
   evolution: {
     evolution: 'Evolution',
     evolutionPlan: 'Evolution Plan',
+    evolutionPlanName: 'Evolution Plan Name',
+    createEvolutionPlan:'Create Evolution Plan'
   },
 };

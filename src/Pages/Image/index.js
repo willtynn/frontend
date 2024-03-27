@@ -393,7 +393,7 @@ export default function ImagesList(props) {
                         align='center'
                         sx={{ padding: '6px 16px !important' }}
                       >
-                        <Stack alignItems='center' justifyContent={'center'} direction='row' spacing={2}>
+                        <Stack alignItems='center' direction='row' spacing={2}>
                           {/* <Task /> */}
                           <ServiceQuery />
                           {/* <button >点击跳转</button> */}
