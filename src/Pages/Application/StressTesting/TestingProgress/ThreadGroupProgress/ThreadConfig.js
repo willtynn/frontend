@@ -67,7 +67,6 @@ export function ThreadConfig(props) {
       loops: state.Application.loops,
       loopsContinueForever: state.Application.loopsContinueForever,
       sameUserOnNextIteration: state.Application.sameUserOnNextIteration,
-      sameUserOnNextIteration: state.Application.sameUserOnNextIteration,
       delayedStart: state.Application.delayedStart,
       scheduler: state.Application.scheduler,
       duration: state.Application.duration,

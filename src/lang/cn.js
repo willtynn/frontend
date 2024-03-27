@@ -354,7 +354,6 @@ export const messages = {
     poissonRandomTimer: '泊松随机定时器',
     gaussianRandomTimer: '高斯随机定时器',
     editTimer: "修改定时器",
-    addTimer: "添加定时器",
     createTestPlan: "创建测试计划",
     editThreadGroup: "修改线程组",
     noOptionalNamespace: "无可选命名空间",

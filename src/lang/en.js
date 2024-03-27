@@ -346,7 +346,6 @@ export const messages = {
     poissonRandomTimer: 'Poisson Random Timer',
     gaussianRandomTimer: 'Gaussian Random Timer',
     editTimer: "Edit Timer",
-    addTimer: "Add Timer",
     createTestPlan: "Create Test Plan",
     editThreadGroup: "Edit Thread Group",
     noOptionalNamespace: "No optional namespace",

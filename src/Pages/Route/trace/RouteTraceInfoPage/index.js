@@ -253,10 +253,11 @@ export function RouteTraceInfoPage() {
               <Stack sx={{ justifyContent: 'center'}}>
                 <Stack sx= {{ pt: '16px', pr: '16px', pl: '16px'}}>
                   {detailSpan ? (
-                    <div style={{ justifyContent: 'center', 
-                    justifyContent: 'center',
-                    alignItems: 'center',
-                    display: 'flex'}}>
+                    <div style={{
+                      justifyContent: 'center',
+                      alignItems: 'center',
+                      display: 'flex'
+                    }}>
                       <Stack sx={{ width: '100%' }}>
                         <Stack spacing={1}>
                           <Stack direction='row' sx={{ justifyContent: 'space-between' }}>
