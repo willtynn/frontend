@@ -44,7 +44,6 @@ import {
   getTestPlans,
 } from '../../actions/applicationAction';
 import { StyledModal } from '../../components/Modal';
-import { TestingProgress } from './TestingProgress';
 
 export const RUNNING = 'Running';
 export const PENDING = 'Pending';
@@ -764,14 +763,9 @@ export default function EvolutionPlan() {
           }}
         />
       </Box>
-      <StyledModal open={planOpen} onClose={handleClose}>
-        <TestingProgress
-          handleConfirmClick={handleConfirmClick}
-          handleCancelClick={handleCancelClick}
-          showError={showError}
-          setShowError={setShowError}
-        />
-      </StyledModal>
+      {/* <StyledModal open={planOpen} onClose={handleClose}>
+        
+      </StyledModal> */}
     </Stack>
   );
 }
