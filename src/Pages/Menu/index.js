@@ -219,10 +219,9 @@ export default function MiniDrawer() {
                     textTransform: "none"
                   }}
                 >
-                  {intl.messages['menu.platformManagement']}
+                  {intl.messages['common.homepage']}
                 </span>
               </KubeTransparentButton>
-              <LanguageButton />
             </Stack>
           </Grid>
 
@@ -241,7 +240,7 @@ export default function MiniDrawer() {
                   fontFamily: 'Segoe Print',
                 }}
               >
-                Cloud Edge Platform
+                云-边-端数据治理引擎
               </Box>
             </Stack>
           </Grid>

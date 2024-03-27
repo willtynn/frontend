@@ -16,20 +16,19 @@ import { LanguageButton } from '../../components/Button/LanguageButton';
 import { useIntl } from 'react-intl';
 
 export function HeadBar() {
-
   const navigate = useNavigate();
 
   const intl = useIntl();
 
   useEffect(() => {
-    if(!localStorage.getItem("current_cluster")) {
-      localStorage.setItem("current_cluster", "ices104");
+    if (!localStorage.getItem('current_cluster')) {
+      localStorage.setItem('current_cluster', 'ices104');
     }
   }, []);
 
   const toHomePage = () => {
-    navigate("/cluster/overview");
-  }
+    navigate('/cluster/overview');
+  };
 
   const styledButton = {
     borderRadius: '100px',
@@ -68,13 +67,12 @@ export function HeadBar() {
                     fontStyle: 'normal',
                     fontSize: '12px',
                     lineHeight: 1.67,
-                    textTransform: "none"
+                    textTransform: 'none',
                   }}
                 >
-                  {intl.messages['menu.platformManagement']}
+                  {intl.messages['common.homepage']}
                 </span>
               </KubeTransparentButton>
-              <LanguageButton />
             </Stack>
           </Grid>
 
@@ -93,7 +91,7 @@ export function HeadBar() {
                   fontFamily: 'Segoe Print',
                 }}
               >
-                Cloud Edge Platform
+                云-边-端数据治理引擎
               </Box>
             </Stack>
           </Grid>
@@ -112,7 +110,13 @@ export function HeadBar() {
         }}
       />
 
-      <Box sx={{ backgroundColor: '#eff4f9', width: 'calc(100%)', fontFamily: fontFamily }}>
+      <Box
+        sx={{
+          backgroundColor: '#eff4f9',
+          width: 'calc(100%)',
+          fontFamily: fontFamily,
+        }}
+      >
         <Box sx={{ display: 'block' }}>
           <Box sx={{ padding: '20px' }}>
             <Outlet />

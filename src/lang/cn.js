@@ -109,6 +109,7 @@ export const messages = {
     execute: "执行",
     description: "描述",
     interface: '接口',
+    homepage: "主页"
   },
   lang: {
     language: '语言',

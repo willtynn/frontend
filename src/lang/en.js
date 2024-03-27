@@ -109,6 +109,7 @@ export const messages = {
     execute: "Execute",
     description: "Description",
     interface: 'Interface',
+    homepage: "Homepage"
   },
   lang: {
     language: 'Language',
