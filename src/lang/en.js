@@ -140,6 +140,7 @@ export const messages = {
     gpuMemResource: "GPU Memory",
     resourceAndCapability: "Resource And Capability",
     idleOccupation: "Occupation during idle time",
+    desiredResource: "Desired Resource",
     processCapability: "Process Capability",
     duration10M: 'Last 10 minutes',
     duration20M: 'Last 20 minutes',

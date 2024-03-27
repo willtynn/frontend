@@ -13,6 +13,7 @@ const styledButton = {
   backgroundColor: 'transparent',
   color: '#36435C !important',
   fontFamily: fontFamily,
+  textTransform:'none'
 };
 
 export const LanguageButton = () => {
