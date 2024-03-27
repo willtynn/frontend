@@ -19,7 +19,7 @@ export const CHANGE_PAGE_NUM = 'CHANGE_SERVICE_PAGE_NUM';
 // const baseURLLink = 'http://192.168.1.104:31931';
 export const UPDATE_SEARCH_POD = 'UPDATE_SEARCH_POD';
 
-const baseURLLink = 'http://192.168.1.104:30990';
+const baseURLLink = 'http://10.1.1.104:30990';
 
 const axios_instance = axios.create({
   baseURL: baseURLLink,
@@ -303,7 +303,7 @@ export function searchDependenciesByInterfaceId(id) {
 export function searchPodsByServiceName(cluster, name) {
   const url = '/instance/status/service';
   const tmpInstance = axios.create({
-    baseURL: 'http://192.168.1.104:31953',
+    baseURL: 'http://10.1.1.104:31953',
     timeout: 10000,
     // withCredentials: isCookie,
     crossDomain: true,

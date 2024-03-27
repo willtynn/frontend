@@ -8,13 +8,13 @@ export const UPDATE_LIST = 'UPDATE_LIST';
 
 const getUrl = (cluster) => {
   if (cluster === 'ices04'){
-    return 'http://192.168.1.104:32340';
+    return 'http://10.1.1.104:32340';
   }else if(cluster === 'icespve01'){
-    return 'http://192.168.1.104:32665';
+    return 'http://10.1.1.104:32665';
   }else if(cluster === 'icespve02'){
-    return 'http://192.168.1.104:31831';
+    return 'http://10.1.1.104:31831';
   }
-  return 'http://192.168.1.104:31883';
+  return 'http://10.1.1.104:31883';
 }
 
 export function getImageList(cluster) {

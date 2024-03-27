@@ -10,10 +10,6 @@ const initState = {
   namespace: '',
   podName: '',
 
-  // Create Exvolution Plan
-  dataResource: 'Jaeger',
-  moniterInterval: 'per minute',
-
   // Thread Group
   threadGroups: [],
   groupName: 'Thread Group',
