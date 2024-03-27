@@ -498,7 +498,7 @@ export default function SchemeOverview(props) {
         }}
       >
         <Stack direction='row' spacing={2}>
-          <StyledAutocomplete
+          {/* <StyledAutocomplete
             height='32px'
             padding='6px 5px 5px 12px'
             value={currentNamespace}
@@ -524,7 +524,7 @@ export default function SchemeOverview(props) {
                 placeholder={intl.messages['common.allNamespaces']}
               />
             )}
-          />
+          /> */}
           <ChipTextField
             value={searchValue}
             setValue={setSearchValue}
