@@ -32,6 +32,7 @@ import PendingIcon from '@/assets/PendingIcon.svg';
 import FailedIcon from '@/assets/FailedIcon.svg';
 import SucceededIcon from '@/assets/SucceededIcon.svg';
 import Question from '@/assets/Question.svg';
+import { EvolutionProgress } from './EvolutionProgress';
 import Task from '@/assets/Task.svg';
 import { NormalBoldFont, SmallLightFont } from '@/components/Fonts';
 import { useNavigate } from 'react-router-dom';
@@ -763,9 +764,14 @@ export default function EvolutionPlan() {
           }}
         />
       </Box>
-      {/* <StyledModal open={planOpen} onClose={handleClose}>
-        
-      </StyledModal> */}
+      <StyledModal open={planOpen} onClose={handleClose}>
+        <EvolutionProgress
+          handleConfirmClick={() => {}}
+          handleCancelClick={handleCancelClick}
+          showError={showError}
+          setShowError={setShowError}
+        />
+      </StyledModal>
     </Stack>
   );
 }
