@@ -8,6 +8,7 @@ export const OutlinedButton = styled(Button)({
   fontFamily: fontFamily,
   fontStyle: 'normal',
   fontWeight: 600,
+  textTransform:'none',
   lineHeight: '18px',
   "&:hover":{
     color: "#6D98EE",
@@ -24,6 +25,7 @@ export const ContainedButton = styled(Button)({
   fontFamily: fontFamily,
   fontStyle: 'normal',
   fontWeight: 600,
+  textTransform:'none',
   lineHeight: '18px',
   "&:hover":{
     color: "#6D98EE",
@@ -38,6 +40,7 @@ export const EclipseTransparentButton = styled(Button)({
   fontFamily: fontFamily,
   fontStyle: 'normal',
   fontWeight: 600,
+  textTransform:'none',
   lineHeight: '18px',
   "&:hover":{
     color: "#6D98EE",
@@ -55,6 +58,7 @@ export const KubeCancelButton = styled(Button)({
   fontStyle: 'normal',
   fontStretch: 'normal',
   lineHeight: 1.67,
+  textTransform:'none',
   letterSpacing: 'normal',
   "&:hover":{
     backgroundColor: "#e3e9ef"
@@ -78,6 +82,7 @@ export const KubeConfirmButton = styled(Button)({
   lineHeight: 1.67,
   letterSpacing: 'normal',
   boxShadow: "0 8px 16px 0 rgba(35,45,65,.28)",
+  textTransform:'none',
   "&:hover":{
     boxShadow: 'none',
     backgroundColor: "#242e42",
@@ -95,6 +100,7 @@ export const KubeTransparentButton = styled(Button)({
   fontStyle: 'normal',
   fontWeight: 600,
   lineHeight: '18px',
+  textTransform:'none',
   "&:hover":{
     color: "#e3e9ef",
   }
@@ -107,6 +113,7 @@ export const KubeRectTransparentButton = styled(Button)({
   fontStyle: 'normal',
   fontWeight: 600,
   lineHeight: '18px',
+  textTransform:'none',
   "&:hover":{
     backgroundColor: "#36435c",
   }

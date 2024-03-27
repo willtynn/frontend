@@ -190,12 +190,12 @@ export default function GeneralInfo(props) {
           spacing={1.5}
           alignItems='center'
         >
-          <KubeCancelButton sx={{ height: '32px', width: '96px' }}>
+          <KubeCancelButton sx={{ height: '32px', minWidth: '96px' }}>
             {intl.messages['serviceOverview.editInfo']}
           </KubeCancelButton>
           <KubeCancelButton
             onClick={handleMoreOperation}
-            sx={{ height: '32px', width: '96px' }}
+            sx={{ height: '32px', minWidth: '96px' }}
           >
             <Stack direction='row' alignItems='center' justifyContent='center'>
               <Box sx={{ ml: '4px' }}>{intl.messages['common.moreOperation']}</Box>
