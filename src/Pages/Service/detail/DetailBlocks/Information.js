@@ -25,6 +25,7 @@ import { SEVERITIES } from '@/components/CommonSnackbar';
 import { useDispatch } from 'react-redux';
 import Question from '@/assets/Question.svg';
 import { NormalBoldFont, SmallLightFont } from '@/components/Fonts';
+import { useIntl } from 'react-intl';
 
 function createRow(
   id,
@@ -52,15 +53,16 @@ function createRow(
 
 export default function Information(props) {
   const { service } = props;
+  const intl = useIntl();
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
   const headRow = [
-    createRow('id', '接口', false, '40px', '40px', true, 'left'),
-    createRow('path', '请求的路径', false, '50px', '50px', true, 'center'),
+    createRow('id', intl.messages['common.interface'], false, '40px', '40px', true, 'left'),
+    createRow('path', intl.messages['serviceOverview.requestedPath'], false, '50px', '50px', true, 'center'),
     createRow(
       'inputSize',
-      '输入数据大小',
+      intl.messages['serviceOverview.inputSize'],
       false,
       '50px',
       '50px',
@@ -69,24 +71,24 @@ export default function Information(props) {
     ),
     createRow(
       'outputSize',
-      '输出数据大小',
+      intl.messages['serviceOverview.outputSize'],
       false,
       '50px',
       '50px',
       true,
       'center'
     ),
-    createRow('method', '请求方法', false, '50px', '50px', true, 'center'),
-    createRow('info', '描述', false, '50px', '50px', true, 'center'),
-    createRow('dependency', '接口依赖', false, '30px', '30px', true, 'center'),
+    createRow('method', intl.messages['common.requestMethod'], false, '50px', '50px', true, 'center'),
+    createRow('info', intl.messages['common.description'], false, '50px', '50px', true, 'center'),
+    createRow('dependency', intl.messages['serviceDependency.interfaceDependency'], false, '30px', '30px', true, 'center'),
   ];
 
   const resourceAndCapabilityHeadRow = [
-    createRow('cpu', 'cpu资源', false, '70px', '70px', true, 'center'),
-    createRow('ram', 'ram资源', false, '70px', '70px', true, 'center'),
-    createRow('disk', '硬盘资源', false, '70px', '70px', true, 'center'),
-    createRow('gpuCore', 'gpu-core资源', false, '70px', '70px', true, 'center'),
-    createRow('gpuMem', 'gpu内存资源', false, '70px', '70px', true, 'center'),
+    createRow('cpu', intl.messages['serviceOverview.cpuResource'], false, '70px', '70px', true, 'center'),
+    createRow('ram', intl.messages['serviceOverview.ramResource'], false, '70px', '70px', true, 'center'),
+    createRow('disk', intl.messages['serviceOverview.diskResource'], false, '70px', '70px', true, 'center'),
+    createRow('gpuCore', intl.messages['serviceOverview.gpuCoreResource'], false, '70px', '70px', true, 'center'),
+    createRow('gpuMem', intl.messages['serviceOverview.gpuMemResource'], false, '70px', '70px', true, 'center'),
   ];
 
   const handleInterfaceDependencyClick = id => {
@@ -102,7 +104,7 @@ export default function Information(props) {
 
   return (
     <Stack direction='column' spacing={1.5}>
-      <KubeSimpleCard title='接口集合'>
+      <KubeSimpleCard title={intl.messages['common.interfaceCollection']}>
         <StyledTableContainer sx={{ maxHeight: '680px' }}>
           <Table
             stickyHeader
@@ -129,7 +131,7 @@ export default function Information(props) {
               </TableRow>
             </TableHead>
             <TableBody>
-              {service !== null ? (
+              {(service && service.interfaces && service.interfaces.length) ? (
                 service.interfaces.map((row, index) => (
                   <TableRow
                     key={row.id + '' + index}
@@ -227,7 +229,7 @@ export default function Information(props) {
                         minWidth: headRow[6].minWidth,
                       }}
                     >
-                      <Tooltip title='查看依赖'>
+                      <Tooltip title={intl.messages['lookupDependency']}>
                         <IconButton
                           onClick={() => {
                             handleInterfaceDependencyClick(row.id);
@@ -243,7 +245,7 @@ export default function Information(props) {
               ) : (
                 <TableRow style={{ height: '220px' }}>
                   <TableCell
-                    colSpan={5}
+                    colSpan={7}
                     sx={{
                       textAlign: 'center',
                       fontSize: '20px',
@@ -252,9 +254,9 @@ export default function Information(props) {
                     }}
                   >
                     <Question />
-                    <NormalBoldFont>无数据</NormalBoldFont>
-
-                    <SmallLightFont>您可以尝试刷新数据</SmallLightFont>
+                    <NormalBoldFont>
+                      {intl.messages['common.serviceTableContentNoData']}
+                    </NormalBoldFont>
                   </TableCell>
                 </TableRow>
               )}
@@ -262,7 +264,7 @@ export default function Information(props) {
           </Table>
         </StyledTableContainer>
       </KubeSimpleCard>
-      <KubeSimpleCard title='资源与能力'>
+      <KubeSimpleCard title={intl.messages['serviceOverview.resourceAndCapability']}>
         <StyledTableContainer
           sx={{ maxHeight: '680px', overflow: 'auto', width: '100%' }}
         >
@@ -310,7 +312,7 @@ export default function Information(props) {
                   selected={false}
                 >
                   <StyledTableBodyCell align='left'>
-                    空闲时占用资源
+                    {intl.messages['serviceOverview.idleOccupation']}
                   </StyledTableBodyCell>
                   {service &&
                     resourceAndCapabilityHeadRow.map((item, index) => (
@@ -342,7 +344,7 @@ export default function Information(props) {
                   selected={false}
                 >
                   <StyledTableBodyCell align='left'>
-                    期望资源
+                    {intl.messages['serviceOverview.desiredResource']}
                   </StyledTableBodyCell>
                   {service &&
                     resourceAndCapabilityHeadRow.map((item, index) => (
@@ -374,7 +376,7 @@ export default function Information(props) {
                   selected={false}
                 >
                   <StyledTableBodyCell align='left'>
-                    处理能力
+                    {intl.messages['serviceOverview.processCapability']}
                   </StyledTableBodyCell>
                   <StyledTableBodyCell
                     align='center'
@@ -401,9 +403,13 @@ export default function Information(props) {
                     }}
                   >
                     <Question />
-                    <NormalBoldFont>无数据</NormalBoldFont>
+                    <NormalBoldFont>
+                      {intl.messages['common.serviceTableContentNoData']}
+                    </NormalBoldFont>
 
-                    <SmallLightFont>您可以尝试刷新数据</SmallLightFont>
+                    <SmallLightFont>
+                      {intl.messages['common.serviceTableContentNoDataHint']}
+                    </SmallLightFont>
                   </TableCell>
                 </TableRow>
               </TableBody>

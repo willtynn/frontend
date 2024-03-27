@@ -44,21 +44,9 @@ import { KubeDatePicker } from '../../../../components/DatePicker';
 import { calculateDuration } from '../../../Route/trace/functions/func';
 import Question from '@/assets/Question.svg';
 import { NormalBoldFont, SmallLightFont } from '@/components/Fonts';
+import { useIntl } from 'react-intl';
 
-const RangeCandidate = [
-  ['最近10分钟', -10, 'minute'],
-  ['最近20分钟', -20, 'minute'],
-  ['最近30分钟', -30, 'minute'],
-  ['最近1小时', -1, 'hour'],
-  ['最近2小时', -2, 'hour'],
-  ['最近3小时', -3, 'hour'],
-  ['最近5小时', -5, 'hour'],
-  ['最近12小时', -12, 'hour'],
-  ['最近1天', -1, 'day'],
-  ['最近2天', -2, 'day'],
-  ['最近3天', -3, 'day'],
-  ['最近7天', -7, 'day'],
-];
+
 
 function createRow(
   id,
@@ -118,7 +106,7 @@ function stableSort(array, comparator) {
 
 export default function RequestMonitor(props) {
   const { service } = props;
-
+  const intl = useIntl();
   const [apiSearchValue, setApiSearchValue] = useState('');
   const [rangeIndex, setRangeIndex] = useState(4);
   const [start, setStart] = useState(dayjs().add(-2, 'hour'));
@@ -137,14 +125,29 @@ export default function RequestMonitor(props) {
   const [order, setOrder] = useState('asc');
   const [orderBy, setOrderBy] = useState('low');
 
+  const RangeCandidate = [
+    [intl.messages['serviceOverview.duration10M'], -10, 'minute'],
+    [intl.messages['serviceOverview.duration20M'], -20, 'minute'],
+    [intl.messages['serviceOverview.duration30M'], -30, 'minute'],
+    [intl.messages['serviceOverview.duration1H'], -1, 'hour'],
+    [intl.messages['serviceOverview.duration2H'], -2, 'hour'],
+    [intl.messages['serviceOverview.duration3H'], -3, 'hour'],
+    [intl.messages['serviceOverview.duration5H'], -5, 'hour'],
+    [intl.messages['serviceOverview.duration12H'], -12, 'hour'],
+    [intl.messages['serviceOverview.duration1D'], -1, 'day'],
+    [intl.messages['serviceOverview.duration2D'], -2, 'day'],
+    [intl.messages['serviceOverview.duration3D'], -3, 'day'],
+    [intl.messages['serviceOverview.duration7D'], -7, 'day'],
+  ];
+
   const headRow = [
-    createRow('api', '接口', true, '200px', '400px', true, 'left'),
-    createRow('count', '请求次数', false, '50px', '80px', true, 'center'),
-    createRow('low', 'LOW', true, '100px', '100px', true, 'center'),
-    createRow('high', 'HIGH', true, '50px', '80px', true, 'center'),
-    createRow('percentile50', 'p50', true, '100px', '100px', true, 'center'),
-    createRow('percentile95', 'p95', true, '50px', '80px', true, 'center'),
-    createRow('percentile99', 'p99', true, '50px', '80px', true, 'center'),
+    createRow('api', intl.messages['common.interface'], true, '200px', '400px', true, 'left'),
+    createRow('count', intl.messages['routeTrace.serviceTableTitleRequestCount'], false, '50px', '80px', true, 'center'),
+    createRow('low', intl.messages['routeTrace.serviceTableTitleLow'], true, '100px', '100px', true, 'center'),
+    createRow('high', intl.messages['routeTrace.serviceTableTitleHigh'], true, '50px', '80px', true, 'center'),
+    createRow('percentile50',  intl.messages['routeTrace.serviceTableTitle05'], true, '100px', '100px', true, 'center'),
+    createRow('percentile95', intl.messages['routeTrace.serviceTableTitle095'], true, '50px', '80px', true, 'center'),
+    createRow('percentile99', intl.messages['routeTrace.serviceTableTitle099'], true, '50px', '80px', true, 'center'),
   ];
 
   const { routeService, pageSize, pageNum } = useSelector(state => {
@@ -250,7 +253,7 @@ export default function RequestMonitor(props) {
   };
 
   return (
-    <KubeSimpleCard title='请求监控'>
+    <KubeSimpleCard title={intl.messages['serviceOverview.requestMonitor']}>
       <Popover
         id='instance-status-table-custom-content-popover'
         open={rangeSelectOpen}
@@ -295,7 +298,7 @@ export default function RequestMonitor(props) {
                 mb: '12px',
               }}
             >
-              选择时间范围
+              {intl.messages['serviceOverview.selectTimeRange']}
             </Box>
             <Stack direction='row'>
               {[0, 1, 2].map(value => {
@@ -355,7 +358,7 @@ export default function RequestMonitor(props) {
                 mb: '12px',
               }}
             >
-              自定义时间范围
+              {intl.messages['serviceOverview.customTimeRange']}
             </Box>
 
             {/* 两个Datetime Picker */}
@@ -371,7 +374,7 @@ export default function RequestMonitor(props) {
                     color: '#36435c',
                   }}
                 >
-                  开始时间
+                  {intl.messages['common.beginTime']}
                 </Box>
                 <KubeDatePicker value={tmpStart} setValue={setTmpStart} />
               </Box>
@@ -387,7 +390,7 @@ export default function RequestMonitor(props) {
                     color: '#36435c',
                   }}
                 >
-                  结束时间
+                  {intl.messages['common.endTime']}
                 </Box>
                 <KubeDatePicker value={tmpEnd} setValue={setTmpEnd} />
               </Box>
@@ -404,13 +407,13 @@ export default function RequestMonitor(props) {
                 sx={{ height: '32px', width: '84px' }}
                 onClick={handleClose}
               >
-                取消
+                {intl.messages['common.cancel']}
               </KubeCancelButton>
               <KubeConfirmButton
                 sx={{ height: '32px', width: '84px' }}
                 onClick={handleRangeConfirm}
               >
-                确定
+                {intl.messages['common.confirm']}
               </KubeConfirmButton>
             </Stack>
           </Box>
@@ -468,7 +471,7 @@ export default function RequestMonitor(props) {
               </InputAdornment>
             ),
           }}
-          placeholder='按名称搜索'
+          placeholder={intl.messages['common.searchByName']}
           inputProps={{}}
         />
 
@@ -666,9 +669,13 @@ export default function RequestMonitor(props) {
                   }}
                 >
                   <Question />
-                  <NormalBoldFont>无数据</NormalBoldFont>
+                  <NormalBoldFont>
+                      {intl.messages['common.serviceTableContentNoData']}
+                    </NormalBoldFont>
 
-                  <SmallLightFont>您可以尝试刷新数据</SmallLightFont>
+                    <SmallLightFont>
+                      {intl.messages['common.serviceTableContentNoDataHint']}
+                    </SmallLightFont>
                 </TableCell>
               </TableRow>
               ) : (

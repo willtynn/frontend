@@ -3,7 +3,7 @@
  */
 import { useState, useEffect } from 'react';
 import { Box, Stack, Typography, MenuItem } from '@mui/material';
-import { KubeInput, EditableTextField, KubeSelect } from '@/components/Input';
+import { KubeSelect } from '@/components/Input';
 import { useIntl } from 'react-intl';
 import { useSelector, useDispatch } from 'react-redux';
 import { UPDATE_TIMER } from '../../../../../actions/applicationAction';
@@ -88,7 +88,7 @@ export function Timer(props) {
 
   return (
     <Box sx={{ p: '12px' }}>
-      <KubeSubCard title='定时器列表'>
+      <KubeSubCard title={intl.messages['stressTesting.timerList']}>
         <Stack
           sx={{
             mt: '12px',
@@ -136,7 +136,7 @@ export function Timer(props) {
                             color: '#242e42',
                           }}
                         >
-                          定时器
+                          {intl.messages['common.timer']}
                         </Box>
                         <Box
                           sx={{
@@ -218,7 +218,7 @@ export function Timer(props) {
                 pt: '8px',
               }}
             >
-              添加定时器
+              {intl.messages['stressTesting.addTimer']}
             </Typography>
 
             <Typography
@@ -262,7 +262,7 @@ export const GAUSSIAN_RANDOM_TIMER = 'GaussianRandomTimer';
 
 function TimerConfiguration(props) {
   const { editTimer, handleConfirmClick, handleCancelClick } = props;
-
+  const intl = useIntl();
   const [currentTimer, setCurrentTimer] = useState(CONSTANT_TIMER);
   const [threadDelay, setThreadDelay] = useState(300);
   const [randomDelayMaximum, setRandomDelayMaximum] = useState(100.0);
@@ -273,7 +273,7 @@ function TimerConfiguration(props) {
   const timerList = [
     {
       id: CONSTANT_TIMER,
-      name: '固定计时器',
+      name: intl.messages['stressTesting.constantTimer'],
       timer: (
         <ConstantTimer
           threadDelay={threadDelay}
@@ -283,7 +283,7 @@ function TimerConfiguration(props) {
     },
     {
       id: UNIFORM_RANDOM_TIMER,
-      name: '统一随机定时器',
+      name: intl.messages['stressTesting.uniformRandomTimer'],
       timer: (
         <UniformRandomTimer
           randomDelayMaximum={randomDelayMaximum}
@@ -295,7 +295,7 @@ function TimerConfiguration(props) {
     },
     {
       id: POISSON_RANDOM_TIMER,
-      name: '泊松随机定时器',
+      name: intl.messages['stressTesting.poissonRandomTimer'],
       timer: (
         <PoissonRandomTimer
           lambda={lambda}
@@ -307,7 +307,7 @@ function TimerConfiguration(props) {
     },
     {
       id: GAUSSIAN_RANDOM_TIMER,
-      name: '高斯随机定时器',
+      name: intl.messages['stressTesting.gaussianRandomTimer'],
       timer: (
         <GaussianRandomTimer
           deviation={deviation}
@@ -345,18 +345,18 @@ function TimerConfiguration(props) {
     let tmpTimer = {};
     tmpTimer.id = currentTimer;
     if (currentTimer === CONSTANT_TIMER) {
-      tmpTimer.label = '固定计时器';
+      tmpTimer.label = intl.messages['stressTesting.constantTimer'];
       tmpTimer.threadDelay = threadDelay;
     } else if (currentTimer === UNIFORM_RANDOM_TIMER) {
-      tmpTimer.label = '统一随机定时器';
+      tmpTimer.label = intl.messages['stressTesting.uniformRandomTimer'];
       tmpTimer.randomDelayMaximum = randomDelayMaximum;
       tmpTimer.constantDelayOffset = constantDelayOffset;
     } else if (currentTimer === POISSON_RANDOM_TIMER) {
-      tmpTimer.label = '泊松随机定时器';
+      tmpTimer.label = intl.messages['stressTesting.poissonRandomTimer'];
       tmpTimer.lambda = lambda;
       tmpTimer.constantDelayOffset = constantDelayOffset;
     } else {
-      tmpTimer.label = '高斯随机定时器';
+      tmpTimer.label = intl.messages['stressTesting.gaussianRandomTimer'];
       tmpTimer.deviation = deviation;
       tmpTimer.constantDelayOffset = constantDelayOffset;
     }
@@ -367,7 +367,7 @@ function TimerConfiguration(props) {
   return (
     <Box sx={style}>
       <KubeDeploymentCard
-        title={editTimer && editTimer.id ? '修改定时器' : '创建定时器'}
+        title={editTimer && editTimer.id ? intl.messages['stressTesting.editTimer'] : intl.messages['stressTesting.addTimer']}
         handleClose={handleCancelClick}
       >
         <Stack
@@ -418,13 +418,13 @@ function TimerConfiguration(props) {
             sx={{ height: '32px', width: '84px' }}
             onClick={handleCancelClick}
           >
-            取消
+            {intl.messages['common.cancel']}
           </KubeCancelButton>
           <KubeConfirmButton
             sx={{ height: '32px', width: '84px' }}
             onClick={handleConfirmButtonClick}
           >
-            {editTimer && editTimer.id ? '确认' : '创建'}
+            {editTimer && editTimer.id ? intl.messages['common.confirm'] : intl.messages['common.create']}
           </KubeConfirmButton>
         </Stack>
       </KubeDeploymentCard>

@@ -14,6 +14,7 @@ import ResourceStatus from './DetailBlocks/ResourceStatus';
 import ServiceRequest from './DetailBlocks/ServiceRequest';
 import ResourceMonitor from './DetailBlocks/ResourceMonitor';
 import { useSelector } from 'react-redux';
+import { useIntl } from 'react-intl';
 
 export function DetailInfo(props) {
   const { exactService } = useSelector(state => {
@@ -21,6 +22,8 @@ export function DetailInfo(props) {
       exactService: state.Service.exactService,
     };
   });
+
+  const intl = useIntl();
   return (
     <Box
       sx={{
@@ -30,11 +33,11 @@ export function DetailInfo(props) {
     >
       <Tabs defaultValue={1}>
         <StyledTabsList>
-          <StyledTab value={1}>详细信息</StyledTab>
-          <StyledTab value={2}>资源状态</StyledTab>
-          <StyledTab value={3}>服务请求情况</StyledTab>
-          <StyledTab value={4}>请求监控</StyledTab>
-          <StyledTab value={5}>资源监控</StyledTab>
+          <StyledTab value={1}>{intl.messages['common.detailedInfo']}</StyledTab>
+          <StyledTab value={2}>{intl.messages['serviceOverview.resourceStatus']}</StyledTab>
+          <StyledTab value={3}>{intl.messages['serviceOverview.serviceRequestStatus']}</StyledTab>
+          <StyledTab value={4}>{intl.messages['serviceOverview.requestMonitor']}</StyledTab>
+          <StyledTab value={5}>{intl.messages['serviceOverview.resourceMonitor']}</StyledTab>
         </StyledTabsList>
         <StyledTabPanel value={1}>
           <Information service={exactService} />

@@ -53,7 +53,7 @@ export default function GeneralInfo(props) {
   const intl = useIntl();
   const [moreOperationAnchorEl, setMoreOperationAnchorEl] = useState(null);
   const moreOperationOpen = Boolean(moreOperationAnchorEl);
-  const [backText, setBackText] = useState("服务");
+  const [backText, setBackText] = useState(intl.messages['common.service']);
 
   const { exactService } = useSelector(state => {
     return {
@@ -62,16 +62,16 @@ export default function GeneralInfo(props) {
   });
 
   const items = [
-    [<EditService />, '编辑服务', () => {}],
-    [<Delete16 />, '删除', () => {}],
+    [<EditService />, intl.messages['serviceOverview.editService'], () => {}],
+    [<Delete16 />, intl.messages['common.delete'], () => {}],
   ];
 
   useEffect(() => {
     const from = localStorage.getItem("serviceFrom");
     if(from === "dependency") {
-      setBackText("服务依赖");
+      setBackText(intl.messages['serviceDependency.serviceDependency']);
     } else {
-      setBackText("服务");
+      setBackText(intl.messages['common.service']);
     }
   }, []);
 
@@ -191,14 +191,14 @@ export default function GeneralInfo(props) {
           alignItems='center'
         >
           <KubeCancelButton sx={{ height: '32px', width: '96px' }}>
-            编辑信息
+            {intl.messages['serviceOverview.editInfo']}
           </KubeCancelButton>
           <KubeCancelButton
             onClick={handleMoreOperation}
             sx={{ height: '32px', width: '96px' }}
           >
             <Stack direction='row' alignItems='center' justifyContent='center'>
-              <Box sx={{ ml: '4px' }}>更多操作</Box>
+              <Box sx={{ ml: '4px' }}>{intl.messages['common.moreOperation']}</Box>
               <ArrowDropDownIcon fontSize='small' />
             </Stack>
           </KubeCancelButton>
@@ -227,7 +227,7 @@ export default function GeneralInfo(props) {
             mb: '12px',
           }}
         >
-          详情
+          {intl.messages['common.details']}
         </Box>
 
         {/* Key-Value Pair */}

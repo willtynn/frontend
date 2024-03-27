@@ -1,10 +1,8 @@
 /**
  * src\Pages\Application\StressTesting\TestingProgress\ThreadGroup.js
  */
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import { Box, Stack, Typography } from '@mui/material';
-import { fontFamily } from '@/utils/commonUtils';
-import { KubeInput, StyledTextField } from '@/components/Input';
 import { useIntl } from 'react-intl';
 import Docker from '@/assets/Docker.svg';
 import { ThreadGroupProgress } from './ThreadGroupProgress';
@@ -117,7 +115,7 @@ export function ThreadGroup(props) {
                 letterSpacing: 'normal',
               }}
             >
-              线程组
+              {intl.messages['common.threadGroup']}
             </Typography>
             <Box
               sx={{
@@ -172,7 +170,7 @@ export function ThreadGroup(props) {
                                   color: '#242e42',
                                 }}
                               >
-                                线程组
+                                {intl.messages['common.threadGroup']}
                               </Box>
                               <Box
                                 sx={{
@@ -259,7 +257,7 @@ export function ThreadGroup(props) {
                       pt: '8px',
                     }}
                   >
-                    添加线程组
+                    {intl.messages['stressTesting.addThreadGroup']}
                   </Typography>
 
                   <Typography

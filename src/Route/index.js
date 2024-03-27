@@ -26,6 +26,7 @@ import InferInstanceDeploy from '../Pages/DNN/InferApplication';
 import InferRouteTrace from '../Pages/DNN/InferRoute/trace';
 import { InferRouteTraceInfoPage } from '../Pages/DNN/InferRoute/trace/RouteTraceInfoPage';
 import ModelDeploymentPage from '../Pages/DNN/Deployment/index'
+import EvolutionPlan from '../Pages/Evolution';
 
 export default function MyRoute() {
   return (
@@ -75,6 +76,9 @@ export default function MyRoute() {
         </Route>
         <Route path='model/'>
           <Route path='overview' element={<ModelOverview />} />
+        </Route>
+        <Route path='evolution/'>
+          <Route path="plan" element={<EvolutionPlan />} />
         </Route>
       </Route>
     </Routes>

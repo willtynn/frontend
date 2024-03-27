@@ -3,7 +3,7 @@
  */
 import { useState, useEffect } from 'react';
 import { Box, Stack, Typography } from '@mui/material';
-import { KubeInput, StyledTextField } from '@/components/Input';
+import { KubeInput } from '@/components/Input';
 import { useIntl } from 'react-intl';
 import { useSelector, useDispatch } from 'react-redux';
 import { StyledRadioGroup } from '../../../../../components/Radio';
@@ -24,22 +24,25 @@ import {
 } from '../../../../../actions/applicationAction';
 
 const regExp = new RegExp(/^[a-zA-Z0-9][a-zA-Z0-9 -]{0,251}[a-zA-Z0-9]$/);
-const onSampleErrorData = [
-  ['continue', '继续'],
-  ['startnextloop', '启动下一进程循环'],
-  ['stopthread', '停止线程'],
-  ['stoptest', '停止测试'],
-  ['stoptestnow', '立即停止测试'],
-];
+
 
 export function ThreadConfig(props) {
   const {
     showError,
     setThreadConfigError
   } = props;
+  const intl = useIntl();
 
   const [groupNameError, setGroupNameError] = useState(false);
   const [groupNameErrorType, setGroupNameErrorType] = useState(0);
+
+  const onSampleErrorData = [
+    ['continue', intl.messages['common.continue']],
+    ['startnextloop', intl.messages['stressTesting.startNextLoop']],
+    ['stopthread', intl.messages['stressTesting.stopthread']],
+    ['stoptest', intl.messages['stressTesting.stopTest']],
+    ['stoptestnow', intl.messages['stressTesting.stoptestnow']],
+  ];
 
   const {
     groupName,
@@ -73,8 +76,6 @@ export function ThreadConfig(props) {
   });
 
   const dispatch = useDispatch();
-
-  const intl = useIntl();
 
   useEffect(() => {
     setThreadConfigError(groupNameError)
@@ -121,7 +122,7 @@ export function ThreadConfig(props) {
     <Box sx={{ p: '12px' }}>
       <Stack direction='column' spacing={1.5}>
         <KubeInput
-          label='名称'
+          label={intl.messages['common.name']}
           decription={intl.messages['stressTesting.planNameDescription']}
           requried={true}
           id='thread-group-name-input'
@@ -133,7 +134,7 @@ export function ThreadConfig(props) {
         />
 
         <KubeInput
-          label='注释'
+          label={intl.messages['common.annotation']}
           decription={intl.messages['stressTesting.groupCommentDescription']}
           requried={false}
           id='thread-group-comment-input'
@@ -151,7 +152,7 @@ export function ThreadConfig(props) {
               fontWeight: 400,
             }}
           >
-            在取样器错误后要执行的动作
+            {intl.messages['stressTesting.onSamplerError']}
           </Typography>
           <Box
             sx={{
@@ -167,7 +168,7 @@ export function ThreadConfig(props) {
         </Box>
 
         <KubeInput
-          label='线程数'
+          label={intl.messages['common.threadNum']}
           requried={false}
           id='thread-group-comment-input'
           variant='outlined'
@@ -176,7 +177,7 @@ export function ThreadConfig(props) {
         />
 
         <KubeInput
-          label='Ramp-Up时间（秒）'
+          label={intl.messages['stressTesting.rampUpTime']}
           requried={false}
           id='thread-group-comment-input'
           variant='outlined'
@@ -191,7 +192,7 @@ export function ThreadConfig(props) {
             }}
           >
             <KubeInput
-              label='循环次数'
+              label={intl.messages['common.cycleIndex']}
               requried={false}
               id='thread-group-comment-input'
               variant='outlined'
@@ -204,7 +205,7 @@ export function ThreadConfig(props) {
             <StyledCheckbox
               checked={loopsContinueForever}
               setChecked={checked => dispatch({type: UPDATE_LOOPS_CONTINUE_FOREVER, data: checked})}
-              msg='永远'
+              msg={intl.messages['common.forever']}
             />
           </Box>
         </Stack>
@@ -230,7 +231,7 @@ export function ThreadConfig(props) {
         {scheduler ? (
           <>
             <KubeInput
-              label='持续时间（秒）'
+              label={intl.messages['stressTesting.durationS']}
               requried={false}
               id='thread-group-comment-input'
               variant='outlined'
@@ -239,7 +240,7 @@ export function ThreadConfig(props) {
             />
 
             <KubeInput
-              label='启动延迟（秒）'
+              label={intl.messages['stressTesting.startDelayS']}
               requried={false}
               id='thread-group-comment-input'
               variant='outlined'

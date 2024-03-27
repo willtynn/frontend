@@ -459,7 +459,7 @@ export default function ServiceStatusTable(props) {
   const filtering = () => {
     let tmpData = JSON.parse(JSON.stringify(tableData));
     searchList.forEach((value, _) => {
-      if (value.startsWith(`${intl.messages['common.name']}:`)) {
+      if (value.startsWith(`${intl.messages['common.status']}:`)) {
         tmpData = tmpData.filter((tableRow, _) => {
           return tableRow.phase.includes(value.replace(statusPattern, ''));
         });
@@ -793,13 +793,13 @@ export default function ServiceStatusTable(props) {
                         p: '0px 16px !important',
                       }}
                     >
-                      <KubeCheckbox
+                      {/* <KubeCheckbox
                         sx={{
                           bgcolor: 'transparent !important',
                         }}
                         disableRipple
                         size='small'
-                      />
+                      /> */}
                     </StyledTableBodyCell>
 
                     <StyledTableBodyCell

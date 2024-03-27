@@ -70,17 +70,11 @@ function createRow(
   };
 }
 
-const headSecondRow = [
-  createRow('major', '大版本号', false, '240px', '280px', true),
-  createRow('minor', '小版本号', false, '190px', '190px', true),
-  createRow('patch', 'Patch版本号', false, '200px', '240px', true),
-];
-
 const versionKey = ['major', 'minor', 'patch'];
 const resourceKey = ['cpu', 'ram', 'disk', 'gpuCore', 'gpuMem'];
 
 const IDPattern = new RegExp(/^ID:/);
-const namePattern = new RegExp(/^名称:/);
+const namePattern = new RegExp(/^(名称|Name):/);
 
 export const RUNNING = 'Running';
 export const PENDING = 'Pending';
@@ -107,7 +101,7 @@ export default function ServiceOverview(props) {
   const [searchValue, setSearchValue] = useState('');
   const [searchSelectAnchorEl, setSearchSelectAnchorEl] = useState(null);
   const searchSelectOpen = Boolean(searchSelectAnchorEl);
-  const [searchBy, setSearchBy] = useState(['名称', 'ID']);
+  const [searchBy, setSearchBy] = useState([intl.messages['common.name'], 'ID']);
 
   const [colDisplay, setColDisplay] = useState([true, true, true, true]);
   const [customContentAnchorEl, setCustomContentAnchorEl] = useState(null);
@@ -197,11 +191,11 @@ export default function ServiceOverview(props) {
       return;
     }
     if (searchList.length == 0) {
-      setSearchBy(['名称', 'ID']);
+      setSearchBy([intl.messages['common.name'], 'ID']);
       return;
     }
     if (searchList[0].startsWith('ID:')) {
-      setSearchBy(['名称']);
+      setSearchBy([intl.messages['common.name']]);
     } else {
       setSearchBy(['ID']);
     }
@@ -241,7 +235,7 @@ export default function ServiceOverview(props) {
         tmpData = tmpData.filter((tableRow, _) => {
           return tableRow.id.includes(value.replace(IDPattern, ''));
         });
-      } else if (value.startsWith('名称:')) {
+      } else if (value.startsWith(`${intl.messages['common.name']}:`)) {
         tmpData = tmpData.filter((tableRow, _) => {
           return tableRow.name.includes(value.replace(namePattern, ''));
         });
@@ -611,18 +605,18 @@ export default function ServiceOverview(props) {
                     selected={false}
                   >
                     <StyledTableBodyCell
-                      align='center'
+                      align='left'
                       sx={{
                         p: '0px 16px !important',
                       }}
                     >
-                      <KubeCheckbox
+                      {/* <KubeCheckbox
                         sx={{
                           bgcolor: 'transparent !important',
                         }}
                         disableRipple
                         size='small'
-                      />
+                      /> */}
                     </StyledTableBodyCell>
 
                     {/* id */}
@@ -716,9 +710,13 @@ export default function ServiceOverview(props) {
                   }}
                 >
                   <Question />
-                  <NormalBoldFont>无数据</NormalBoldFont>
+                  <NormalBoldFont>
+                      {intl.messages['common.serviceTableContentNoData']}
+                    </NormalBoldFont>
 
-                  <SmallLightFont>您可以尝试刷新数据</SmallLightFont>
+                    <SmallLightFont>
+                      {intl.messages['common.serviceTableContentNoDataHint']}
+                    </SmallLightFont>
                 </TableCell>
               </TableRow>
             ) : (

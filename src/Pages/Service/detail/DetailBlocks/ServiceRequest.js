@@ -48,6 +48,7 @@ import { KubeDatePicker } from '../../../../components/DatePicker';
 import { calculateDuration } from '../../../Route/trace/functions/func';
 import Question from '@/assets/Question.svg';
 import { NormalBoldFont, SmallLightFont } from '@/components/Fonts';
+import { useIntl } from 'react-intl';
 
 const RangeCandidate = [
   ['最近10分钟', -10, 'minute'],
@@ -122,7 +123,7 @@ function stableSort(array, comparator) {
 
 export default function ServiceRequest(props) {
   const { service } = props;
-
+  const intl = useIntl();
   const [apiSearchValue, setApiSearchValue] = useState('');
   const [rangeIndex, setRangeIndex] = useState(4);
   const [start, setStart] = useState(dayjs().add(-2, 'hour'));
@@ -144,20 +145,60 @@ export default function ServiceRequest(props) {
   const [currentAPI, setCurrentAPI] = useState('');
 
   const headRow = [
-    createRow('request', '请求', false, '200px', '400px', true, 'left'),
-    createRow('length', '链路长度', false, '50px', '80px', true, 'center'),
-    createRow('startTime', '开始时间', true, '100px', '100px', true, 'center'),
     createRow(
-      'responseTime',
-      '响应时间',
+      'request',
+      intl.messages['common.request'],
+      false,
+      '200px',
+      '400px',
+      true,
+      'left'
+    ),
+    createRow(
+      'length',
+      intl.messages['serviceOverview.linkLength'],
+      false,
+      '50px',
+      '80px',
+      true,
+      'center'
+    ),
+    createRow(
+      'startTime',
+      intl.messages['common.beginTime'],
       true,
       '100px',
       '100px',
       true,
       'center'
     ),
-    createRow('method', '请求方法', false, '50px', '80px', true, 'center'),
-    createRow('code', '响应码', false, '50px', '80px', true, 'center'),
+    createRow(
+      'responseTime',
+      intl.messages['common.responseTime'],
+      true,
+      '100px',
+      '100px',
+      true,
+      'center'
+    ),
+    createRow(
+      'method',
+      intl.messages['common.requestMethod'],
+      false,
+      '50px',
+      '80px',
+      true,
+      'center'
+    ),
+    createRow(
+      'code',
+      intl.messages['common.responseCode'],
+      false,
+      '50px',
+      '80px',
+      true,
+      'center'
+    ),
   ];
 
   const { routeService, routeTrace, pageSize, pageNum } = useSelector(state => {
@@ -253,7 +294,7 @@ export default function ServiceRequest(props) {
     setRangeIndex(4);
     setTmpStart(dayjs().add(-2, 'hour'));
     setTmpEnd(dayjs());
-  }
+  };
 
   //改变每页的数量
   const handlePerPageChange = pageSize => {
@@ -278,7 +319,7 @@ export default function ServiceRequest(props) {
     setStart(tmpStart);
     setEnd(tmpEnd);
     handleClose();
-  }
+  };
 
   const handleKeyDown = e => {
     if (typeof e.target.value === 'string' && e.keyCode === 13) {
@@ -305,7 +346,9 @@ export default function ServiceRequest(props) {
   };
 
   return (
-    <KubeSimpleCard title='服务接口请求'>
+    <KubeSimpleCard
+      title={intl.messages['serviceOverview.serviceRequestInterface']}
+    >
       <Popover
         id='instance-status-table-custom-content-popover'
         open={rangeSelectOpen}
@@ -350,7 +393,7 @@ export default function ServiceRequest(props) {
                 mb: '12px',
               }}
             >
-              选择时间范围
+              {intl.messages['serviceOverview.selectTimeRange']}
             </Box>
             <Stack direction='row'>
               {[0, 1, 2].map(value => {
@@ -410,7 +453,7 @@ export default function ServiceRequest(props) {
                 mb: '12px',
               }}
             >
-              自定义时间范围
+              {intl.messages['serviceOverview.customTimeRange']}
             </Box>
 
             {/* 两个Datetime Picker */}
@@ -426,7 +469,7 @@ export default function ServiceRequest(props) {
                     color: '#36435c',
                   }}
                 >
-                  开始时间
+                  {intl.messages['serviceOverview.beginTime']}
                 </Box>
                 <KubeDatePicker value={tmpStart} setValue={setTmpStart} />
               </Box>
@@ -442,7 +485,7 @@ export default function ServiceRequest(props) {
                     color: '#36435c',
                   }}
                 >
-                  结束时间
+                  {intl.messages['serviceOverview.endTime']}
                 </Box>
                 <KubeDatePicker value={tmpEnd} setValue={setTmpEnd} />
               </Box>
@@ -455,11 +498,17 @@ export default function ServiceRequest(props) {
               spacing={1.5}
               sx={{ mt: '32px' }}
             >
-              <KubeCancelButton sx={{ height: '32px', width: '84px' }} onClick={handleClose}>
-                取消
+              <KubeCancelButton
+                sx={{ height: '32px', width: '84px' }}
+                onClick={handleClose}
+              >
+                {intl.messages['common.cancel']}
               </KubeCancelButton>
-              <KubeConfirmButton sx={{ height: '32px', width: '84px' }} onClick={handleRangeConfirm}>
-                确定
+              <KubeConfirmButton
+                sx={{ height: '32px', width: '84px' }}
+                onClick={handleRangeConfirm}
+              >
+                {intl.messages['common.confirm']}
               </KubeConfirmButton>
             </Stack>
           </Box>
@@ -517,7 +566,7 @@ export default function ServiceRequest(props) {
               </InputAdornment>
             ),
           }}
-          placeholder='按名称搜索'
+          placeholder={intl.messages['common.searchByName']}
           inputProps={{}}
         />
 
@@ -572,241 +621,265 @@ export default function ServiceRequest(props) {
           <RefreshIcon fontSize='small' />
         </EclipseTransparentButton>
       </Stack>
-      <Stack direction='row' sx={{ mt: '20px' }} spacing={2}>
-        {/* 左侧api列表 */}
-        <Box
-          sx={{
-            maxHeight: '660px',
-            overflowY: 'auto',
-          }}
-        >
-          <Stack direction='column' spacing={1} >
-            {visibleAPI.map((api, index) => {
-              return (
-                <Stack
-                  sx={{
-                    padding: '8px 20px',
-                    width: '200px',
-                    height: '52px',
-                    borderRadius: '4px',
-                    bgcolor: currentAPI === api.api ? '#55bc8a' : '#FFFFFF',
-                    color: currentAPI === api.api ? '#FFFFFF' : '#242E42',
-                    '&:hover': {
-                      bgcolor: '#55bc8a',
-                      color: '#FFFFFF',
-                    },
-                    cursor: 'pointer',
-                    overflow: 'hidden',
-                    textOverflow: 'ellipsis',
-                    whiteSpace: 'nowrap',
-                  }}
-                  onClick={handleApiChange.bind(this, api.api)}
-                  direction='row'
-                  alignItems='center'
-                  spacing={2.5}
-                >
-                  <Box>{currentAPI === api.api ? <WhiteAPI /> : <API />}</Box>
-
-                  <Box
+      {visibleAPI && visibleAPI.length > 0 ? (
+        <Stack direction='row' sx={{ mt: '20px' }} spacing={2}>
+          {/* 左侧api列表 */}
+          <Box
+            sx={{
+              maxHeight: '660px',
+              overflowY: 'auto',
+            }}
+          >
+            <Stack direction='column' spacing={1}>
+              {visibleAPI.map((api, index) => {
+                return (
+                  <Stack
                     sx={{
-                      width: '100%',
+                      padding: '8px 20px',
+                      width: '200px',
+                      height: '52px',
+                      borderRadius: '4px',
+                      bgcolor: currentAPI === api.api ? '#55bc8a' : '#FFFFFF',
+                      color: currentAPI === api.api ? '#FFFFFF' : '#242E42',
+                      '&:hover': {
+                        bgcolor: '#55bc8a',
+                        color: '#FFFFFF',
+                      },
+                      cursor: 'pointer',
                       overflow: 'hidden',
                       textOverflow: 'ellipsis',
                       whiteSpace: 'nowrap',
                     }}
+                    onClick={handleApiChange.bind(this, api.api)}
+                    direction='row'
+                    alignItems='center'
+                    spacing={2.5}
                   >
+                    <Box>{currentAPI === api.api ? <WhiteAPI /> : <API />}</Box>
+
                     <Box
                       sx={{
-                        fontSize: '12px',
-                        fontFamily: fontFamily,
-                        fontStyle: 'normal',
-                        fontWeight: 700,
-                        lineHeight: 1.67,
-                        color: '#242e42',
+                        width: '100%',
                         overflow: 'hidden',
                         textOverflow: 'ellipsis',
                         whiteSpace: 'nowrap',
                       }}
                     >
-                      {api.api}
-                    </Box>
-                    <Box
-                      sx={{
-                        fontSize: '12px',
-                        fontFamily: fontFamily,
-                        fontStyle: 'normal',
-                        fontWeight: 400,
-                        lineHeight: 1.67,
-                        color: '#79879c',
-                      }}
-                    >
-                      API
-                    </Box>
-                  </Box>
-                </Stack>
-              );
-            })}
-          </Stack>
-        </Box>
-
-        {/* 右侧请求详情 */}
-        <Box sx={{ width: 'calc(100% - 256px)' }}>
-          <StyledTableContainer sx={{ bgcolor: '#FFF', width: '100%' }}>
-            <Table
-              stickyHeader
-              size='small'
-              sx={{
-                tableLayout: 'auto',
-                width: '100%',
-              }}
-            >
-              <StyledTableHead
-                headRow={headRow}
-                selectAll={false}
-                order={order}
-                orderBy={orderBy}
-                onRequestSort={handleRequestSort}
-              />
-
-              <TableBody>
-                {!loading &&
-                visibleRows !== null &&
-                visibleRows.length !== 0 ? (
-                  visibleRows.map((row, index) => {
-                    return (
-                      <TableRow
-                        key={row.id + '' + index}
-                        aria-checked={false}
+                      <Box
                         sx={{
-                          '&:last-child td, &:last-child th': {
-                            border: 0,
-                          },
-                          fontWeight: 600,
-                          maxWidth: '110px',
-                          position: 'sticky',
-                          left: 0,
-                          zIndex: 6,
+                          fontSize: '12px',
+                          fontFamily: fontFamily,
+                          fontStyle: 'normal',
+                          fontWeight: 700,
+                          lineHeight: 1.67,
+                          color: '#242e42',
+                          overflow: 'hidden',
+                          textOverflow: 'ellipsis',
+                          whiteSpace: 'nowrap',
                         }}
-                        selected={false}
                       >
-                        <StyledTableBodyCell
-                          align={'left'}
-                          sx={{
-                            padding: '6px 16px !important',
-                            minWidth: headRow[0].minWidth,
-                            maxWidth: headRow[0].maxWidth,
-                          }}
-                        >
-                          <Box>
-                            <Tooltip title={row.request}>
-                              <Box
-                                component='div'
-                                sx={{
-                                  textOverflow: 'ellipsis',
-                                  whiteSpace: 'nowrap',
-                                  overflow: 'hidden',
-                                }}
-                              >
-                                {row.request}
-                              </Box>
-                            </Tooltip>
-                          </Box>
-                        </StyledTableBodyCell>
+                        {api.api}
+                      </Box>
+                      <Box
+                        sx={{
+                          fontSize: '12px',
+                          fontFamily: fontFamily,
+                          fontStyle: 'normal',
+                          fontWeight: 400,
+                          lineHeight: 1.67,
+                          color: '#79879c',
+                        }}
+                      >
+                        API
+                      </Box>
+                    </Box>
+                  </Stack>
+                );
+              })}
+            </Stack>
+          </Box>
 
-                        <StyledTableBodyCell
-                          align={'center'}
-                          sx={{
-                            display: headRow[1].show ? 'table-cell' : 'none',
-                            minWidth: headRow[1].minWidth,
-                            maxWidth: headRow[1].maxWidth,
-                          }}
-                        >
-                          {row.length}
-                        </StyledTableBodyCell>
+          {/* 右侧请求详情 */}
+          <Box sx={{ width: 'calc(100% - 256px)' }}>
+            <StyledTableContainer sx={{ bgcolor: '#FFF', width: '100%' }}>
+              <Table
+                stickyHeader
+                size='small'
+                sx={{
+                  tableLayout: 'auto',
+                  width: '100%',
+                }}
+              >
+                <StyledTableHead
+                  headRow={headRow}
+                  selectAll={false}
+                  order={order}
+                  orderBy={orderBy}
+                  onRequestSort={handleRequestSort}
+                />
 
-                        <StyledTableBodyCell
-                          align={'center'}
+                <TableBody>
+                  {!loading &&
+                  visibleRows !== null &&
+                  visibleRows.length !== 0 ? (
+                    visibleRows.map((row, index) => {
+                      return (
+                        <TableRow
+                          key={row.id + '' + index}
+                          aria-checked={false}
                           sx={{
-                            display: headRow[2].show ? 'table-cell' : 'none',
-                            minWidth: headRow[2].minWidth,
-                            maxWidth: headRow[2].maxWidth,
+                            '&:last-child td, &:last-child th': {
+                              border: 0,
+                            },
+                            fontWeight: 600,
+                            maxWidth: '110px',
+                            position: 'sticky',
+                            left: 0,
+                            zIndex: 6,
                           }}
+                          selected={false}
                         >
-                          {formatDatetimeString(row.startTime)}
-                        </StyledTableBodyCell>
+                          <StyledTableBodyCell
+                            align={'left'}
+                            sx={{
+                              padding: '6px 16px !important',
+                              minWidth: headRow[0].minWidth,
+                              maxWidth: headRow[0].maxWidth,
+                            }}
+                          >
+                            <Box>
+                              <Tooltip title={row.request}>
+                                <Box
+                                  component='div'
+                                  sx={{
+                                    textOverflow: 'ellipsis',
+                                    whiteSpace: 'nowrap',
+                                    overflow: 'hidden',
+                                  }}
+                                >
+                                  {row.request}
+                                </Box>
+                              </Tooltip>
+                            </Box>
+                          </StyledTableBodyCell>
 
-                        <StyledTableBodyCell
-                          align={'center'}
-                          sx={{
-                            display: headRow[3].show ? 'table-cell' : 'none',
-                            minWidth: headRow[3].minWidth,
-                            maxWidth: headRow[3].maxWidth,
-                          }}
-                        >
-                          {calculateDuration(row.responseTime)}
-                        </StyledTableBodyCell>
+                          <StyledTableBodyCell
+                            align={'center'}
+                            sx={{
+                              display: headRow[1].show ? 'table-cell' : 'none',
+                              minWidth: headRow[1].minWidth,
+                              maxWidth: headRow[1].maxWidth,
+                            }}
+                          >
+                            {row.length}
+                          </StyledTableBodyCell>
 
-                        <StyledTableBodyCell
-                          align={'center'}
-                          sx={{
-                            display: headRow[4].show ? 'table-cell' : 'none',
-                            minWidth: headRow[4].minWidth,
-                            maxWidth: headRow[4].maxWidth,
-                          }}
-                        >
-                          {row.method}
-                        </StyledTableBodyCell>
+                          <StyledTableBodyCell
+                            align={'center'}
+                            sx={{
+                              display: headRow[2].show ? 'table-cell' : 'none',
+                              minWidth: headRow[2].minWidth,
+                              maxWidth: headRow[2].maxWidth,
+                            }}
+                          >
+                            {formatDatetimeString(row.startTime)}
+                          </StyledTableBodyCell>
 
-                        <StyledTableBodyCell
-                          align={'center'}
-                          sx={{
-                            display: headRow[5].show ? 'table-cell' : 'none',
-                            minWidth: headRow[5].minWidth,
-                            maxWidth: headRow[5].maxWidth,
-                          }}
-                        >
-                          {row.code}
-                        </StyledTableBodyCell>
-                      </TableRow>
-                    );
-                  })
-                ) : !loading ? (
-                  <TableRow style={{ height: '220px' }}>
-                <TableCell
-                  colSpan={6}
-                  sx={{
-                    textAlign: 'center',
-                    fontSize: '20px',
-                    fontFamily: fontFamily,
-                    fontStyle: 'normal',
-                  }}
-                >
-                  <Question />
-                  <NormalBoldFont>无数据</NormalBoldFont>
+                          <StyledTableBodyCell
+                            align={'center'}
+                            sx={{
+                              display: headRow[3].show ? 'table-cell' : 'none',
+                              minWidth: headRow[3].minWidth,
+                              maxWidth: headRow[3].maxWidth,
+                            }}
+                          >
+                            {calculateDuration(row.responseTime)}
+                          </StyledTableBodyCell>
 
-                  <SmallLightFont>您可以尝试刷新数据</SmallLightFont>
-                </TableCell>
-              </TableRow>
-                ) : (
-                  <div></div>
-                )}
-              </TableBody>
-            </Table>
-          </StyledTableContainer>
-          <StyledTableFooter
-            pageNum={pageNum}
-            pageSize={pageSize}
-            // perPageList={[]}
-            count={count}
-            handlePerPageChange={handlePerPageChange}
-            handlePageChange={handlePageChange}
-            sx={{
-              pt: '12px',
-              pb: '12px',
-            }}
-          />
-        </Box>
-      </Stack>
+                          <StyledTableBodyCell
+                            align={'center'}
+                            sx={{
+                              display: headRow[4].show ? 'table-cell' : 'none',
+                              minWidth: headRow[4].minWidth,
+                              maxWidth: headRow[4].maxWidth,
+                            }}
+                          >
+                            {row.method}
+                          </StyledTableBodyCell>
+
+                          <StyledTableBodyCell
+                            align={'center'}
+                            sx={{
+                              display: headRow[5].show ? 'table-cell' : 'none',
+                              minWidth: headRow[5].minWidth,
+                              maxWidth: headRow[5].maxWidth,
+                            }}
+                          >
+                            {row.code}
+                          </StyledTableBodyCell>
+                        </TableRow>
+                      );
+                    })
+                  ) : !loading ? (
+                    <TableRow style={{ height: '220px' }}>
+                      <TableCell
+                        colSpan={6}
+                        sx={{
+                          textAlign: 'center',
+                          fontSize: '20px',
+                          fontFamily: fontFamily,
+                          fontStyle: 'normal',
+                        }}
+                      >
+                        <Question />
+                        <NormalBoldFont>
+                          {intl.messages['common.serviceTableContentNoData']}
+                        </NormalBoldFont>
+
+                        <SmallLightFont>
+                          {
+                            intl.messages[
+                              'common.serviceTableContentNoDataHint'
+                            ]
+                          }
+                        </SmallLightFont>
+                      </TableCell>
+                    </TableRow>
+                  ) : (
+                    <div></div>
+                  )}
+                </TableBody>
+              </Table>
+            </StyledTableContainer>
+            <StyledTableFooter
+              pageNum={pageNum}
+              pageSize={pageSize}
+              // perPageList={[]}
+              count={count}
+              handlePerPageChange={handlePerPageChange}
+              handlePageChange={handlePageChange}
+              sx={{
+                pt: '12px',
+                pb: '12px',
+              }}
+            />
+          </Box>
+        </Stack>
+      ) : (
+        <Stack
+          direction='column'
+          justifyContent='center'
+          alignItems='center'
+          sx={{
+            height: '300px',
+          }}
+        >
+          <Question />
+          <NormalBoldFont>
+            {intl.messages['common.serviceTableContentNoData']}
+          </NormalBoldFont>
+        </Stack>
+      )}
     </KubeSimpleCard>
   );
 }

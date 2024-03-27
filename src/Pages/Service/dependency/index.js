@@ -767,7 +767,7 @@ function ServiceDependency() {
                 lineHeight: '32px',
               }}
             >
-              服务依赖
+              {intl.messages['serviceDependency.serviceDependency']}
             </Typography>
             <Typography
               sx={{
@@ -794,8 +794,8 @@ function ServiceDependency() {
         <Box>
           <Tabs value={tabValue} onChange={(e, value) => setTabValue(value)}>
             <StyledTabsList>
-              <StyledTab value={1}>服务依赖</StyledTab>
-              <StyledTab value={2}>接口依赖</StyledTab>
+              <StyledTab value={1}>{intl.messages['serviceDependency.serviceDependency']}</StyledTab>
+              <StyledTab value={2}>{intl.messages['serviceDependency.interfaceDependency']}</StyledTab>
             </StyledTabsList>
 
             <StyledTabPanel value={1}>
@@ -820,7 +820,7 @@ function ServiceDependency() {
                       setCurrentService(newValue);
                     }}
                     id='positive_service_autocomplete'
-                    noOptionsText='无可选服务'
+                    noOptionsText={intl.messages['serviceDependency.noOptionalService']}
                     options={Object.keys(positiveServices)}
                     filterOptions={(options, params) => {
                       const { inputValue } = params;
@@ -865,7 +865,7 @@ function ServiceDependency() {
                       if (positiveServices[option]) {
                         params.inputProps.value = `${positiveServices[option].name} (${option}) `;
                       }
-                      return <TextField {...params} placeholder='可选服务' />;
+                      return <TextField {...params} placeholder={intl.messages['serviceDependency.optionalService']} />;
                     }}
                   />
                 </Box>
@@ -930,7 +930,7 @@ function ServiceDependency() {
                       setCurrentInterface(newValue);
                     }}
                     id='positive_interface_autocomplete'
-                    noOptionsText='无可选接口'
+                    noOptionsText={intl.messages['serviceDependency.noOptionalInterface']}
                     options={Object.keys(positiveInterfaces)}
                     filterOptions={(options, params) => {
                       const { inputValue } = params;
@@ -975,7 +975,7 @@ function ServiceDependency() {
                       if (positiveInterfaces[option]) {
                         params.inputProps.value = `${positiveInterfaces[option].path} (${option}) `;
                       }
-                      return <TextField {...params} placeholder='可选接口' />;
+                      return <TextField {...params} placeholder={intl.messages['serviceDependency.optionalInterface']} />;
                     }}
                   />
                 </Box>
@@ -1018,12 +1018,6 @@ function ServiceDependency() {
                     </Box>
                   )}
                 </Box>
-
-                {/* <FreeCanvas
-                  nodes={fakeNodes}
-                  links={fakeLinks}
-                  handleNodeClick={() => {}}
-                /> */}
               </Box>
             </StyledTabPanel>
           </Tabs>

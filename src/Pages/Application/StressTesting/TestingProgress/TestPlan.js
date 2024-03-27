@@ -107,7 +107,7 @@ export function TestPlan(props) {
         spacing={2}
       >
         <KubeInput
-          label='名称'
+          label={intl.messages['common.name']}
           decription={intl.messages['stressTesting.planNameDescription']}
           requried={true}
           id='test-plan-name-input'
@@ -119,7 +119,7 @@ export function TestPlan(props) {
         />
 
         <KubeInput
-          label='注释'
+          label={intl.messages['common.annotation']}
           decription={intl.messages['stressTesting.planCommentDescription']}
           requried={false}
           id='test-plan-comment-input'
@@ -136,7 +136,7 @@ export function TestPlan(props) {
             dispatch({ type: UPDATE_PLAN_NAMESPACE, data: newValue });
           }}
           id='plan_namespace_autocomplete'
-          noOptionsText="无可选命名空间"
+          noOptionsText={intl.messages['stressTesting.noOptionalNamespace']}
           options={namespaces}
           sx={{
             width: '100%',
@@ -150,7 +150,7 @@ export function TestPlan(props) {
             letterSpacing: 'normal',
           }}
           renderInput={params => (
-            <TextField {...params} placeholder='命名空间' />
+            <TextField {...params} placeholder={intl.messages['common.namespace']} />
           )}
         />
 
@@ -163,7 +163,7 @@ export function TestPlan(props) {
             dispatch({ type: UPDATE_PLAN_PODNAME, data: newValue });
           }}
           id='plan_podName_autocomplete'
-          noOptionsText="无可选Pod"
+          noOptionsText={intl.messages['stressTesting.noOptionalPod']}
           options={(gottenInstances && gottenInstances.items)? gottenInstances.items.map((value, index) => { return value.metadata.name }) : []}
           filterOptions={(options, params) => {
             const { inputValue } = params;

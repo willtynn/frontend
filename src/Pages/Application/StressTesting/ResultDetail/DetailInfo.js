@@ -6,9 +6,11 @@ import {
   StyledTabPanel,
 } from '@/components/Tab';
 import { Information } from './DetailBlocks/Information';
-import { useSelector } from 'react-redux';
+import { useIntl } from 'react-intl';
 
 export default function DetailInfo() {
+
+  const intl = useIntl();
 
   return (
     <Box
@@ -19,13 +21,12 @@ export default function DetailInfo() {
     >
       <Tabs defaultValue={1}>
         <StyledTabsList>
-          <StyledTab value={1}>普通信息</StyledTab>
+          <StyledTab value={1}>{intl.messages['common.basicInfo']}</StyledTab>
         </StyledTabsList>
         <StyledTabPanel value={1}>
           <Information />
         </StyledTabPanel>
       </Tabs>
-      {/* </Stack> */}
     </Box>
   );
 }

@@ -2,7 +2,7 @@
  * src\Pages\Application\StressTesting\TestingProgress\index.js
  */
 
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { Box, Stack } from '@mui/material';
 import { KubeDeploymentCard } from '@/components/InfoCard';
 import { fontFamily } from '@/utils/commonUtils';
@@ -12,7 +12,6 @@ import InfoNow from '@/assets/InfoNow.svg';
 import DockerFinished from '@/assets/DockerFinished.svg';
 import DockerWaiting from '@/assets/DockerWaiting.svg';
 import DockerNow from '@/assets/DockerNow.svg';
-import { KubeInput, StyledTextField } from '@/components/Input';
 import { useIntl } from 'react-intl';
 import { KubeCancelButton, KubeConfirmButton } from '@/components/Button';
 import ProgressIndicator from '../../../Cluster/deploy/DeployProgress/ProgressIndicator';
@@ -26,7 +25,6 @@ import {
   RESET_GROUP,
   RESET_PLAN,
   UPDATE_GROUP_EDIT_INDEX,
-  measure,
   createTestPlan
 } from '../../../../actions/applicationAction';
 import {
@@ -379,20 +377,20 @@ export function TestingProgress(props) {
 
   return (
     <Box sx={style}>
-      <KubeDeploymentCard title='创建测试计划' handleClose={handleCancelClick}>
+      <KubeDeploymentCard title={intl.messages['stressTesting.createTestPlan']} handleClose={handleCancelClick}>
         <Stack
           direction='row'
           spacing={0}
           sx={{ bgcolor: '#eff4f9', p: '0px 20px' }}
         >
           <ProgressIndicator
-            title='测试计划'
+            title={intl.messages['common.testPlan']}
             adornments={[<InfoWaiting />, <InfoNow />, <InfoFinished />]}
             stage={1}
             currentStage={currentStage}
           />
           <ProgressIndicator
-            title='线程组设置'
+            title={intl.messages['stressTesting.threadGroupSetting']}
             adornments={[<DockerWaiting />, <DockerNow />, <DockerFinished />]}
             stage={2}
             currentStage={currentStage}
@@ -418,7 +416,7 @@ export function TestingProgress(props) {
             sx={{ height: '32px', p: '5px 23px' }}
             onClick={handleCancelButtonClick}
           >
-            取消
+            {intl.messages['common.cancel']}
           </KubeCancelButton>
           {/* 不在edit group时，主步骤大于1；在edit group时，次步骤大于1 */}
           {(currentStage > 1 && !groupEdit) ||
@@ -427,7 +425,7 @@ export function TestingProgress(props) {
               sx={{ height: '32px', p: '5px 23px' }}
               onClick={previousStep}
             >
-              上一步
+              {intl.messages['common.previousStep']}
             </KubeCancelButton>
           ) : (
             <></>
@@ -438,7 +436,7 @@ export function TestingProgress(props) {
               sx={{ height: '32px', p: '5px 23px' }}
               onClick={nextStep}
             >
-              下一步
+              {intl.messages['common.nextStep']}
             </KubeConfirmButton>
           ) : (
             <KubeConfirmButton
@@ -446,10 +444,10 @@ export function TestingProgress(props) {
               onClick={handleConfirmButtonClick}
             >
               {!groupEdit
-                ? '创建'
+                ? intl.messages['common.create']
                 : groupEditIndex !== null
-                ? '修改线程组'
-                : '添加'}
+                ? intl.messages['stressTesting.editThreadGroup']
+                : intl.messages['common.add']}
             </KubeConfirmButton>
           )}
         </Stack>

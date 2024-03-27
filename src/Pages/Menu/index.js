@@ -39,8 +39,6 @@ export default function MiniDrawer() {
   const [verticalOpen5, setVerticalOpen5] = useState(false);
   const [verticalOpen6, setVerticalOpen6] = useState(false);
   const [verticalOpen7, setVerticalOpen7] = useState(false);
-  const [verticalOpen8, setVerticalOpen8] = useState(false);
-  const [verticalOpen9, setVerticalOpen9] = useState(false);
 
   // 这部分变量用于控制导航列表按钮字体颜色
   // 集群模块
@@ -62,13 +60,16 @@ export default function MiniDrawer() {
   // 镜像模块
   const [l5, setl5] = useState(false);
   const [l51, setl51] = useState(false);
-  // DNN协同推理模块
+  // 演化模块
   const [l6, setl6] = useState(false);
   const [l61, setl61] = useState(false);
-  const [l62, setl62] = useState(false);
-  const [l63, setl63] = useState(false);
-  const [l64, setl64] = useState(false);
-  const [l65, setl65] = useState(false);
+  // DNN协同推理模块
+  const [l7, setl7] = useState(false);
+  const [l71, setl71] = useState(false);
+  const [l72, setl72] = useState(false);
+  const [l73, setl73] = useState(false);
+  const [l74, setl74] = useState(false);
+  const [l75, setl75] = useState(false);
 
   const intl = useIntl();
   const [clusterSelectOpen, setClusterSelectOpen] = useState(false);
@@ -101,8 +102,12 @@ export default function MiniDrawer() {
   }, [l51]);
 
   useEffect(() => {
-    setl6(l61||l62||l63||l64);
-  }, [l61, l62, l63, l64]);
+    setl6(l61);
+  }, [l61]);
+
+  useEffect(() => {
+    setl7(l71||l72||l73||l74||l75);
+  }, [l71, l72, l73, l74, l75]);
 
   const setAllFalse = () => {
     setl1(false);
@@ -121,9 +126,12 @@ export default function MiniDrawer() {
     setl51(false);
     setl6(false);
     setl61(false);
-    setl62(false);
-    setl63(false);
-    setl64(false);
+    setl7(false);
+    setl71(false);
+    setl72(false);
+    setl73(false);
+    setl74(false);
+    setl75(false);
   };
   const handleClick1 = () => {
     setVerticalOpen1(!verticalOpen1);
@@ -147,6 +155,10 @@ export default function MiniDrawer() {
 
   const handleClick6 = () => {
     setVerticalOpen6(!verticalOpen6);
+  };
+
+  const handleClick7 = () => {
+    setVerticalOpen7(!verticalOpen7);
   };
 
   const handlelClusterSelectClose = () => {
@@ -329,7 +341,7 @@ export default function MiniDrawer() {
                     textAlign: 'center',
                   }}
                 >
-                  集群
+                  {intl.messages['common.cluster']}
                 </Box>
               </Stack>
             </Stack>
@@ -347,7 +359,7 @@ export default function MiniDrawer() {
                   <Cluster16 />
                 </Box>
                 <Box sx={{ ...styledFont, color: l1 ? '#55bc8a' : '#242e42' }}>
-                  集群
+                  {intl.messages['common.cluster']}
                 </Box>
                 {verticalOpen1 ? <ExpandLess /> : <ExpandMore />}
               </ListItemButton>
@@ -412,7 +424,7 @@ export default function MiniDrawer() {
                   <Service16 />
                 </Box>
                 <Box sx={{ ...styledFont, color: l2 ? '#55bc8a' : '#242e42' }}>
-                  服务
+                  {intl.messages['common.service']}
                 </Box>
                 {verticalOpen2 ? <ExpandLess /> : <ExpandMore />}
               </ListItemButton>
@@ -429,7 +441,7 @@ export default function MiniDrawer() {
                     <Box
                       sx={{ ...styledFont, color: l21 ? '#55bc8a' : '#242e42' }}
                     >
-                      服务集合
+                      {intl.messages['common.serviceCollection']}
                     </Box>
                   </ListItemButton>
                   <ListItemButton
@@ -443,7 +455,7 @@ export default function MiniDrawer() {
                     <Box
                       sx={{ ...styledFont, color: l22 ? '#55bc8a' : '#242e42' }}
                     >
-                      服务依赖
+                      {intl.messages['serviceDependency.serviceDependency']}
                     </Box>
                   </ListItemButton>
                 </List>
@@ -461,7 +473,7 @@ export default function MiniDrawer() {
                   <Link16 />
                 </Box>
                 <Box sx={{ ...styledFont, color: l3 ? '#55bc8a' : '#242e42' }}>
-                  路由
+                  {intl.messages['common.route']}
                 </Box>
                 {verticalOpen3 ? <ExpandLess /> : <ExpandMore />}
               </ListItemButton>
@@ -478,7 +490,7 @@ export default function MiniDrawer() {
                     <Box
                       sx={{ ...styledFont, color: l31 ? '#55bc8a' : '#242e42' }}
                     >
-                      路由链路
+                      {intl.messages['common.routeLink']}
                     </Box>
                   </ListItemButton>
                   <ListItemButton
@@ -492,7 +504,7 @@ export default function MiniDrawer() {
                     <Box
                       sx={{ ...styledFont, color: l32 ? '#55bc8a' : '#242e42' }}
                     >
-                      路由控制
+                      {intl.messages['common.routeControl']}
                     </Box>
                   </ListItemButton>
                 </List>
@@ -510,7 +522,7 @@ export default function MiniDrawer() {
                   <Application16 />
                 </Box>
                 <Box sx={{ ...styledFont, color: l4 ? '#55bc8a' : '#242e42' }}>
-                  应用模块
+                  {intl.messages['common.application']}
                 </Box>
                 {verticalOpen4 ? <ExpandLess /> : <ExpandMore />}
               </ListItemButton>
@@ -527,7 +539,7 @@ export default function MiniDrawer() {
                     <Box
                       sx={{ ...styledFont, color: l41 ? '#55bc8a' : '#242e42' }}
                     >
-                      服务能力自动测试
+                      {intl.messages['common.serviceCapabilityAutomaticTesting']}
                     </Box>
                   </ListItemButton>
                 </List>
@@ -545,7 +557,7 @@ export default function MiniDrawer() {
                   <Route16 />
                 </Box>
                 <Box sx={{ ...styledFont, color: l5 ? '#55bc8a' : '#242e42' }}>
-                  镜像管理
+                  {intl.messages['common.imageManagement']}
                 </Box>
                 {verticalOpen5 ? <ExpandLess /> : <ExpandMore />}
               </ListItemButton>
@@ -562,7 +574,7 @@ export default function MiniDrawer() {
                     <Box
                       sx={{ ...styledFont, color: l51 ? '#55bc8a' : '#242e42' }}
                     >
-                      镜像列表
+                      {intl.messages['common.imageList']}
                     </Box>
                   </ListItemButton>
                 </List>
@@ -577,10 +589,10 @@ export default function MiniDrawer() {
                 onClick={handleClick6}
               >
                 <Box sx={styledIcon}>
-                  <Service16 />
+                  <Route16 />
                 </Box>
                 <Box sx={{ ...styledFont, color: l6 ? '#55bc8a' : '#242e42' }}>
-                  DNN协同推理模块
+                  {intl.messages['evolution.evolution']}
                 </Box>
                 {verticalOpen6 ? <ExpandLess /> : <ExpandMore />}
               </ListItemButton>
@@ -591,11 +603,46 @@ export default function MiniDrawer() {
                     onClick={() => {
                       setAllFalse();
                       setl61(true);
-                      navigate('/partition/strategy');
+                      navigate('/evolution/plan');
                     }}
                   >
                     <Box
                       sx={{ ...styledFont, color: l61 ? '#55bc8a' : '#242e42' }}
+                    >
+                      {intl.messages['evolution.evolutionPlan']}
+                    </Box>
+                  </ListItemButton>
+                </List>
+              </Collapse>
+            </List>
+            <List sx={{ paddingTop: '0px', paddingBottom: '0px' }}>
+              <ListItemButton
+                sx={{
+                  ...styleListButton,
+                  paddingLeft: '12px',
+                }}
+                onClick={handleClick7}
+              >
+                <Box sx={styledIcon}>
+                  <Service16 />
+                </Box>
+                <Box sx={{ ...styledFont, color: l7 ? '#55bc8a' : '#242e42' }}>
+                  DNN协同推理模块
+                </Box>
+                {verticalOpen7 ? <ExpandLess /> : <ExpandMore />}
+              </ListItemButton>
+              <Collapse in={verticalOpen7} timeout='auto' unmountOnExit={true}>
+                <List component='div' disablePadding>
+                  <ListItemButton
+                    sx={styleListButton}
+                    onClick={() => {
+                      setAllFalse();
+                      setl71(true);
+                      navigate('/partition/strategy');
+                    }}
+                  >
+                    <Box
+                      sx={{ ...styledFont, color: l71 ? '#55bc8a' : '#242e42' }}
                     >
                       拆分方案管理
                     </Box>
@@ -606,12 +653,12 @@ export default function MiniDrawer() {
                     sx={styleListButton}
                     onClick={() => {
                       setAllFalse();
-                      setl62(true);
+                      setl72(true);
                       navigate('/model/overview');
                     }}
                   >
                     <Box
-                      sx={{ ...styledFont, color: l62 ? '#55bc8a' : '#242e42' }}
+                      sx={{ ...styledFont, color: l72 ? '#55bc8a' : '#242e42' }}
                     >
                       模型列表
                     </Box>
@@ -622,12 +669,12 @@ export default function MiniDrawer() {
                     sx={styleListButton}
                     onClick={() => {
                       setAllFalse();
-                      setl63(true);
+                      setl73(true);
                       navigate('/application/deploy');
                     }}
                   >
                     <Box
-                      sx={{ ...styledFont, color: l63 ? '#55bc8a' : '#242e42' }}
+                      sx={{ ...styledFont, color: l73 ? '#55bc8a' : '#242e42' }}
                     >
                       推理实例管理
                     </Box>
@@ -638,12 +685,12 @@ export default function MiniDrawer() {
                     sx={styleListButton}
                     onClick={() => {
                       setAllFalse();
-                      setl64(true);
+                      setl74(true);
                       navigate('/route/infertrace');
                     }}
                   >
                     <Box
-                      sx={{ ...styledFont, color: l64 ? '#55bc8a' : '#242e42' }}
+                      sx={{ ...styledFont, color: l74 ? '#55bc8a' : '#242e42' }}
                     >
                       推理请求管理
                     </Box>
@@ -654,12 +701,12 @@ export default function MiniDrawer() {
                     sx={styleListButton}
                     onClick={() => {
                       setAllFalse();
-                      setl65(true);
+                      setl75(true);
                       navigate('detail/model/deployment');
                     }}
                   >
                     <Box
-                      sx={{ ...styledFont, color: l65 ? '#55bc8a' : '#242e42' }}
+                      sx={{ ...styledFont, color: l75 ? '#55bc8a' : '#242e42' }}
                     >
                       timeline test
                     </Box>
