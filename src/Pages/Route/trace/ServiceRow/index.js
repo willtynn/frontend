@@ -2,7 +2,7 @@
  * src\Pages\Route\trace\ServiceRow\index.js
  */
 import React from 'react';
-import { TableRow, Tooltip } from '@mui/material';
+import { TableRow, Tooltip, Box } from '@mui/material';
 import { SmallLightFont } from '@/components/Fonts';
 import { StyledTableBodyCell } from '@/components/DisplayTable';
 
@@ -35,7 +35,7 @@ export function ServiceRow(props) {
     return (
       <React.Fragment>
         <TableRow
-          onClick={onRowClick}
+          // onClick={onRowClick}
           hover
           selected={selected}
           sx={{
@@ -50,6 +50,21 @@ export function ServiceRow(props) {
               sx={{ minWidth: _minWidth[0] }}
             >
               <Tooltip title={rowData.service} placement='top-end'>
+                <Box
+                  sx={{
+                    height: '30px',
+                    lineHeight: '30px',
+                    fontWeight: 600,
+                    cursor: 'pointer',
+                    '&:hover': {
+                      color: '#55bc8a',
+                    },
+                  }}
+                  onClick={onRowClick}
+                >
+                  {rowData.service}
+                </Box>
+                {/*
                 <SmallLightFont
                   style={{
                     color: 'black',
@@ -59,6 +74,7 @@ export function ServiceRow(props) {
                 >
                   <>{rowData.service}</>
                 </SmallLightFont>
+                */}
               </Tooltip>
             </StyledTableBodyCell>
           ) : (

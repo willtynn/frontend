@@ -49,6 +49,7 @@ import {
 } from '@/actions/routeAction';
 
 import { useIntl } from 'react-intl';
+import { local } from 'd3';
 
 //#endregion
 //import
@@ -257,18 +258,30 @@ export default function RouteTrace() {
   }, [serviceVisibleRows, selectedServiceIndex, serviceColumnDisplay]);
 
   useEffect(() => {
-    setDurationSelectIndex(localStorage.getItem('route_trace_duration') || 5);
+    let tmpDuration = localStorage.getItem('route_trace_duration');
+    if (tmpDuration) {
+      setDurationSelectIndex(parseInt(tmpDuration));
+    } else {
+      setDurationSelectIndex(5);
+    }
     setServiceColumnDisplay(JSON.parse(localStorage.getItem('route_trace_service_column_display')) || [true, true, true, true, true, false, true, true]);
 
     let startTmp = localStorage.getItem('route_trace_start_time');
     let endTmp = localStorage.getItem('route_trace_end_time');
+    console.log("Load", startTmp, endTmp);
     if (!startTmp || !endTmp) {
       let now = dayjs();
       startTmp = now - 3600000;
       endTmp = now.valueOf();
+    } else {
+      startTmp = parseInt(startTmp);
+      endTmp = parseInt(endTmp);
     }
+    console.log("Load", startTmp, endTmp, dayjs(startTmp), dayjs(endTmp));
     setStartTime(startTmp);
     setEndTime(endTmp);
+    setStartTimeValue(dayjs(startTmp));
+    setEndTimeValue(dayjs(endTmp));
 
     startLoading();
     dispatch(getRouteService(startTmp, endTmp));
@@ -291,7 +304,7 @@ export default function RouteTrace() {
       if (durationSelectIndex >= 0 && durationSelectIndex < 11) {
         duration = durationList[durationSelectIndex];
       } else {
-        console.warn('!!!! handleTraceSearchClick durationIndex failure');
+        console.warn('!!!! handleTraceSearchClick durationIndex failure', durationSelectIndex);
         return;
       }
       let now = dayjs();
@@ -305,6 +318,9 @@ export default function RouteTrace() {
     else {
       startTmp = startTimeValue.valueOf();
       endTmp = endTimeValue.valueOf();
+
+      localStorage.setItem('route_trace_start_time', startTmp);
+      localStorage.setItem('route_trace_end_time', endTmp);
     }
     clearPage();
     setStartTime(startTmp);
@@ -316,17 +332,33 @@ export default function RouteTrace() {
 
   const handleDurationSelectChange = e => {
     setDurationSelectIndex(e.target.value);
-    localStorage.setItem('route_trace_duration', e.target.value); // TODO
+    localStorage.setItem('route_trace_duration', e.target.value);
   };
 
   const handleStartTimeChange = newValue => {
-    setStartTimeValue(newValue);
-    localStorage.setItem('route_trace_start_time', newValue); // TODO
+    console.log("start", newValue, dayjs(newValue))
+    setStartTime(newValue);
+    setStartTimeValue(dayjs(newValue));
+    localStorage.setItem('route_trace_start_time', newValue);
   };
 
   const handleEndTimeChange = newValue => {
+    setEndTime(newValue);
+    setEndTimeValue(dayjs(newValue));
+    localStorage.setItem('route_trace_end_time', newValue);
+  };
+
+  const handleStartTimeValueChange = newValue => {
+    console.log("startValue", newValue)
+    setStartTimeValue(newValue);
+    setStartTime(newValue.valueOf());
+    localStorage.setItem('route_trace_start_time', newValue.valueOf());
+  };
+
+  const handleEndTimeValueChange = newValue => {
     setEndTimeValue(newValue);
-    localStorage.setItem('route_trace_end_time', newValue); // TODO
+    setEndTime(newValue.valueOf());
+    localStorage.setItem('route_trace_end_time', newValue.valueOf());
   };
 
   const handleServiceChangePage = (_, newPage) => {
@@ -528,7 +560,7 @@ export default function RouteTrace() {
                       maxDate={dayjs().add(1, 'day')}
                       timeSteps={{ hours: 1, minutes: 1, seconds: 10 }}
                       value={startTimeValue}
-                      onChange={handleStartTimeChange}
+                      onChange={handleStartTimeValueChange}
                     />
                     <StyledDateTimePicker
                       round='20px'
@@ -540,7 +572,7 @@ export default function RouteTrace() {
                       maxDate={dayjs().add(1, 'day')}
                       timeSteps={{ hours: 1, minutes: 1, seconds: 10 }}
                       value={endTimeValue}
-                      onChange={handleEndTimeChange}
+                      onChange={handleEndTimeValueChange}
                     />
                   </LocalizationProvider>
                 ) : (
