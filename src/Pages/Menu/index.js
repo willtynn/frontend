@@ -11,13 +11,12 @@ import {
   Divider,
   Modal,
 } from '@mui/material';
-import { ExpandLess, ExpandMore, Timeline } from '@mui/icons-material';
+import { ExpandLess, ExpandMore } from '@mui/icons-material';
 import { Outlet } from 'react-router-dom';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import CommonSnackBar from '../../components/CommonSnackbar';
 import { useState, useEffect } from 'react';
 import { fontFamily } from '../../utils/commonUtils';
-import Workbench from '@/assets/Workbench.svg';
 import Gear from '@/assets/Gear.svg';
 import ClusterManagement from '@/assets/ClusterManagement.svg';
 import { KubeTransparentButton } from '../../components/Button';
@@ -31,41 +30,11 @@ import Link16 from '@/assets/Link16.svg';
 import { LanguageButton } from '../../components/Button/LanguageButton';
 
 export default function MiniDrawer() {
-  // 这部分变量用于控制导航列表打开/关闭
-  const [verticalOpen1, setVerticalOpen1] = useState(false);
-  const [verticalOpen2, setVerticalOpen2] = useState(false);
-  const [verticalOpen3, setVerticalOpen3] = useState(false);
-  const [verticalOpen4, setVerticalOpen4] = useState(false);
-  const [verticalOpen5, setVerticalOpen5] = useState(false);
-  const [verticalOpen6, setVerticalOpen6] = useState(false);
-
-  // 这部分变量用于控制导航列表按钮字体颜色
-  // 集群模块
-  const [l1, setl1] = useState(false);
-  const [l11, setl11] = useState(false);
-  const [l12, setl12] = useState(false);
-  const [l13, setl13] = useState(false);
-  // 服务模块
-  const [l2, setl2] = useState(false);
-  const [l21, setl21] = useState(false);
-  const [l22, setl22] = useState(false);
-  // 路由模块
-  const [l3, setl3] = useState(false);
-  const [l31, setl31] = useState(false);
-  const [l32, setl32] = useState(false);
-  // 应用模块
-  const [l4, setl4] = useState(false);
-  const [l41, setl41] = useState(false);
-  // 镜像模块
-  const [l5, setl5] = useState(false);
-  const [l51, setl51] = useState(false);
-  // 演化模块
-  const [l6, setl6] = useState(false);
-  const [l61, setl61] = useState(false);
-
   const intl = useIntl();
   const [clusterSelectOpen, setClusterSelectOpen] = useState(false);
   const navigate = useNavigate();
+  const location = useLocation();
+  const [currentPath, setCurrentPath] = useState(location.pathname);
 
   useEffect(() => {
     if (!localStorage.getItem('current_cluster')) {
@@ -74,70 +43,8 @@ export default function MiniDrawer() {
   }, []);
 
   useEffect(() => {
-    setl1(l11 || l12 || l13);
-  }, [l11, l12, l13]);
-
-  useEffect(() => {
-    setl2(l21 || l22);
-  }, [l21, l22]);
-
-  useEffect(() => {
-    setl3(l31||l32);
-  }, [l31,l32]);
-
-  useEffect(() => {
-    setl4(l41);
-  }, [l41]);
-
-  useEffect(() => {
-    setl5(l51);
-  }, [l51]);
-
-  useEffect(() => {
-    setl6(l61);
-  }, [l61]);
-
-  const setAllFalse = () => {
-    setl1(false);
-    setl11(false);
-    setl12(false);
-    setl13(false);
-    setl2(false);
-    setl21(false);
-    setl22(false);
-    setl3(false);
-    setl31(false);
-    setl32(false);
-    setl4(false);
-    setl41(false);
-    setl5(false);
-    setl51(false);
-    setl6(false);
-    setl61(false);
-  };
-  const handleClick1 = () => {
-    setVerticalOpen1(!verticalOpen1);
-  };
-
-  const handleClick2 = () => {
-    setVerticalOpen2(!verticalOpen2);
-  };
-
-  const handleClick3 = () => {
-    setVerticalOpen3(!verticalOpen3);
-  };
-
-  const handleClick4 = () => {
-    setVerticalOpen4(!verticalOpen4);
-  };
-
-  const handleClick5 = () => {
-    setVerticalOpen5(!verticalOpen5);
-  };
-
-  const handleClick6 = () => {
-    setVerticalOpen6(!verticalOpen6);
-  };
+    setCurrentPath(location.pathname)
+  }, [location.pathname]);
 
   const handlelClusterSelectClose = () => {
     setClusterSelectOpen(false);
@@ -331,28 +238,26 @@ export default function MiniDrawer() {
                   ...styleListButton,
                   paddingLeft: '12px',
                 }}
-                onClick={handleClick1}
+                onClick={() => {setCurrentPath('/cluster')}}
               >
                 <Box sx={styledIcon}>
                   <Cluster16 />
                 </Box>
-                <Box sx={{ ...styledFont, color: l1 ? '#55bc8a' : '#242e42' }}>
+                <Box sx={{ ...styledFont, color: currentPath.includes('/cluster') ? '#55bc8a' : '#242e42' }}>
                   {intl.messages['common.cluster']}
                 </Box>
-                {verticalOpen1 ? <ExpandLess /> : <ExpandMore />}
+                {currentPath.includes('/cluster') ? <ExpandLess /> : <ExpandMore />}
               </ListItemButton>
-              <Collapse in={verticalOpen1} timeout='auto' unmountOnExit={true}>
+              <Collapse in={currentPath.includes('/cluster')} timeout='auto' unmountOnExit={true}>
                 <List component='div' disablePadding>
                   <ListItemButton
                     sx={styleListButton}
                     onClick={() => {
-                      setAllFalse();
-                      setl11(true);
-                      navigate('cluster/overview');
+                      navigate('/cluster/overview');
                     }}
                   >
                     <Box
-                      sx={{ ...styledFont, color: l11 ? '#55bc8a' : '#242e42' }}
+                      sx={{ ...styledFont, color: currentPath ==='/cluster/overview' ? '#55bc8a' : '#242e42' }}
                     >
                       {intl.messages['menu.clusterOverview']}
                     </Box>
@@ -361,13 +266,11 @@ export default function MiniDrawer() {
                   <ListItemButton
                     sx={styleListButton}
                     onClick={() => {
-                      setAllFalse();
-                      setl12(true);
-                      navigate('cluster/scheme');
+                      navigate('/cluster/scheme');
                     }}
                   >
                     <Box
-                      sx={{ ...styledFont, color: l12 ? '#55bc8a' : '#242e42' }}
+                      sx={{ ...styledFont, color: currentPath ==='/cluster/scheme' ? '#55bc8a' : '#242e42' }}
                     >
                       {intl.messages['common.schemeDeploy']}
                     </Box>
@@ -376,13 +279,11 @@ export default function MiniDrawer() {
                   <ListItemButton
                     sx={styleListButton}
                     onClick={() => {
-                      setAllFalse();
-                      setl13(true);
-                      navigate('cluster/deploy');
+                      navigate('/cluster/deploy');
                     }}
                   >
                     <Box
-                      sx={{ ...styledFont, color: l13 ? '#55bc8a' : '#242e42' }}
+                      sx={{ ...styledFont, color: currentPath ==='/cluster/deploy' ? '#55bc8a' : '#242e42' }}
                     >
                       {intl.messages['common.serviceInstance']}
                     </Box>
@@ -396,28 +297,26 @@ export default function MiniDrawer() {
                   ...styleListButton,
                   paddingLeft: '12px',
                 }}
-                onClick={handleClick2}
+                onClick={() => {setCurrentPath('/service')}}
               >
                 <Box sx={styledIcon}>
                   <Service16 />
                 </Box>
-                <Box sx={{ ...styledFont, color: l2 ? '#55bc8a' : '#242e42' }}>
+                <Box sx={{ ...styledFont, color: currentPath.includes('/service') ? '#55bc8a' : '#242e42' }}>
                   {intl.messages['common.service']}
                 </Box>
-                {verticalOpen2 ? <ExpandLess /> : <ExpandMore />}
+                {currentPath.includes('/service') ? <ExpandLess /> : <ExpandMore />}
               </ListItemButton>
-              <Collapse in={verticalOpen2} timeout='auto' unmountOnExit={true}>
+              <Collapse in={currentPath.includes('/service')} timeout='auto' unmountOnExit={true}>
                 <List component='div' disablePadding>
                   <ListItemButton
                     sx={styleListButton}
                     onClick={() => {
-                      setAllFalse();
-                      setl21(true);
                       navigate('/service/query');
                     }}
                   >
                     <Box
-                      sx={{ ...styledFont, color: l21 ? '#55bc8a' : '#242e42' }}
+                      sx={{ ...styledFont, color: currentPath ==='/service/query' ? '#55bc8a' : '#242e42' }}
                     >
                       {intl.messages['common.serviceCollection']}
                     </Box>
@@ -425,13 +324,11 @@ export default function MiniDrawer() {
                   <ListItemButton
                     sx={styleListButton}
                     onClick={() => {
-                      setAllFalse();
-                      setl22(true);
                       navigate('/service/dependency');
                     }}
                   >
                     <Box
-                      sx={{ ...styledFont, color: l22 ? '#55bc8a' : '#242e42' }}
+                      sx={{ ...styledFont, color: currentPath === '/service/dependency' ? '#55bc8a' : '#242e42' }}
                     >
                       {intl.messages['serviceDependency.serviceDependency']}
                     </Box>
@@ -445,28 +342,26 @@ export default function MiniDrawer() {
                   ...styleListButton,
                   paddingLeft: '12px',
                 }}
-                onClick={handleClick3}
+                onClick={() => {setCurrentPath('/route')}}
               >
                 <Box sx={styledIcon}>
                   <Link16 />
                 </Box>
-                <Box sx={{ ...styledFont, color: l3 ? '#55bc8a' : '#242e42' }}>
+                <Box sx={{ ...styledFont, color: currentPath.includes('/route') ? '#55bc8a' : '#242e42' }}>
                   {intl.messages['common.route']}
                 </Box>
-                {verticalOpen3 ? <ExpandLess /> : <ExpandMore />}
+                {currentPath.includes('/route') ? <ExpandLess /> : <ExpandMore />}
               </ListItemButton>
-              <Collapse in={verticalOpen3} timeout='auto' unmountOnExit={true}>
+              <Collapse in={currentPath.includes('/route')} timeout='auto' unmountOnExit={true}>
                 <List component='div' disablePadding>
                   <ListItemButton
                     sx={styleListButton}
                     onClick={() => {
-                      setAllFalse();
-                      setl31(true);
                       navigate('/route/trace');
                     }}
                   >
                     <Box
-                      sx={{ ...styledFont, color: l31 ? '#55bc8a' : '#242e42' }}
+                      sx={{ ...styledFont, color: currentPath === '/route/trace' ? '#55bc8a' : '#242e42' }}
                     >
                       {intl.messages['common.routeLink']}
                     </Box>
@@ -474,13 +369,11 @@ export default function MiniDrawer() {
                   <ListItemButton
                     sx={styleListButton}
                     onClick={() => {
-                      setAllFalse();
-                      setl32(true);
                       navigate('/route/controlling');
                     }}
                   >
                     <Box
-                      sx={{ ...styledFont, color: l32 ? '#55bc8a' : '#242e42' }}
+                      sx={{ ...styledFont, color: currentPath === '/route/controlling' ? '#55bc8a' : '#242e42' }}
                     >
                       {intl.messages['common.routeControl']}
                     </Box>
@@ -494,28 +387,26 @@ export default function MiniDrawer() {
                   ...styleListButton,
                   paddingLeft: '12px',
                 }}
-                onClick={handleClick4}
+                onClick={() => {setCurrentPath('/application')}}
               >
                 <Box sx={styledIcon}>
                   <Application16 />
                 </Box>
-                <Box sx={{ ...styledFont, color: l4 ? '#55bc8a' : '#242e42' }}>
+                <Box sx={{ ...styledFont, color: currentPath.includes('/application') ? '#55bc8a' : '#242e42' }}>
                   {intl.messages['common.application']}
                 </Box>
-                {verticalOpen4 ? <ExpandLess /> : <ExpandMore />}
+                {currentPath.includes('/application') ? <ExpandLess /> : <ExpandMore />}
               </ListItemButton>
-              <Collapse in={verticalOpen4} timeout='auto' unmountOnExit={true}>
+              <Collapse in={currentPath.includes('/application')} timeout='auto' unmountOnExit={true}>
                 <List component='div' disablePadding>
                   <ListItemButton
                     sx={styleListButton}
                     onClick={() => {
-                      setAllFalse();
-                      setl41(true);
                       navigate('/application/stress_testing');
                     }}
                   >
                     <Box
-                      sx={{ ...styledFont, color: l41 ? '#55bc8a' : '#242e42' }}
+                      sx={{ ...styledFont, color: currentPath === '/application/stress_testing' ? '#55bc8a' : '#242e42' }}
                     >
                       {intl.messages['common.serviceCapabilityAutomaticTesting']}
                     </Box>
@@ -529,28 +420,26 @@ export default function MiniDrawer() {
                   ...styleListButton,
                   paddingLeft: '12px',
                 }}
-                onClick={handleClick5}
+                onClick={() => {setCurrentPath('/images')}}
               >
                 <Box sx={styledIcon}>
                   <Route16 />
                 </Box>
-                <Box sx={{ ...styledFont, color: l5 ? '#55bc8a' : '#242e42' }}>
+                <Box sx={{ ...styledFont, color: currentPath.includes('/images') ? '#55bc8a' : '#242e42' }}>
                   {intl.messages['common.imageManagement']}
                 </Box>
-                {verticalOpen5 ? <ExpandLess /> : <ExpandMore />}
+                {currentPath.includes('/images') ? <ExpandLess /> : <ExpandMore />}
               </ListItemButton>
-              <Collapse in={verticalOpen5} timeout='auto' unmountOnExit={true}>
+              <Collapse in={currentPath.includes('/images')} timeout='auto' unmountOnExit={true}>
                 <List component='div' disablePadding>
                   <ListItemButton
                     sx={styleListButton}
                     onClick={() => {
-                      setAllFalse();
-                      setl51(true);
                       navigate('/images/list');
                     }}
                   >
                     <Box
-                      sx={{ ...styledFont, color: l51 ? '#55bc8a' : '#242e42' }}
+                      sx={{ ...styledFont, color: currentPath === '/images/list' ? '#55bc8a' : '#242e42' }}
                     >
                       {intl.messages['common.imageList']}
                     </Box>
@@ -564,28 +453,26 @@ export default function MiniDrawer() {
                   ...styleListButton,
                   paddingLeft: '12px',
                 }}
-                onClick={handleClick6}
+                onClick={() => {setCurrentPath('/evolution')}}
               >
                 <Box sx={styledIcon}>
                   <Route16 />
                 </Box>
-                <Box sx={{ ...styledFont, color: l6 ? '#55bc8a' : '#242e42' }}>
+                <Box sx={{ ...styledFont, color: currentPath.includes('/evolution') ? '#55bc8a' : '#242e42' }}>
                   {intl.messages['evolution.evolution']}
                 </Box>
-                {verticalOpen6 ? <ExpandLess /> : <ExpandMore />}
+                {currentPath.includes('/evolution') ? <ExpandLess /> : <ExpandMore />}
               </ListItemButton>
-              <Collapse in={verticalOpen6} timeout='auto' unmountOnExit={true}>
+              <Collapse in={currentPath.includes('/evolution')} timeout='auto' unmountOnExit={true}>
                 <List component='div' disablePadding>
                   <ListItemButton
                     sx={styleListButton}
                     onClick={() => {
-                      setAllFalse();
-                      setl61(true);
                       navigate('/evolution/plan');
                     }}
                   >
                     <Box
-                      sx={{ ...styledFont, color: l61 ? '#55bc8a' : '#242e42' }}
+                      sx={{ ...styledFont, color: currentPath === '/evolution/plan' ? '#55bc8a' : '#242e42' }}
                     >
                       {intl.messages['evolution.evolutionPlan']}
                     </Box>
