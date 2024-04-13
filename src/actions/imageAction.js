@@ -81,14 +81,17 @@ export function deleteImage(imageName, cluster, version) {
     crossDomain: true,
   });
 
-  const url = '/deleteImage';
+  const url = '/deleteImages';
   return async dispatch => {
     try {
-      const res = await a_instance.get(
+      const res = await a_instance.post(
         url,
         {
-          params: {
-            imageName: imageName + ':'+ version,
+          image: [imageName + ':'+ version]
+        },
+        {
+          headers: {
+            'Content-Type': 'application/json',
           },
         }
       );
@@ -113,6 +116,58 @@ export function deleteImage(imageName, cluster, version) {
       dispatch(
         setSnackbarMessageAndOpen(
           'image.deleteError',
+          {},
+          SEVERITIES.warning
+        )
+      );
+    }
+  };
+}
+
+export function pullImage(jsonData) {
+  const baseURLLink = getUrl(jsonData.node);
+  const a_instance = axios.create({
+    baseURL: baseURLLink,
+    timeout: 10000,
+    // withCredentials: isCookie,
+    crossDomain: true,
+  });
+
+  const url = '/pullImages';
+  return async dispatch => {
+    try {
+      const res = await a_instance.post(
+        url,
+        {
+          image: jsonData.image
+        },
+        {
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        }
+      );
+      if (res.status === 200 ) {
+        dispatch(
+          setSnackbarMessageAndOpen(
+            'image.pullSuccess',
+            {},
+            SEVERITIES.success
+          )
+        );
+      } else {
+        dispatch(
+          setSnackbarMessageAndOpen(
+            'image.pullError',
+            {},
+            SEVERITIES.warning
+          )
+        );
+      }
+    } catch {
+      dispatch(
+        setSnackbarMessageAndOpen(
+          'image.pullError',
           {},
           SEVERITIES.warning
         )

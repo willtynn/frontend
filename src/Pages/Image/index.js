@@ -16,7 +16,7 @@ import {
 import React from 'react';
 import ServiceQuery from '@/assets/ServiceQuery.svg';
 import { useDispatch, useSelector } from 'react-redux';
-import { getImageList, deleteImage } from '../../actions/imageAction';
+import {getImageList, deleteImage, pullImage} from '../../actions/imageAction';
 import GeneralService from '@/assets/GeneralService.svg';
 import { KubeCheckbox } from '../../components/Checkbox';
 import DeleteIcon from "@mui/icons-material/Delete";
@@ -37,6 +37,7 @@ import DockerWaiting from '@/assets/DockerWaiting.svg';
 import DockerNow from '@/assets/DockerNow.svg';
 import {KubeDeploymentCard} from "../../components/InfoCard";
 import AceEditor from 'react-ace';
+import 'ace-builds/webpack-resolver';
 import 'ace-builds/src-noconflict/mode-json';
 import 'ace-builds/src-noconflict/theme-xcode';
 
@@ -88,7 +89,7 @@ export default function ImagesList(props) {
   const [clusterSelected, setClusterSelected] = useState('ices04');
   const dispatch = useDispatch();
   const [open, setOpen] = useState(false);
-  const [jsonValue, setJsonValue] = useState('');
+  const [jsonValue, setJsonValue] = useState('{\n    "node": "xxx",\n    "image": ["xxx"]\n}');
 
   const { imageList } = useSelector(state => {
     return {
@@ -180,6 +181,10 @@ export default function ImagesList(props) {
 
   const handleClose = () => {
     setOpen(false);
+  }
+
+  const handleConfirm = () => {
+    dispatch(pullImage(JSON.parse(jsonValue)))
   }
 
   const handleInputChange = (value) => {
@@ -513,7 +518,7 @@ export default function ImagesList(props) {
                </KubeCancelButton>
                <KubeConfirmButton
                  sx={{height: '32px', p: '5px 23px'}}
-                 onClick={handleClose}
+                 onClick={handleConfirm}
                >
                  创建
                </KubeConfirmButton>

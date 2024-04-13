@@ -268,6 +268,8 @@ export const messages = {
     listQueryError: '镜像列表获取失败...请刷新页面重试。',
     deleteError: '镜像删除失败...请重试。',
     deleteSuccess: '镜像删除成功',
+    pullError: '镜像缓存失败...请重试。',
+    pullSuccess: '镜像缓存成功',
   },
   routerule: {
     routeruleDesc: '控制实例间的路由规则',
@@ -354,7 +356,6 @@ export const messages = {
     poissonRandomTimer: '泊松随机定时器',
     gaussianRandomTimer: '高斯随机定时器',
     editTimer: "修改定时器",
-    addTimer: "添加定时器",
     createTestPlan: "创建测试计划",
     editThreadGroup: "修改线程组",
     noOptionalNamespace: "无可选命名空间",

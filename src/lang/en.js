@@ -347,7 +347,6 @@ export const messages = {
     poissonRandomTimer: 'Poisson Random Timer',
     gaussianRandomTimer: 'Gaussian Random Timer',
     editTimer: "Edit Timer",
-    addTimer: "Add Timer",
     createTestPlan: "Create Test Plan",
     editThreadGroup: "Edit Thread Group",
     noOptionalNamespace: "No optional namespace",
@@ -447,5 +446,12 @@ export const messages = {
     triggerCondition:'Trigger Condition',
     evolutionMean:'Evolution Mean',
     evolutionAlgorithm:'Evolution Algorithm'
+  },
+  image: {
+    listQueryError: 'Failed to get the image list... Please refresh the page and try again.',
+    deleteError: 'Image deletion failed... Please try again',
+    deleteSuccess: 'The image is deleted',
+    pullError: 'Images caching failed... Please try again.',
+    pullSuccess: 'The image cache is successful',
   },
 };
