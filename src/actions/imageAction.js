@@ -124,8 +124,8 @@ export function deleteImage(imageName, cluster, version) {
   };
 }
 
-export function pullImage(jsonData) {
-  const baseURLLink = getUrl(jsonData.node);
+export function pullImage(jsonData, cluster) {
+  const baseURLLink = getUrl(cluster);
   const a_instance = axios.create({
     baseURL: baseURLLink,
     timeout: 10000,
@@ -138,9 +138,7 @@ export function pullImage(jsonData) {
     try {
       const res = await a_instance.post(
         url,
-        {
-          image: jsonData.image
-        },
+        jsonData,
         {
           headers: {
             'Content-Type': 'application/json',

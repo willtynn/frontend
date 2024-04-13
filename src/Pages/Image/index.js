@@ -89,7 +89,7 @@ export default function ImagesList(props) {
   const [clusterSelected, setClusterSelected] = useState('ices04');
   const dispatch = useDispatch();
   const [open, setOpen] = useState(false);
-  const [jsonValue, setJsonValue] = useState('{\n    "node": "xxx",\n    "image": ["xxx"]\n}');
+  const [jsonValue, setJsonValue] = useState('{\n    "image": ["xxx"]\n}');
 
   const { imageList } = useSelector(state => {
     return {
@@ -184,7 +184,7 @@ export default function ImagesList(props) {
   }
 
   const handleConfirm = () => {
-    dispatch(pullImage(JSON.parse(jsonValue)))
+    dispatch(pullImage(JSON.parse(jsonValue), clusterSelected))
   }
 
   const handleInputChange = (value) => {
@@ -495,6 +495,7 @@ export default function ImagesList(props) {
                placeholder="Enter JSON here..."
                width="100%"
                height="calc(100% - 200px)"
+               fontSize={17}
              />
              {/* 按钮组 */}
              <Stack
