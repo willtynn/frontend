@@ -109,6 +109,7 @@ export const messages = {
     execute: "执行",
     description: "描述",
     interface: '接口',
+    id: "ID",
   },
   lang: {
     language: '语言',
@@ -127,6 +128,9 @@ export const messages = {
     addScheme: "添加方案",
     deploySuccess: "方案部署成功",
     deployFail: "方案部署失败",
+    deployScheme: "部署方案",
+    editScheme: "编辑方案",
+    schemeName: "方案名称",
   },
   serviceOverview: {
     serviceDescription:

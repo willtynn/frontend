@@ -20,6 +20,7 @@ import { ResultDetail } from '../Pages/Application/StressTesting/ResultDetail';
 import SchemeDeploy from '../Pages/Cluster/scheme';
 import EvolutionPlan from '../Pages/Evolution';
 import { EvolutionPlanDetail } from '../Pages/Evolution/Detail';
+import SchemeDetail from '../Pages/Cluster/scheme/SchemeDetail';
 
 export default function MyRoute() {
   return (
@@ -29,6 +30,7 @@ export default function MyRoute() {
       {/* 不存在导航栏 */}
       <Route path='detail/' element={<HeadBar />}>
         <Route path='service/:serviceId' element={<ServiceDetail />}/>
+        <Route path='scheme/:schemeId' element={<SchemeDetail />} />
         <Route path='testplan/:testPlanId' element={<TestPlanDetail />}/>
         <Route path='evolutionplan/:evolutionPlanId' element={<EvolutionPlanDetail />}/>
         <Route path='planresult/:testResultId' element={<ResultDetail />}/>

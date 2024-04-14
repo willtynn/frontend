@@ -7,6 +7,7 @@ export const CHANGE_PAGE_SIZE = 'CHANGE_SCHEME_PAGE_SIZE';
 export const CHANGE_PAGE_NUM = 'CHANGE_SCHEME_PAGE_NUM';
 export const UPDATE_NAMESPACES = 'UPDATE_NAMESPACES';
 export const UPDATE_CURRENT_NAMESPACE = 'UPDATE_CURRENT_NAMESPACE';
+export const UPDATE_CURRENT_SCHEME = 'UPDATE_CURRENT_SCHEME';
 const baseURLLink = 'http://192.168.1.104:30012';
 
 const axios_instance = axios.create({
@@ -123,4 +124,41 @@ export function schemeDeploy(id, name, namespace) {
   };
 }
 
+
+export function getScheme(id) {
+  const url = '/deployment/scheme/detail';
+  return async dispatch => {
+    try {
+      const res = await axios_instance.get(
+        url,
+        {
+          params: {
+            id: id
+          },
+        }
+      );
+      if (res.data.code === 200 || res.data.code === 0) {
+        dispatch({ type: UPDATE_CURRENT_SCHEME, data: res.data.data });
+      } else {
+        dispatch({ type: UPDATE_CURRENT_SCHEME, data: null });
+        dispatch(
+          setSnackbarMessageAndOpen(
+            'scheme.getFail',
+            {},
+            SEVERITIES.warning
+          )
+        );
+      }
+    } catch {
+      dispatch({ type: UPDATE_CURRENT_SCHEME, data: null });
+      dispatch(
+        setSnackbarMessageAndOpen(
+          'scheme.getFail',
+          {},
+          SEVERITIES.warning
+        )
+      );
+    }
+  };
+}
 

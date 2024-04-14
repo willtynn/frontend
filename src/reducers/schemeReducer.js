@@ -6,6 +6,7 @@ const initState = {
   pageNum: 1,
   namespace: [],
   currentNamespace: null,
+  currentScheme: null
 };
 
 export default function SchemeReducer(state = initState, action) {
@@ -35,6 +36,11 @@ export default function SchemeReducer(state = initState, action) {
         return {
           ...state,
           currentNamespace: data
+        }
+      case actions.UPDATE_CURRENT_SCHEME:
+        return {
+          ...state,
+          currentScheme: data
         }
     default:
       return state;

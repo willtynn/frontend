@@ -56,6 +56,7 @@ import {
 } from '../../../../actions/schemeAction';
 import { getNamaspaces } from '@/actions/instanceAction';
 import PlayCircleOutlineIcon from '@mui/icons-material/PlayCircleOutline';
+import { useNavigate } from 'react-router-dom';
 
 // const data = [
 //   {
@@ -150,6 +151,7 @@ const namePattern = new RegExp(/^(名称|Name):/);
 export default function SchemeOverview(props) {
   const { embeddingButton } = props;
   const intl = useIntl();
+  const navigate = useNavigate();
   const { schemes, pageSize, pageNum, namespaces, currentNamespace } =
     useSelector(state => {
       return {
@@ -373,6 +375,10 @@ export default function SchemeOverview(props) {
       return tmpDisplay;
     });
   };
+
+  const handleClickById = id => {
+    navigate(`/detail/scheme/${id}`)
+  }
 
   return (
     <Box>
@@ -645,15 +651,20 @@ export default function SchemeOverview(props) {
                     >
                       <Stack alignItems='center' direction='row' spacing={2}>
                         <Task />
-                        <span
-                          style={{
+                        <Box
+                          sx={{
                             height: '30px',
                             lineHeight: '30px',
                             fontWeight: 600,
+                            cursor: 'pointer',
+                            '&:hover': {
+                              color: '#55bc8a',
+                            },
                           }}
+                          onClick={handleClickById.bind(this, row.id)}
                         >
                           {row.name}
-                        </span>
+                        </Box>
                       </Stack>
                     </StyledTableBodyCell>
 

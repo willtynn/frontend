@@ -109,6 +109,7 @@ export const messages = {
     execute: "Execute",
     description: "Description",
     interface: 'Interface',
+    id: "ID",
   },
   lang: {
     language: 'Language',
@@ -127,6 +128,8 @@ export const messages = {
     addScheme: "Add Scheme",
     deploySuccess: "Scheme deployment is successful.",
     deployFail: "Scheme deployment failed.",
+    deployScheme: "Deploy Scheme",
+    schemeName: "Scheme Name",
   },
   serviceOverview: {
     serviceDescription:
