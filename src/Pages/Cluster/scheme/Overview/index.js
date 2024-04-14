@@ -52,30 +52,31 @@ import {
   CHANGE_PAGE_SIZE,
   UPDATE_SCHEMES,
   UPDATE_CURRENT_NAMESPACE,
+  getSchemes,
 } from '../../../../actions/schemeAction';
 import { getNamaspaces } from '@/actions/instanceAction';
 import PlayCircleOutlineIcon from '@mui/icons-material/PlayCircleOutline';
 
-const data = [
-  {
-    name: 'test1',
-    namespace: 'test',
-    status: '已执行',
-    time: '2024-03-02T06:09:41.000+00:00',
-  },
-  {
-    name: 'test3',
-    namespace: 'test',
-    status: '已执行',
-    time: '2024-03-02T06:09:41.000+00:00',
-  },
-  {
-    name: 'test2',
-    namespace: 'test',
-    status: '未执行',
-    time: '2024-03-02T06:09:41.000+00:00',
-  },
-];
+// const data = [
+//   {
+//     name: 'test1',
+//     namespace: 'test',
+//     status: '已执行',
+//     time: '2024-03-02T06:09:41.000+00:00',
+//   },
+//   {
+//     name: 'test3',
+//     namespace: 'test',
+//     status: '已执行',
+//     time: '2024-03-02T06:09:41.000+00:00',
+//   },
+//   {
+//     name: 'test2',
+//     namespace: 'test',
+//     status: '未执行',
+//     time: '2024-03-02T06:09:41.000+00:00',
+//   },
+// ];
 
 function descendingComparator(a, b, orderBy) {
   if (b[orderBy] < a[orderBy]) {
@@ -181,10 +182,6 @@ export default function SchemeOverview(props) {
   const dispatch = useDispatch();
 
   useEffect(() => {
-    dispatch({ type: UPDATE_SCHEMES, data: data });
-  }, []);
-
-  useEffect(() => {
     if (localStorage.getItem('current_cluster')) {
       dispatch(getNamaspaces(localStorage.getItem('current_cluster')));
     }
@@ -195,6 +192,12 @@ export default function SchemeOverview(props) {
       dispatch({ type: UPDATE_CURRENT_NAMESPACE, data: namespaces[0] });
     }
   }, [namespaces]);
+
+  useEffect(() => {
+    dispatch(
+      getSchemes(localStorage.getItem('current_cluster'), currentNamespace)
+    );
+  }, [currentNamespace]);
 
   useEffect(() => {
     if (searchList.length == 2) {

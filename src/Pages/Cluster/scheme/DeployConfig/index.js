@@ -108,8 +108,8 @@ export default function DeployConfig(props) {
         )
       );
     } else {
-      // dispatch(schemeDeploy(name, namespace, data));
-      handleCancelClick();
+      dispatch(schemeDeploy(name, namespace, data));
+      // handleCancelClick();
     }
   };
 

@@ -7,7 +7,7 @@ export const CHANGE_PAGE_SIZE = 'CHANGE_SCHEME_PAGE_SIZE';
 export const CHANGE_PAGE_NUM = 'CHANGE_SCHEME_PAGE_NUM';
 export const UPDATE_NAMESPACES = 'UPDATE_NAMESPACES';
 export const UPDATE_CURRENT_NAMESPACE = 'UPDATE_CURRENT_NAMESPACE';
-const baseURLLink = 'http://192.168.1.104:32454';
+const baseURLLink = 'http://192.168.1.104:30012';
 
 const axios_instance = axios.create({
   baseURL: baseURLLink,
