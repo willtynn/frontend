@@ -7,7 +7,7 @@ import * as monaco from 'monaco-editor/esm/vs/editor/editor.api';
 import { fontFamily } from '@/utils/commonUtils';
 import { KubeCancelButton, KubeConfirmButton } from '@/components/Button';
 import { useDispatch, useSelector } from 'react-redux';
-import { schemeDeploy } from '@/actions/schemeAction';
+import { schemeAdd } from '@/actions/schemeAction';
 import json5 from 'json5';
 import { SEVERITIES } from '@/components/CommonSnackbar';
 import { setSnackbarMessageAndOpen } from '@/actions/snackbarAction';
@@ -108,7 +108,7 @@ export default function DeployConfig(props) {
         )
       );
     } else {
-      dispatch(schemeDeploy(name, namespace, data));
+      dispatch(schemeAdd(name, namespace, data));
       // handleCancelClick();
     }
   };

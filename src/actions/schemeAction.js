@@ -16,7 +16,7 @@ const axios_instance = axios.create({
   crossDomain: true,
 });
 
-export function schemeDeploy(name, namespace, scheme) {
+export function schemeAdd(name, namespace, scheme) {
   const url = '/deployment/scheme/add';
   return async dispatch => {
     try {
@@ -84,6 +84,40 @@ export function getSchemes(cluster, namespace, name) {
           {},
           SEVERITIES.warning
         )
+      );
+    }
+  };
+}
+
+export function schemeDeploy(id, name, namespace) {
+  const url = '/deployment/scheme/deploy';
+  return async dispatch => {
+    try {
+      const res = await axios_instance.post(
+        url,
+        {
+          id: id,
+          name: name,
+          namespace: namespace
+        },
+        {
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        }
+      );
+      if (res.data.code === 200 || res.data.code === 0) {
+        dispatch(
+          setSnackbarMessageAndOpen('scheme.deploySuccess', {}, SEVERITIES.success)
+        );
+      } else {
+        dispatch(
+          setSnackbarMessageAndOpen('scheme.deployFail', {}, SEVERITIES.warning)
+        );
+      }
+    } catch {
+      dispatch(
+        setSnackbarMessageAndOpen('scheme.deployFail', {}, SEVERITIES.warning)
       );
     }
   };

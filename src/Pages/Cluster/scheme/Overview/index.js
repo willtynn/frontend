@@ -50,9 +50,9 @@ import { useIntl } from 'react-intl';
 import {
   CHANGE_PAGE_NUM,
   CHANGE_PAGE_SIZE,
-  UPDATE_SCHEMES,
   UPDATE_CURRENT_NAMESPACE,
   getSchemes,
+  schemeDeploy
 } from '../../../../actions/schemeAction';
 import { getNamaspaces } from '@/actions/instanceAction';
 import PlayCircleOutlineIcon from '@mui/icons-material/PlayCircleOutline';
@@ -718,6 +718,9 @@ export default function SchemeOverview(props) {
                               color: '#3d3b4f',
                             },
                             height: '32px',
+                          }}
+                          onClick={() => {
+                            dispatch(schemeDeploy(row.id, row.name, row.namespace))
                           }}
                         >
                           <PlayCircleOutlineIcon />

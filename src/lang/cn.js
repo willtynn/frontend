@@ -125,6 +125,8 @@ export const messages = {
     addFail: "部署方案添加失败",
     getFail: "部署方案获取失败",
     addScheme: "添加方案",
+    deploySuccess: "方案部署成功",
+    deployFail: "方案部署失败",
   },
   serviceOverview: {
     serviceDescription:

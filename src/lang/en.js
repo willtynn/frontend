@@ -125,6 +125,8 @@ export const messages = {
     addFail: "Failed to add the deployment scheme.",
     getFail: "The deployment scheme fails to be obtained.",
     addScheme: "Add Scheme",
+    deploySuccess: "Scheme deployment is successful.",
+    deployFail: "Scheme deployment failed.",
   },
   serviceOverview: {
     serviceDescription:
