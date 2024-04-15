@@ -7,6 +7,7 @@ import {
   IconButton,
   TableBody,
   TableCell,
+  Box,
 } from '@mui/material';
 import { fontFamily, decodeInterfaceSymbol } from '@/utils/commonUtils';
 import { KubeSimpleCard } from '@/components/InfoCard';
@@ -23,6 +24,11 @@ import { useDispatch } from 'react-redux';
 import Question from '@/assets/Question.svg';
 import { NormalBoldFont, SmallLightFont } from '@/components/Fonts';
 import { useIntl } from 'react-intl';
+import { StyledModal } from '@/components/Modal';
+import { useState } from 'react';
+import LanIcon from '@mui/icons-material/Lan';
+import { ContainedButton } from '../../../../../components/Button';
+import { KubeDeploymentCard } from '../../../../../components/InfoCard';
 
 function createRow(
   id,
@@ -48,12 +54,25 @@ function createRow(
   };
 }
 
+const style = {
+  position: 'absolute',
+  top: '50%',
+  left: '50%',
+  transform: 'translate(-50%, -50%)',
+  width: '960px',
+  boxShadow: 24,
+  height: 'calc(100% - 120px)',
+  fontFamily: fontFamily,
+};
+
 export default function Information(props) {
   const { scheme } = props;
   const intl = useIntl();
 
   const navigate = useNavigate();
   const dispatch = useDispatch();
+  const [portsOpen, setPortsOpen] = useState(false);
+  const [ports, setPorts] = useState([]);
 
   const firstRow = [
     createRow(
@@ -192,6 +211,45 @@ export default function Information(props) {
       1
     ),
   ];
+
+  const portRow = [
+    createRow(
+      'name',
+      intl.messages['common.name'],
+      false,
+      '40px',
+      '40px',
+      true,
+      'left'
+    ),
+    createRow(
+      'protocol',
+      intl.messages['common.protocol'],
+      false,
+      '50px',
+      '50px',
+      true,
+      'center'
+    ),
+    createRow(
+      'containerPort',
+      intl.messages['common.port'],
+      false,
+      '50px',
+      '50px',
+      true,
+      'center'
+    ),
+  ];
+
+  const handleClose = () => {
+    setPortsOpen(false);
+  };
+
+  const handlePortsClick = ports => {
+    setPortsOpen(true);
+    setPorts(ports);
+  };
 
   const handleCopyToClickboard = text => {
     navigator.clipboard.writeText(text);
@@ -335,7 +393,11 @@ export default function Information(props) {
                         minWidth: firstRow[5].minWidth,
                       }}
                     >
-                      {row.ports.length}
+                      <ContainedButton
+                        onClick={handlePortsClick.bind(this, row.ports)}
+                      >
+                        <LanIcon />
+                      </ContainedButton>
                     </StyledTableBodyCell>
                     <StyledTableBodyCell
                       align={secondRow[1].align}
@@ -344,7 +406,8 @@ export default function Information(props) {
                         minWidth: secondRow[1].minWidth,
                       }}
                     >
-                      {row.resources.requests.cpu ?? intl.messages['cluster.noLimited']}
+                      {row.resources.requests.cpu ??
+                        intl.messages['cluster.noLimited']}
                     </StyledTableBodyCell>
                     <StyledTableBodyCell
                       align={secondRow[2].align}
@@ -353,7 +416,8 @@ export default function Information(props) {
                         minWidth: secondRow[2].minWidth,
                       }}
                     >
-                      {row.resources.requests.memory ?? intl.messages['cluster.noLimited']}
+                      {row.resources.requests.memory ??
+                        intl.messages['cluster.noLimited']}
                     </StyledTableBodyCell>
                     <StyledTableBodyCell
                       align={secondRow[3].align}
@@ -362,7 +426,8 @@ export default function Information(props) {
                         minWidth: secondRow[3].minWidth,
                       }}
                     >
-                      {row.resources.limits.cpu ?? intl.messages['cluster.noLimited']}
+                      {row.resources.limits.cpu ??
+                        intl.messages['cluster.noLimited']}
                     </StyledTableBodyCell>
                     <StyledTableBodyCell
                       align={secondRow[2].align}
@@ -371,7 +436,8 @@ export default function Information(props) {
                         minWidth: secondRow[3].minWidth,
                       }}
                     >
-                      {row.resources.limits.memory ?? intl.messages['cluster.noLimited']}
+                      {row.resources.limits.memory ??
+                        intl.messages['cluster.noLimited']}
                     </StyledTableBodyCell>
                   </TableRow>
                 ))
@@ -397,6 +463,112 @@ export default function Information(props) {
           </Table>
         </StyledTableContainer>
       </KubeSimpleCard>
+      <StyledModal open={portsOpen} onClose={handleClose}>
+        <Box sx={style}>
+          <KubeDeploymentCard
+            title={intl.messages['common.portsDetails']}
+            handleClose={handleClose}
+          >
+            <Box sx={{
+              p: "20px"
+            }}>
+              <StyledTableContainer sx={{ maxHeight: '680px' }}>
+                <Table
+                  stickyHeader
+                  size='small'
+                  sx={{
+                    tableLayout: 'auto',
+                    minWidth: '100%',
+                  }}
+                >
+                  <TableHead>
+                    <TableRow>
+                      {portRow.map((item, index) => (
+                        <StyledTableRowCell
+                          key={item.id}
+                          align={item.align}
+                          sx={{
+                            maxWidth: item.maxWidth,
+                            minWidth: item.minWidth,
+                          }}
+                        >
+                          {item.label}
+                        </StyledTableRowCell>
+                      ))}
+                    </TableRow>
+                  </TableHead>
+                  <TableBody>
+                    {ports && ports.length ? (
+                      ports.map((row, index) => (
+                        <TableRow
+                          key={row.id + '' + index}
+                          aria-checked={false}
+                          sx={{
+                            '&:last-child td, &:last-child th': {
+                              border: 0,
+                            },
+                            fontWeight: 600,
+                            maxWidth: '110px',
+                            position: 'sticky',
+                            left: 0,
+                            zIndex: 6,
+                            backgroundColor: '#FFF !important',
+                          }}
+                        >
+                          <StyledTableBodyCell
+                            align={firstRow[0].align}
+                            sx={{
+                              maxWidth: firstRow[0].maxWidth,
+                              minWidth: firstRow[0].minWidth,
+                            }}
+                          >
+                            {row.name}
+                          </StyledTableBodyCell>
+                          <StyledTableBodyCell
+                            align={firstRow[1].align}
+                            sx={{
+                              maxWidth: firstRow[1].maxWidth,
+                              minWidth: firstRow[1].minWidth,
+                            }}
+                          >
+                            {row.protocol}
+                          </StyledTableBodyCell>
+                          <StyledTableBodyCell
+                            align={firstRow[2].align}
+                            sx={{
+                              maxWidth: firstRow[2].maxWidth,
+                              minWidth: firstRow[2].minWidth,
+                            }}
+                          >
+                            {row.containerPort}
+                          </StyledTableBodyCell>
+                        </TableRow>
+                      ))
+                    ) : (
+                      <TableRow style={{ height: '220px' }}>
+                        <TableCell
+                          colSpan={7}
+                          sx={{
+                            textAlign: 'center',
+                            fontSize: '20px',
+                            fontFamily: fontFamily,
+                            fontStyle: 'normal',
+                          }}
+                        >
+                          <Question />
+                          <NormalBoldFont>
+                            {intl.messages['common.serviceTableContentNoData']}
+                          </NormalBoldFont>
+                        </TableCell>
+                      </TableRow>
+                    )}
+                  </TableBody>
+                </Table>
+              </StyledTableContainer>
+            </Box>
+          </KubeDeploymentCard>
+        </Box>
+      </StyledModal>
     </Stack>
   );
 }

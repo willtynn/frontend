@@ -114,6 +114,7 @@ export const messages = {
     resourceLimit: "资源限制",
     schemeDetails: "方案详情",
     cpu: "CPU",
+    portsDetails: "端口详情",
   },
   lang: {
     language: '语言',
