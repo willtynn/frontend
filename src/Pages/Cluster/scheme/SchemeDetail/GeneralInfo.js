@@ -60,9 +60,7 @@ export default function GeneralInfo(props) {
   ];
 
   const handleReturn = () => {
-    
     navigate('/cluster/scheme');
-
   };
 
   const handleMoreOperation = e => {

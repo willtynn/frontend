@@ -110,6 +110,10 @@ export const messages = {
     description: "Description",
     interface: 'Interface',
     id: "ID",
+    resourceRequest: "Resources Request",
+    resourceLimit: "Resources Limit",
+    schemeDetails: "Scheme Details",
+    cpu: "CPU",
   },
   lang: {
     language: 'Language',

@@ -110,6 +110,10 @@ export const messages = {
     description: "描述",
     interface: '接口',
     id: "ID",
+    resourceRequest: "请求资源",
+    resourceLimit: "资源限制",
+    schemeDetails: "方案详情",
+    cpu: "CPU",
   },
   lang: {
     language: '语言',
