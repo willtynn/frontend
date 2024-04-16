@@ -14,6 +14,7 @@ import PendingPod from '@/assets/PendingPod.svg';
 import FailedPod from '@/assets/FailedPod.svg';
 import SucceededPod from '@/assets/SucceededPod.svg';
 import KubeSearch from '@/assets/KubeSearch.svg';
+import Question from '@/assets/Question.svg';
 import RefreshIcon from '@mui/icons-material/Refresh';
 import { searchPodsByServiceName } from '../../../../actions/serviceAction';
 import {
@@ -23,6 +24,8 @@ import {
 } from '../../../Cluster/deploy/ServiceStatusTable';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import { parseServiceName } from '../../../../utils/commonUtils';
+import { useIntl } from 'react-intl';
+import { NormalBoldFont } from '../../../../components/Fonts';
 
 export const IconOfPod = status => {
   if (status === RUNNING) {
@@ -39,6 +42,7 @@ export const IconOfPod = status => {
 
 export default function ResourceStatus(props) {
   const { service } = props;
+  const intl = useIntl();
   const [podSearchValue, setPodSearchValue] = useState('');
   const [enter, setEnter] = useState(0);
 
@@ -94,7 +98,7 @@ export default function ResourceStatus(props) {
   };
 
   return (
-    <KubeSimpleCard title='容器组'>
+    <KubeSimpleCard title={intl.messages['serviceOverview.pod']}>
       <Stack direction='row' spacing={1.5} justifyContent='space-between'>
         {/* 搜索框 */}
         <KubeAdornmentTextField
@@ -146,7 +150,7 @@ export default function ResourceStatus(props) {
               </InputAdornment>
             ),
           }}
-          placeholder='按名称搜索'
+          placeholder={intl.messages['common.searchByName']}
           inputProps={{}}
         />
 
@@ -171,47 +175,77 @@ export default function ResourceStatus(props) {
       {/* PODS 列表 */}
       <Stack sx={{ mt: '24px' }} direction='column' spacing={1.5}>
         {visibleRows && visibleRows.length > 0 ? (
-          visibleRows.map((pod, index) => {
-            return (
-              <Stack
-                sx={{
-                  bgcolor: '#FFFFFF',
-                  borderRadius: '4px',
-                  padding: '12px',
-                  height: '40px',
-                  cursor: 'pointer',
-                  border: '1px solid #ccd3db',
-                }}
-                direction='row'
-                justifyContent='space-between'
-                alignItems='center'
-                spacing={2}
-              >
-                {/* NAME */}
-                <Stack direction='row' spacing={1}>
-                  <Tooltip
-                    PopperProps={{
-                      sx: {
-                        '& .MuiTooltip-tooltip': {
-                          backgroundColor: '#242e42',
+          <>
+            {visibleRows.map((pod, index) => {
+              return (
+                <Stack
+                  sx={{
+                    bgcolor: '#FFFFFF',
+                    borderRadius: '4px',
+                    padding: '12px',
+                    height: '40px',
+                    cursor: 'pointer',
+                    border: '1px solid #ccd3db',
+                  }}
+                  direction='row'
+                  justifyContent='space-between'
+                  alignItems='center'
+                  spacing={2}
+                >
+                  {/* NAME */}
+                  <Stack direction='row' spacing={1}>
+                    <Tooltip
+                      PopperProps={{
+                        sx: {
+                          '& .MuiTooltip-tooltip': {
+                            backgroundColor: '#242e42',
+                          },
+                          '& .MuiTooltip-arrow': {
+                            color: '#242e42',
+                          },
                         },
-                        '& .MuiTooltip-arrow': {
-                          color: '#242e42',
-                        },
-                      },
-                    }}
-                    title={
-                      <Stack sx={{ padding: '12px' }} spacing={1}>
-                        <Box>{pod.metadata.name}</Box>
-                        <Box>{`状态：${pod.status.phase}`}</Box>
-                      </Stack>
-                    }
-                    placement='top'
-                    arrow
-                  >
-                    {IconOfPod(pod.status.phase)}
-                  </Tooltip>
+                      }}
+                      title={
+                        <Stack sx={{ padding: '12px' }} spacing={1}>
+                          <Box>{pod.metadata.name}</Box>
+                          <Box>{`${intl.messages['common.status']}：${pod.status.phase}`}</Box>
+                        </Stack>
+                      }
+                      placement='top'
+                      arrow
+                    >
+                      {IconOfPod(pod.status.phase)}
+                    </Tooltip>
 
+                    <Stack direction='column'>
+                      <Box
+                        sx={{
+                          fontSize: '12px',
+                          fontFamily: fontFamily,
+                          fontStyle: 'normal',
+                          fontWeight: 700,
+                          lineHeight: 1.67,
+                          color: '#242e42',
+                        }}
+                      >
+                        {pod.metadata.name}
+                      </Box>
+                      <Box
+                        sx={{
+                          fontSize: '12px',
+                          fontFamily: fontFamily,
+                          fontStyle: 'normal',
+                          fontWeight: 400,
+                          lineHeight: 1.67,
+                          color: '#79879c',
+                        }}
+                      >
+                        {`${intl.messages['common.createdOn']} ${formatDatetimeString(pod.status.startTime)}`}
+                      </Box>
+                    </Stack>
+                  </Stack>
+
+                  {/* HOST IP */}
                   <Stack direction='column'>
                     <Box
                       sx={{
@@ -223,7 +257,7 @@ export default function ResourceStatus(props) {
                         color: '#242e42',
                       }}
                     >
-                      {pod.metadata.name}
+                      {pod.status.hostIP}
                     </Box>
                     <Box
                       sx={{
@@ -235,81 +269,69 @@ export default function ResourceStatus(props) {
                         color: '#79879c',
                       }}
                     >
-                      {`创建于 ${formatDatetimeString(pod.status.startTime)}`}
+                      {intl.messages['common.hostIP']}
                     </Box>
                   </Stack>
-                </Stack>
 
-                {/* HOST IP */}
-                <Stack direction='column'>
-                  <Box
-                    sx={{
-                      fontSize: '12px',
-                      fontFamily: fontFamily,
-                      fontStyle: 'normal',
-                      fontWeight: 700,
-                      lineHeight: 1.67,
-                      color: '#242e42',
-                    }}
-                  >
-                    {pod.status.hostIP}
-                  </Box>
-                  <Box
-                    sx={{
-                      fontSize: '12px',
-                      fontFamily: fontFamily,
-                      fontStyle: 'normal',
-                      fontWeight: 400,
-                      lineHeight: 1.67,
-                      color: '#79879c',
-                    }}
-                  >
-                    主机IP地址
-                  </Box>
-                </Stack>
+                  {/* POD IP */}
+                  <Stack direction='column'>
+                    <Box
+                      sx={{
+                        fontSize: '12px',
+                        fontFamily: fontFamily,
+                        fontStyle: 'normal',
+                        fontWeight: 700,
+                        lineHeight: 1.67,
+                        color: '#242e42',
+                      }}
+                    >
+                      {pod.status.podIP}
+                    </Box>
+                    <Box
+                      sx={{
+                        fontSize: '12px',
+                        fontFamily: fontFamily,
+                        fontStyle: 'normal',
+                        fontWeight: 400,
+                        lineHeight: 1.67,
+                        color: '#79879c',
+                      }}
+                    >
+                      {intl.messages['serviceOverview.podIP']}
+                    </Box>
+                  </Stack>
 
-                {/* POD IP */}
-                <Stack direction='column'>
-                  <Box
-                    sx={{
-                      fontSize: '12px',
-                      fontFamily: fontFamily,
-                      fontStyle: 'normal',
-                      fontWeight: 700,
-                      lineHeight: 1.67,
-                      color: '#242e42',
-                    }}
-                  >
-                    {pod.status.podIP}
-                  </Box>
-                  <Box
-                    sx={{
-                      fontSize: '12px',
-                      fontFamily: fontFamily,
-                      fontStyle: 'normal',
-                      fontWeight: 400,
-                      lineHeight: 1.67,
-                      color: '#79879c',
-                    }}
-                  >
-                    容器组IP地址
+                  <Box sx={{ padding: '12px 12px 6px 12px' }}>
+                    <KeyboardArrowDownIcon />
                   </Box>
                 </Stack>
-
-                <Box sx={{ padding: '12px 12px 6px 12px' }}>
-                  <KeyboardArrowDownIcon />
-                </Box>
-              </Stack>
-            );
-          })
+              );
+            })}
+            <Box
+              sx={{
+                fontSize: '12px',
+                fontFamily: fontFamily,
+                fontStyle: 'normal',
+                fontWeight: 400,
+                lineHeight: 1.67,
+                color: '#79879C',
+                height: '32px',
+                display: 'flex',
+                alignItems: 'center',
+                mt: '12px',
+              }}
+            >
+              {`${intl.messages['serviceOverview.total']} : ${pods.length}`}
+            </Box>
+          </>
         ) : (
-          <Box
+          <Stack
+            direction='column'
+            justifyContent='center'
+            alignItems='center'
             sx={{
+              height: '300px',
               width: '100%',
-              height: '56px',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
               fontSize: '12px',
               fontFamily: fontFamily,
               fontStyle: 'normal',
@@ -318,27 +340,13 @@ export default function ResourceStatus(props) {
               color: '#242E42',
             }}
           >
-            未发现资源
-          </Box>
+            <Question />
+            <NormalBoldFont>
+              {intl.messages['common.serviceTableContentNoData']}
+            </NormalBoldFont>
+          </Stack>
         )}
       </Stack>
-
-      <Box
-        sx={{
-          fontSize: '12px',
-          fontFamily: fontFamily,
-          fontStyle: 'normal',
-          fontWeight: 400,
-          lineHeight: 1.67,
-          color: '#79879C',
-          height: '32px',
-          display: 'flex',
-          alignItems: 'center',
-          mt: '12px',
-        }}
-      >
-        {`总数：${pods.length}`}
-      </Box>
-    </KubeSimpleCard>
+    </KubeSimpleCard >
   );
 }

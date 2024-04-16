@@ -13,11 +13,18 @@ import ActivePod from '@/assets/ActivePod.svg';
 import { searchPodsByServiceName } from '@/actions/serviceAction';
 import { serviceMonitorData } from '../data';
 import { getResourceHistory } from '../../../../actions/instanceAction';
-import { formatDatetimeString, parseServiceName } from '../../../../utils/commonUtils';
+import {
+  formatDatetimeString,
+  parseServiceName,
+} from '../../../../utils/commonUtils';
+import { useIntl } from 'react-intl';
+import Question from '@/assets/Question.svg';
+import { NormalBoldFont, SmallLightFont } from '@/components/Fonts';
 
 export default function ResourceMonitor(props) {
   const { service } = props;
   const dispatch = useDispatch();
+  const intl = useIntl();
 
   const { pods } = useSelector(state => {
     return {
@@ -40,12 +47,29 @@ export default function ResourceMonitor(props) {
   }, []);
 
   return (
-    <KubeSimpleCard title='容器组资源监控'>
+    <KubeSimpleCard
+      title={intl.messages['serviceOverview.containerGroupResourceMonitoring']}
+    >
       <Stack spacing={1.5} sx={{ mt: '12px' }}>
-        {pods && pods.length && pods.map((pod, index) => {
-          return (<PodResourceMonitor pod={pod} />);
-        })}
-       
+        {pods && pods.length ? (
+          pods.map((pod, index) => {
+            return <PodResourceMonitor pod={pod} />;
+          })
+        ) : (
+          <Stack
+            direction='column'
+            justifyContent='center'
+            alignItems='center'
+            sx={{
+              height: '300px',
+            }}
+          >
+            <Question />
+            <NormalBoldFont>
+              {intl.messages['common.serviceTableContentNoData']}
+            </NormalBoldFont>
+          </Stack>
+        )}
       </Stack>
     </KubeSimpleCard>
   );
@@ -53,6 +77,7 @@ export default function ResourceMonitor(props) {
 
 function PodResourceMonitor(props) {
   const { pod } = props;
+  const intl = useIntl();
 
   const [open, setOpen] = useState(false);
   const [cpuUsage, setCpuUsage] = useState([]);
@@ -73,16 +98,17 @@ function PodResourceMonitor(props) {
           localStorage.getItem('current_cluster'),
           pod.metadata.namespace,
           pod.metadata.name,
-          Math.floor(new Date(new Date().getTime() - 24 * 60 * 60 * 1000).getTime() / 1000),
-          Math.floor((new Date().getTime() / 1000)),
+          Math.floor(
+            new Date(new Date().getTime() - 24 * 60 * 60 * 1000).getTime() /
+              1000
+          ),
+          Math.floor(new Date().getTime() / 1000),
           60,
           setData
         )
       );
     }
   }, []);
-
-
 
   useEffect(() => {
     if (data && data.results) {
@@ -102,19 +128,28 @@ function PodResourceMonitor(props) {
           } else if (result.metric_name === 'pod_net_bytes_transmitted') {
             setByteTransmitted(
               result.data.result[0].values.map((record, index) => {
-                return { name: record[0], flow: (Number(record[1]) / 128).toFixed(2) };
+                return {
+                  name: record[0],
+                  flow: (Number(record[1]) / 128).toFixed(2),
+                };
               })
             );
           } else if (result.metric_name === 'pod_net_bytes_received') {
             setByteReceived(
               result.data.result[0].values.map((record, index) => {
-                return { name: record[0], flow: (Number(record[1]) / 128).toFixed(2) };
+                return {
+                  name: record[0],
+                  flow: (Number(record[1]) / 128).toFixed(2),
+                };
               })
             );
           } else {
             setMemoryUsage(
               result.data.result[0].values.map((record, index) => {
-                return { name: record[0], usage: (Number(record[1]) / 1024 / 1024).toFixed(2) };
+                return {
+                  name: record[0],
+                  usage: (Number(record[1]) / 1024 / 1024).toFixed(2),
+                };
               })
             );
           }
@@ -132,7 +167,6 @@ function PodResourceMonitor(props) {
       setMemoryUsage([]);
     }
   }, [data]);
-
 
   const handleMonitorClick = () => {
     setOpen(prevOpen => !prevOpen);
@@ -172,7 +206,7 @@ function PodResourceMonitor(props) {
             title={
               <Stack sx={{ padding: '12px' }} spacing={1}>
                 <Box>{pod.metadata.name}</Box>
-                <Box>{`状态：${pod.status.phase}`}</Box>
+                <Box>{`${intl.messages['common.status']}：${pod.status.phase}`}</Box>
               </Stack>
             }
             placement='top'
@@ -204,7 +238,9 @@ function PodResourceMonitor(props) {
                 color: '#79879c',
               }}
             >
-              {`创建于 ${formatDatetimeString(Date.parse(pod.status.startTime))}`}
+              {`${intl.messages['common.createdOn']} ${formatDatetimeString(
+                Date.parse(pod.status.startTime)
+              )}`}
             </Box>
           </Stack>
         </Stack>
@@ -233,7 +269,7 @@ function PodResourceMonitor(props) {
               color: '#79879c',
             }}
           >
-            主机IP地址
+            {intl.messages['common.hostIP']}
           </Box>
         </Stack>
 
@@ -261,7 +297,7 @@ function PodResourceMonitor(props) {
               color: '#79879c',
             }}
           >
-            容器组IP地址
+            {intl.messages['serviceOverview.podIP']}
           </Box>
         </Stack>
 
@@ -279,8 +315,8 @@ function PodResourceMonitor(props) {
             width: 'calc(100% - 64px)',
             bgcolor: '#FFFFFF',
             padding: '12px',
-            borderRadius: "0px 0px 4px 4px",
-            boxShadow: '0 4px 8px 0 rgba(36,46,66,.06)'
+            borderRadius: '0px 0px 4px 4px',
+            boxShadow: '0 4px 8px 0 rgba(36,46,66,.06)',
           }}
         >
           <Box
@@ -293,8 +329,8 @@ function PodResourceMonitor(props) {
               data={cpuUsage}
               keyName='name'
               valueName='usage'
-              labelY='CPU 用量 (m)'
-              labelName='用量'
+              labelY={intl.messages['stressTesting.cpuUsage']}
+              labelName={intl.messages['common.usage']}
               unitName='m'
             />
           </Box>
@@ -309,8 +345,8 @@ function PodResourceMonitor(props) {
               data={memoryUsage}
               keyName='name'
               valueName='usage'
-              labelY='内存用量 (Mi)'
-              labelName='用量'
+              labelY={intl.messages['stressTesting.memUsage']}
+              labelName={intl.messages['common.usage']}
               unitName='Mi'
             />
           </Box>
@@ -325,8 +361,8 @@ function PodResourceMonitor(props) {
               data={byteTransmitted}
               keyName='name'
               valueName='flow'
-              labelY='出站流量 (Kbps)'
-              labelName='出站'
+              labelY={intl.messages['stressTesting.transferredFlow']}
+              labelName={intl.messages['common.transferred']}
               unitName='Kbps'
             />
           </Box>
@@ -341,8 +377,8 @@ function PodResourceMonitor(props) {
               data={byteReceived}
               keyName='name'
               valueName='flow'
-              labelY='入站流量 (Kbps)'
-              labelName='入站'
+              labelY={intl.messages['stressTesting.receivedFlow']}
+              labelName={intl.messages['common.received']}
               unitName='Kbps'
             />
           </Box>

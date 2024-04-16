@@ -89,7 +89,7 @@ export default function ClusterSelectModal(props) {
                   color: '#242E42',
                 }}
               >
-                集群
+                {intl.messages['common.cluster']}
               </Box>
               <Box
                 sx={{
@@ -174,7 +174,7 @@ export default function ClusterSelectModal(props) {
                 </InputAdornment>
               ),
             }}
-            placeholder='按名称搜索'
+            placeholder={intl.messages['common.searchByName']}
             inputProps={{}}
           />
 
@@ -281,7 +281,7 @@ export default function ClusterSelectModal(props) {
                       color: '#79879c',
                     }}
                   >
-                    节点数量
+                    {intl.messages['menu.nodeNum']}
                   </Box>
                 </Stack>
 
@@ -308,7 +308,7 @@ export default function ClusterSelectModal(props) {
                       color: '#79879c',
                     }}
                   >
-                    Kubernetes 版本
+                    {`Kubernetes ${intl.messages['common.version']}`}
                   </Box>
                 </Stack>
 

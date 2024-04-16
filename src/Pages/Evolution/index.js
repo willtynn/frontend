@@ -11,13 +11,10 @@ import {
   TableRow,
 } from '@mui/material';
 import { useDispatch, useSelector } from 'react-redux';
-import { ContainedButton, KubeConfirmButton } from '@/components/Button';
+import { KubeConfirmButton } from '@/components/Button';
 import { fontFamily } from '@/utils/commonUtils';
-import { StyledModal } from '../../../components/Modal';
 import {
-  StyledTableBox,
   StyledTableContainer,
-  StyledTableRowCell,
   StyledTableBodyCell,
   StyledTableFooter,
   StyledTableHead,
@@ -27,7 +24,6 @@ import StressTestingIcon from '@/assets/StressTesting.svg';
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
 import { useIntl } from 'react-intl';
-import { TestingProgress } from './TestingProgress';
 import SearchIcon from '@mui/icons-material/Search';
 import RefreshIcon from '@mui/icons-material/Refresh';
 import { EclipseTransparentButton } from '@/components/Button';
@@ -36,11 +32,9 @@ import PendingIcon from '@/assets/PendingIcon.svg';
 import FailedIcon from '@/assets/FailedIcon.svg';
 import SucceededIcon from '@/assets/SucceededIcon.svg';
 import Question from '@/assets/Question.svg';
-import { KubeCheckbox } from '@/components/Checkbox';
 import Task from '@/assets/Task.svg';
 import { NormalBoldFont, SmallLightFont } from '@/components/Fonts';
 import { useNavigate } from 'react-router-dom';
-
 import {
   UPDATE_GROUP_EDIT,
   RESET_GROUP,
@@ -48,7 +42,9 @@ import {
   UPDATE_TEST_PLAN_PAGE_NUM,
   UPDATE_TEST_PLAN_PAGE_SIZE,
   getTestPlans,
-} from '../../../actions/applicationAction';
+} from '../../actions/applicationAction';
+import { StyledModal } from '../../components/Modal';
+import {TestingProgress} from "../Application/StressTesting/TestingProgress";
 
 export const RUNNING = 'Running';
 export const PENDING = 'Pending';
@@ -142,7 +138,7 @@ function createRow(
 const statusPattern = new RegExp(/^(状态|Status):/);
 const namePattern = new RegExp(/^(名称|Name):/);
 
-export default function StressTesting() {
+export default function EvolutionPlan() {
   const intl = useIntl();
   const [planOpen, setPlanOpen] = useState(false);
   const [showError, setShowError] = useState(false);
@@ -151,14 +147,14 @@ export default function StressTesting() {
   const [tableData, setTableData] = useState([]);
   const [count, setCount] = useState(0);
   const [order, setOrder] = useState('asc');
-  const [orderBy, setOrderBy] = useState('testPlanName');
+  const [orderBy, setOrderBy] = useState('evolutionPlanName');
 
   const [searchValue, setSearchValue] = useState('');
   const [searchSelectAnchorEl, setSearchSelectAnchorEl] = useState(null);
   const searchSelectOpen = Boolean(searchSelectAnchorEl);
   const [searchBy, setSearchBy] = useState([
     intl.messages['common.name'],
-    intl.messages['common.status'],
+    intl.messages['common.createTime'],
   ]);
 
   const [colDisplay, setColDisplay] = useState([true, true, true, true, true]);
@@ -167,11 +163,11 @@ export default function StressTesting() {
 
   const [searchList, setSearchList] = useState([]);
 
-  const { pageSize, pageNum, testPlans } = useSelector(state => {
+  const { pageSize, pageNum, evolutionPlans } = useSelector(state => {
     return {
-      pageSize: state.Application.pageSize,
-      pageNum: state.Application.pageNum,
-      testPlans: state.Application.testPlans,
+      pageSize: state.Evolution.pageSize,
+      pageNum: state.Evolution.pageNum,
+      evolutionPlans: state.Evolution.evolutionPlans,
     };
   });
 
@@ -183,13 +179,13 @@ export default function StressTesting() {
   }, []);
 
   useEffect(() => {
-    setTableData(testPlans);
-  }, [testPlans]);
+    setTableData(evolutionPlans);
+  }, [evolutionPlans]);
 
   const headRow = [
     createRow(
-      'testPlanName',
-      intl.messages['stressTesting.planName'],
+      'evolutionPlanName',
+      intl.messages['evolution.evolutionPlanName'],
       true,
       '100px',
       '100px',
@@ -197,8 +193,8 @@ export default function StressTesting() {
       'center'
     ),
     createRow(
-      'status',
-      intl.messages['common.status'],
+      'createTime',
+      intl.messages['common.createTime'],
       false,
       '100px',
       '100px',
@@ -206,8 +202,8 @@ export default function StressTesting() {
       'center'
     ),
     createRow(
-      'serialized',
-      intl.messages['common.serialized'],
+      'executionNumber',
+      intl.messages['common.executionNumber'],
       false,
       '120px',
       '130px',
@@ -215,8 +211,8 @@ export default function StressTesting() {
       'center'
     ),
     createRow(
-      'functionalMode',
-      intl.messages['common.functionMode'],
+      'lastExecutionTime',
+      intl.messages['common.lastExecutionTime'],
       false,
       '120px',
       '130px',
@@ -224,8 +220,8 @@ export default function StressTesting() {
       'center'
     ),
     createRow(
-      'tearDown',
-      'tear down',
+      'enableOrDisable',
+      intl.messages['common.enableOrDisable'],
       false,
       '120px',
       '130px',
@@ -233,12 +229,12 @@ export default function StressTesting() {
       'center'
     ),
     createRow(
-      'comment',
-      intl.messages['common.description'],
+      'remark',
+      intl.messages['common.remark'],
       false,
       '120px',
       '130px',
-      colDisplay[3],
+      colDisplay[4],
       'center'
     ),
   ];
@@ -386,7 +382,7 @@ export default function StressTesting() {
                 lineHeight: '32px',
               }}
             >
-              {intl.messages['stressTesting.performancePressureTest']}
+              {intl.messages['evolution.evolutionPlan']}
             </Typography>
             <Typography
               sx={{
@@ -397,7 +393,7 @@ export default function StressTesting() {
                 lineHeight: 1.67,
               }}
             >
-              {intl.messages['stressTesting.stressTestingDescription']}
+              {intl.messages['evolution.evolutionPlan']}
             </Typography>
           </Box>
         </Stack>
@@ -589,10 +585,12 @@ export default function StressTesting() {
               }}
               onClick={handlePlanClick}
             >
-              {intl.messages['stressTesting.createTestPlan']}
+              {intl.messages['evolution.createEvolutionPlan']}
             </KubeConfirmButton>
           </Stack>
         </Box>
+
+        {/* <StyledTableBox> */}
         <StyledTableContainer sx={{ bgcolor: '#FFF' }}>
           <Table
             stickyHeader
@@ -628,21 +626,6 @@ export default function StressTesting() {
                       }}
                       selected={false}
                     >
-                      {/* <StyledTableBodyCell
-                        align='center'
-                        sx={{
-                          p: '0px 16px !important',
-                        }}
-                      >
-                        <KubeCheckbox
-                          sx={{
-                            bgcolor: 'transparent !important',
-                          }}
-                          disableRipple
-                          size='small'
-                        />
-                      </StyledTableBodyCell> */}
-
                       <StyledTableBodyCell
                         align={'center'}
                         sx={{
@@ -781,11 +764,10 @@ export default function StressTesting() {
           }}
         />
       </Box>
-
       <StyledModal open={planOpen} onClose={handleClose}>
         <TestingProgress
-          handleConfirmClick={handleConfirmClick}
-          handleCancelClick={handleCancelClick}
+          handleConfirmClick={() => {}}
+          handleCancelClick={handleClose}
           showError={showError}
           setShowError={setShowError}
         />

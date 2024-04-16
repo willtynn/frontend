@@ -12,6 +12,8 @@ import ModelReducer from './modelReducer';
 import InferApplicationReducer from './inferApplicationReducer';
 import InferRouteReducer from './inferRouteReducer';
 import InferPipelineReducer from './InferPipelineReducer'
+import SchemeReducer from './schemeReducer';
+import EvolutionReducer from './evolutionReducer';
 
 const rootReducer = combineReducers({
     Service: ServiceReducer,
@@ -27,6 +29,8 @@ const rootReducer = combineReducers({
     InferInstance: InferApplicationReducer,
     InferRoute: InferRouteReducer,
     InferPipeline:InferPipelineReducer,
+    Scheme: SchemeReducer,
+    Evolution: EvolutionReducer
 });
 
 export default rootReducer;

@@ -1,5 +1,6 @@
 import { Stack } from '@mui/material';
 import { KubeInput } from '../../../../../../components/Input';
+import { useIntl } from 'react-intl';
 
 export function UniformRandomTimer(props) {
   const {
@@ -8,6 +9,8 @@ export function UniformRandomTimer(props) {
     constantDelayOffset,
     setConstantDelayOffset,
   } = props;
+
+  const intl = useIntl();
 
   const handleRandomDelayMaximumChange = e => {
     setRandomDelayMaximum(e.target.value);
@@ -20,8 +23,7 @@ export function UniformRandomTimer(props) {
   return (
     <Stack direction="column" spacing={1}>
       <KubeInput
-        label='最大随机延迟时间（毫秒）'
-        // decription={intl.messages['stressTesting.groupCommentDescription']}
+        label={intl.messages['stressTesting.randomMsDelayMaximum']}
         requried={true}
         id='random-uniform-timer-randomDelayMaximum-input'
         variant='outlined'
@@ -29,8 +31,7 @@ export function UniformRandomTimer(props) {
         onChange={handleRandomDelayMaximumChange}
       />
       <KubeInput
-        label='固定延迟偏移（毫秒）'
-        // decription={intl.messages['stressTesting.groupCommentDescription']}
+        label={intl.messages['stressTesting.constantMsDelayOffset']}
         requried={true}
         id='random-uniform-timer-constantDelayOffset-input'
         variant='outlined'

@@ -92,7 +92,7 @@ export default function RouteReducer(state = initState, action) {
     case UPDATE_SEARCH_SERVICE:
       return {
         ...state,
-        services: data.map(s=>s.name)
+        services: data?.map(s=>s?.name)
       }
     case routectl.UPDATE_CURRENT_SERVICE:
       return {

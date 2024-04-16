@@ -123,18 +123,20 @@ export function StyledTableFooter(props) {
             page={pageNum}
           />
         </Grid>
-        <Grid item md={3} alignItems='center' justifyContent='center'>
-          {perPageList ? (
-            <PageSizePopper
-              id='pageSelectPopper'
-              pageSize={pageSize}
-              handlePageSizeChange={handlePerPageChange}
-              pageSizeList={perPageList}
-            />
-          ) : (
-            <Box> </Box>
-          )}
-        </Grid>
+        {perPageList ? (
+          <Grid item md={3} alignItems='center' justifyContent='center'>
+            
+              <PageSizePopper
+                id='pageSelectPopper'
+                pageSize={pageSize}
+                handlePageSizeChange={handlePerPageChange}
+                pageSizeList={perPageList}
+              />
+
+          </Grid>
+        ) : (
+          <> </>
+        )}
       </Stack>
     </Box>
   );
@@ -341,13 +343,13 @@ export function StyledTableHead(props) {
       }}>
         {selectAll === true ? (
           <StyledTableRowCell
-            align='center'
+            align='left'
             sx={{
-              maxWidth: "30px",
-              minWidth: "30px",
+              maxWidth: "0px",
+              minWidth: "0px",
             }}
           >
-            <KubeCheckbox
+            {/* <KubeCheckbox
               sx={{
                 bgcolor: 'transparent !important',
               }}
@@ -355,7 +357,7 @@ export function StyledTableHead(props) {
               size="small"
               checked={checkAll}
               onChange={(e) => setCheckAll(e.target.checked)}
-            />
+            /> */}
           </StyledTableRowCell>
         ) : (
           <></>

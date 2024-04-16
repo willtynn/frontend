@@ -1,15 +1,26 @@
 import { useEffect, useState } from 'react';
-import { Box, Stack, TextField, Typography } from '@mui/material';
+import { Box, Stack, TextField, Typography, Modal, } from '@mui/material';
 import { useDispatch, useSelector } from 'react-redux';
 import { UPDATE_SELECTED_SERVER } from '@/actions/clusterAction';
 import { useIntl } from 'react-intl';
 import ClusterNode from '@/assets/ClusterNode.svg';
 import { StyledAutocomplete } from '@/components/Input';
 import { fontFamily } from '../../../utils/commonUtils';
+import SchemeOverview from './Overview';
+import { OutlinedButton } from '@/components/Button';
+import DeployConfig from './DeployConfig';
 
 export default function SchemeDeploy() {
-
   const intl = useIntl();
+
+  const [openConfig, setOpenConfig] = useState(false);
+  const [showError, setShowError] = useState(false);
+
+  const handleConfigOpen = () => setOpenConfig(true);
+  const handleConfigClose = () => {
+    setShowError(false);
+    setOpenConfig(false);
+  }
 
   return (
     <Box>
@@ -52,6 +63,26 @@ export default function SchemeDeploy() {
           </Box>
         </Stack>
       </Box>
+      <SchemeOverview
+        embeddingButton={
+          <OutlinedButton
+            onClick={handleConfigOpen}
+            sx={{
+              borderRadius: '20px !important',
+              width: '120px',
+            }}
+          >
+            {intl.messages['scheme.addScheme']}
+          </OutlinedButton>
+        }
+      />
+      <Modal open={openConfig} onClose={handleConfigClose}>
+        <DeployConfig 
+          handleCancelClick={handleConfigClose}
+          showError={showError}
+          setShowError={setShowError}
+        />
+      </Modal>
     </Box>
   );
 }

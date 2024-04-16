@@ -91,6 +91,23 @@ export function RouteTraceCanvas(props) {
     });
 
     edges.forEach((item, index) => {
+      // 处理边中的某个节点在上面的nodes中不存在的奇怪情况
+      if (!g.hasNode(item.start)) {
+        g.setNode(item.start, {
+          label: item.start,
+          labelStyle: 'overflow: hidden;text-overflow: ellipsis;',
+          class: 'trace_node',
+          id: item.start,
+        });
+      }
+      if (!g.hasNode(item.end)) {
+        g.setNode(item.end, {
+          label: item.end,
+          labelStyle: 'overflow: hidden;text-overflow: ellipsis;',
+          class: 'trace_node',
+          id: item.end,
+        });
+      }
       g.setEdge(item.start, item.end, {
         label: item.info, //"<div style=\"max-width:100px;height:90px;overflow: auto;text-overflow: ellipsis;word-break: break-all;\">" + item.info + "</div>",
         labelType: 'html',
@@ -103,6 +120,7 @@ export function RouteTraceCanvas(props) {
       }); //.on("mouseover", (e)=> console.log(e));
     });
 
+    
     g.nodes().forEach(function (v) {
       var node = g.node(v);
       // Round the corners of the nodes
