@@ -1,10 +1,10 @@
-import { Box } from '@mui/material';
 import CreateAndUpdateHeader from './CommonComponents/MyHeader';
 import MainPageFramework from './CommonComponents/MainPageFramework'
 import CreateAndUpdateFooter from './CommonComponents/MyFooter'
 import ModelInformation from './SubPage/ModelSelector/ModelInformation';
 import ServerInformation from './SubPage/ServerSelector/ServerInformation';
-import PartitionInformation from './SubPage/PartitionView//PartitionInformation';
+import PartitionInformation from './SubPage/PartitionView/PartitionInformation';
+import DeploymentInformation from './SubPage/DeploymentView/DeploymentInformation'
 import React, { createContext, useState, useContext } from 'react';
 
 export default function ModelDeploymentPage() {
@@ -63,7 +63,7 @@ export default function ModelDeploymentPage() {
       case 3:
         return (<PartitionInformation></PartitionInformation>);
       case 4:
-        return steps[activeStep];
+        return (<DeploymentInformation></DeploymentInformation>);
       default:
         return 'defalut';
     }
