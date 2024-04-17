@@ -542,7 +542,7 @@ export default function SchemeOverview(props) {
             isDuplicate={isDuplicate}
             startAdornment={<SearchIcon />}
             sx={{
-              width: 'calc(100% - 600px)',
+              width: 'calc(100% - 300px)',
               '& .MuiOutlinedInput-input.MuiInputBase-input': {
                 // padding: '6px 12px !important',
                 fontSize: '12px',

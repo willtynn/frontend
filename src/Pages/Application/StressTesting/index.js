@@ -526,7 +526,7 @@ export default function StressTesting() {
             bgcolor: '#f9fbfd',
           }}
         >
-          <Stack direction='row' spacing={2}>
+          <Stack direction='row' spacing={2} justifyContent='space-between'>
             <ChipTextField
               value={searchValue}
               setValue={setSearchValue}
@@ -535,7 +535,7 @@ export default function StressTesting() {
               isDuplicate={isDuplicate}
               startAdornment={<SearchIcon />}
               sx={{
-                width: 'calc(100% - 600px)',
+                width: 'calc(100% - 300px)',
                 '& .MuiOutlinedInput-input.MuiInputBase-input': {
                   // padding: '6px 12px !important',
                   fontSize: '12px',
@@ -583,6 +583,7 @@ export default function StressTesting() {
             >
               <VisibilityIcon />
             </EclipseTransparentButton>
+
             <KubeConfirmButton
               sx={{
                 width: '200px',
@@ -633,8 +634,7 @@ export default function StressTesting() {
                         sx={{
                           p: '0px 16px !important',
                         }}
-                      >
-                      </StyledTableBodyCell>
+                      ></StyledTableBodyCell>
 
                       <StyledTableBodyCell
                         align={'center'}
