@@ -747,7 +747,7 @@ export default function SchemeOverview(props) {
                   colSpan={colDisplay.reduce(
                     (accumulator, currentValue) =>
                       accumulator + (currentValue === true),
-                    2
+                    3
                   )}
                   sx={{
                     textAlign: 'center',
