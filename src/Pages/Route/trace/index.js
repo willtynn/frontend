@@ -1,3 +1,8 @@
+/**
+ * @file index.js
+ * @description 这个文件是路由链路页面，包含了RouteTrace组件的定义和实现。
+ */
+
 // imports
 //#region
 

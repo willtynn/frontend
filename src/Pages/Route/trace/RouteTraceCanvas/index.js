@@ -73,20 +73,21 @@ export function RouteTraceCanvas(props) {
     });*/
     nodes.forEach((item, index) => {
       let label = 
-      "<div style=\"width:max-content;text-align: center;\"> \
+      "<div style=\"width:100%;top: 0px;text-align: center;\"> \
       <strong style=\"font-size:16px\">" + item.service + "</strong><br> \
       <table><tbody> \
       <tr align=\"left\"><td><em style=\"font-size:14px\">IP&nbsp;&nbsp;&nbsp;</em></td><td>" + item.ip + "</td></tr> \
       <tr align=\"left\"><td><em>" + intl.messages['routeTrace.popWindowTimeConsuming'] + "&nbsp;&nbsp;&nbsp;</em></td><td>" + item.duration + "</td></tr> \
       <tr align=\"left\"><td><em>Host&nbsp;&nbsp;&nbsp;</em></td><td>" + item.host_ip + "</td></tr> \
       </tbody></table></div>";
+      // let label = item.service
       g.setNode(item.ip, {
         label:
           label,
         labelType: 'html',
         labelStyle: 'overflow: hidden;text-overflow: ellipsis;',
-        class: 'trace_node',
-        id: item.id,
+        class: 'trace_node abc1',
+        id: item.id
       });
     });
 
@@ -188,6 +189,27 @@ export function RouteTraceCanvas(props) {
     // Run the renderer. This is what draws the final graph.
     render(svgGroup, g);
 
+    // let colordiv = document.createElement('div');
+    // colordiv.style.width = '100px';
+    // colordiv.style.height = '20px';
+    // colordiv.style.position = 'absolute';
+    // colordiv.style.fill = 'red';
+    // // document.getElementsByClassName('abc1')[0].childNodes[0].style.fill = 'red';
+    // // document.getElementsByClassName('abc1')[0].childNodes[0].style.height += '90px';
+    // // document.getElementsByClassName('abc1')[0].childNodes[0].style.background = "linear-gradient(#e66465, #9198e5)";
+    // // document.getElementsByClassName('abc1')[0].childNodes[0].style.backgroundSize = "100% 100%";
+    // // document.getElementsByClassName('abc1')[0].childNodes[0].style.fill = 'red';
+    // // console.log(document.getElementsByClassName('abc1')[0].childNodes[1].transform);
+    // // console.log(document.getElementsByClassName('abc1')[0].childNodes[1].childNodes[0].transform);
+    // // document.getElementsByClassName('abc1')[0].childNodes[1].transform.baseVal[0].matrix.e = -10;
+    // // document.getElementsByClassName('abc1')[0].childNodes[1].transform.baseVal[0].matrix.f = -10;
+    
+    // let new1 = document.getElementsByClassName('abc1')[0].childNodes[0].cloneNode(true);
+    // // new1.y += 10;
+    // document.getElementsByClassName('abc1')[0].appendChild(new1);
+    // document.getElementsByClassName('abc1')[0].appendChild(colordiv);
+
+
     // Center the graph
     // console.log(svg.attr("width"));
     // var xCenterOffset = 10;
@@ -198,14 +220,19 @@ export function RouteTraceCanvas(props) {
     //svg.attr("height", refSvg.current.offsetHeight);
     //svg.attr("width", refSvg.current.offsetWidth);
 
-    var xCenterOffset = 20;
-    svgGroup.attr('transform', 'translate(' + xCenterOffset + ', 25)');
+    //var xCenterOffset = 20;
+    //svgGroup.attr('transform', 'translate(' + xCenterOffset + ', 25)');
+    // Center the graph
+    var xCenterOffset = (svg.attr("width") - g.graph().width) / 2;
+    //svgGroup.attr("transform", "translate(" + xCenterOffset + ", 20)");
+    svg.attr("height", g.graph().height + 40);
   }, [routeTraceDetail]);
 
   return (
     <Box
       sx={{
         width: '100%',
+        height: '100%',
         fontFamily: fontFamily,
         overflow: 'auto',
       }}
@@ -227,9 +254,8 @@ export function RouteTraceCanvas(props) {
       ) : (
         <svg
           id='trace_svg-canvas'
-          sx={{ width: '100%', boxShadow: '2px 0px 8px rgba(35,45,65,.28)' }}
-        >
-          <g id='trace_g-canvas' />
+          style={{ width: '100%', height: '100%' }}>
+          <g id='trace_g-canvas'/>
         </svg>
       )}
     </Box>

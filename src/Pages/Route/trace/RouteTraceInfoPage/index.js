@@ -1,4 +1,9 @@
 /**
+ * @file index.js
+ * @description 这个文件是路由链路页面的二级页面，用于展示某个服务的所有请求及其链路信息
+ */
+
+/**
  * src\Pages\Route\trace\RouteTraceInfoPage\index.js
  */
 import React from 'react';
@@ -26,11 +31,10 @@ import {
 import { Tabs } from '@mui/base/Tabs';
 import { NormalFont, NormalFontBlack, NormalBoldFont, SmallLightFont } from '@/components/Fonts';
 import Question from '@/assets/Question.svg';
-import { fontFamily } from '@/utils/commonUtils';
 
 import dayjs from 'dayjs';
 
-import { RouteTraceCanvas } from '../RouteTraceCanvas';
+import { RouteTraceCanvas } from '../RouteTraceCanvas_New';
 import { DataRow } from '../DataRow';
 import GeneralInfo from './GeneralInfo';
 
@@ -187,7 +191,7 @@ export function RouteTraceInfoPage() {
 
         <Grid container spacing={1} sx={{ width: '100%', pt: '20px' }}>
 
-          <Grid item sm={12} md={12} lg={8}>
+          <Grid item sm={12} md={12} lg={6}>
             <Stack>
               <StyledTableContainer sx={{ width: '100%' }}>
                 <Table stickyHeader size='small' sx={{ tableLayout: 'auto' }}>
@@ -230,7 +234,7 @@ export function RouteTraceInfoPage() {
           </Grid>
 
 
-          <Grid item sm={12} md={12} lg={4}>
+          <Grid item sm={12} md={12} lg={6}>
             <Stack sx={styleGraphCard}>
               <div style={{ 
                 width: '100%', 
@@ -250,14 +254,10 @@ export function RouteTraceInfoPage() {
               </div>
               <Divider flexItem />
               {/* 依赖图 */}
-              <Stack sx={{ justifyContent: 'center'}}>
-                <Stack sx= {{ pt: '16px', pr: '16px', pl: '16px'}}>
+              <Stack sx={{ justifyContent: 'center', width: '100%', height: "100%"}}>
+                <Stack sx= {{ pt: '16px', pr: '16px', pl: '16px', height: "100%"}}>
                   {detailSpan ? (
-                    <div style={{ justifyContent: 'center', 
-                    justifyContent: 'center',
-                    alignItems: 'center',
-                    display: 'flex'}}>
-                      <Stack sx={{ width: '100%' }}>
+                      <Stack sx={{ width: '100%', height: "100%" }}>
                         <Stack spacing={1}>
                           <Stack direction='row' sx={{ justifyContent: 'space-between' }}>
                             <NormalFont sx={{ width: '50px' }}>{intl.messages['routeTrace.modalServiceId']}</NormalFont>
@@ -282,10 +282,8 @@ export function RouteTraceInfoPage() {
                           }}
                         />
                       </Stack>
-                    </div>
                   ) : (
                     <Stack sx={{ height: '100%', width: '100%', 
-                      pt: '50px',
                       justifyContent: 'center',
                       alignItems: 'center',
                       display: 'flex'}}>

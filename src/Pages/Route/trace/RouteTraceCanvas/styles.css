@@ -1,3 +1,7 @@
+/* .node rect {
+  fill: #00ffd0;
+} */
+
 .clusters rect {
   fill: #00ffd0;
   stroke: #999;
@@ -14,6 +18,7 @@ text {
   max-width: 300px;
   overflow: hidden;
   text-overflow: ellipsis;
+  background-color: #00ffd0;
 }
 
 .tooltip {
