@@ -8,7 +8,8 @@ import { useDispatch, useSelector } from 'react-redux';
 import { Box } from '@mui/material';
 import { getRouteTraceDetail } from '@/actions/routeAction';
 import CustomNode from './CustomNode';
-import ReactFlow, { useNodesState, useEdgesState, MiniMap, Controls, Background } from 'reactflow';
+import CustomEdge from './CustomEdge';
+import ReactFlow, { Controls, Background } from 'reactflow';
 import { useIntl } from 'react-intl';
 
 import 'reactflow/dist/style.css';
@@ -19,6 +20,10 @@ import './node.css';
 const nodeTypes = {
   customNode: CustomNode,
 };
+const edgeTypes = {
+  customEdge: CustomEdge,
+};
+
 const connectionLineStyle = { stroke: '#000' };
 const snapGrid = [20, 20];
 const defaultViewport = { x: 0, y: 0, zoom: 1.5 };
@@ -89,10 +94,7 @@ export function RouteTraceCanvas(props) {
       });
     }
 
-    console.log('nodes_tmp', nodes_tmp);
-
     let noNode = 1;
-    console.log('edges_raw', edges_raw);
     let edges_tmp = [];
     for (let i = 0; i < edges_raw.length; i++) {
       const item = edges_raw[i];
@@ -123,17 +125,15 @@ export function RouteTraceCanvas(props) {
         id: JSON.stringify(item),
         source: item.start,
         target: item.end,
-        animated: true,
-        label: item.info,
-        style: { stroke: '#000', strokeWidth: 2, fontSize: 12 },
+        data: {
+          label: item.info,
+        },
+        type: 'customEdge',
       });
     }
 
-    console.log('nodes_tmp', nodes_tmp);
-    console.log('edges_tmp', edges_tmp);
     setNodes(nodes_tmp);
     setEdges(edges_tmp);
-
   }, [routeTraceDetail]);
 
   return (
@@ -163,6 +163,7 @@ export function RouteTraceCanvas(props) {
             nodes={nodes}
             edges={edges}
             nodeTypes={nodeTypes}
+            edgeTypes={edgeTypes}
             // onNodesChange={onNodesChange}
             // onEdgesChange={onEdgesChange}
             connectionLineStyle={connectionLineStyle}
