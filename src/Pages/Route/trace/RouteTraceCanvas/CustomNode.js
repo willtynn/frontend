@@ -1,14 +1,12 @@
 import React, { memo } from 'react';
 import { Handle, Position } from 'reactflow';
 import { 
-  Typography,
   Box,
   Stack
 } from '@mui/material';
 import { useIntl } from 'react-intl';
 import { fontFamily } from '@/utils/commonUtils';
 
-import './node.css';
 
 const labelStyle = {
   fontFamily: fontFamily,

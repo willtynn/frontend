@@ -3,7 +3,6 @@ import {
   getBezierPath, 
   EdgeLabelRenderer, 
   BaseEdge,
-  MarkerType,
 } from 'reactflow';
 
 const CustomEdge = ({
@@ -15,6 +14,7 @@ const CustomEdge = ({
   sourcePosition,
   targetPosition,
   data,
+  markerEnd,
 }) => {
   const [edgePath, labelX, labelY] = getBezierPath({
     sourceX,
@@ -32,16 +32,10 @@ const CustomEdge = ({
         path={edgePath}
         style={{ 
           stroke: '#000',
-          strokeWidth: 2 
+          strokeWidth: 2,
+          animated: true,
         }}
-        
-        markerEnd={{
-          type: MarkerType.Arrow,
-          width: 8,
-          height: 8,
-          color: '#000',
-          strokeWidth: 1.5,
-        }}
+        markerEnd={markerEnd}
       />
       <EdgeLabelRenderer>
         <div

@@ -1,35 +1,57 @@
 /**
- * src\Pages\Route\trace\RouteTraceCanvas\index.js
+ * src\Pages\Route\trace\RouteTraceCanvas_New\index.js
  */
 import React from 'react';
-import * as d3 from 'd3';
-import dagreD3 from 'dagre-d3';
+
 import { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Box } from '@mui/material';
-import { fontFamily } from '@/utils/commonUtils';
-import './styles.css';
 import { getRouteTraceDetail } from '@/actions/routeAction';
-
+import CustomNode from './CustomNode';
+import CustomEdge from './CustomEdge';
+import ReactFlow, { Controls, Background, MarkerType } from 'reactflow';
 import { useIntl } from 'react-intl';
+
+import 'reactflow/dist/style.css';
+
+
+
+const nodeTypes = {
+  customNode: CustomNode,
+};
+const edgeTypes = {
+  customEdge: CustomEdge,
+};
+
+const snapGrid = [20, 20];
+
+const findNode = (nodes, id) => nodes.find((n) => n.id === id) || null;
 
 export function RouteTraceCanvas(props) {
   const dispatch = useDispatch();
   const intl = useIntl();
 
   const { id } = props;
+  
+  //const [nodes, setNodes, onNodesChange] = useNodesState([]);
+  //const [edges, setEdges, onEdgesChange] = useEdgesState([]);
+  const [nodes, setNodes] = React.useState([]);
+  const [edges, setEdges] = React.useState([]);
 
   const [noData, setNoData] = React.useState(false);
 
+  /*
   const { routeTraceDetail } = useSelector(state => {
     return {
       routeTraceDetail: state.Route.routeTraceDetail,
     };
+  });*/
+  const routeTraceDetail = useSelector(state => {
+    return state.Route.routeTraceDetail;
   });
 
   useEffect(() => {
     dispatch(getRouteTraceDetail(id));
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   useEffect(() => {
@@ -50,191 +72,119 @@ export function RouteTraceCanvas(props) {
       return;
     } else setNoData(false);
 
-    const nodes = routeTraceDetail.nodes;
-    const edges = routeTraceDetail.edges;
+    const nodes_raw = routeTraceDetail.nodes;
+    const edges_raw = routeTraceDetail.edges;
 
-    var g = new dagreD3.graphlib.Graph({ compound: true })
-      .setGraph({})
-      .setDefaultEdgeLabel(() => {
-        return {};
+    let nodes_tmp = [];
+    for (let i = 0; i < nodes_raw.length; i++) {
+      const item = nodes_raw[i];
+      nodes_tmp.push({
+        id: item.ip,
+        position: { x: i % 2 == 0 ? 100 : -100, y: 200 * i },
+        data: { 
+          ip: item.ip, 
+          service: item.service, 
+          duration: item.duration, 
+          host_ip: item.host_ip,
+          onlyip: false
+        },
+        type: 'customNode',
+        targetPosition: 'top',
+        sourcePosition: 'bottom',
+        style: { backgroundColor: '#FFF', borderRadius: '10px', border: '2px solid #000' },
       });
+    }
 
-    // Here we're setting the nodes
-    /*旧方案
-    nodes.forEach((item, index) => {
-      g.setNode(item.ip, {
-        label:
-          item.name === '' || item.name.trim() === '' ? item.ip : item.name,
-        labelType: 'html',
-        labelStyle: 'overflow: hidden;text-overflow: ellipsis;',
-        class: 'trace_node',
-        id: item.id,
-      });
-    });*/
-    nodes.forEach((item, index) => {
-      let label = 
-      "<div style=\"width:100%;top: 0px;text-align: center;\"> \
-      <strong style=\"font-size:16px\">" + item.service + "</strong><br> \
-      <table><tbody> \
-      <tr align=\"left\"><td><em style=\"font-size:14px\">IP&nbsp;&nbsp;&nbsp;</em></td><td>" + item.ip + "</td></tr> \
-      <tr align=\"left\"><td><em>" + intl.messages['routeTrace.popWindowTimeConsuming'] + "&nbsp;&nbsp;&nbsp;</em></td><td>" + item.duration + "</td></tr> \
-      <tr align=\"left\"><td><em>Host&nbsp;&nbsp;&nbsp;</em></td><td>" + item.host_ip + "</td></tr> \
-      </tbody></table></div>";
-      // let label = item.service
-      g.setNode(item.ip, {
-        label:
-          label,
-        labelType: 'html',
-        labelStyle: 'overflow: hidden;text-overflow: ellipsis;',
-        class: 'trace_node abc1',
-        id: item.id
-      });
-    });
-
-    edges.forEach((item, index) => {
-      // 处理边中的某个节点在上面的nodes中不存在的奇怪情况
-      if (!g.hasNode(item.start)) {
-        g.setNode(item.start, {
-          label: item.start,
-          labelStyle: 'overflow: hidden;text-overflow: ellipsis;',
-          class: 'trace_node',
+    let noNode = 1;
+    let edges_tmp = [];
+    for (let i = 0; i < edges_raw.length; i++) {
+      const item = edges_raw[i];
+      if (findNode(nodes_tmp, item.start) === null) {
+        nodes_tmp.push({
           id: item.start,
+          position: { x: noNode % 2 == 0 ? 100 : -100 , y: -200 * noNode++ },
+          data: { ip: item.start, onlyip: true },
+          type: 'customNode',
+          targetPosition: 'top',
+          sourcePosition: 'bottom',
+          style: { backgroundColor: '#FFF', borderRadius: '10px', border: '2px solid #000' },
         });
       }
-      if (!g.hasNode(item.end)) {
-        g.setNode(item.end, {
-          label: item.end,
-          labelStyle: 'overflow: hidden;text-overflow: ellipsis;',
-          class: 'trace_node',
+      if (findNode(nodes_tmp, item.end) === null) {
+        nodes_tmp.push({
           id: item.end,
+          position: { x: noNode % 2 == 0 ? 100 : -100, y: -200 * noNode++ },
+          data: { ip: item.end, onlyip: true },
+          type: 'customNode',
+          targetPosition: 'top',
+          sourcePosition: 'bottom',
+          style: { backgroundColor: '#FFF', borderRadius: '10px', border: '2px solid #000' },
         });
       }
-      g.setEdge(item.start, item.end, {
-        label: item.info, //"<div style=\"max-width:100px;height:90px;overflow: auto;text-overflow: ellipsis;word-break: break-all;\">" + item.info + "</div>",
-        labelType: 'html',
-        style:
-          'stroke: #74C67A; stroke-width: 2px; stroke-dasharray: 5, 5; fill: none;',
-        labelStyle: 'max-width:300px;overflow: hidden;text-overflow: ellipsis;',
-        arrowheadStyle: 'fill: #74C67A; width: 2px;',
-        class: 'trace_link',
+      /*
+      edges_tmp.push({
         id: JSON.stringify(item),
-      }); //.on("mouseover", (e)=> console.log(e));
-    });
+        source: item.start,
+        target: item.end,
+        animated: true,
+        style: { stroke: '#000', strokeWidth: 2 },
+        markerEnd: {
+          type: 'arrow',
+          width: 12,
+          height: 12,
+          color: '#000',
+          strokeWidth: 1.5,
+        },
+        label: (<EdgeLabelRenderer>
+        <div
+          style={{
+            position: 'absolute',
+            background: '#ffcc00ee',
+            padding: '5px 8px',
+            borderRadius: 5,
+            fontSize: 12,
+            fontWeight: 700,
+          }}
+          className="nodrag nopan"
+        >
+          {item.info}
+        </div>
+      </EdgeLabelRenderer>),
+      labelBgPadding: [8, -50],
+        /*data: {
+          label: item.info,
+        },*
+        type: 'customEdge1',
+      });*/
 
-    
-    g.nodes().forEach(function (v) {
-      var node = g.node(v);
-      // Round the corners of the nodes
-      node.rx = node.ry = 5;
-    });
-
-    // Create the renderer
-    var render = new dagreD3.render();
-
-    // Set up an SVG group so that we can translate the final graph.
-    var svg = d3.select(document.getElementById('trace_svg-canvas'));
-    let svgGroup = d3.select(document.getElementById('trace_g-canvas'));
-
-    // *********** ToolTip ***************
-    function createTooltip() {
-      return d3.select('body').append('div').classed('tooltip', true);
-    }
-
-    let tooltip = createTooltip();
-    //tooltip显示
-    function tipVisible(textContent, x, y) {
-      tooltip
-        .transition()
-        .duration(400)
-        .style('opacity', 0.9)
-        .style('display', 'block');
-      tooltip
-        .html(textContent)
-        .style('left', x + 'px')
-        .style('top', y + 'px');
-    }
-    //tooltip隐藏
-    function tipHidden() {
-      tooltip
-        .transition()
-        .duration(400)
-        .style('opacity', 0)
-        .style('display', 'none');
-    }
-    // *********** ToolTip ***************
-
-    //鼠标悬停显示隐藏tooltip
-    svgGroup
-      .selectAll('g.edgeLabel')
-      .on('mouseover', function (v) {
-        //console.log(v.toElement.innerText);
-        tipVisible(v.toElement.innerText, v.pageX, v.pageY);
-      })
-      .on('mouseout', function (_) {
-        tipHidden();
+      edges_tmp.push({
+        id: JSON.stringify(item),
+        source: item.start,
+        target: item.end,
+        animated: true,
+        markerEnd: {
+          type: MarkerType.Arrow,
+          width: 12,
+          height: 12,
+          color: '#000',
+          strokeWidth: 1.75,
+        },
+        data: {
+          label: item.info,
+        },
+        type: 'customEdge',
       });
-    svgGroup
-      .selectAll('g.node')
-      .on('mouseover', function (v) {
-        //console.log(v.toElement.innerText);
-        if (v.toElement.innerText === 'undefined') {
-          return;
-        }
-        tipVisible(v.toElement.innerText, v.pageX, v.pageY);
-      })
-      .on('mouseout', function (_) {
-        tipHidden();
-      });
+    }
 
-    // Run the renderer. This is what draws the final graph.
-    render(svgGroup, g);
-
-    // let colordiv = document.createElement('div');
-    // colordiv.style.width = '100px';
-    // colordiv.style.height = '20px';
-    // colordiv.style.position = 'absolute';
-    // colordiv.style.fill = 'red';
-    // // document.getElementsByClassName('abc1')[0].childNodes[0].style.fill = 'red';
-    // // document.getElementsByClassName('abc1')[0].childNodes[0].style.height += '90px';
-    // // document.getElementsByClassName('abc1')[0].childNodes[0].style.background = "linear-gradient(#e66465, #9198e5)";
-    // // document.getElementsByClassName('abc1')[0].childNodes[0].style.backgroundSize = "100% 100%";
-    // // document.getElementsByClassName('abc1')[0].childNodes[0].style.fill = 'red';
-    // // console.log(document.getElementsByClassName('abc1')[0].childNodes[1].transform);
-    // // console.log(document.getElementsByClassName('abc1')[0].childNodes[1].childNodes[0].transform);
-    // // document.getElementsByClassName('abc1')[0].childNodes[1].transform.baseVal[0].matrix.e = -10;
-    // // document.getElementsByClassName('abc1')[0].childNodes[1].transform.baseVal[0].matrix.f = -10;
-    
-    // let new1 = document.getElementsByClassName('abc1')[0].childNodes[0].cloneNode(true);
-    // // new1.y += 10;
-    // document.getElementsByClassName('abc1')[0].appendChild(new1);
-    // document.getElementsByClassName('abc1')[0].appendChild(colordiv);
-
-
-    // Center the graph
-    // console.log(svg.attr("width"));
-    // var xCenterOffset = 10;
-    // console.log(xCenterOffset);
-    svg.attr('height', g.graph().height + 50);
-    svg.attr('width', g.graph().width + 40);
-
-    //svg.attr("height", refSvg.current.offsetHeight);
-    //svg.attr("width", refSvg.current.offsetWidth);
-
-    //var xCenterOffset = 20;
-    //svgGroup.attr('transform', 'translate(' + xCenterOffset + ', 25)');
-    // Center the graph
-    var xCenterOffset = (svg.attr("width") - g.graph().width) / 2;
-    //svgGroup.attr("transform", "translate(" + xCenterOffset + ", 20)");
-    svg.attr("height", g.graph().height + 40);
+    setNodes(nodes_tmp);
+    setEdges(edges_tmp);
   }, [routeTraceDetail]);
 
   return (
-    <Box
-      sx={{
+    <div
+      style={{
         width: '100%',
         height: '100%',
-        fontFamily: fontFamily,
-        overflow: 'auto',
       }}
     >
       {noData ? (
@@ -252,12 +202,39 @@ export function RouteTraceCanvas(props) {
           <span>{intl.messages['routeTrace.popWindowNoLinkDiagram']}</span>
         </Box>
       ) : (
-        <svg
-          id='trace_svg-canvas'
-          style={{ width: '100%', height: '100%' }}>
-          <g id='trace_g-canvas'/>
-        </svg>
+          <ReactFlow
+            style={{ backgroundColor: '#FFFFFF'}}
+            nodes={nodes}
+            edges={edges}
+            nodeTypes={nodeTypes}
+            edgeTypes={edgeTypes}
+            // onNodesChange={onNodesChange}
+            // onEdgesChange={onEdgesChange}
+            snapToGrid={true}
+            snapGrid={snapGrid}
+            fitView
+            // attributionPosition="bottom-left"
+            nodesConnectable={false}
+            elementsSelectable={false}
+          >
+          <Controls />
+          <Background />
+
+          {/*
+          鸟瞰图太占位置，所以不显示
+          <MiniMap
+            nodeStrokeColor={(n) => {
+              if (n.type === 'input') return '#0041d0';
+              if (n.type === 'customNode') return '#FFFF00';
+              if (n.type === 'output') return '#ff0072';
+            }}
+            nodeColor={(n) => {
+              if (n.type === 'customNode') return '#00FFd0';
+              return '#fff';
+            }}
+          />*/}
+          </ReactFlow>
       )}
-    </Box>
+    </div>
   );
 }

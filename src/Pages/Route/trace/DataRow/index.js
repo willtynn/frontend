@@ -25,7 +25,7 @@ const defaultMinWidth = ['100px', '30px', '150px', '60px', '40px'];
 const defaultMaxWidth = ['350px', '30px', '150px', '60px', '40px']
 
 export function DataRow(props) {
-  const { key, rowData, onRowClick, selected, minWidth, maxWidth } = props;
+  const { rowData, onRowClick, selected, minWidth, maxWidth } = props;
 
   const intl = useIntl();
   
@@ -46,7 +46,7 @@ export function DataRow(props) {
 
     return (
       <React.Fragment>
-        <TableRow onClick={onRowClick} hover selected={selected} key={key}
+        <TableRow onClick={onRowClick} hover selected={selected}
         sx={{
           position: 'sticky',
           backgroundColor: '#FFFFFF',

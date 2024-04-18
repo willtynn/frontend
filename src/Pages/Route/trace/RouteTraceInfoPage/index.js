@@ -34,7 +34,7 @@ import Question from '@/assets/Question.svg';
 
 import dayjs from 'dayjs';
 
-import { RouteTraceCanvas } from '../RouteTraceCanvas_New';
+import { RouteTraceCanvas } from '../RouteTraceCanvas';
 import { DataRow } from '../DataRow';
 import GeneralInfo from './GeneralInfo';
 
@@ -65,34 +65,29 @@ export function RouteTraceInfoPage() {
 
   const traceTableHeaders = [
     { 
-      key: 'service', 
       align: 'left', 
       text: intl.messages['routeTrace.popWindowTableTitleRequest'], 
       minWidth: 100, 
       maxWidth: 350 },
     {
-      key: 'spanNum',
       align: 'center',
       text: intl.messages['routeTrace.popWindowTableTitleLinkLength'],
       minWidth: 30,
       maxWidth: 30,
     },
     {
-      key: 'time',
       align: 'center',
       text: intl.messages['routeTrace.popWindowTableTitleStartTime'],
       minWidth: 150,
       maxWidth: 150,
     },
     {
-      key: 'duration',
       align: 'center',
       text: intl.messages['routeTrace.popWindowTableTitleResponseTime'],
       minWidth: 60,
       maxWidth: 60,
     },
     {
-      key: 'status',
       align: 'center',
       text: intl.messages['routeTrace.popWindowTableTitleStatus'],
       minWidth: 40,
@@ -197,17 +192,16 @@ export function RouteTraceInfoPage() {
                 <Table stickyHeader size='small' sx={{ tableLayout: 'auto' }}>
                   <TableHead>
                     <TableRow sx={{ height: '52px' }}>
-                      {traceTableHeaders.map(item => {
-                        return (
+                      {traceTableHeaders.map(item => 
+                        <React.Fragment key={item.text}>
                           <StyledTableRowCell
-                            key={item.key}
                             align={item.align}
-                            sx={{ minWidth: item.minWidth, maxWidth: item.maxWidth }}
-                          >
+                            key={item.text}
+                            sx={{ minWidth: item.minWidth, maxWidth: item.maxWidth }}>
                             {item.text}
                           </StyledTableRowCell>
-                        );
-                      })}
+                        </React.Fragment>
+                      )}
                     </TableRow>
                   </TableHead>
                   <TableBody
