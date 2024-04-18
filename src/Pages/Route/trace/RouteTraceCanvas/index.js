@@ -12,6 +12,9 @@ import CustomEdge from './CustomEdge';
 import ReactFlow, { Controls, Background, MarkerType } from 'reactflow';
 import { useIntl } from 'react-intl';
 
+
+import dagre from "dagre";
+
 import 'reactflow/dist/style.css';
 
 
@@ -26,6 +29,31 @@ const edgeTypes = {
 const snapGrid = [20, 20];
 
 const findNode = (nodes, id) => nodes.find((n) => n.id === id) || null;
+
+const getLayout = (nodes, edges) => {
+  const dagreGraph = new dagre.graphlib.Graph();
+  dagreGraph.setDefaultEdgeLabel(() => ({}));
+  dagreGraph.setGraph({ rankdir: 'TB' }); // 设置布局方向为从上到下，从左到右为LR
+  nodes.forEach((node) => {
+    dagreGraph.setNode(node.id, { width: 300, height: 170 });
+  });
+  edges.forEach((edge) => {
+    dagreGraph.setEdge(edge.source, edge.target);
+  });
+  dagre.layout(dagreGraph);
+
+  nodes.forEach((node) => {
+    const n = dagreGraph.node(node.id);
+    //node.targetPosition = 'top';
+    //node.sourcePosition = 'bottom';
+    node.position = {
+      x: n.x - 150, // 300 / 2
+      y: n.y - 85, // 170 / 2
+    };
+    return node;
+  });
+  return { nodes, edges };
+}
 
 export function RouteTraceCanvas(props) {
   const dispatch = useDispatch();
@@ -80,7 +108,6 @@ export function RouteTraceCanvas(props) {
       const item = nodes_raw[i];
       nodes_tmp.push({
         id: item.ip,
-        position: { x: i % 2 == 0 ? 100 : -100, y: 200 * i },
         data: { 
           ip: item.ip, 
           service: item.service, 
@@ -102,7 +129,6 @@ export function RouteTraceCanvas(props) {
       if (findNode(nodes_tmp, item.start) === null) {
         nodes_tmp.push({
           id: item.start,
-          position: { x: noNode % 2 == 0 ? 100 : -100 , y: -200 * noNode++ },
           data: { ip: item.start, onlyip: true },
           type: 'customNode',
           targetPosition: 'top',
@@ -113,7 +139,6 @@ export function RouteTraceCanvas(props) {
       if (findNode(nodes_tmp, item.end) === null) {
         nodes_tmp.push({
           id: item.end,
-          position: { x: noNode % 2 == 0 ? 100 : -100, y: -200 * noNode++ },
           data: { ip: item.end, onlyip: true },
           type: 'customNode',
           targetPosition: 'top',
@@ -121,41 +146,6 @@ export function RouteTraceCanvas(props) {
           style: { backgroundColor: '#FFF', borderRadius: '10px', border: '2px solid #000' },
         });
       }
-      /*
-      edges_tmp.push({
-        id: JSON.stringify(item),
-        source: item.start,
-        target: item.end,
-        animated: true,
-        style: { stroke: '#000', strokeWidth: 2 },
-        markerEnd: {
-          type: 'arrow',
-          width: 12,
-          height: 12,
-          color: '#000',
-          strokeWidth: 1.5,
-        },
-        label: (<EdgeLabelRenderer>
-        <div
-          style={{
-            position: 'absolute',
-            background: '#ffcc00ee',
-            padding: '5px 8px',
-            borderRadius: 5,
-            fontSize: 12,
-            fontWeight: 700,
-          }}
-          className="nodrag nopan"
-        >
-          {item.info}
-        </div>
-      </EdgeLabelRenderer>),
-      labelBgPadding: [8, -50],
-        /*data: {
-          label: item.info,
-        },*
-        type: 'customEdge1',
-      });*/
 
       edges_tmp.push({
         id: JSON.stringify(item),
@@ -176,8 +166,10 @@ export function RouteTraceCanvas(props) {
       });
     }
 
-    setNodes(nodes_tmp);
-    setEdges(edges_tmp);
+    const res = getLayout(nodes_tmp, edges_tmp);
+
+    setNodes(res.nodes);
+    setEdges(res.edges);
   }, [routeTraceDetail]);
 
   return (

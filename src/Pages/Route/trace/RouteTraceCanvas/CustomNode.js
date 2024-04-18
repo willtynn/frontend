@@ -50,7 +50,10 @@ export default memo(({ data, isConnectable }) => {
       />
       {
         data.onlyip ? (
-          <Stack>
+          <Stack sx={{ 
+              maxHeight: '170px',
+              maxWidth: '300px',
+            }}>
             <Box
               sx={{
                 fontFamily: fontFamily,
@@ -81,7 +84,10 @@ export default memo(({ data, isConnectable }) => {
             </Box>
           </Stack>
         ) : (
-          <Stack>
+          <Stack sx={{ 
+            maxHeight: '170px',
+            maxWidth: '300px',
+          }}>
             <Box
               sx={{
                 fontFamily: fontFamily,
