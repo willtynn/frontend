@@ -1,3 +1,8 @@
+/**
+ * @file index.js
+ * @description 这个文件是路由链路页面，包含了RouteTrace组件的定义和实现。
+ */
+
 // imports
 //#region
 
@@ -49,7 +54,6 @@ import {
 } from '@/actions/routeAction';
 
 import { useIntl } from 'react-intl';
-import { local } from 'd3';
 
 //#endregion
 //import
@@ -187,9 +191,12 @@ export default function RouteTrace() {
     navigate(`/detail/trace/${start}/${end}/${id}`);
   };
 
-  const clearPage = () => {
+  const clearPage = (resetPage) => {
     setSelectedServiceIndex(-1);
-    setServicePage(1);
+    if (resetPage) {
+      setServicePage(1);
+      localStorage.setItem('route_trace_service_page', 1);
+    }
   };
 
   const getVisibleRows = () => {
@@ -283,10 +290,16 @@ export default function RouteTrace() {
     setStartTimeValue(dayjs(startTmp));
     setEndTimeValue(dayjs(endTmp));
 
+    let page = localStorage.getItem('route_trace_service_page');
+    console.log("Load", page);
+    if (page) {
+      setServicePage(parseInt(page));
+    }
+
     startLoading();
     dispatch(getRouteService(startTmp, endTmp));
     dispatch(clearRouteTrace());
-    clearPage();
+    clearPage(false);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
   //#endregion
@@ -322,12 +335,12 @@ export default function RouteTrace() {
       localStorage.setItem('route_trace_start_time', startTmp);
       localStorage.setItem('route_trace_end_time', endTmp);
     }
-    clearPage();
+    clearPage(true);
     setStartTime(startTmp);
     setEndTime(endTmp);
     dispatch(getRouteService(startTmp, endTmp));
     dispatch(clearRouteTrace());
-    clearPage();
+    clearPage(true);
   };
 
   const handleDurationSelectChange = e => {
@@ -361,10 +374,11 @@ export default function RouteTrace() {
     localStorage.setItem('route_trace_end_time', newValue.valueOf());
   };
 
-  const handleServiceChangePage = (_, newPage) => {
+  const handleServicePageChange = (_, newPage) => {
     if (servicePage !== newPage) {
       setSelectedServiceIndex(-1);
       setServicePage(newPage);
+      localStorage.setItem('route_trace_service_page', newPage);
     }
   };
 
@@ -677,7 +691,7 @@ export default function RouteTrace() {
                   pageSize={serviceNumPerPage}
                   pageNum={servicePage}
                   count={routeService ? routeService.length : 0}
-                  handlePageChange={handleServiceChangePage}
+                  handlePageChange={handleServicePageChange}
                   sx={{
                     width: '100%',
                     pt: '10px',

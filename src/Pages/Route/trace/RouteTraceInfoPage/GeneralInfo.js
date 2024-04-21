@@ -1,4 +1,10 @@
 /**
+ * @file index.js
+ * @description 这个文件是路由链路页面的二级页面的组件，用于在页面的左上角展示服务的详细信息
+ */
+
+
+/**
  * src\Pages\Route\trace\RouteTraceInfoPage\GeneralInfo.js
  */
 import { Box, Stack, Tooltip } from '@mui/material';

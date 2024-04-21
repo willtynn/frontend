@@ -1,4 +1,9 @@
 /**
+ * @file index.js
+ * @description 这个文件是路由链路页面的二级页面，用于展示某个服务的所有请求及其链路信息
+ */
+
+/**
  * src\Pages\Route\trace\RouteTraceInfoPage\index.js
  */
 import React from 'react';
@@ -26,7 +31,6 @@ import {
 import { Tabs } from '@mui/base/Tabs';
 import { NormalFont, NormalFontBlack, NormalBoldFont, SmallLightFont } from '@/components/Fonts';
 import Question from '@/assets/Question.svg';
-import { fontFamily } from '@/utils/commonUtils';
 
 import dayjs from 'dayjs';
 
@@ -61,34 +65,29 @@ export function RouteTraceInfoPage() {
 
   const traceTableHeaders = [
     { 
-      key: 'service', 
       align: 'left', 
       text: intl.messages['routeTrace.popWindowTableTitleRequest'], 
       minWidth: 100, 
       maxWidth: 350 },
     {
-      key: 'spanNum',
       align: 'center',
       text: intl.messages['routeTrace.popWindowTableTitleLinkLength'],
       minWidth: 30,
       maxWidth: 30,
     },
     {
-      key: 'time',
       align: 'center',
       text: intl.messages['routeTrace.popWindowTableTitleStartTime'],
       minWidth: 150,
       maxWidth: 150,
     },
     {
-      key: 'duration',
       align: 'center',
       text: intl.messages['routeTrace.popWindowTableTitleResponseTime'],
       minWidth: 60,
       maxWidth: 60,
     },
     {
-      key: 'status',
       align: 'center',
       text: intl.messages['routeTrace.popWindowTableTitleStatus'],
       minWidth: 40,
@@ -187,23 +186,22 @@ export function RouteTraceInfoPage() {
 
         <Grid container spacing={1} sx={{ width: '100%', pt: '20px' }}>
 
-          <Grid item sm={12} md={12} lg={8}>
+          <Grid item sm={12} md={12} lg={6}>
             <Stack>
               <StyledTableContainer sx={{ width: '100%' }}>
                 <Table stickyHeader size='small' sx={{ tableLayout: 'auto' }}>
                   <TableHead>
                     <TableRow sx={{ height: '52px' }}>
-                      {traceTableHeaders.map(item => {
-                        return (
+                      {traceTableHeaders.map(item => 
+                        <React.Fragment key={item.text}>
                           <StyledTableRowCell
-                            key={item.key}
                             align={item.align}
-                            sx={{ minWidth: item.minWidth, maxWidth: item.maxWidth }}
-                          >
+                            key={item.text}
+                            sx={{ minWidth: item.minWidth, maxWidth: item.maxWidth }}>
                             {item.text}
                           </StyledTableRowCell>
-                        );
-                      })}
+                        </React.Fragment>
+                      )}
                     </TableRow>
                   </TableHead>
                   <TableBody
@@ -230,7 +228,7 @@ export function RouteTraceInfoPage() {
           </Grid>
 
 
-          <Grid item sm={12} md={12} lg={4}>
+          <Grid item sm={12} md={12} lg={6}>
             <Stack sx={styleGraphCard}>
               <div style={{ 
                 width: '100%', 
@@ -250,14 +248,10 @@ export function RouteTraceInfoPage() {
               </div>
               <Divider flexItem />
               {/* 依赖图 */}
-              <Stack sx={{ justifyContent: 'center'}}>
-                <Stack sx= {{ pt: '16px', pr: '16px', pl: '16px'}}>
+              <Stack sx={{ justifyContent: 'center', width: '100%', height: "100%"}}>
+                <Stack sx= {{ pt: '16px', pr: '16px', pl: '16px', height: "100%"}}>
                   {detailSpan ? (
-                    <div style={{ justifyContent: 'center', 
-                    justifyContent: 'center',
-                    alignItems: 'center',
-                    display: 'flex'}}>
-                      <Stack sx={{ width: '100%' }}>
+                      <Stack sx={{ width: '100%', height: "100%" }}>
                         <Stack spacing={1}>
                           <Stack direction='row' sx={{ justifyContent: 'space-between' }}>
                             <NormalFont sx={{ width: '50px' }}>{intl.messages['routeTrace.modalServiceId']}</NormalFont>
@@ -282,10 +276,8 @@ export function RouteTraceInfoPage() {
                           }}
                         />
                       </Stack>
-                    </div>
                   ) : (
                     <Stack sx={{ height: '100%', width: '100%', 
-                      pt: '50px',
                       justifyContent: 'center',
                       alignItems: 'center',
                       display: 'flex'}}>

@@ -1,4 +1,9 @@
 /**
+ * @file index.js
+ * @description 这个文件是路由链路页面的加载遮罩组件
+ */
+
+/**
  * src\Pages\Route\trace\Loading\index.js
  */
 import CircularProgress from '@mui/material/CircularProgress';
