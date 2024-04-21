@@ -5,8 +5,8 @@ import { SEVERITIES } from '../components/CommonSnackbar';
 export const UPDATE_SCHEMES = 'UPDATE_SCHEMES';
 export const CHANGE_PAGE_SIZE = 'CHANGE_SCHEME_PAGE_SIZE';
 export const CHANGE_PAGE_NUM = 'CHANGE_SCHEME_PAGE_NUM';
-export const UPDATE_NAMESPACES = 'UPDATE_NAMESPACES';
-export const UPDATE_CURRENT_NAMESPACE = 'UPDATE_CURRENT_NAMESPACE';
+export const UPDATE_NAMESPACES = 'UPDATE_SCHEME_NAMESPACES';
+export const UPDATE_CURRENT_NAMESPACE = 'UPDATE_CURRENT_SCHEME_NAMESPACE';
 export const UPDATE_CURRENT_SCHEME = 'UPDATE_CURRENT_SCHEME';
 const baseURLLink = 'http://192.168.1.104:30012';
 
@@ -17,7 +17,7 @@ const axios_instance = axios.create({
   crossDomain: true,
 });
 
-export function schemeAdd(name, namespace, scheme) {
+export function schemeAdd(name, namespace, scheme, cb) {
   const url = '/deployment/scheme/add';
   return async dispatch => {
     try {
@@ -38,6 +38,7 @@ export function schemeAdd(name, namespace, scheme) {
         dispatch(
           setSnackbarMessageAndOpen('scheme.addSuccess', {}, SEVERITIES.success)
         );
+        cb();
       } else {
         dispatch(
           setSnackbarMessageAndOpen('scheme.addFail', {}, SEVERITIES.warning)

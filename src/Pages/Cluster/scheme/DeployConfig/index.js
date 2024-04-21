@@ -108,8 +108,7 @@ export default function DeployConfig(props) {
         )
       );
     } else {
-      dispatch(schemeAdd(name, namespace, data));
-      // handleCancelClick();
+      dispatch(schemeAdd(name, namespace, data, handleCancelClick));
     }
   };
 

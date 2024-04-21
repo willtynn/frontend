@@ -191,13 +191,13 @@ export default function SchemeOverview(props) {
 
   useEffect(() => {
     if (namespaces && namespaces.length > 0) {
-      dispatch({ type: UPDATE_CURRENT_NAMESPACE, data: namespaces[0] });
+      dispatch({ type: UPDATE_CURRENT_NAMESPACE, data: "" });
     }
   }, [namespaces]);
 
   useEffect(() => {
     dispatch(
-      getSchemes(localStorage.getItem('current_cluster'), currentNamespace)
+      getSchemes(localStorage.getItem('current_cluster'), currentNamespace, "")
     );
   }, [currentNamespace]);
 
@@ -226,6 +226,7 @@ export default function SchemeOverview(props) {
     }
     const tmpData = schemes.map((value, index) => {
       return {
+        id: value.id,
         name: value.name,
         namespace: value.namespace,
         status: value.status,
@@ -507,7 +508,7 @@ export default function SchemeOverview(props) {
         }}
       >
         <Stack direction='row' spacing={2}>
-          {/* <StyledAutocomplete
+          <StyledAutocomplete
             height='32px'
             padding='6px 5px 5px 12px'
             value={currentNamespace}
@@ -515,7 +516,15 @@ export default function SchemeOverview(props) {
               dispatch({ type: UPDATE_CURRENT_NAMESPACE, data: newValue });
             }}
             id='scheme_status_table_autocomplete'
-            options={namespaces}
+            options={["", ...namespaces]}
+            renderOption={(props, option, state) => {return (
+              <Box
+                {...props}
+              >
+                {option == "" ? "All" : option}
+              </Box>
+            )
+              }}
             sx={{
               width: 300,
               color: '#36435c',
@@ -533,7 +542,7 @@ export default function SchemeOverview(props) {
                 placeholder={intl.messages['common.allNamespaces']}
               />
             )}
-          /> */}
+          />
           <ChipTextField
             value={searchValue}
             setValue={setSearchValue}

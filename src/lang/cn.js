@@ -127,7 +127,7 @@ export const messages = {
     nodeNum: "节点数量"
   },
   scheme: {
-    addSuccess: "部署方案添加成功",
+    addSuccess: "部署方案添加成功，刷新可查看",
     addFail: "部署方案添加失败",
     getFail: "部署方案获取失败",
     addScheme: "添加方案",

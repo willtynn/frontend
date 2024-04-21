@@ -127,7 +127,7 @@ export const messages = {
     nodeNum: "Node Number"
   },
   scheme: {
-    addSuccess: "The deployment scheme is successfully added.",
+    addSuccess: "The deployment scheme is successfully added, refresh to view.",
     addFail: "Failed to add the deployment scheme.",
     getFail: "The deployment scheme fails to be obtained.",
     addScheme: "Add Scheme",

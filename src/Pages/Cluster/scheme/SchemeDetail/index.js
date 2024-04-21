@@ -288,12 +288,11 @@ const data = {
 };
 
 export default function SchemeDetail() {
-  const { id } = useParams();
+  const { schemeId } = useParams();
   const dispatch = useDispatch();
 
   useEffect(() => {
-    dispatch({ type: UPDATE_CURRENT_SCHEME, data: data });
-    // dispatch(getScheme(id));
+    dispatch(getScheme(schemeId));
   }, []);
 
   return (
