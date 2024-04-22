@@ -55,6 +55,7 @@ const getLayout = (nodes, edges) => {
   return { nodes, edges };
 }
 
+
 export function RouteTraceCanvas(props) {
   const dispatch = useDispatch();
   const intl = useIntl();
@@ -80,7 +81,7 @@ export function RouteTraceCanvas(props) {
 
   useEffect(() => {
     dispatch(getRouteTraceDetail(id));
-  }, []);
+  }, [id]);
 
   useEffect(() => {
     if (
@@ -122,7 +123,6 @@ export function RouteTraceCanvas(props) {
       });
     }
 
-    let noNode = 1;
     let edges_tmp = [];
     for (let i = 0; i < edges_raw.length; i++) {
       const item = edges_raw[i];

@@ -60,8 +60,11 @@ import { useIntl } from 'react-intl';
 
 //Constants
 //#region
-
 const serviceNumPerPage = 10;
+
+const durationList = [
+  60, 120, 300, 600, 1800, 3600, 10800, 21600, 43200, 86400, 604800,
+];
 //#endregion
 //Constants
 
@@ -85,9 +88,6 @@ export default function RouteTrace() {
     intl.messages['routeTrace.duration1D'],
     intl.messages['routeTrace.duration7D'],
     intl.messages['routeTrace.durationCustom'],
-  ];
-  const durationList = [
-    60, 120, 300, 600, 1800, 3600, 10800, 21600, 43200, 86400, 604800,
   ];
 
   const serviceTableHeaders = [
