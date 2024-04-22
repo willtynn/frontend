@@ -26,6 +26,7 @@ import {
   Popover,
 } from '@mui/material';
 import Question from '@/assets/Question.svg';
+import CircularProgress from '@mui/material/CircularProgress';
 import Link60 from '@/assets/Link60.svg';
 import {
   KubeConfirmButton,
@@ -44,7 +45,6 @@ import VisibilityIcon from '@mui/icons-material/Visibility';
 import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
 import { fontFamily } from '@/utils/commonUtils';
 import { ServiceRow } from './ServiceRow';
-import { Loading } from './Loading';
 import dayjs from 'dayjs';
 
 import {
@@ -412,7 +412,7 @@ export default function RouteTrace() {
   //#region
   return (
     <>
-      <Loading show={showLoading} />
+      {/* {<Loading show={showLoading} />} */}
 
       <Popover
         id='route-trace-table-content-popover'
@@ -675,7 +675,8 @@ export default function RouteTrace() {
                               fontStyle: 'normal',
                             }}
                           >
-                            <Question />
+                            {showLoading ? <CircularProgress /> : <Question />}
+                            
                             <NormalBoldFont>{intl.messages['routeTrace.serviceTableContentNoData']}</NormalBoldFont>
 
                             <SmallLightFont>{intl.messages['routeTrace.serviceTableContentNoDataHint']}</SmallLightFont>
