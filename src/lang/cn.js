@@ -445,4 +445,14 @@ export const messages = {
     description: "深度学习模型(Model)是一种基于人工神经网络架构的机器学习模型，通过多层次的神经网络结构，能够自动学习和提取高级抽象特征，用于解决复杂的模式识别、数据分析和决策任务。",
     uploading: "上传中"
   },
+  inferPlan: {
+    title: "协同推理计划",
+    description: "根据算法生成协同推理计划",
+    planName: "计划名称",
+    status: "状态",
+    modelNum: "模型数量",
+    serverNum: "服务器数量",
+    comment: "描述",
+    createPlan: "创建协同推理计划",
+  }
 };

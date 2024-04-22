@@ -150,7 +150,7 @@ export default function ModelInformation() {
     };
 
     return (
-        <Stack sx={{ width: '100%' }}>
+        <Stack sx={{ p: '10px 5px', bgcolor: '#FFFFFF', height: "calc(100% - 244px)" }}>
             {/* 顶部信息块 */}
             <Stack direction='row' justifyContent='space-between' spacing={2}>
                 <Stack sx={{ width: '30%' }} direction='column' spacing={0}
@@ -180,7 +180,7 @@ export default function ModelInformation() {
                             <TextField {...params} placeholder={'全部模型'} />
                         )}
                     />
-                    <StyledTableContainer sx={{ width: '100%' }}>
+                    <StyledTableContainer sx={{ width: '100%', height: "calc(100% - 244px)" } }>
                         <Table stickyHeader size='small' sx={{ tableLayout: 'auto' }}>
                             <TableHead>
                                 <TableRow sx={{ height: '52px' }}>

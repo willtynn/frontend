@@ -702,13 +702,13 @@ export default function MiniDrawer() {
                     onClick={() => {
                       setAllFalse();
                       setl75(true);
-                      navigate('detail/model/deployment');
+                      navigate('/model/deployment');
                     }}
                   >
                     <Box
                       sx={{ ...styledFont, color: l75 ? '#55bc8a' : '#242e42' }}
                     >
-                      timeline test
+                      协同推理
                     </Box>
                   </ListItemButton>
                 </List>

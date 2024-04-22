@@ -42,7 +42,6 @@ export default function MyRoute() {
         <Route path='infertrace/:start/:end/:traceId' element={<InferRouteTraceInfoPage />}/>
         <Route path='model/:modelId' element={<ModelDetail />}/>
         <Route path='strategy/:id' element={<SubModelPage />} />
-        <Route path='model/deployment' element={<ModelDeploymentPage />} />
       </Route>
 
       {/* 存在导航栏 */}
@@ -76,6 +75,7 @@ export default function MyRoute() {
         </Route>
         <Route path='model/'>
           <Route path='overview' element={<ModelOverview />} />
+          <Route path='deployment' element={<ModelDeploymentPage />} />
         </Route>
         <Route path='evolution/'>
           <Route path="plan" element={<EvolutionPlan />} />

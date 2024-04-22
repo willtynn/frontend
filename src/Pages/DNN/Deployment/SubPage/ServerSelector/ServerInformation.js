@@ -279,7 +279,7 @@ class ServerInformation extends Component {
 
     render() {
         return (
-            <Stack sx={{ width: '100%' }}>
+            <Stack sx={{ p: '10px 5px', bgcolor: '#FFFFFF', height: "calc(100% - 244px)" }}>
                 <Stack direction='row' justifyContent='space-between' spacing={2}>
                     <Stack
                         direction='column'

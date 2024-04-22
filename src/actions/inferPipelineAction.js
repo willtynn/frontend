@@ -5,7 +5,19 @@ import { SEVERITIES } from '../components/CommonSnackbar';
 // For pipeline 
 export const PIPELINE_SEARCH = 'PIPELINE_SEARCH';
 export const GET_SUBMODEL = 'GET_SUBMODEL';
+// For infer
+export const UPDATE_GROUP_EDIT = 'UPDATE_GROUP_EDIT';
+export const RESET_GROUP = 'RESET_GROUP';
+export const RESET_PLAN = 'RESET_PLAN';
 
+export const UPDATE_PLAN_NAMESPACE = "UPDATE_PLAN_NAMESPACE";
+
+export const UPDATE_TEST_PLAN_PAGE_SIZE = 'UPDATE_TEST_PLAN_PAGE_SIZE';
+export const UPDATE_TEST_PLAN_PAGE_NUM = 'UPDATE_TEST_PLAN_PAGE_NUM';
+
+export const UPDATE_GROUP_EDIT_INDEX = 'UPDATE_GROUP_EDIT_INDEX';
+export const UPDATE_CURRENT_GROUP_EDIT_STAGE = 'UPDATE_CURRENT_GROUP_EDIT_STAGE';
+  
 
 const baseURLLink = 'http://192.168.1.104:32589';
 // const baseURLLink = 'http://127.0.0.1:80';
