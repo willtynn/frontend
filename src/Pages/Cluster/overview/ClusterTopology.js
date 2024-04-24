@@ -26,8 +26,6 @@ export function ClusterTopologyOnlyCanvas(props) {
       return
     }
     
-    
-    
     if (graph === null || graph === undefined) {
       setDisplay(false);
     } else {

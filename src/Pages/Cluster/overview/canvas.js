@@ -104,7 +104,7 @@ export function ClusterCanvas(props) {
 
     setN(res.nodes);
     setE(res.edges);
-  }, []);
+  }, [nodes, links]);
 
   return (
     <div
