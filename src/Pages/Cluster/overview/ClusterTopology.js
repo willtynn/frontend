@@ -10,13 +10,24 @@ import InfoAlert from '@/assets/InfoAlert.svg';
 import { fontFamily } from "@/utils/commonUtils";
 
 export function ClusterTopologyOnlyCanvas(props) {
-  const { clusterId, graph, handleNodeClick } = props;
+  const { clusterId, points, graph, handleNodeClick } = props;
   const intl = useIntl();
   const [nodes, setNodes] = useState([]);
   const [links, setLinks] = useState([]);
   const [display, setDisplay] = useState(false);
 
   useEffect(() => {
+    let dict = {}
+    if (points) {
+      for(const server of points) {
+        dict[server.id] = server
+      }
+    } else {
+      return
+    }
+    
+    
+    
     if (graph === null || graph === undefined) {
       setDisplay(false);
     } else {
@@ -37,6 +48,9 @@ export function ClusterTopologyOnlyCanvas(props) {
         tmpNodes.push({
           id: node,
           label: node,
+          hostname: dict[node].hostname,
+          ip: dict[node].ip,
+          description: dict[node].description,
         });
       }
       setNodes(tmpNodes);

@@ -447,6 +447,9 @@ export default function ClusterOverview() {
       <Stack direction='column' spacing={4}>
         <ClusterTopologyOnlyCanvas
           clusterId={targetCluster}
+          points={
+            clusterData[targetCluster] && clusterData[targetCluster].servers
+          }
           graph={
             clusterData[targetCluster] && clusterData[targetCluster].network
           }

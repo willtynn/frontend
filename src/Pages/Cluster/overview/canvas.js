@@ -64,6 +64,10 @@ export function ClusterCanvas(props) {
         id: item.id,
         data: {
           label: item.label,
+          hostname: item.hostname,
+          ip: item.ip,
+          description: item.description,
+          infoList: ["hostname", "ip", "description"]
         },
         type: 'customNode',
         targetPosition: 'top',
