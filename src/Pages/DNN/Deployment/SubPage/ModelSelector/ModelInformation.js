@@ -153,7 +153,7 @@ export default function ModelInformation() {
         <Stack sx={{ p: '10px 5px', bgcolor: '#FFFFFF', height: "calc(100% - 244px)" }}>
             {/* 顶部信息块 */}
             <Stack direction='row' justifyContent='space-between' spacing={2}>
-                <Stack sx={{ width: '30%' }} direction='column' spacing={0}
+                <Stack sx={{ width: '40%' }} direction='column' spacing={0}
                     padding={'0px 0px 0px 0px'}>
                     <KubeAutocomplete
                         height='50px'

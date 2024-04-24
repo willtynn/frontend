@@ -654,7 +654,7 @@ export default function ModelDeploymentPage() {
                               },
                             }}
                             onClick={() => {
-                              navigate(`/detail/testplan/${row.id}`);
+                              navigate(`/detail/inferplan/${row.id}`);
                             }}
                           >
                             {row.name}
