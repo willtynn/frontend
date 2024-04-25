@@ -1,7 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Box } from '@mui/material';
-import { getRouteTraceDetail } from '@/actions/routeAction';
 import ReactFlow, { Controls, Background, MarkerType } from 'reactflow';
 import { useIntl } from 'react-intl';
 import { CustomEdge, CustomNode } from '@/components/Reactflow';

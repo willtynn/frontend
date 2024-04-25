@@ -56,7 +56,13 @@ export const CustomEdge = ({
           }}
           className='nodrag nopan'
         >
-          {data.label}
+          {data.infoList &&
+            data.infoList.map((item, index) => (
+              <Stack direction='row' spacing={0.5}>
+                <Box sx={labelStyle}>{item}</Box>
+                <Box sx={valueStyle}>{data[item]}</Box>
+              </Stack>
+            ))}
         </div>
       </EdgeLabelRenderer>
     </>
@@ -136,23 +142,13 @@ export const CustomNode = memo(({ data, isConnectable }) => {
         </Box>
 
         <Stack sx={{ margin: '8px 13px' }} direction='column' spacing={0.25}>
-          {data.infoList && data.infoList.map((item, index) => (
-            <Stack direction='row' spacing={0.5}>
-              <Box sx={labelStyle}>{item}</Box>
-              <Box sx={valueStyle}>{data[item]}</Box>
-            </Stack>
-          ))}
-
-          {/* <Stack direction='row' spacing={0.5}>
-            <Box sx={labelStyle}>
-              {intl.messages['routeTrace.popWindowTimeConsuming']}
-            </Box>
-            <Box sx={valueStyle}>{data.duration}</Box>
-          </Stack>
-          <Stack direction='row' spacing={0.5}>
-            <Box sx={labelStyle}>Host</Box>
-            <Box sx={valueStyle}>{data.host_ip}</Box>
-          </Stack> */}
+          {data.infoList &&
+            data.infoList.map((item, index) => (
+              <Stack direction='row' spacing={0.5}>
+                <Box sx={labelStyle}>{item}</Box>
+                <Box sx={valueStyle}>{data[item]}</Box>
+              </Stack>
+            ))}
         </Stack>
       </Stack>
 
