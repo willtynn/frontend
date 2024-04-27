@@ -611,8 +611,9 @@ function ServiceDependency() {
       let nodes = [];
       let links = [];
       let graph_dict = {};
-      let target_up_nodes = [];
-      let target_down_nodes = [];
+      let target_up_nodes = new Set();
+      let target_down_nodes = new Set();
+      let path = new Set();
       let flag = false;
       // 查看该接口是否被调用
       for (const key of Object.keys(graph)) {
@@ -621,8 +622,8 @@ function ServiceDependency() {
           const [callee_node, isDown, invoke_info] = invoking_element;
           if (invoke_info.callee === currentInterface) {
             flag = true;
-            target_up_nodes.push(key);
-            target_down_nodes.push(callee_node);
+            target_up_nodes.add(key);
+            target_down_nodes.add(callee_node);
             // 此时添加边，因为如果图为DAG，则后续不会再访问到
             links.push({
               source: key,
@@ -644,7 +645,7 @@ function ServiceDependency() {
         clearVarible();
         return;
       }
-      const _recursive_search = (node, isDown, path) => {
+      const _recursive_search = (node, isDown) => {
         graph_dict[node] = {
           id: node,
           label: positiveServices[node].name,
@@ -673,18 +674,21 @@ function ServiceDependency() {
               center: false,
             });
           }
-          if (path.find((value, index) => value === callee_node) === undefined) {
-            _recursive_search(callee_node, isDown, [...path, callee_node]);
+          if (!path.has(callee_node)) {
+            path.add(callee_node)
+            _recursive_search(callee_node, isDown);
           }
         }
       };
       target_up_nodes = new Set(target_up_nodes);
       target_down_nodes = new Set(target_down_nodes);
       for (const up_node of target_up_nodes) {
-        _recursive_search(up_node, false, [up_node]);
+        path.add(up_node);
+        _recursive_search(up_node, false);
       }
       for (const down_node of target_down_nodes) {
-        _recursive_search(down_node, true, [down_node]);
+        path.add(down_node);
+        _recursive_search(down_node, true);
       }
 
       for (const node of Object.values(graph_dict)) {

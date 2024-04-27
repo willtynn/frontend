@@ -16,6 +16,7 @@ import { useIntl } from 'react-intl';
 import ReactFlow, { Controls, Background, MarkerType } from 'reactflow';
 import { CustomEdge, CustomNode } from '@/components/Reactflow';
 import dagre from 'dagre';
+import { addEdge } from 'reactflow';
 
 import 'reactflow/dist/style.css';
 
@@ -429,259 +430,423 @@ export function ThreeLayerCanvas(props) {
 //   );
 // }
 
+
+
 export function EdgeCenterCanvas(props) {
   const { nodes, links, handleNodeClick, services, target } = props;
-  const intl = useIntl();
-  const [graph, setGraph] = useState(
-    new dagreD3.graphlib.Graph({ compound: true })
-      .setGraph({})
-      .setDefaultEdgeLabel(() => {
-        return {};
-      })
-  );
-
   const dispatch = useDispatch();
+  const intl = useIntl();
 
-  const [id, setId] = useState('');
-  const [repo, setRepo] = useState('');
-  const [imageUrl, setImageUrl] = useState('');
+  const [n, setN] = useState([]);
+  const [e, setE] = useState([]);
 
-  const [callerId, setCallerId] = useState('');
-  const [callerPath, setCallerPath] = useState('');
-  const [calleeId, setCalleeId] = useState('');
-  const [calleePath, setCalleePath] = useState('');
-
-  const [svgWidth, setSvgWidth] = useState(0);
-
-  const nodeTooltip = useRef(null);
-  const edgeTooltip = useRef(null);
-
+  const [noData, setNoData] = useState(false);
   const service = decodeInterfaceForService(target);
 
   useEffect(() => {
-    var g = new dagreD3.graphlib.Graph({ compound: true })
-      .setGraph({})
-      .setDefaultEdgeLabel(() => {
-        return {};
-      });
+    let nodes_tmp = [];
+    let edges_tmp = [];
 
-    // Here we're setting the nodes
     nodes.forEach((item, index) => {
       if (item.id == service) {
-        g.setNode(item.id, {
-          label: item.label,
-          class: 'service_node',
+        nodes_tmp.push({
           id: item.id,
-          style: 'fill: #ffd47f',
+          data: {
+            label: item.label,
+            repo: services[item.id].repo,
+            imageUrl: services[item.id].imageUrl,
+            infoList: ["repo", "imageUrl"]
+          },
+          type: 'customNode',
+          targetPosition: 'top',
+          sourcePosition: 'bottom',
+          style: {
+            backgroundColor: '#FFF',
+            borderRadius: '10px',
+            border: '2px solid #000',
+          },
+          onClick: () => handleNodeClick(item.id)
         });
       } else {
-        g.setNode(item.id, {
-          label: item.label,
-          class: 'service_node',
+        nodes_tmp.push({
           id: item.id,
+          data: {
+            label: item.label,
+            repo: services[item.id].repo,
+            imageUrl: services[item.id].imageUrl,
+            infoList: ["repo", "imageUrl"]
+          },
+          type: 'customNode',
+          targetPosition: 'top',
+          sourcePosition: 'bottom',
+          style: {
+            backgroundColor: '#FFF',
+            borderRadius: '10px',
+            border: '2px solid #000',
+          },
+          onClick: () => handleNodeClick(item.id)
         });
       }
+      
     });
 
     links.forEach((item, index) => {
-      const calleePath = item.invoke_info.calleePath ?? "";
       if (item.center) {
-        g.setEdge(item.source, item.target, {
-          label: calleePath,
-          style: 'stroke: #f66; stroke-width: 1.5px; fill: none;',
-          arrowheadStyle: 'fill: #f66; width: 1.5px;',
-          class: 'service_link',
-          id: JSON.stringify(item.invoke_info),
+        edges_tmp.push({
+          id: JSON.stringify(item),
+          source: item.source,
+          target: item.target,
+          animated: true,
+          markerEnd: {
+            type: MarkerType.Arrow,
+            width: 12,
+            height: 12,
+            color: '#000',
+            strokeWidth: 1.75,
+          },
+          data: {
+            caller: item.invoke_info.caller,
+            callerPath: item.invoke_info.callerPath,
+            callee: item.invoke_info.callee,
+            calleePath: item.invoke_info.calleePath,
+            // infoList: ["caller", "callerPath", "callee", "calleePath"]
+          },
+          type: 'customEdge',
         });
       } else {
-        g.setEdge(item.source, item.target, {
-          label: calleePath,
-          ...normalEdgeStyle,
-          class: 'service_link',
-          id: JSON.stringify(item.invoke_info),
+        edges_tmp.push({
+          id: JSON.stringify(item),
+          source: item.source,
+          target: item.target,
+          animated: true,
+          markerEnd: {
+            type: MarkerType.Arrow,
+            width: 12,
+            height: 12,
+            color: '#000',
+            strokeWidth: 1.75,
+          },
+          data: {
+            caller: item.invoke_info.caller,
+            callerPath: item.invoke_info.callerPath,
+            callee: item.invoke_info.callee,
+            calleePath: item.invoke_info.calleePath,
+            // infoList: ["caller", "callerPath", "callee", "calleePath"]
+          },
+          type: 'customEdge',
         });
       }
+      
     });
 
-    g.nodes().forEach(function (v) {
-      var node = g.node(v);
-      // Round the corners of the nodes
-      if (node) {
-        node.rx = node.ry = 5;
-      }
-    });
+    const res = getLayout(nodes_tmp, edges_tmp);
 
-    setGraph(g);
-  }, [links]);
+    setN(res.nodes);
+    setE(res.edges);
+    
+  }, [nodes, links]);
 
-  useEffect(() => {
-    // Create the renderer
-    var render = new dagreD3.render();
-
-    // Set up an SVG group so that we can translate the final graph.
-
-    let svg = d3.select(document.getElementById('interface_svg-canvas'));
-    let svgGroup = d3.select(document.getElementById('interface_g-canvas'));
-
-    // Run the renderer. This is what draws the final graph.
-    try {
-      render(svgGroup, graph);
-    } catch (error) {
-      console.log(graph.graph().width);
-      if (
-        error.message.includes('Cannot set properties of undefined') &&
-        graph.graph().width == undefined
-      ) {
-        dispatch(
-          setSnackbarMessageAndOpen(
-            'serviceDependency.graphNotFound',
-            {},
-            SEVERITIES.info
-          )
-        );
-      }
-    }
-
-    const service_nodes = document.getElementsByClassName('service_node');
-    for (const service_node of service_nodes) {
-      service_node.addEventListener('click', () => {
-        handleNodeClick(service_node.id);
-      });
-      service_node.addEventListener('mouseover', e => {
-        setId(service_node.id);
-        setRepo(services[service_node.id].repo);
-        setImageUrl(services[service_node.id].imageUrl);
-        nodeTooltip.current.style.display = 'block';
-        nodeTooltip.current.style.top = e.clientY + 20 + 'px';
-        nodeTooltip.current.style.left = e.clientX + 'px';
-      });
-      service_node.addEventListener('mouseleave', function () {
-        nodeTooltip.current.style.display = 'none';
-      });
-    }
-
-    const service_links = document.getElementsByClassName('service_link');
-    for (const service_link of service_links) {
-      const service_link_info = JSON.parse(service_link.id);
-      service_link.addEventListener('mouseover', e => {
-        setCallerId(service_link_info.caller);
-        setCallerPath(service_link_info.callerPath);
-        setCalleeId(service_link_info.callee);
-        setCalleePath(service_link_info.calleePath);
-        edgeTooltip.current.style.display = 'block';
-        edgeTooltip.current.style.top = e.clientY + 20 + 'px';
-        edgeTooltip.current.style.left = e.clientX + 'px';
-      });
-      service_link.addEventListener('mouseleave', function () {
-        edgeTooltip.current.style.display = 'none';
-      });
-    }
-
-    // Center the graph
-    var xCenterOffset =
-      (svg.property('width').baseVal.value - graph.graph().width) / 2;
-    // svgGroup.attr('transform', 'translate(' + xCenterOffset + ', 50)');
-
-    svg.attr('height', graph.graph().height + 100);
-
-    setSvgWidth(graph.graph().width);
-  }, [graph]);
-
-  window.onresize = () => {
-    let svg = d3.select(document.getElementById('interface_svg-canvas'));
-    let svgGroup = d3.select(document.getElementById('interface_g-canvas'));
-    var xCenterOffset =
-      (svg.property('width').baseVal.value - graph.graph().width) / 2;
-    svgGroup.attr('transform', 'translate(' + xCenterOffset + ', 50)');
-  };
+  // const onConnect = (params) => setN(addEdge(params, n));
 
   return (
-    <Box
-      sx={{
-        fontFamily: fontFamily,
-        width: '100%',
-        overflow: 'auto',
-        p: '20px',
+    <div
+      style={{
+        width: '1000px',
+        height: '1000px',
       }}
     >
-      <svg
-        style={{ minWidth: '100%' }}
-        width={svgWidth ? svgWidth + 40 : 'none'}
-        id='interface_svg-canvas'
-        height='1000'
-      >
-        <g id='interface_g-canvas'></g>
-      </svg>
-
-      <Box
-        ref={nodeTooltip}
-        sx={{
-          bgcolor: '#242E42',
-          position: 'absolute',
-          borderRadius: '5px',
-          p: '12px',
-          color: '#FFFFFF',
-          display: 'none',
-          fontSize: '12px',
-          fontWeight: 400,
-          fontStyle: 'normal',
-          fontStretch: 'normal',
-          lineHeight: 1.67,
-          letterSpacing: 'normal',
-        }}
-      >
-        <Stack direction='column' spacing={1}>
-          <Stack direction='row' spacing={1}>
-            <Box sx={{ width: '80px' }}>ID</Box>
-            <Box>{id}</Box>
-          </Stack>
-          <Stack direction='row' spacing={1}>
-            <Box sx={{ width: '80px' }}>{intl.messages['common.repo']}</Box>
-            <Box>{repo}</Box>
-          </Stack>
-          <Stack direction='row' spacing={1}>
-            <Box sx={{ width: '80px' }}>{intl.messages['common.imageUrl']}</Box>
-            <Box>{imageUrl}</Box>
-          </Stack>
-        </Stack>
-      </Box>
-
-      <Box
-        ref={edgeTooltip}
-        sx={{
-          bgcolor: '#242E42',
-          position: 'absolute',
-          borderRadius: '5px',
-          p: '12px',
-          color: '#FFFFFF',
-          display: 'none',
-          fontSize: '12px',
-          fontWeight: 400,
-          fontStyle: 'normal',
-          fontStretch: 'normal',
-          lineHeight: 1.67,
-          letterSpacing: 'normal',
-        }}
-      >
-        <Stack direction='column' spacing={1}>
-          <Stack direction='row' spacing={1}>
-            <Box sx={{ width: '80px' }}>{intl.messages['serviceDependency.sourceInterfaceId']}</Box>
-            <Box>{callerId}</Box>
-          </Stack>
-          <Stack direction='row' spacing={1}>
-            <Box sx={{ width: '80px' }}>{intl.messages['serviceDependency.sourceInterfacePath']}</Box>
-            <Box>{callerPath}</Box>
-          </Stack>
-          <Stack direction='row' spacing={1}>
-            <Box sx={{ width: '80px' }}>{intl.messages['serviceDependency.targetInterfaceId']}</Box>
-            <Box>{calleeId}</Box>
-          </Stack>
-          <Stack direction='row' spacing={1}>
-            <Box sx={{ width: '80px' }}>{intl.messages['serviceDependency.targetInterfacePath']}</Box>
-            <Box>{calleePath}</Box>
-          </Stack>
-        </Stack>
-      </Box>
-    </Box>
+      {noData ? (
+        <Box
+          sx={{
+            width: '90%',
+            height: '200px',
+            display: 'flex',
+            justifyContent: 'center',
+            alignItems: 'center',
+            border: '1px solid #BFBFBF',
+            boxShadow: '2px 0px 8px rgba(35,45,65,.28)',
+          }}
+        >
+          <span>{intl.messages['routeTrace.popWindowNoLinkDiagram']}</span>
+        </Box>
+      ) : (
+        <ReactFlow
+          style={{ backgroundColor: '#FFFFFF' }}
+          nodes={n}
+          edges={e}
+          nodeTypes={nodeTypes}
+          edgeTypes={edgeTypes}
+          // onNodesChange={onNodesChange}
+          // onEdgesChange={onEdgesChange}
+          snapToGrid={true}
+          snapGrid={snapGrid}
+          // onConnect={onConnect}
+          fitView
+          // attributionPosition="bottom-left"
+          nodesConnectable={false}
+          elementsSelectable={false}
+        >
+          <Controls />
+          <Background />
+        </ReactFlow>
+      )}
+    </div>
   );
 }
+
+// export function EdgeCenterCanvas(props) {
+//   const { nodes, links, handleNodeClick, services, target } = props;
+//   const intl = useIntl();
+//   const [graph, setGraph] = useState(
+//     new dagreD3.graphlib.Graph({ compound: true })
+//       .setGraph({})
+//       .setDefaultEdgeLabel(() => {
+//         return {};
+//       })
+//   );
+
+//   const dispatch = useDispatch();
+
+//   const [id, setId] = useState('');
+//   const [repo, setRepo] = useState('');
+//   const [imageUrl, setImageUrl] = useState('');
+
+//   const [callerId, setCallerId] = useState('');
+//   const [callerPath, setCallerPath] = useState('');
+//   const [calleeId, setCalleeId] = useState('');
+//   const [calleePath, setCalleePath] = useState('');
+
+//   const [svgWidth, setSvgWidth] = useState(0);
+
+//   const nodeTooltip = useRef(null);
+//   const edgeTooltip = useRef(null);
+
+//   const service = decodeInterfaceForService(target);
+
+//   useEffect(() => {
+//     var g = new dagreD3.graphlib.Graph({ compound: true })
+//       .setGraph({})
+//       .setDefaultEdgeLabel(() => {
+//         return {};
+//       });
+
+//     // Here we're setting the nodes
+//     nodes.forEach((item, index) => {
+//       if (item.id == service) {
+//         g.setNode(item.id, {
+//           label: item.label,
+//           class: 'service_node',
+//           id: item.id,
+//           style: 'fill: #ffd47f',
+//         });
+//       } else {
+//         g.setNode(item.id, {
+//           label: item.label,
+//           class: 'service_node',
+//           id: item.id,
+//         });
+//       }
+//     });
+
+//     links.forEach((item, index) => {
+//       const calleePath = item.invoke_info.calleePath ?? "";
+//       if (item.center) {
+//         g.setEdge(item.source, item.target, {
+//           label: calleePath,
+//           style: 'stroke: #f66; stroke-width: 1.5px; fill: none;',
+//           arrowheadStyle: 'fill: #f66; width: 1.5px;',
+//           class: 'service_link',
+//           id: JSON.stringify(item.invoke_info),
+//         });
+//       } else {
+//         g.setEdge(item.source, item.target, {
+//           label: calleePath,
+//           ...normalEdgeStyle,
+//           class: 'service_link',
+//           id: JSON.stringify(item.invoke_info),
+//         });
+//       }
+//     });
+
+//     g.nodes().forEach(function (v) {
+//       var node = g.node(v);
+//       // Round the corners of the nodes
+//       if (node) {
+//         node.rx = node.ry = 5;
+//       }
+//     });
+
+//     setGraph(g);
+//   }, [links]);
+
+//   useEffect(() => {
+//     // Create the renderer
+//     var render = new dagreD3.render();
+
+//     // Set up an SVG group so that we can translate the final graph.
+
+//     let svg = d3.select(document.getElementById('interface_svg-canvas'));
+//     let svgGroup = d3.select(document.getElementById('interface_g-canvas'));
+
+//     // Run the renderer. This is what draws the final graph.
+//     try {
+//       render(svgGroup, graph);
+//     } catch (error) {
+//       console.log(graph.graph().width);
+//       if (
+//         error.message.includes('Cannot set properties of undefined') &&
+//         graph.graph().width == undefined
+//       ) {
+//         dispatch(
+//           setSnackbarMessageAndOpen(
+//             'serviceDependency.graphNotFound',
+//             {},
+//             SEVERITIES.info
+//           )
+//         );
+//       }
+//     }
+
+//     const service_nodes = document.getElementsByClassName('service_node');
+//     for (const service_node of service_nodes) {
+//       service_node.addEventListener('click', () => {
+//         handleNodeClick(service_node.id);
+//       });
+//       service_node.addEventListener('mouseover', e => {
+//         setId(service_node.id);
+//         setRepo(services[service_node.id].repo);
+//         setImageUrl(services[service_node.id].imageUrl);
+//         nodeTooltip.current.style.display = 'block';
+//         nodeTooltip.current.style.top = e.clientY + 20 + 'px';
+//         nodeTooltip.current.style.left = e.clientX + 'px';
+//       });
+//       service_node.addEventListener('mouseleave', function () {
+//         nodeTooltip.current.style.display = 'none';
+//       });
+//     }
+
+//     const service_links = document.getElementsByClassName('service_link');
+//     for (const service_link of service_links) {
+//       const service_link_info = JSON.parse(service_link.id);
+//       service_link.addEventListener('mouseover', e => {
+//         setCallerId(service_link_info.caller);
+//         setCallerPath(service_link_info.callerPath);
+//         setCalleeId(service_link_info.callee);
+//         setCalleePath(service_link_info.calleePath);
+//         edgeTooltip.current.style.display = 'block';
+//         edgeTooltip.current.style.top = e.clientY + 20 + 'px';
+//         edgeTooltip.current.style.left = e.clientX + 'px';
+//       });
+//       service_link.addEventListener('mouseleave', function () {
+//         edgeTooltip.current.style.display = 'none';
+//       });
+//     }
+
+//     // Center the graph
+//     var xCenterOffset =
+//       (svg.property('width').baseVal.value - graph.graph().width) / 2;
+//     // svgGroup.attr('transform', 'translate(' + xCenterOffset + ', 50)');
+
+//     svg.attr('height', graph.graph().height + 100);
+
+//     setSvgWidth(graph.graph().width);
+//   }, [graph]);
+
+//   window.onresize = () => {
+//     let svg = d3.select(document.getElementById('interface_svg-canvas'));
+//     let svgGroup = d3.select(document.getElementById('interface_g-canvas'));
+//     var xCenterOffset =
+//       (svg.property('width').baseVal.value - graph.graph().width) / 2;
+//     svgGroup.attr('transform', 'translate(' + xCenterOffset + ', 50)');
+//   };
+
+//   return (
+//     <Box
+//       sx={{
+//         fontFamily: fontFamily,
+//         width: '100%',
+//         overflow: 'auto',
+//         p: '20px',
+//       }}
+//     >
+//       <svg
+//         style={{ minWidth: '100%' }}
+//         width={svgWidth ? svgWidth + 40 : 'none'}
+//         id='interface_svg-canvas'
+//         height='1000'
+//       >
+//         <g id='interface_g-canvas'></g>
+//       </svg>
+
+//       <Box
+//         ref={nodeTooltip}
+//         sx={{
+//           bgcolor: '#242E42',
+//           position: 'absolute',
+//           borderRadius: '5px',
+//           p: '12px',
+//           color: '#FFFFFF',
+//           display: 'none',
+//           fontSize: '12px',
+//           fontWeight: 400,
+//           fontStyle: 'normal',
+//           fontStretch: 'normal',
+//           lineHeight: 1.67,
+//           letterSpacing: 'normal',
+//         }}
+//       >
+//         <Stack direction='column' spacing={1}>
+//           <Stack direction='row' spacing={1}>
+//             <Box sx={{ width: '80px' }}>ID</Box>
+//             <Box>{id}</Box>
+//           </Stack>
+//           <Stack direction='row' spacing={1}>
+//             <Box sx={{ width: '80px' }}>{intl.messages['common.repo']}</Box>
+//             <Box>{repo}</Box>
+//           </Stack>
+//           <Stack direction='row' spacing={1}>
+//             <Box sx={{ width: '80px' }}>{intl.messages['common.imageUrl']}</Box>
+//             <Box>{imageUrl}</Box>
+//           </Stack>
+//         </Stack>
+//       </Box>
+
+//       <Box
+//         ref={edgeTooltip}
+//         sx={{
+//           bgcolor: '#242E42',
+//           position: 'absolute',
+//           borderRadius: '5px',
+//           p: '12px',
+//           color: '#FFFFFF',
+//           display: 'none',
+//           fontSize: '12px',
+//           fontWeight: 400,
+//           fontStyle: 'normal',
+//           fontStretch: 'normal',
+//           lineHeight: 1.67,
+//           letterSpacing: 'normal',
+//         }}
+//       >
+//         <Stack direction='column' spacing={1}>
+//           <Stack direction='row' spacing={1}>
+//             <Box sx={{ width: '80px' }}>{intl.messages['serviceDependency.sourceInterfaceId']}</Box>
+//             <Box>{callerId}</Box>
+//           </Stack>
+//           <Stack direction='row' spacing={1}>
+//             <Box sx={{ width: '80px' }}>{intl.messages['serviceDependency.sourceInterfacePath']}</Box>
+//             <Box>{callerPath}</Box>
+//           </Stack>
+//           <Stack direction='row' spacing={1}>
+//             <Box sx={{ width: '80px' }}>{intl.messages['serviceDependency.targetInterfaceId']}</Box>
+//             <Box>{calleeId}</Box>
+//           </Stack>
+//           <Stack direction='row' spacing={1}>
+//             <Box sx={{ width: '80px' }}>{intl.messages['serviceDependency.targetInterfacePath']}</Box>
+//             <Box>{calleePath}</Box>
+//           </Stack>
+//         </Stack>
+//       </Box>
+//     </Box>
+//   );
+// }
