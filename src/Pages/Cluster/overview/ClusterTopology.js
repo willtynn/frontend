@@ -2,7 +2,7 @@ import { ClusterCanvas } from './canvas';
 import { Box, Stack } from '@mui/material';
 import ArrowDown from '@/assets/ArrowDown.svg';
 import ArrowUp from '@/assets/ArrowUp.svg';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { YaHeiLargeFont } from '@/components/Fonts';
 import InfoCard from '@/components/InfoCard';
 import { useIntl } from 'react-intl';
@@ -15,6 +15,7 @@ export function ClusterTopologyOnlyCanvas(props) {
   const [nodes, setNodes] = useState([]);
   const [links, setLinks] = useState([]);
   const [display, setDisplay] = useState(false);
+  const box = useRef();
 
   useEffect(() => {
     let dict = {}
@@ -62,9 +63,8 @@ export function ClusterTopologyOnlyCanvas(props) {
       <Box
         sx={{
           minHeight: '400px',
-          height: "600px",
-          width: "2000px",
         }}
+        ref={box}
       >
         {display ? (
           <ClusterCanvas
@@ -72,6 +72,7 @@ export function ClusterTopologyOnlyCanvas(props) {
             nodes={nodes}
             links={links}
             handleNodeClick={handleNodeClick}
+            parent={box}
           />
         ) : (
           <Stack sx={{

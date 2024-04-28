@@ -45,7 +45,7 @@ const getLayout = (nodes, edges) => {
 };
 
 export function ClusterCanvas(props) {
-  const { id, nodes, links, handleNodeClick, handleLinkClick } = props;
+  const { id, nodes, links, handleNodeClick, parent } = props;
   const dispatch = useDispatch();
   const intl = useIntl();
 
@@ -108,8 +108,8 @@ export function ClusterCanvas(props) {
   return (
     <div
       style={{
-        width: '100%',
-        height: '100%',
+        width: parent.current.clientWidth,
+        height: parent.current.clientHeight,
       }}
     >
       {noData ? (
