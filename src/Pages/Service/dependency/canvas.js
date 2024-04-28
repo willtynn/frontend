@@ -62,7 +62,7 @@ const getLayout = (nodes, edges) => {
 };
 
 export function ThreeLayerCanvas(props) {
-  const { nodes, links, handleNodeClick, services } = props;
+  const { nodes, links, handleNodeClick, services, parent } = props;
   const dispatch = useDispatch();
   const intl = useIntl();
 
@@ -151,8 +151,8 @@ export function ThreeLayerCanvas(props) {
   return (
     <div
       style={{
-        width: '5000px',
-        height: '5000px',
+        width: parent.current.clientWidth,
+        height: parent.current.clientHeight,
       }}
     >
       {noData ? (
@@ -433,7 +433,7 @@ export function ThreeLayerCanvas(props) {
 
 
 export function EdgeCenterCanvas(props) {
-  const { nodes, links, handleNodeClick, services, target } = props;
+  const { nodes, links, handleNodeClick, services, target, parent } = props;
   const dispatch = useDispatch();
   const intl = useIntl();
 
@@ -551,8 +551,8 @@ export function EdgeCenterCanvas(props) {
   return (
     <div
       style={{
-        width: '1000px',
-        height: '1000px',
+        width: parent.current.clientWidth,
+        height: parent.current.clientHeight,
       }}
     >
       {noData ? (

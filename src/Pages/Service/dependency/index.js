@@ -397,6 +397,9 @@ function ServiceDependency() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
+  const nodeBox = useRef(null);
+  const edgeBox = useRef(null);
+
   const intl = useIntl();
 
   const { dependency } = useSelector(state => {
@@ -881,6 +884,7 @@ function ServiceDependency() {
                     borderRadius: '5px',
                     p: 0,
                   }}
+                  ref={nodeBox}
                 >
                   {nodes.length !== 0 ? (
                     <ThreeLayerCanvas
@@ -888,6 +892,7 @@ function ServiceDependency() {
                       links={links}
                       handleNodeClick={handleNodeClick}
                       services={positiveServices}
+                      parent={nodeBox}
                     />
                   ) : (
                     <Box
@@ -991,6 +996,7 @@ function ServiceDependency() {
                     borderRadius: '5px',
                     p: 0,
                   }}
+                  ref={edgeBox}
                 >
                   {inodes.length !== 0 ? (
                     <EdgeCenterCanvas
@@ -1000,6 +1006,7 @@ function ServiceDependency() {
                       handleLinkClick={handleInterfaceLinkClick}
                       services={positiveServices}
                       target={currentInterface}
+                      parent={edgeBox}
                     />
                   ) : (
                     <Box
