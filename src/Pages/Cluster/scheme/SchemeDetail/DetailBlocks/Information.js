@@ -393,11 +393,20 @@ export default function Information(props) {
                         minWidth: firstRow[5].minWidth,
                       }}
                     >
-                      <ContainedButton
+                      <Stack direction="column" spacing={0.5}>
+                        {row.ports.map((port, index) => {
+                          return (
+                            <Box>{`${port.protocol}:${port.containerPort}->${port.containerPort}`}</Box>
+                          )
+                        })}
+
+                      </Stack>
+
+                      {/* <ContainedButton
                         onClick={handlePortsClick.bind(this, row.ports)}
                       >
                         <LanIcon />
-                      </ContainedButton>
+                      </ContainedButton> */}
                     </StyledTableBodyCell>
                     <StyledTableBodyCell
                       align={secondRow[1].align}

@@ -5,7 +5,7 @@ const initState = {
   pageSize: 10,
   pageNum: 1,
   namespace: [],
-  currentNamespace: null,
+  currentNamespace: "",
   currentScheme: null
 };
 
