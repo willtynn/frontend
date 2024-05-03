@@ -365,6 +365,18 @@ export const messages = {
     performancePressureTest: "Performance Pressure Test",
 
   },
+  routectl:{
+    jsonConfig: 'Configure Routerule through JSON',
+    routeruleAddSuccess: 'Successfully added routerule',
+    routeruleAddFailed: 'Failed to add routerule, please try again',
+    routeruleUpdateSuccess: 'Successfully updated routerule',
+    routeruleUpdateFailed: 'Failed to update routerule, please try again',
+    routeruleDeleteSuccess: 'Successfully deleted routerule',
+    routeruleDeleteFailed: 'Failed to delete routerule, please try again',
+    routeruleQuerySuccess: 'Successfully get routerule',
+    routeruleQueryFailed: 'Failed to get routerule, please try again',
+
+  },
   routeTrace: {
     title: 'Route Trace',
     //查看服务的路由链路

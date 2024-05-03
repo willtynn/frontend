@@ -58,7 +58,7 @@ export function getRouteRules(searchInfo) {
     } catch {}
     dispatch(
       setSnackbarMessageAndOpen(
-        'route.routerulesQueryError',
+        'routectl.routerulesQueryFailed',
         {},
         SEVERITIES.warning
       )
@@ -69,7 +69,7 @@ export function getRouteRules(searchInfo) {
  * @param {RouteRuleId} searchInfo
  */
 export function getRouteRule(searchInfo) {
-  const url = '/route-rules/getRouteRules?exact=true';
+  const url = '/route-rules/all?exact=true';
   return async (dispatch) => {
     try {
       const res = await axios_instance.post(
@@ -84,7 +84,7 @@ export function getRouteRule(searchInfo) {
     } catch {}
     dispatch(
       setSnackbarMessageAndOpen(
-        'route.routeruleQueryError',
+        'routectl.routeruleQueryFailed',
         {},
         SEVERITIES.warning
       )
@@ -95,7 +95,7 @@ export function getRouteRule(searchInfo) {
  * @param {RouteRule} routerule
  */
 export function updateRouteRule(routerule) {
-  const url = '/route-rules/getRouteRules?allowOverwrite=true';
+  const url = '/route-rules/add?allowOverwrite=true';
 
   return async (dispatch) => {
     try {
@@ -108,7 +108,7 @@ export function updateRouteRule(routerule) {
       if (res.status == 200 && res.data.code == 0) {
         dispatch(
           setSnackbarMessageAndOpen(
-            'route.routeruleUpdateSuccess',
+            'routectl.routeruleUpdateSuccess',
             {},
             SEVERITIES.success
           )
@@ -118,7 +118,7 @@ export function updateRouteRule(routerule) {
     } catch {}
     dispatch(
       setSnackbarMessageAndOpen(
-        'route.routeruleUpdateError',
+        'routectl.routeruleUpdateFailed',
         {},
         SEVERITIES.warning
       )
@@ -129,7 +129,7 @@ export function updateRouteRule(routerule) {
  * @param {RouteRule} routerule
  */
 export function addRouteRule(routerule) {
-  const url = '/route-rules/getRouteRules?allowOverwrite=false';
+  const url = '/route-rules/add?allowOverwrite=false';
 
   return  async (dispatch) => {
     try {
@@ -141,7 +141,7 @@ export function addRouteRule(routerule) {
       if (res.status == 200 && res.data.code == 0) {
         dispatch(
           setSnackbarMessageAndOpen(
-            'route.routeruleAddSuccess',
+            'routectl.routeruleAddSuccess',
             {},
             SEVERITIES.success
           )
@@ -151,7 +151,7 @@ export function addRouteRule(routerule) {
     } catch {}
     dispatch(
       setSnackbarMessageAndOpen(
-        'route.routeruleAddError',
+        'routectl.routeruleAddFailed',
         {},
         SEVERITIES.warning
       )
@@ -174,7 +174,7 @@ export function deleteRouteRule(
       if (res.status == 200 && res.data.code == 0) {
         dispatch(
           setSnackbarMessageAndOpen(
-            'route.routeruleDeleteSuccess',
+            'routectl.routeruleDeleteSuccess',
             {},
             SEVERITIES.success
           )
@@ -184,7 +184,7 @@ export function deleteRouteRule(
     } catch {}
     dispatch(
       setSnackbarMessageAndOpen(
-        'route.routeruleDeleteError',
+        'routectl.routeruleDeleteFailed',
         {},
         SEVERITIES.warning
       )

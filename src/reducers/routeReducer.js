@@ -1,7 +1,7 @@
 import * as actions from "../actions/routeAction";
 import dayjs from 'dayjs';
 import {UPDATE_CURRENT_NAMESPACE, UPDATE_NAMESPACES} from "../actions/instanceAction";
-import * as routectl from "../actions/routectlActions"
+import * as routectl from "../actions/routectlAction"
 import {UPDATE_SEARCH_SERVICE} from "../actions/serviceAction";
 
 const initState = {

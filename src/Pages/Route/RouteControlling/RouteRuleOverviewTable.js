@@ -46,7 +46,7 @@ import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
 import {
   getRouteRules,
   UPDATE_CURRENT_SERVICE,
-} from '../../../actions/routectlActions';
+} from '../../../actions/routectlAction';
 import { RouteRule } from '@/models/RouteControlling';
 import Question from '@/assets/Question.svg';
 import { NormalBoldFont, SmallLightFont } from '../../../components/Fonts';
