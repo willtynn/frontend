@@ -275,7 +275,7 @@ export default function RouteTrace() {
 
     let startTmp = localStorage.getItem('route_trace_start_time');
     let endTmp = localStorage.getItem('route_trace_end_time');
-    console.log("Load", startTmp, endTmp);
+    // console.log("Load", startTmp, endTmp);
     if (!startTmp || !endTmp) {
       let now = dayjs();
       startTmp = now - 3600000;
@@ -284,14 +284,14 @@ export default function RouteTrace() {
       startTmp = parseInt(startTmp);
       endTmp = parseInt(endTmp);
     }
-    console.log("Load", startTmp, endTmp, dayjs(startTmp), dayjs(endTmp));
+    // console.log("Load", startTmp, endTmp, dayjs(startTmp), dayjs(endTmp));
     setStartTime(startTmp);
     setEndTime(endTmp);
     setStartTimeValue(dayjs(startTmp));
     setEndTimeValue(dayjs(endTmp));
 
     let page = localStorage.getItem('route_trace_service_page');
-    console.log("Load", page);
+    // console.log("Load", page);
     if (page) {
       setServicePage(parseInt(page));
     }
@@ -349,7 +349,7 @@ export default function RouteTrace() {
   };
 
   const handleStartTimeChange = newValue => {
-    console.log("start", newValue, dayjs(newValue))
+    // console.log("start", newValue, dayjs(newValue))
     setStartTime(newValue);
     setStartTimeValue(dayjs(newValue));
     localStorage.setItem('route_trace_start_time', newValue);
@@ -362,7 +362,7 @@ export default function RouteTrace() {
   };
 
   const handleStartTimeValueChange = newValue => {
-    console.log("startValue", newValue)
+    // console.log("startValue", newValue)
     setStartTimeValue(newValue);
     setStartTime(newValue.valueOf());
     localStorage.setItem('route_trace_start_time', newValue.valueOf());

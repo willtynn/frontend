@@ -14,7 +14,7 @@ import { useDispatch } from 'react-redux';
 import { decodeInterfaceForService, decodeInterfaceForInterface } from '../../../utils/commonUtils';
 import { useIntl } from 'react-intl';
 import ReactFlow, { Controls, Background, MarkerType } from 'reactflow';
-import { CustomEdge, CustomNode } from '@/components/Reactflow';
+import { CustomEdge, CustomNode, SelfConnectEdge } from '@/components/Reactflow';
 import dagre from 'dagre';
 import { addEdge } from 'reactflow';
 
@@ -30,6 +30,7 @@ const nodeTypes = {
 };
 const edgeTypes = {
   customEdge: CustomEdge,
+  selfConnectEdge: SelfConnectEdge,
 };
 
 const snapGrid = [20, 20];
@@ -119,6 +120,10 @@ export function ThreeLayerCanvas(props) {
     });
 
     links.forEach((item, index) => {
+      let edgeType = 'customEdge';
+      if (item.source == item.target) {
+        edgeType = 'selfConnectEdge';
+      }
       edges_tmp.push({
         id: JSON.stringify(item),
         source: item.source,
@@ -138,7 +143,7 @@ export function ThreeLayerCanvas(props) {
           calleePath: item.invoke_info.calleePath,
           // infoList: ["caller", "callerPath", "callee", "calleePath"]
         },
-        type: 'customEdge',
+        type: edgeType,
       });
     });
 
@@ -491,6 +496,10 @@ export function EdgeCenterCanvas(props) {
     });
 
     links.forEach((item, index) => {
+      let edgeType = 'customEdge';
+      if (item.source == item.target) {
+        edgeType = 'selfConnectEdge';
+      }
       if (item.center) {
         edges_tmp.push({
           id: JSON.stringify(item),
@@ -511,7 +520,7 @@ export function EdgeCenterCanvas(props) {
             calleePath: item.invoke_info.calleePath,
             // infoList: ["caller", "callerPath", "callee", "calleePath"]
           },
-          type: 'customEdge',
+          type: edgeType,
         });
       } else {
         edges_tmp.push({
@@ -533,7 +542,7 @@ export function EdgeCenterCanvas(props) {
             calleePath: item.invoke_info.calleePath,
             // infoList: ["caller", "callerPath", "callee", "calleePath"]
           },
-          type: 'customEdge',
+          type: edgeType,
         });
       }
       

@@ -4,6 +4,8 @@ import {
   BaseEdge,
   Handle,
   Position,
+  BezierEdge, 
+  EdgeProps
 } from 'reactflow';
 import { memo } from 'react';
 import { Box, Stack } from '@mui/material';
@@ -68,6 +70,107 @@ export const CustomEdge = ({
     </>
   );
 };
+
+
+export const SelfConnectEdge = ({
+    id,
+    source,
+    target,
+    sourceX,
+    sourceY,
+    targetX,
+    targetY,
+    sourcePosition,
+    targetPosition,
+    data,
+    markerEnd,
+  }) => {
+  // we are using the default bezier edge when source and target ids are different
+  if (source !== target) {
+    console.error('SelfConnecting must have the same source and target id');
+  }
+
+  const [_, labelX, labelY] = getBezierPath({
+    sourceX,
+    sourceY,
+    sourcePosition,
+    targetX,
+    targetY,
+    targetPosition,
+  });
+
+  const radiusY = (sourceY - targetY) * 0.6;
+  const radiusX = 120;
+  // Move the pen to sourceX, sourceY, then draw a curve to targetX+2, targetY
+  // x-axis-rotation is 0, large-arc-flag is 1 which means the arc should be greater 
+  // than 180 degree, sweep-flag is 0 which means the arc should be drawn in a negative angle
+  // the end point of the arc is targetX+2, targetY
+
+  // the center of the ellipse is at 
+  // the radius of the ellipse is (radiusX, radiusY)
+  const edgePath = `M ${sourceX} ${sourceY} A ${radiusX} ${radiusY} 0 1 0 ${targetX + 2} ${targetY}`;
+  // 根据椭圆方程计算的label的位置
+  const realLabelX = Math.sqrt(radiusX**2 * (1 - (sourceY-targetY)**2 / radiusY**2 / 4)) + radiusX + labelX;
+  const realLabelY = labelY;
+
+  /*
+  {
+    "id": "{\"source\":\"train-ticket/ts-config-service\",\"target\":\"train-ticket/ts-config-service\",\"invoke_info\":{\"caller\":\"train-ticket/ts-config-service::/api/v1/configservice/configs:Get\",\"callerPath\":\"/api/v1/configservice/configs\",\"callee\":\"train-ticket/ts-config-service::/api/v1/configservice/configs:Get\",\"calleePath\":\"/api/v1/configservice/configs\",\"responseSize\":\"191\",\"requestSize\":\"0\"}}",
+    "source": "train-ticket/ts-config-service",
+    "target": "train-ticket/ts-config-service",
+    "selected": false,
+    "animated": true,
+    "data": {
+        "caller": "train-ticket/ts-config-service::/api/v1/configservice/configs:Get",
+        "callerPath": "/api/v1/configservice/configs",
+        "callee": "train-ticket/ts-config-service::/api/v1/configservice/configs:Get",
+        "calleePath": "/api/v1/configservice/configs"
+    },
+    "sourceX": 282,
+    "sourceY": 395.265625,
+    "targetX": 282,
+    "targetY": 218,
+    "sourcePosition": "bottom",
+    "targetPosition": "top",
+    "markerStart": "url('#')",
+    "markerEnd": "url('#1__color=#000&height=12&strokeWidth=1.75&type=arrow&width=12')"
+  }
+  */
+  return <>
+    <BaseEdge
+      id={id}
+      path={edgePath}
+      style={{
+        stroke: '#000',
+        strokeWidth: 2,
+        animated: true,
+      }}
+      markerEnd={markerEnd}
+    />
+    <EdgeLabelRenderer>
+      <div
+        style={{
+          position: 'absolute',
+          transform: `translate(-50%, -50%) translate(${realLabelX}px,${realLabelY}px)`,
+          background: '#ffcc00ee',
+          padding: '5px 8px',
+          borderRadius: 5,
+          fontSize: 12,
+          fontWeight: 700,
+        }}
+        className='nodrag nopan'
+      >
+        {data.infoList &&
+          data.infoList.map((item, index) => (
+            <Stack direction='row' spacing={0.5}>
+              <Box sx={labelStyle}>{item}</Box>
+              <Box sx={valueStyle}>{data[item]}</Box>
+            </Stack>
+          ))}
+      </div>
+    </EdgeLabelRenderer>
+  </>
+}
 
 const labelStyle = {
   fontFamily: fontFamily,
