@@ -14,7 +14,7 @@ import { useDispatch } from 'react-redux';
 import { decodeInterfaceForService, decodeInterfaceForInterface } from '../../../utils/commonUtils';
 import { useIntl } from 'react-intl';
 import ReactFlow, { Controls, Background, MarkerType } from 'reactflow';
-import { CustomEdge, CustomNode, SelfConnectEdge } from '@/components/Reactflow';
+import { TooltipEdge, CustomNode, SelfConnectEdge } from '@/components/Reactflow';
 import dagre from 'dagre';
 import { addEdge } from 'reactflow';
 
@@ -29,7 +29,7 @@ const nodeTypes = {
   customNode: CustomNode,
 };
 const edgeTypes = {
-  customEdge: CustomEdge,
+  customEdge: TooltipEdge,
   selfConnectEdge: SelfConnectEdge,
 };
 
@@ -63,7 +63,7 @@ const getLayout = (nodes, edges) => {
 };
 
 export function ThreeLayerCanvas(props) {
-  const { nodes, links, handleNodeClick, services, parent } = props;
+  const { nodes, links, handleNodeClick, services, parent, onEdgeMouseEnter, onEdgeMouseLeave } = props;
   const dispatch = useDispatch();
   const intl = useIntl();
 
@@ -189,6 +189,9 @@ export function ThreeLayerCanvas(props) {
           // attributionPosition="bottom-left"
           nodesConnectable={false}
           elementsSelectable={false}
+          onEdgeMouseEnter={onEdgeMouseEnter}
+          onEdgeMouseLeave={onEdgeMouseLeave}
+          onEdgeClick={() => {}}
         >
           <Controls />
           <Background />

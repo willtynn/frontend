@@ -4,8 +4,8 @@ import {
   BaseEdge,
   Handle,
   Position,
-  BezierEdge, 
-  EdgeProps
+  BezierEdge,
+  EdgeProps,
 } from 'reactflow';
 import { memo } from 'react';
 import { Box, Stack } from '@mui/material';
@@ -71,20 +71,86 @@ export const CustomEdge = ({
   );
 };
 
-
-export const SelfConnectEdge = ({
-    id,
-    source,
-    target,
+export const TooltipEdge = ({
+  id,
+  sourceX,
+  sourceY,
+  targetX,
+  targetY,
+  sourcePosition,
+  targetPosition,
+  data,
+  markerEnd,
+}) => {
+  const [edgePath, labelX, labelY] = getBezierPath({
     sourceX,
     sourceY,
+    sourcePosition,
     targetX,
     targetY,
-    sourcePosition,
     targetPosition,
-    data,
-    markerEnd,
-  }) => {
+  });
+
+  return (
+    <>
+      <BaseEdge
+        id={id}
+        path={edgePath}
+        style={{
+          stroke: '#000',
+          strokeWidth: 2,
+          animated: true,
+        }}
+        markerEnd={markerEnd}
+      />
+      <EdgeLabelRenderer>
+        <Box
+          style={{
+            position: 'absolute',
+            transform: `translate(-50%, -50%) translate(${labelX}px,${labelY}px)`,
+            background: '#ffcc00ee',
+            padding: '5px 8px',
+            borderRadius: 5,
+            fontSize: 12,
+            fontWeight: 700,
+          }}
+          className='nodrag nopan'
+          onMouseOver={() => {
+            console.log(123);
+          }}
+          onMouseLeave={() => {
+            console.log(456);
+          }}
+          onClick={() => {
+            console.log(789);
+          }}
+        >
+          {data.infoList &&
+            data.infoList.map((item, index) => (
+              <Stack direction='row' spacing={0.5}>
+                <Box sx={labelStyle}>{item}</Box>
+                <Box sx={valueStyle}>{data[item]}</Box>
+              </Stack>
+            ))}
+        </Box>
+      </EdgeLabelRenderer>
+    </>
+  );
+};
+
+export const SelfConnectEdge = ({
+  id,
+  source,
+  target,
+  sourceX,
+  sourceY,
+  targetX,
+  targetY,
+  sourcePosition,
+  targetPosition,
+  data,
+  markerEnd,
+}) => {
   // we are using the default bezier edge when source and target ids are different
   if (source !== target) {
     console.error('SelfConnecting must have the same source and target id');
@@ -102,15 +168,22 @@ export const SelfConnectEdge = ({
   const radiusY = (sourceY - targetY) * 0.6;
   const radiusX = 120;
   // Move the pen to sourceX, sourceY, then draw a curve to targetX+2, targetY
-  // x-axis-rotation is 0, large-arc-flag is 1 which means the arc should be greater 
+  // x-axis-rotation is 0, large-arc-flag is 1 which means the arc should be greater
   // than 180 degree, sweep-flag is 0 which means the arc should be drawn in a negative angle
   // the end point of the arc is targetX+2, targetY
 
-  // the center of the ellipse is at 
+  // the center of the ellipse is at
   // the radius of the ellipse is (radiusX, radiusY)
-  const edgePath = `M ${sourceX} ${sourceY} A ${radiusX} ${radiusY} 0 1 0 ${targetX + 2} ${targetY}`;
+  const edgePath = `M ${sourceX} ${sourceY} A ${radiusX} ${radiusY} 0 1 0 ${
+    targetX + 2
+  } ${targetY}`;
   // 根据椭圆方程计算的label的位置
-  const realLabelX = Math.sqrt(radiusX**2 * (1 - (sourceY-targetY)**2 / radiusY**2 / 4)) + radiusX + labelX;
+  const realLabelX =
+    Math.sqrt(
+      radiusX ** 2 * (1 - (sourceY - targetY) ** 2 / radiusY ** 2 / 4)
+    ) +
+    radiusX +
+    labelX;
   const realLabelY = labelY;
 
   /*
@@ -136,41 +209,43 @@ export const SelfConnectEdge = ({
     "markerEnd": "url('#1__color=#000&height=12&strokeWidth=1.75&type=arrow&width=12')"
   }
   */
-  return <>
-    <BaseEdge
-      id={id}
-      path={edgePath}
-      style={{
-        stroke: '#000',
-        strokeWidth: 2,
-        animated: true,
-      }}
-      markerEnd={markerEnd}
-    />
-    <EdgeLabelRenderer>
-      <div
+  return (
+    <>
+      <BaseEdge
+        id={id}
+        path={edgePath}
         style={{
-          position: 'absolute',
-          transform: `translate(-50%, -50%) translate(${realLabelX}px,${realLabelY}px)`,
-          background: '#ffcc00ee',
-          padding: '5px 8px',
-          borderRadius: 5,
-          fontSize: 12,
-          fontWeight: 700,
+          stroke: '#000',
+          strokeWidth: 2,
+          animated: true,
         }}
-        className='nodrag nopan'
-      >
-        {data.infoList &&
-          data.infoList.map((item, index) => (
-            <Stack direction='row' spacing={0.5}>
-              <Box sx={labelStyle}>{item}</Box>
-              <Box sx={valueStyle}>{data[item]}</Box>
-            </Stack>
-          ))}
-      </div>
-    </EdgeLabelRenderer>
-  </>
-}
+        markerEnd={markerEnd}
+      />
+      <EdgeLabelRenderer>
+        <div
+          style={{
+            position: 'absolute',
+            transform: `translate(-50%, -50%) translate(${realLabelX}px,${realLabelY}px)`,
+            background: '#ffcc00ee',
+            padding: '5px 8px',
+            borderRadius: 5,
+            fontSize: 12,
+            fontWeight: 700,
+          }}
+          className='nodrag nopan'
+        >
+          {data.infoList &&
+            data.infoList.map((item, index) => (
+              <Stack direction='row' spacing={0.5}>
+                <Box sx={labelStyle}>{item}</Box>
+                <Box sx={valueStyle}>{data[item]}</Box>
+              </Stack>
+            ))}
+        </div>
+      </EdgeLabelRenderer>
+    </>
+  );
+};
 
 const labelStyle = {
   fontFamily: fontFamily,
