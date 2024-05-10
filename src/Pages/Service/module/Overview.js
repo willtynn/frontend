@@ -28,17 +28,12 @@ import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
 import SearchIcon from '@mui/icons-material/Search';
 import RefreshIcon from '@mui/icons-material/Refresh';
 import { useDispatch, useSelector } from 'react-redux';
-import {
-  StyledAutocomplete,
-  ChipTextField,
-} from '../../../components/Input';
+import { StyledAutocomplete, ChipTextField } from '../../../components/Input';
 import {
   CHANGE_PAGE_NUM,
   CHANGE_PAGE_SIZE,
 } from '../../../actions/serviceAction';
-import {
-  UPDATE_SEARCH_SERVICE,
-} from '../../../actions/serviceAction';
+import { UPDATE_SEARCH_SERVICE } from '../../../actions/serviceAction';
 import { EclipseTransparentButton } from '../../../components/Button';
 import { KubeCheckbox } from '../../../components/Checkbox';
 import Question from '@/assets/Question.svg';
@@ -101,13 +96,17 @@ export default function ServiceOverview(props) {
   const [searchValue, setSearchValue] = useState('');
   const [searchSelectAnchorEl, setSearchSelectAnchorEl] = useState(null);
   const searchSelectOpen = Boolean(searchSelectAnchorEl);
-  const [searchBy, setSearchBy] = useState([intl.messages['common.name'], 'ID']);
+  const [searchBy, setSearchBy] = useState([
+    intl.messages['common.name'],
+    'ID',
+  ]);
 
   const [colDisplay, setColDisplay] = useState([true, true, true, true]);
   const [customContentAnchorEl, setCustomContentAnchorEl] = useState(null);
   const customContentOpen = Boolean(customContentAnchorEl);
 
   const [checkAll, setCheckAll] = useState(false);
+  const [selectedItems, setSelectedItems] = useState([]);
 
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -123,7 +122,17 @@ export default function ServiceOverview(props) {
   // service/query左侧表格表头
   const headFirstRow = [
     // createRow('id', '服务ID', false, '150px', '170px', true, 1, 1, 'left'),
-    createRow('name', intl.messages['common.serviceName'], false, '120px', '130px', true, 1, 1, 'left'),
+    createRow(
+      'name',
+      intl.messages['common.serviceName'],
+      false,
+      '120px',
+      '130px',
+      true,
+      1,
+      1,
+      'left'
+    ),
     createRow(
       'repo',
       intl.messages['common.repo'],
@@ -290,6 +299,36 @@ export default function ServiceOverview(props) {
       (pageNum - 1) * pageSize + pageSize
     );
   }, [order, orderBy, pageNum, pageSize, tableData, searchList]);
+
+  useEffect(() => {
+    if (checkAll) {
+      setSelectedItems(previousSelectedItems => {
+        return [
+          ...previousSelectedItems,
+          ...visibleRows.map((item, index) => {
+            return item.id;
+          }),
+        ];
+      });
+    } else {
+      setSelectedItems(previousSelectedItems => {
+        const arr = visibleRows.map((row, index) => {
+          return row.id;
+        });
+        return previousSelectedItems.filter(item => !arr.includes(item));
+      });
+    }
+  }, [checkAll]);
+
+  useEffect(() => {
+    setCheckAll(
+      visibleRows
+        .map((row, index) => {
+          return row.id;
+        })
+        .every((value, index) => selectedItems.includes(value))
+    );
+  }, [visibleRows]);
 
   const isDuplicate = () => {
     return false;
@@ -502,7 +541,10 @@ export default function ServiceOverview(props) {
               letterSpacing: 'normal',
             }}
             renderInput={params => (
-              <TextField {...params} placeholder={intl.messages['serviceOverview.allItems']} />
+              <TextField
+                {...params}
+                placeholder={intl.messages['serviceOverview.allItems']}
+              />
             )}
           />
           {/* 搜索栏 */}
@@ -616,6 +658,7 @@ export default function ServiceOverview(props) {
                         }}
                         disableRipple
                         size='small'
+                        checked={selectedItems.includes(row.id)}
                       />
                     </StyledTableBodyCell>
 
@@ -711,12 +754,12 @@ export default function ServiceOverview(props) {
                 >
                   <Question />
                   <NormalBoldFont>
-                      {intl.messages['common.serviceTableContentNoData']}
-                    </NormalBoldFont>
+                    {intl.messages['common.serviceTableContentNoData']}
+                  </NormalBoldFont>
 
-                    <SmallLightFont>
-                      {intl.messages['common.serviceTableContentNoDataHint']}
-                    </SmallLightFont>
+                  <SmallLightFont>
+                    {intl.messages['common.serviceTableContentNoDataHint']}
+                  </SmallLightFont>
                 </TableCell>
               </TableRow>
             ) : (
