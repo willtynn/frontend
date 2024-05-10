@@ -39,6 +39,10 @@ import {
 import InfoAlert from '@/assets/InfoAlert.svg';
 import { KubeAutocomplete } from '../../../components/Input';
 import { encodeId } from '../../../utils/commonUtils';
+import {
+  UPDATE_EDGE_DATA,
+  UPDATE_EDGE_LIST,
+} from '../../../actions/serviceAction';
 
 const fakeNodes = [
   {
@@ -753,14 +757,22 @@ function ServiceDependency() {
   };
 
   const onEdgeMouseEnter = (event, edge) => {
+    dispatch({
+      type: UPDATE_EDGE_LIST,
+      data: edge.data.infoList ,
+    });
+    dispatch({ type: UPDATE_EDGE_DATA, data: edge.data });
     edgeTooltip.current.style.display = 'block';
     edgeTooltip.current.style.top = event.clientY + 20 + 'px';
     edgeTooltip.current.style.left = event.clientX + 'px';
-    console.log(edge)
   };
 
   const onEdgeMouseLeave = (event, edge) => {
     edgeTooltip.current.style.display = 'none';
+    dispatch({
+      type: UPDATE_EDGE_LIST,
+      data: [],
+    });
   };
 
   return (
@@ -1051,6 +1063,8 @@ function ServiceDependency() {
                       services={positiveServices}
                       target={currentInterface}
                       parent={edgeBox}
+                      onEdgeMouseEnter={onEdgeMouseEnter}
+                      onEdgeMouseLeave={onEdgeMouseLeave}
                     />
                   ) : (
                     <Box
@@ -1096,14 +1110,15 @@ function ServiceDependency() {
         }}
       >
         <Stack direction='column' spacing={1}>
-          {edgeList.map((item, index) => {
-            <Stack direction='row' spacing={1}>
-              <Box sx={{ width: '80px' }}>
-                {`${item}:`}
-              </Box>
-              <Box>{edgeData[item]}</Box>
-            </Stack>;
-          })}
+          {edgeList &&
+            edgeList.map((item, index) => {
+              return (
+                <Stack direction='row' spacing={1}>
+                  <Box sx={{ width: '80px' }}>{`${item}:`}</Box>
+                  <Box>{edgeData[item]}</Box>
+                </Stack>
+              );
+            })}
         </Stack>
       </Box>
     </Box>

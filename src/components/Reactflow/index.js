@@ -46,26 +46,7 @@ export const CustomEdge = ({
         markerEnd={markerEnd}
       />
       <EdgeLabelRenderer>
-        <div
-          style={{
-            position: 'absolute',
-            transform: `translate(-50%, -50%) translate(${labelX}px,${labelY}px)`,
-            background: '#ffcc00ee',
-            padding: '5px 8px',
-            borderRadius: 5,
-            fontSize: 12,
-            fontWeight: 700,
-          }}
-          className='nodrag nopan'
-        >
-          {data.infoList &&
-            data.infoList.map((item, index) => (
-              <Stack direction='row' spacing={0.5}>
-                <Box sx={labelStyle}>{item}</Box>
-                <Box sx={valueStyle}>{data[item]}</Box>
-              </Stack>
-            ))}
-        </div>
+       
       </EdgeLabelRenderer>
     </>
   );
@@ -104,35 +85,7 @@ export const TooltipEdge = ({
         markerEnd={markerEnd}
       />
       <EdgeLabelRenderer>
-        <Box
-          style={{
-            position: 'absolute',
-            transform: `translate(-50%, -50%) translate(${labelX}px,${labelY}px)`,
-            background: '#ffcc00ee',
-            padding: '5px 8px',
-            borderRadius: 5,
-            fontSize: 12,
-            fontWeight: 700,
-          }}
-          className='nodrag nopan'
-          onMouseOver={() => {
-            console.log(123);
-          }}
-          onMouseLeave={() => {
-            console.log(456);
-          }}
-          onClick={() => {
-            console.log(789);
-          }}
-        >
-          {data.infoList &&
-            data.infoList.map((item, index) => (
-              <Stack direction='row' spacing={0.5}>
-                <Box sx={labelStyle}>{item}</Box>
-                <Box sx={valueStyle}>{data[item]}</Box>
-              </Stack>
-            ))}
-        </Box>
+        
       </EdgeLabelRenderer>
     </>
   );
@@ -222,26 +175,6 @@ export const SelfConnectEdge = ({
         markerEnd={markerEnd}
       />
       <EdgeLabelRenderer>
-        <div
-          style={{
-            position: 'absolute',
-            transform: `translate(-50%, -50%) translate(${realLabelX}px,${realLabelY}px)`,
-            background: '#ffcc00ee',
-            padding: '5px 8px',
-            borderRadius: 5,
-            fontSize: 12,
-            fontWeight: 700,
-          }}
-          className='nodrag nopan'
-        >
-          {data.infoList &&
-            data.infoList.map((item, index) => (
-              <Stack direction='row' spacing={0.5}>
-                <Box sx={labelStyle}>{item}</Box>
-                <Box sx={valueStyle}>{data[item]}</Box>
-              </Stack>
-            ))}
-        </div>
       </EdgeLabelRenderer>
     </>
   );

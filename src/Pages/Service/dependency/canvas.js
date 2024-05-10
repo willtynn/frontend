@@ -141,7 +141,7 @@ export function ThreeLayerCanvas(props) {
           callerPath: item.invoke_info.callerPath,
           callee: item.invoke_info.callee,
           calleePath: item.invoke_info.calleePath,
-          // infoList: ["caller", "callerPath", "callee", "calleePath"]
+          infoList: ["caller", "callerPath", "callee", "calleePath"]
         },
         type: edgeType,
       });
@@ -441,7 +441,7 @@ export function ThreeLayerCanvas(props) {
 
 
 export function EdgeCenterCanvas(props) {
-  const { nodes, links, handleNodeClick, services, target, parent } = props;
+  const { nodes, links, handleNodeClick, services, target, parent, onEdgeMouseEnter, onEdgeMouseLeave } = props;
   const dispatch = useDispatch();
   const intl = useIntl();
 
@@ -521,7 +521,7 @@ export function EdgeCenterCanvas(props) {
             callerPath: item.invoke_info.callerPath,
             callee: item.invoke_info.callee,
             calleePath: item.invoke_info.calleePath,
-            // infoList: ["caller", "callerPath", "callee", "calleePath"]
+            infoList: ["caller", "callerPath", "callee", "calleePath"]
           },
           type: edgeType,
         });
@@ -543,7 +543,7 @@ export function EdgeCenterCanvas(props) {
             callerPath: item.invoke_info.callerPath,
             callee: item.invoke_info.callee,
             calleePath: item.invoke_info.calleePath,
-            // infoList: ["caller", "callerPath", "callee", "calleePath"]
+            infoList: ["caller", "callerPath", "callee", "calleePath"]
           },
           type: edgeType,
         });
@@ -597,6 +597,9 @@ export function EdgeCenterCanvas(props) {
           // attributionPosition="bottom-left"
           nodesConnectable={false}
           elementsSelectable={false}
+          onEdgeMouseEnter={onEdgeMouseEnter}
+          onEdgeMouseLeave={onEdgeMouseLeave}
+          onEdgeClick={()=>{}}
         >
           <Controls />
           <Background />
