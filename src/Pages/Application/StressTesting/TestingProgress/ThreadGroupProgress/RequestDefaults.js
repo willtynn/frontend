@@ -387,7 +387,7 @@ export function RequestDefaults(props) {
                 >
                   <StyledTableHead
                     headRow={headRow}
-                    selectAll={true}
+                    selectAll={false}
                     checkAll={allCheck}
                     setCheckAll={handleAllCheck}
                   />

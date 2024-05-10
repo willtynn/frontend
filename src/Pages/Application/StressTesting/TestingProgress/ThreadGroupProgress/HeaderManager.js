@@ -146,7 +146,7 @@ export function HeaderManager(props) {
             >
               <StyledTableHead
                 headRow={headRow}
-                selectAll={true}
+                selectAll={false}
                 checkAll={allCheck}
                 setCheckAll={handleAllCheck}
               />

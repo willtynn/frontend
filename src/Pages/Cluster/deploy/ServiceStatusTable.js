@@ -762,7 +762,7 @@ export default function ServiceStatusTable(props) {
         >
           <StyledTableHead
             headRow={headRow}
-            selectAll={true}
+            selectAll={false}
             order={order}
             orderBy={orderBy}
             onRequestSort={handleRequestSort}
@@ -787,20 +787,20 @@ export default function ServiceStatusTable(props) {
                     }}
                     selected={false}
                   >
-                    <StyledTableBodyCell
+                    {/* <StyledTableBodyCell
                       align='center'
                       sx={{
                         p: '0px 16px !important',
                       }}
                     >
-                      {/* <KubeCheckbox
+                      <KubeCheckbox
                         sx={{
                           bgcolor: 'transparent !important',
                         }}
                         disableRipple
                         size='small'
-                      /> */}
-                    </StyledTableBodyCell>
+                      />
+                    </StyledTableBodyCell> */}
 
                     <StyledTableBodyCell
                       align={'left'}

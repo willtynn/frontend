@@ -194,7 +194,7 @@ export default function StressTesting() {
       '100px',
       '100px',
       true,
-      'center'
+      'left'
     ),
     createRow(
       'status',
@@ -604,7 +604,7 @@ export default function StressTesting() {
           >
             <StyledTableHead
               headRow={headRow}
-              selectAll={true}
+              selectAll={false}
               order={order}
               orderBy={orderBy}
               onRequestSort={handleRequestSort}
@@ -629,12 +629,12 @@ export default function StressTesting() {
                       }}
                       selected={false}
                     >
-                      <StyledTableBodyCell
+                      {/* <StyledTableBodyCell
                         align='center'
                         sx={{
                           p: '0px 16px !important',
                         }}
-                      ></StyledTableBodyCell>
+                      ></StyledTableBodyCell> */}
 
                       <StyledTableBodyCell
                         align={'center'}

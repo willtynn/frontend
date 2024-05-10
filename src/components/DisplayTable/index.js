@@ -349,7 +349,7 @@ export function StyledTableHead(props) {
               minWidth: "0px",
             }}
           >
-            {/* <KubeCheckbox
+            <KubeCheckbox
               sx={{
                 bgcolor: 'transparent !important',
               }}
@@ -357,10 +357,10 @@ export function StyledTableHead(props) {
               size="small"
               checked={checkAll}
               onChange={(e) => setCheckAll(e.target.checked)}
-            /> */}
+            />
           </StyledTableRowCell>
         ) : (
-          <></>
+          null
         )}
 
         {headRow&&headRow.map((item, index) => {

@@ -1,4 +1,4 @@
-import {useEffect, useState, useMemo, useRef} from 'react';
+import { useEffect, useState, useMemo, useRef } from 'react';
 import {
   StyledTableContainer,
   StyledTableBodyCell,
@@ -11,31 +11,42 @@ import {
   Typography,
   Tooltip,
   TableBody,
-  Stack, IconButton, TextField, Modal,
+  Stack,
+  IconButton,
+  TextField,
+  Modal,
 } from '@mui/material';
 import React from 'react';
 import ServiceQuery from '@/assets/ServiceQuery.svg';
 import { useDispatch, useSelector } from 'react-redux';
-import {getImageList, deleteImage, pullImage} from '../../actions/imageAction';
+import {
+  getImageList,
+  deleteImage,
+  pullImage,
+} from '../../actions/imageAction';
 import GeneralService from '@/assets/GeneralService.svg';
 import { KubeCheckbox } from '../../components/Checkbox';
-import DeleteIcon from "@mui/icons-material/Delete";
-import {EclipseTransparentButton, KubeCancelButton, KubeConfirmButton} from "../../components/Button";
-import VisibilityIcon from "@mui/icons-material/Visibility";
-import RefreshIcon from "@mui/icons-material/Refresh";
-import {ChipTextField, StyledAutocomplete} from "../../components/Input";
-import SearchIcon from "@mui/icons-material/Search";
+import DeleteIcon from '@mui/icons-material/Delete';
+import {
+  EclipseTransparentButton,
+  KubeCancelButton,
+  KubeConfirmButton,
+} from '../../components/Button';
+import VisibilityIcon from '@mui/icons-material/Visibility';
+import RefreshIcon from '@mui/icons-material/Refresh';
+import { ChipTextField, StyledAutocomplete } from '../../components/Input';
+import SearchIcon from '@mui/icons-material/Search';
 import { fontFamily } from '@/utils/commonUtils';
-import {StyledTableFooter} from "../../components/DisplayTable";
-import DeployProgress from "../Cluster/deploy/DeployProgress";
-import ProgressIndicator from "../Cluster/deploy/DeployProgress/ProgressIndicator";
+import { StyledTableFooter } from '../../components/DisplayTable';
+import DeployProgress from '../Cluster/deploy/DeployProgress';
+import ProgressIndicator from '../Cluster/deploy/DeployProgress/ProgressIndicator';
 import InfoFinished from '@/assets/InfoFinished.svg';
 import InfoWaiting from '@/assets/InfoWaiting.svg';
 import InfoNow from '@/assets/InfoNow.svg';
 import DockerFinished from '@/assets/DockerFinished.svg';
 import DockerWaiting from '@/assets/DockerWaiting.svg';
 import DockerNow from '@/assets/DockerNow.svg';
-import {KubeDeploymentCard} from "../../components/InfoCard";
+import { KubeDeploymentCard } from '../../components/InfoCard';
 import AceEditor from 'react-ace';
 import 'ace-builds/webpack-resolver';
 import 'ace-builds/src-noconflict/mode-json';
@@ -70,9 +81,19 @@ function createRow(
   show = true,
   colSpan = 1,
   rowSpan = 1,
-  align,
+  align
 ) {
-  return { id, label, isOrder, minWidth, maxWidth, show, colSpan, rowSpan, align };
+  return {
+    id,
+    label,
+    isOrder,
+    minWidth,
+    maxWidth,
+    show,
+    colSpan,
+    rowSpan,
+    align,
+  };
 }
 
 export default function ImagesList(props) {
@@ -93,7 +114,7 @@ export default function ImagesList(props) {
 
   const { imageList } = useSelector(state => {
     return {
-      imageList: state.Image.imageList
+      imageList: state.Image.imageList,
     };
   });
 
@@ -127,8 +148,28 @@ export default function ImagesList(props) {
   const headFirstRow = [
     createRow('name', '镜像名', false, '150px', '170px', true, 1, 1, 'left'),
     createRow('version', '版本', false, '100px', '100px', true, 1, 1, 'center'),
-    createRow('size', '大小（MB）', false, '120px', '130px', true, 1, 1, 'center'),
-    createRow('cluster', '所在节点', false, '120px', '130px', true, 1, 1, 'center'),
+    createRow(
+      'size',
+      '大小（MB）',
+      false,
+      '120px',
+      '130px',
+      true,
+      1,
+      1,
+      'center'
+    ),
+    createRow(
+      'cluster',
+      '所在节点',
+      false,
+      '120px',
+      '130px',
+      true,
+      1,
+      1,
+      'center'
+    ),
     createRow('delete', '操作', false, '120px', '130px', true, 1, 1, 'center'),
   ];
 
@@ -141,7 +182,7 @@ export default function ImagesList(props) {
     if (!imageList) {
       return;
     }
-    const items = rows
+    const items = rows;
     const tmpData = items.map((value, index) => {
       return {
         name: value.name,
@@ -157,7 +198,7 @@ export default function ImagesList(props) {
   const deleteClick = (name, cluster, version) => {
     dispatch(deleteImage(name, cluster, version));
     dispatch(getImageList(cluster));
-  }
+  };
   const isDuplicate = () => {
     return false;
   };
@@ -177,19 +218,19 @@ export default function ImagesList(props) {
 
   const handleAddClick = () => {
     setOpen(true);
-  }
+  };
 
   const handleClose = () => {
     setOpen(false);
-  }
+  };
 
   const handleConfirm = () => {
-    dispatch(pullImage(JSON.parse(jsonValue), clusterSelected))
-  }
+    dispatch(pullImage(JSON.parse(jsonValue), clusterSelected));
+  };
 
-  const handleInputChange = (value) => {
+  const handleInputChange = value => {
     setJsonValue(value);
-  }
+  };
 
   return (
     <>
@@ -204,7 +245,7 @@ export default function ImagesList(props) {
         }}
       >
         <Stack direction='row' spacing={1}>
-        <GeneralService />
+          <GeneralService />
           <Box>
             <Typography
               sx={{
@@ -264,7 +305,7 @@ export default function ImagesList(props) {
                     dispatch(getImageList(newValue));
                   }}
                   id='image_table_autocomplete'
-                  options={['ices04','icespve01', 'icespve02', 'icespve03']}
+                  options={['ices04', 'icespve01', 'icespve02', 'icespve03']}
                   sx={{
                     width: 300,
                     color: '#36435c',
@@ -298,7 +339,7 @@ export default function ImagesList(props) {
                       lineHeight: 1.67,
                       letterSpacing: 'normal',
                       color: '#36435c',
-                      height: "20px"
+                      height: '20px',
                     },
                   }}
                   // onFocus={handleSearchFocus}
@@ -316,11 +357,11 @@ export default function ImagesList(props) {
                     '& svg': {
                       color: '#3d3b4f',
                     },
-                    height: "32px"
+                    height: '32px',
                   }}
                   onClick={() => {
                     clearPage();
-                    if(clusterSelected !== '') {
+                    if (clusterSelected !== '') {
                       dispatch(getImageList(clusterSelected));
                     }
                   }}
@@ -353,95 +394,99 @@ export default function ImagesList(props) {
           >
             <StyledTableHead
               headRow={headFirstRow}
-              selectAll={true}
+              selectAll={false}
               checkAll={checkAll}
               setCheckAll={setCheckAll}
               sx={{
-                textTransform: 'none !important'
+                textTransform: 'none !important',
               }}
             />
 
             <TableBody>
-              {visibleRows.map((row) => (
-                    <TableRow
-                      key={row.Name}
-                      aria-checked={false}
-                      sx={{
-                        '&:last-child td, &:last-child th': {
-                          border: 0,
-                        },
-                        fontWeight: 600,
-                        maxWidth: '110px',
-                        position: 'sticky',
-                        left: 0,
-                        zIndex: 6,
-                      }}
-                      selected={false}
-                    >
-                      <StyledTableBodyCell
+              {visibleRows.map(row => (
+                <TableRow
+                  key={row.Name}
+                  aria-checked={false}
+                  sx={{
+                    '&:last-child td, &:last-child th': {
+                      border: 0,
+                    },
+                    fontWeight: 600,
+                    maxWidth: '110px',
+                    position: 'sticky',
+                    left: 0,
+                    zIndex: 6,
+                  }}
+                  selected={false}
+                >
+                  {/* <StyledTableBodyCell
                         align='center'
                         sx={{
                           p: '0px 16px !important',
                         }}
                       >
-                      </StyledTableBodyCell>
+                      </StyledTableBodyCell> */}
 
-                      {/* image name */}
-                      <StyledTableBodyCell
-                        align='left'
-                        sx={{ padding: '6px 16px !important' }}
+                  {/* image name */}
+                  <StyledTableBodyCell
+                    align='left'
+                    sx={{ padding: '6px 16px !important' }}
+                  >
+                    <Stack alignItems='center' direction='row' spacing={2}>
+                      {/* <Task /> */}
+                      <ServiceQuery />
+                      {/* <button >点击跳转</button> */}
+                      <Box
+                        sx={{
+                          height: '30px',
+                          lineHeight: '30px',
+                          fontWeight: 600,
+                          cursor: 'pointer',
+                          ':hover': {
+                            color: '#55bc8a',
+                          },
+                        }}
+                        onClick={() => {}}
                       >
-                        <Stack alignItems='center' direction='row' spacing={2}>
-                          {/* <Task /> */}
-                          <ServiceQuery />
-                          {/* <button >点击跳转</button> */}
-                          <Box
-                            sx={{
-                              height: '30px',
-                              lineHeight: '30px',
-                              fontWeight: 600,
-                              cursor: "pointer",
-                              ":hover": {
-                                color: "#55bc8a"
-                              }
-                            }}
-                            onClick={() => {}}
-                          >
-                            {row.imageName}
-                          </Box>
-                        </Stack>
-                      </StyledTableBodyCell>
+                        {row.imageName}
+                      </Box>
+                    </Stack>
+                  </StyledTableBodyCell>
 
-                      {/* 版本 */}
-                      <StyledTableBodyCell align='center'>
-                        {row.imageVersion === ''? 'None': row.imageVersion}
-                      </StyledTableBodyCell>
+                  {/* 版本 */}
+                  <StyledTableBodyCell align='center'>
+                    {row.imageVersion === '' ? 'None' : row.imageVersion}
+                  </StyledTableBodyCell>
 
-                      {/* 大小 */}
-                      <StyledTableBodyCell align='center'>
-                        {Math.floor(row.imageSize /100000)/10}
-                      </StyledTableBodyCell>
+                  {/* 大小 */}
+                  <StyledTableBodyCell align='center'>
+                    {Math.floor(row.imageSize / 100000) / 10}
+                  </StyledTableBodyCell>
 
-                      {/* 所在节点 */}
-                      <StyledTableBodyCell align='center'>
-                        {row.node}
-                      </StyledTableBodyCell>
+                  {/* 所在节点 */}
+                  <StyledTableBodyCell align='center'>
+                    {row.node}
+                  </StyledTableBodyCell>
 
-                      {/* 操作 */}
-                      <StyledTableBodyCell
-                        align='center'
-                      >
-                        <IconButton
-                          onClick={() => {deleteClick(row.imageName, row.node, row.imageVersion)}}
-                          aria-label="delete">
-                          <DeleteIcon
-                            size='small'
-                            sx={{color:'#79879c', ':hover': {color:'#36435c'}}}
-                          />
-                        </IconButton>
-                      </StyledTableBodyCell>
-                    </TableRow>
-                  ))}
+                  {/* 操作 */}
+                  <StyledTableBodyCell align='center'>
+                    <IconButton
+                      onClick={() => {
+                        deleteClick(row.imageName, row.node, row.imageVersion);
+                      }}
+                      aria-label='delete'
+                    >
+                      <DeleteIcon
+                        size='small'
+                        sx={{
+                          color: '#79879c',
+                          ':hover': { color: '#36435c' },
+                        }}
+                      />
+                    </IconButton>
+                  </StyledTableBodyCell>
+                </TableRow>
+              ))}
             </TableBody>
           </Table>
         </StyledTableContainer>
@@ -457,75 +502,72 @@ export default function ImagesList(props) {
           }}
         />
         <Modal open={open} onClose={handleClose}>
-         <Box
-          sx={{
-            position: 'absolute',
-            top: '50%',
-            left: '50%',
-            transform: 'translate(-50%, -50%)',
-            width: '960px',
-            boxShadow: 24,
-            height: 'calc(100% - 120px)',
-            fontFamily: fontFamily,
-          }}
-         >
-           <KubeDeploymentCard
-             title='镜像缓存配置'
-             handleClose={handleClose}
-           >
-             <Stack
-               direction='row'
-               spacing={0}
-               sx={{bgcolor: '#eff4f9', p: '0px 20px'}}
-             >
-               <ProgressIndicator
-                 title='镜像缓存方案'
-                 adornments={[<InfoWaiting/>, <InfoNow/>, <InfoFinished/>]}
-                 stage={1}
-                 // currentStage={currentStage}
-               />
-             </Stack>
-             {/*{currentPage(currentStage)}*/}
-             <AceEditor
-               mode="json"
-               theme="xcode"
-               onChange={handleInputChange}
-               value={jsonValue}
-               editorProps={{ $blockScrolling: true }}
-               placeholder="Enter JSON here..."
-               width="100%"
-               height="calc(100% - 200px)"
-               fontSize={17}
-             />
-             {/* 按钮组 */}
-             <Stack
-               sx={{
-                 mt: '80px',
-                 position: 'absolute',
-                 bottom: '12px',
-                 width: 'calc(100% - 64px)',
-                 bgcolor: '#f9fbfd',
-               }}
-               direction='row'
-               spacing={3}
-               justifyContent='flex-end'
-               alignItems='flex-end'
-             >
-               <KubeCancelButton
-                 sx={{height: '32px', p: '5px 23px'}}
-                 onClick={handleClose}
-               >
-                 取消
-               </KubeCancelButton>
-               <KubeConfirmButton
-                 sx={{height: '32px', p: '5px 23px'}}
-                 onClick={handleConfirm}
-               >
-                 创建
-               </KubeConfirmButton>
-             </Stack>
-           </KubeDeploymentCard>
-         </Box>
+          <Box
+            sx={{
+              position: 'absolute',
+              top: '50%',
+              left: '50%',
+              transform: 'translate(-50%, -50%)',
+              width: '960px',
+              boxShadow: 24,
+              height: 'calc(100% - 120px)',
+              fontFamily: fontFamily,
+            }}
+          >
+            <KubeDeploymentCard title='镜像缓存配置' handleClose={handleClose}>
+              <Stack
+                direction='row'
+                spacing={0}
+                sx={{ bgcolor: '#eff4f9', p: '0px 20px' }}
+              >
+                <ProgressIndicator
+                  title='镜像缓存方案'
+                  adornments={[<InfoWaiting />, <InfoNow />, <InfoFinished />]}
+                  stage={1}
+                  // currentStage={currentStage}
+                />
+              </Stack>
+              {/*{currentPage(currentStage)}*/}
+              <AceEditor
+                mode='json'
+                theme='xcode'
+                onChange={handleInputChange}
+                value={jsonValue}
+                editorProps={{ $blockScrolling: true }}
+                placeholder='Enter JSON here...'
+                width='100%'
+                height='calc(100% - 200px)'
+                fontSize={17}
+              />
+              {/* 按钮组 */}
+              <Stack
+                sx={{
+                  mt: '80px',
+                  position: 'absolute',
+                  bottom: '12px',
+                  width: 'calc(100% - 64px)',
+                  bgcolor: '#f9fbfd',
+                }}
+                direction='row'
+                spacing={3}
+                justifyContent='flex-end'
+                alignItems='flex-end'
+              >
+                <KubeCancelButton
+                  sx={{ height: '32px', p: '5px 23px' }}
+                  onClick={handleClose}
+                >
+                  取消
+                </KubeCancelButton>
+                <KubeConfirmButton
+                  sx={{ height: '32px', p: '5px 23px' }}
+                  onClick={handleConfirm}
+                >
+                  创建
+                </KubeConfirmButton>
+              </Stack>
+            </KubeDeploymentCard>
+          </Box>
         </Modal>
       </Box>
     </>

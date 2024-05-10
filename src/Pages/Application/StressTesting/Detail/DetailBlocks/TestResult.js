@@ -323,7 +323,7 @@ export function TestResult() {
         >
           <StyledTableHead
             headRow={headRow}
-            selectAll={true}
+            selectAll={false}
             order={order}
             orderBy={orderBy}
             onRequestSort={handleRequestSort}
@@ -348,7 +348,7 @@ export function TestResult() {
                     }}
                     selected={false}
                   >
-                    <StyledTableBodyCell
+                    {/* <StyledTableBodyCell
                       align='center'
                       sx={{
                         p: '0px 16px !important',
@@ -361,7 +361,7 @@ export function TestResult() {
                         disableRipple
                         size='small'
                       />
-                    </StyledTableBodyCell>
+                    </StyledTableBodyCell> */}
 
                     <StyledTableBodyCell
                       align={'left'}

@@ -190,7 +190,7 @@ export default function EvolutionPlan() {
       '100px',
       '100px',
       true,
-      'center'
+      'left'
     ),
     createRow(
       'createTime',
@@ -613,7 +613,7 @@ export default function EvolutionPlan() {
           >
             <StyledTableHead
               headRow={headRow}
-              selectAll={true}
+              selectAll={false}
               order={order}
               orderBy={orderBy}
               onRequestSort={handleRequestSort}
@@ -638,12 +638,12 @@ export default function EvolutionPlan() {
                       }}
                       selected={false}
                     >
-                      <StyledTableBodyCell
+                      {/* <StyledTableBodyCell
                         align='center'
                         sx={{
                           p: '0px 16px !important',
                         }}
-                      />
+                      /> */}
                       <StyledTableBodyCell
                         align={'center'}
                         sx={{

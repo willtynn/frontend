@@ -588,7 +588,7 @@ export default function RouteRuleOverviewTable(props) {
         >
           <StyledTableHead
             headRow={headRow}
-            selectAll={true}
+            selectAll={false}
             order={order}
             orderBy={orderBy}
             onRequestSort={handleRequestSort}
