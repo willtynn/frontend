@@ -9,6 +9,8 @@ const initState = {
   pageSize: 10,
   pageNum: 1,
   pods: [],
+  edgeData: {},
+  edgeList: [],
 }
 
 export default function ServiceReducer(state = initState, action) {
@@ -54,7 +56,16 @@ export default function ServiceReducer(state = initState, action) {
         ...state,
         pods: data
       }
-
+    case actions.UPDATE_EDGE_DATA:
+      return {
+        ...state,
+        edgeData: data
+      }
+    case actions.UPDATE_EDGE_LIST:
+      return {
+        ...state,
+        edgeList: data
+      }
     default:
       return state
   }

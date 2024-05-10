@@ -16,6 +16,10 @@ export const CHANGE_PAGE_SIZE = 'CHANGE_SERVICE_PAGE_SIZE';
 
 export const CHANGE_PAGE_NUM = 'CHANGE_SERVICE_PAGE_NUM';
 
+export const UPDATE_EDGE_DATA = 'UPDATE_EDGE_DATA';
+
+export const UPDATE_EDGE_LIST = 'UPDATE_EDGE_LIST';
+
 // const baseURLLink = 'http://192.168.1.104:31931';
 export const UPDATE_SEARCH_POD = 'UPDATE_SEARCH_POD';
 
@@ -310,7 +314,6 @@ export function searchPodsByServiceName(cluster, name) {
   });
   return async dispatch => {
     try {
-      
       const res = await tmpInstance.get(
         url,
         {
@@ -318,7 +321,7 @@ export function searchPodsByServiceName(cluster, name) {
             cluster: cluster,
             service: name,
           },
-        },
+        }
         // {
         //   headers: {
         //     // 'Content-Type': 'application/json',

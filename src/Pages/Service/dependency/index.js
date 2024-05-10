@@ -368,6 +368,14 @@ function ServiceDependency() {
   /**
    * 用于service的依赖图
    */
+
+  const { edgeData, edgeList } = useSelector(state => {
+    return {
+      edgeData: state.Service.edgeData,
+      edgeList: state.Service.edgeList,
+    };
+  });
+
   const [nodes, setNodes] = useState([]);
   const [links, setLinks] = useState([]);
   /**
@@ -748,6 +756,7 @@ function ServiceDependency() {
     edgeTooltip.current.style.display = 'block';
     edgeTooltip.current.style.top = event.clientY + 20 + 'px';
     edgeTooltip.current.style.left = event.clientX + 'px';
+    console.log(edge)
   };
 
   const onEdgeMouseLeave = (event, edge) => {
@@ -1087,31 +1096,14 @@ function ServiceDependency() {
         }}
       >
         <Stack direction='column' spacing={1}>
-          haha
-          {/* <Stack direction='row' spacing={1}>
-            <Box sx={{ width: '80px' }}>
-              {intl.messages['serviceDependency.sourceInterfaceId']}
-            </Box>
-            <Box>{callerId}</Box>
-          </Stack>
-          <Stack direction='row' spacing={1}>
-            <Box sx={{ width: '80px' }}>
-              {intl.messages['serviceDependency.sourceInterfacePath']}
-            </Box>
-            <Box>{callerPath}</Box>
-          </Stack>
-          <Stack direction='row' spacing={1}>
-            <Box sx={{ width: '80px' }}>
-              {intl.messages['serviceDependency.targetInterfaceId']}
-            </Box>
-            <Box>{calleeId}</Box>
-          </Stack>
-          <Stack direction='row' spacing={1}>
-            <Box sx={{ width: '80px' }}>
-              {intl.messages['serviceDependency.targetInterfacePath']}
-            </Box>
-            <Box>{calleePath}</Box>
-          </Stack> */}
+          {edgeList.map((item, index) => {
+            <Stack direction='row' spacing={1}>
+              <Box sx={{ width: '80px' }}>
+                {`${item}:`}
+              </Box>
+              <Box>{edgeData[item]}</Box>
+            </Stack>;
+          })}
         </Stack>
       </Box>
     </Box>

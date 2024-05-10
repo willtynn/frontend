@@ -10,7 +10,7 @@ import { fontFamily } from '@/utils/commonUtils';
 import './styles.css';
 import { setSnackbarMessageAndOpen } from '../../../actions/snackbarAction';
 import { SEVERITIES } from '../../../components/CommonSnackbar';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { decodeInterfaceForService, decodeInterfaceForInterface } from '../../../utils/commonUtils';
 import { useIntl } from 'react-intl';
 import ReactFlow, { Controls, Background, MarkerType } from 'reactflow';
