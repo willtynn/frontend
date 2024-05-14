@@ -108,6 +108,8 @@ export default function ServiceOverview(props) {
   const [checkAll, setCheckAll] = useState(false);
   const [selectedItems, setSelectedItems] = useState([]);
 
+  const selectFlag = selectedItems && selectedItems.length > 0;
+
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
@@ -388,6 +390,20 @@ export default function ServiceOverview(props) {
     navigate(`/detail/service/${encodeId(id)}`);
   };
 
+  const handleRowCheck = (event, item) => {
+    const checked = event.target.checked;
+    if (checked) {
+      setSelectedItems(previousSelectedItems => [
+        ...previousSelectedItems,
+        item,
+      ]);
+    } else {
+      setSelectedItems(previousSelectedItems => {
+        return previousSelectedItems.filter((value, index) => value !== item);
+      });
+    }
+  };
+
   // service/query左侧表格新
   return (
     // <BrowserRouter>
@@ -516,97 +532,118 @@ export default function ServiceOverview(props) {
         sx={{
           height: '32px',
           padding: '10px 30px 10px 30px',
-          bgcolor: '#f9fbfd',
+          bgcolor: selectFlag ? '#242e42' : '#f9fbfd',
         }}
       >
-        <Stack direction='row' spacing={2}>
-          <StyledAutocomplete
-            height='32px'
-            padding='6px 5px 5px 12px'
-            value={project}
-            onChange={(event, newValue) => {
-              setProject(newValue);
-            }}
-            id='service_table_autocomplete'
-            options={projectList}
-            sx={{
-              width: 300,
-              color: '#36435c',
-              fontFamily: fontFamily,
-              fontSize: '12px',
-              fontWeight: 600,
-              fontStyle: 'normal',
-              fontStretch: 'normal',
-              lineHeight: 1.67,
-              letterSpacing: 'normal',
-            }}
-            renderInput={params => (
-              <TextField
-                {...params}
-                placeholder={intl.messages['serviceOverview.allItems']}
-              />
-            )}
-          />
-          {/* 搜索栏 */}
-          <ChipTextField
-            value={searchValue}
-            setValue={setSearchValue}
-            contentList={searchList}
-            setContentList={setSearchList}
-            isDuplicate={isDuplicate}
-            startAdornment={<SearchIcon />}
-            sx={{
-              width: 'calc(100% - 300px)',
-              '& .MuiOutlinedInput-input.MuiInputBase-input': {
-                // padding: '6px 12px !important',
+        {selectFlag ? (
+          <Stack direction='row' justifyContent='space-between'>
+            <EclipseTransparentButton
+              sx={{
+                bgcolor: '#242e42 !important',
+                '&:hover': {
+                  bgcolor: '#36435c !important',
+                },
+                fontSize: '12px',
+                fontWeight: 600,
+                color: '#ffffff',
+                width: '96px',
+                height: '32px',
+              }}
+              onClick={handleEyeClick}
+            >
+              {intl.messages['serviceOverview.cancelSelect']}
+            </EclipseTransparentButton>
+          </Stack>
+        ) : (
+          <Stack direction='row' spacing={2}>
+            <StyledAutocomplete
+              height='32px'
+              padding='6px 5px 5px 12px'
+              value={project}
+              onChange={(event, newValue) => {
+                setProject(newValue);
+              }}
+              id='service_table_autocomplete'
+              options={projectList}
+              sx={{
+                width: 300,
+                color: '#36435c',
+                fontFamily: fontFamily,
                 fontSize: '12px',
                 fontWeight: 600,
                 fontStyle: 'normal',
                 fontStretch: 'normal',
                 lineHeight: 1.67,
                 letterSpacing: 'normal',
-                color: '#36435c',
-                height: '20px',
-              },
-            }}
-            onFocus={handleSearchFocus}
-            onBlur={handleSearchBlur}
-            enterBlur={true}
-            id='service-search-input'
-          />
-          {/* 刷新按钮 */}
-          <EclipseTransparentButton
-            sx={{
-              bgcolor: '#f9fbfd !important',
-              '&:hover': {
-                bgcolor: '#FFFFFF !important',
-              },
-              '& svg': {
-                color: '#3d3b4f',
-              },
-              height: '32px',
-            }}
-          >
-            <RefreshIcon />
-          </EclipseTransparentButton>
-          {/* 眼睛按钮 */}
-          <EclipseTransparentButton
-            sx={{
-              bgcolor: '#f9fbfd !important',
-              '&:hover': {
-                bgcolor: '#FFFFFF !important',
-              },
-              '& svg': {
-                color: '#3d3b4f',
-              },
-              height: '32px',
-            }}
-            onClick={handleEyeClick}
-          >
-            <VisibilityIcon />
-          </EclipseTransparentButton>
-          {embeddingButton}
-        </Stack>
+              }}
+              renderInput={params => (
+                <TextField
+                  {...params}
+                  placeholder={intl.messages['serviceOverview.allItems']}
+                />
+              )}
+            />
+            {/* 搜索栏 */}
+            <ChipTextField
+              value={searchValue}
+              setValue={setSearchValue}
+              contentList={searchList}
+              setContentList={setSearchList}
+              isDuplicate={isDuplicate}
+              startAdornment={<SearchIcon />}
+              sx={{
+                width: 'calc(100% - 300px)',
+                '& .MuiOutlinedInput-input.MuiInputBase-input': {
+                  // padding: '6px 12px !important',
+                  fontSize: '12px',
+                  fontWeight: 600,
+                  fontStyle: 'normal',
+                  fontStretch: 'normal',
+                  lineHeight: 1.67,
+                  letterSpacing: 'normal',
+                  color: '#36435c',
+                  height: '20px',
+                },
+              }}
+              onFocus={handleSearchFocus}
+              onBlur={handleSearchBlur}
+              enterBlur={true}
+              id='service-search-input'
+            />
+            {/* 刷新按钮 */}
+            <EclipseTransparentButton
+              sx={{
+                bgcolor: '#f9fbfd !important',
+                '&:hover': {
+                  bgcolor: '#FFFFFF !important',
+                },
+                '& svg': {
+                  color: '#3d3b4f',
+                },
+                height: '32px',
+              }}
+            >
+              <RefreshIcon />
+            </EclipseTransparentButton>
+            {/* 眼睛按钮 */}
+            <EclipseTransparentButton
+              sx={{
+                bgcolor: '#f9fbfd !important',
+                '&:hover': {
+                  bgcolor: '#FFFFFF !important',
+                },
+                '& svg': {
+                  color: '#3d3b4f',
+                },
+                height: '32px',
+              }}
+              onClick={handleEyeClick}
+            >
+              <VisibilityIcon />
+            </EclipseTransparentButton>
+            {embeddingButton}
+          </Stack>
+        )}
       </Box>
       <StyledTableContainer sx={{ bgcolor: '#FFF' }}>
         <Table
@@ -659,6 +696,7 @@ export default function ServiceOverview(props) {
                         disableRipple
                         size='small'
                         checked={selectedItems.includes(row.id)}
+                        onChange={event => handleRowCheck(event, row.id)}
                       />
                     </StyledTableBodyCell>
 

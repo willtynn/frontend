@@ -63,7 +63,7 @@ export default function GeneralInfo(props) {
 
   const items = [
     [<EditService />, intl.messages['serviceOverview.editService'], () => {}],
-    [<Delete16 />, intl.messages['common.delete'], () => {}],
+    [<Delete16 />, intl.messages['common.delete'], () => { console.log("已删除") }],
   ];
 
   useEffect(() => {

@@ -179,6 +179,7 @@ export const messages = {
     resourceMonitor: "Resource Monitor",
     editService: "Edit Service",
     editInfo: "Edit Information",
+    cancelSelect: "Deselect",
   },
   serviceDependency: {
     serviceDependencyNotFound:

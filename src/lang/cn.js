@@ -180,7 +180,7 @@ export const messages = {
     resourceMonitor: "资源监控",
     editService: "编辑服务",
     editInfo: "编辑信息",
-
+    cancelSelect: "取消选择",
   },
   serviceDependency: {
     serviceDependencyNotFound: '所查询服务没有相关调用关系...',
