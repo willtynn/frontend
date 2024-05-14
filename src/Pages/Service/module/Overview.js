@@ -1,7 +1,7 @@
 /**
  * src\Pages\Service\module\Overview.js
  */
-import { useEffect, useState, useMemo } from 'react';
+import { useEffect, useState, useMemo, forwardRef, Fragment } from 'react';
 import {
   StyledTableContainer,
   StyledTableBodyCell,
@@ -18,6 +18,7 @@ import {
   Popper,
   Stack,
   TextField,
+  Button,
 } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 import { transformVersion } from '@/utils/commonUtils';
@@ -40,6 +41,17 @@ import Question from '@/assets/Question.svg';
 import { NormalBoldFont, SmallLightFont } from '@/components/Fonts';
 import { encodeId } from '../../../utils/commonUtils';
 import { useIntl } from 'react-intl';
+import Dialog from '@mui/material/Dialog';
+import DialogActions from '@mui/material/DialogActions';
+import DialogContent from '@mui/material/DialogContent';
+import DialogContentText from '@mui/material/DialogContentText';
+import DialogTitle from '@mui/material/DialogTitle';
+
+import Slide from '@mui/material/Slide';
+
+const Transition = forwardRef(function Transition(props, ref) {
+  return <Slide direction='up' ref={ref} {...props} />;
+});
 
 function createRow(
   id,
@@ -109,6 +121,8 @@ export default function ServiceOverview(props) {
   const [selectedItems, setSelectedItems] = useState([]);
 
   const selectFlag = selectedItems && selectedItems.length > 0;
+
+  const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
 
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -332,6 +346,12 @@ export default function ServiceOverview(props) {
     );
   }, [visibleRows]);
 
+  useEffect(() => {
+    if (!selectedItems || selectedItems.length === 0) {
+      setCheckAll(false);
+    }
+  }, [selectedItems]);
+
   const isDuplicate = () => {
     return false;
   };
@@ -403,6 +423,26 @@ export default function ServiceOverview(props) {
       });
     }
   };
+
+  const handleBatchDelete = () => {
+    setDeleteDialogOpen(true);
+  };
+
+  const handleDeselect = () => {
+    setSelectedItems([]);
+  };
+
+  const handleDeleteDialogOpen = () => {
+    setDeleteDialogOpen(true);
+  };
+
+  const handleDeleteDialogClose = () => {
+    setDeleteDialogOpen(false);
+  };
+
+  const handleDeleteService = () => {
+    
+  }
 
   // service/query左侧表格新
   return (
@@ -539,6 +579,22 @@ export default function ServiceOverview(props) {
           <Stack direction='row' justifyContent='space-between'>
             <EclipseTransparentButton
               sx={{
+                // bgcolor: '#242e42 !important',
+                '&:hover': {
+                  bgcolor: '#ffffff !important',
+                },
+                fontSize: '12px',
+                fontWeight: 600,
+                color: '#36435c',
+                width: '96px',
+                height: '32px',
+              }}
+              onClick={handleBatchDelete}
+            >
+              {intl.messages['common.delete']}
+            </EclipseTransparentButton>
+            <EclipseTransparentButton
+              sx={{
                 bgcolor: '#242e42 !important',
                 '&:hover': {
                   bgcolor: '#36435c !important',
@@ -549,7 +605,7 @@ export default function ServiceOverview(props) {
                 width: '96px',
                 height: '32px',
               }}
-              onClick={handleEyeClick}
+              onClick={handleDeselect}
             >
               {intl.messages['serviceOverview.cancelSelect']}
             </EclipseTransparentButton>
@@ -818,6 +874,26 @@ export default function ServiceOverview(props) {
           pb: '12px',
         }}
       />
+      <Fragment>
+        <Dialog
+          open={deleteDialogOpen}
+          TransitionComponent={Transition}
+          keepMounted
+          onClose={handleDeleteDialogClose}
+          aria-describedby='alert-delete-service-description'
+        >
+          <DialogTitle>{intl.messages['serviceOverview.deleteServicesTitle']}</DialogTitle>
+          <DialogContent>
+            <DialogContentText id='alert-delete-service-description'>
+            {intl.messages['serviceOverview.deleteServicesDescription']}
+            </DialogContentText>
+          </DialogContent>
+          <DialogActions>
+            <Button onClick={handleDeleteDialogClose}>{intl.messages['common.cancel']}</Button>
+            <Button onClick={handleDeleteService}>{intl.messages['common.confirm']}</Button>
+          </DialogActions>
+        </Dialog>
+      </Fragment>
     </Box>
   );
 }

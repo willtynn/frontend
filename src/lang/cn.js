@@ -181,6 +181,8 @@ export const messages = {
     editService: "编辑服务",
     editInfo: "编辑信息",
     cancelSelect: "取消选择",
+    deleteServicesTitle: "删除所选服务?",
+    deleteServicesDescription: "删除内容不可恢复。",
   },
   serviceDependency: {
     serviceDependencyNotFound: '所查询服务没有相关调用关系...',
