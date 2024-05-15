@@ -183,6 +183,8 @@ export const messages = {
     cancelSelect: "取消选择",
     deleteServicesTitle: "删除所选服务?",
     deleteServicesDescription: "删除内容不可恢复。",
+    batchDeleteSuccess: "成功删除所选服务",
+    batchDeleteFail: "所选服务删除失败，请重试"
   },
   serviceDependency: {
     serviceDependencyNotFound: '所查询服务没有相关调用关系...',

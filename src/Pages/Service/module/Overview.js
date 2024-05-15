@@ -34,7 +34,11 @@ import {
   CHANGE_PAGE_NUM,
   CHANGE_PAGE_SIZE,
 } from '../../../actions/serviceAction';
-import { UPDATE_SEARCH_SERVICE } from '../../../actions/serviceAction';
+import {
+  UPDATE_SEARCH_SERVICE,
+  batchDeleteServices,
+  searchServiceById,
+} from '../../../actions/serviceAction';
 import { EclipseTransparentButton } from '../../../components/Button';
 import { KubeCheckbox } from '../../../components/Checkbox';
 import Question from '@/assets/Question.svg';
@@ -441,8 +445,13 @@ export default function ServiceOverview(props) {
   };
 
   const handleDeleteService = () => {
-    
-  }
+    dispatch(
+      batchDeleteServices(selectedItems, () => {
+        dispatch(searchServiceById(''));
+        setDeleteDialogOpen(false);
+      })
+    );
+  };
 
   // service/query左侧表格新
   return (
@@ -882,15 +891,21 @@ export default function ServiceOverview(props) {
           onClose={handleDeleteDialogClose}
           aria-describedby='alert-delete-service-description'
         >
-          <DialogTitle>{intl.messages['serviceOverview.deleteServicesTitle']}</DialogTitle>
+          <DialogTitle>
+            {intl.messages['serviceOverview.deleteServicesTitle']}
+          </DialogTitle>
           <DialogContent>
             <DialogContentText id='alert-delete-service-description'>
-            {intl.messages['serviceOverview.deleteServicesDescription']}
+              {intl.messages['serviceOverview.deleteServicesDescription']}
             </DialogContentText>
           </DialogContent>
           <DialogActions>
-            <Button onClick={handleDeleteDialogClose}>{intl.messages['common.cancel']}</Button>
-            <Button onClick={handleDeleteService}>{intl.messages['common.confirm']}</Button>
+            <Button onClick={handleDeleteDialogClose}>
+              {intl.messages['common.cancel']}
+            </Button>
+            <Button onClick={handleDeleteService}>
+              {intl.messages['common.confirm']}
+            </Button>
           </DialogActions>
         </Dialog>
       </Fragment>
