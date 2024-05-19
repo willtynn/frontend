@@ -115,6 +115,8 @@ export const messages = {
     schemeDetails: "Scheme Details",
     cpu: "CPU",
     portsDetails: "Ports Details",
+    deleteServiceError: "Failed to delete a service",
+    deleteServiceSuccess: "Deleted successfully"
   },
   lang: {
     language: 'Language',
@@ -207,6 +209,8 @@ export const messages = {
     optionalService: "Optional Service",
     noOptionalInterface: "No Optional Interface",
     optionalInterface: "Optional Interface",
+    deleteServiceError: "Failed to delete a service dependency",
+    deleteServiceSuccess: "Deleted successfully"
   },
   cluster: {
     clustersSearchError:

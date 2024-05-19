@@ -115,6 +115,8 @@ export const messages = {
     schemeDetails: "方案详情",
     cpu: "CPU",
     portsDetails: "端口详情",
+    deleteServiceError: "删除服务失败",
+    deleteServiceSuccess: "删除服务成功"
   },
   lang: {
     language: '语言',
@@ -206,6 +208,8 @@ export const messages = {
     optionalService: "可选服务",
     noOptionalInterface: "无可选接口",
     optionalInterface: "可选接口",
+    deleteServiceError: "删除服务依赖失败",
+    deleteServiceSuccess: "删除服务依赖成功",
   },
   cluster: {
     clustersSearchError: '集群信息获取失败，请刷新页面重试...',
