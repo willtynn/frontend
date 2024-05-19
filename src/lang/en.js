@@ -181,6 +181,9 @@ export const messages = {
     resourceMonitor: "Resource Monitor",
     editService: "Edit Service",
     editInfo: "Edit Information",
+    cancelSelect: "Deselect",
+    deleteServicesTitle: "Delete the selected services?",
+    deleteServicesDescription: "The deletion cannot be restored.",
   },
   serviceDependency: {
     serviceDependencyNotFound:

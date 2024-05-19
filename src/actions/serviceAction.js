@@ -310,6 +310,53 @@ export function searchDependenciesByInterfaceId(id) {
   };
 }
 
+export function batchDeleteServices(serviceIds, cb=()=>{}) {
+  const url = '/service/advancedDelete';
+  return async dispatch => {
+    try {
+      const res = await axios_instance.post(
+        url,
+        {
+          serviceIds: serviceIds,
+          fuzzy: true
+        },
+        {
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        }
+      );
+
+      if (res.data.code === 200 || res.data.code === 0) {
+        dispatch(
+          setSnackbarMessageAndOpen(
+            'serviceOverview.batchDeleteSuccess',
+            {},
+            SEVERITIES.warning
+          )
+        );
+        cb();
+      } else {
+        dispatch(
+          setSnackbarMessageAndOpen(
+            'serviceOverview.batchDeleteFail',
+            {},
+            SEVERITIES.warning
+          )
+        );
+      }
+    } catch {
+      dispatch(
+        setSnackbarMessageAndOpen(
+          'serviceOverview.batchDeleteFail',
+          {},
+          SEVERITIES.warning
+        )
+      );
+    }
+  };
+}
+
 export function searchPodsByServiceName(cluster, name) {
   const url = '/instance/status/service';
   const tmpInstance = axios.create({

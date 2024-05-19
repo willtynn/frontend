@@ -1,7 +1,7 @@
 /**
  * src\Pages\Service\module\Overview.js
  */
-import { useEffect, useState, useMemo } from 'react';
+import { useEffect, useState, useMemo, forwardRef, Fragment } from 'react';
 import {
   StyledTableContainer,
   StyledTableBodyCell,
@@ -18,6 +18,7 @@ import {
   Popper,
   Stack,
   TextField,
+  Button,
 } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 import { transformVersion } from '@/utils/commonUtils';
@@ -33,13 +34,28 @@ import {
   CHANGE_PAGE_NUM,
   CHANGE_PAGE_SIZE,
 } from '../../../actions/serviceAction';
-import { UPDATE_SEARCH_SERVICE } from '../../../actions/serviceAction';
+import {
+  UPDATE_SEARCH_SERVICE,
+  batchDeleteServices,
+  searchServiceById,
+} from '../../../actions/serviceAction';
 import { EclipseTransparentButton } from '../../../components/Button';
 import { KubeCheckbox } from '../../../components/Checkbox';
 import Question from '@/assets/Question.svg';
 import { NormalBoldFont, SmallLightFont } from '@/components/Fonts';
 import { encodeId } from '../../../utils/commonUtils';
 import { useIntl } from 'react-intl';
+import Dialog from '@mui/material/Dialog';
+import DialogActions from '@mui/material/DialogActions';
+import DialogContent from '@mui/material/DialogContent';
+import DialogContentText from '@mui/material/DialogContentText';
+import DialogTitle from '@mui/material/DialogTitle';
+
+import Slide from '@mui/material/Slide';
+
+const Transition = forwardRef(function Transition(props, ref) {
+  return <Slide direction='up' ref={ref} {...props} />;
+});
 
 function createRow(
   id,
@@ -107,6 +123,10 @@ export default function ServiceOverview(props) {
 
   const [checkAll, setCheckAll] = useState(false);
   const [selectedItems, setSelectedItems] = useState([]);
+
+  const selectFlag = selectedItems && selectedItems.length > 0;
+
+  const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
 
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -330,6 +350,12 @@ export default function ServiceOverview(props) {
     );
   }, [visibleRows]);
 
+  useEffect(() => {
+    if (!selectedItems || selectedItems.length === 0) {
+      setCheckAll(false);
+    }
+  }, [selectedItems]);
+
   const isDuplicate = () => {
     return false;
   };
@@ -386,6 +412,45 @@ export default function ServiceOverview(props) {
   // 点击服务id跳转页面
   const handleClickById = id => {
     navigate(`/detail/service/${encodeId(id)}`);
+  };
+
+  const handleRowCheck = (event, item) => {
+    const checked = event.target.checked;
+    if (checked) {
+      setSelectedItems(previousSelectedItems => [
+        ...previousSelectedItems,
+        item,
+      ]);
+    } else {
+      setSelectedItems(previousSelectedItems => {
+        return previousSelectedItems.filter((value, index) => value !== item);
+      });
+    }
+  };
+
+  const handleBatchDelete = () => {
+    setDeleteDialogOpen(true);
+  };
+
+  const handleDeselect = () => {
+    setSelectedItems([]);
+  };
+
+  const handleDeleteDialogOpen = () => {
+    setDeleteDialogOpen(true);
+  };
+
+  const handleDeleteDialogClose = () => {
+    setDeleteDialogOpen(false);
+  };
+
+  const handleDeleteService = () => {
+    dispatch(
+      batchDeleteServices(selectedItems, () => {
+        dispatch(searchServiceById(''));
+        setDeleteDialogOpen(false);
+      })
+    );
   };
 
   // service/query左侧表格新
@@ -516,97 +581,134 @@ export default function ServiceOverview(props) {
         sx={{
           height: '32px',
           padding: '10px 30px 10px 30px',
-          bgcolor: '#f9fbfd',
+          bgcolor: selectFlag ? '#242e42' : '#f9fbfd',
         }}
       >
-        <Stack direction='row' spacing={2}>
-          <StyledAutocomplete
-            height='32px'
-            padding='6px 5px 5px 12px'
-            value={project}
-            onChange={(event, newValue) => {
-              setProject(newValue);
-            }}
-            id='service_table_autocomplete'
-            options={projectList}
-            sx={{
-              width: 300,
-              color: '#36435c',
-              fontFamily: fontFamily,
-              fontSize: '12px',
-              fontWeight: 600,
-              fontStyle: 'normal',
-              fontStretch: 'normal',
-              lineHeight: 1.67,
-              letterSpacing: 'normal',
-            }}
-            renderInput={params => (
-              <TextField
-                {...params}
-                placeholder={intl.messages['serviceOverview.allItems']}
-              />
-            )}
-          />
-          {/* 搜索栏 */}
-          <ChipTextField
-            value={searchValue}
-            setValue={setSearchValue}
-            contentList={searchList}
-            setContentList={setSearchList}
-            isDuplicate={isDuplicate}
-            startAdornment={<SearchIcon />}
-            sx={{
-              width: 'calc(100% - 300px)',
-              '& .MuiOutlinedInput-input.MuiInputBase-input': {
-                // padding: '6px 12px !important',
+        {selectFlag ? (
+          <Stack direction='row' justifyContent='space-between'>
+            <EclipseTransparentButton
+              sx={{
+                // bgcolor: '#242e42 !important',
+                '&:hover': {
+                  bgcolor: '#ffffff !important',
+                },
+                fontSize: '12px',
+                fontWeight: 600,
+                color: '#36435c',
+                width: '96px',
+                height: '32px',
+              }}
+              onClick={handleBatchDelete}
+            >
+              {intl.messages['common.delete']}
+            </EclipseTransparentButton>
+            <EclipseTransparentButton
+              sx={{
+                bgcolor: '#242e42 !important',
+                '&:hover': {
+                  bgcolor: '#36435c !important',
+                },
+                fontSize: '12px',
+                fontWeight: 600,
+                color: '#ffffff',
+                width: '96px',
+                height: '32px',
+              }}
+              onClick={handleDeselect}
+            >
+              {intl.messages['serviceOverview.cancelSelect']}
+            </EclipseTransparentButton>
+          </Stack>
+        ) : (
+          <Stack direction='row' spacing={2}>
+            <StyledAutocomplete
+              height='32px'
+              padding='6px 5px 5px 12px'
+              value={project}
+              onChange={(event, newValue) => {
+                setProject(newValue);
+              }}
+              id='service_table_autocomplete'
+              options={projectList}
+              sx={{
+                width: 300,
+                color: '#36435c',
+                fontFamily: fontFamily,
                 fontSize: '12px',
                 fontWeight: 600,
                 fontStyle: 'normal',
                 fontStretch: 'normal',
                 lineHeight: 1.67,
                 letterSpacing: 'normal',
-                color: '#36435c',
-                height: '20px',
-              },
-            }}
-            onFocus={handleSearchFocus}
-            onBlur={handleSearchBlur}
-            enterBlur={true}
-            id='service-search-input'
-          />
-          {/* 刷新按钮 */}
-          <EclipseTransparentButton
-            sx={{
-              bgcolor: '#f9fbfd !important',
-              '&:hover': {
-                bgcolor: '#FFFFFF !important',
-              },
-              '& svg': {
-                color: '#3d3b4f',
-              },
-              height: '32px',
-            }}
-          >
-            <RefreshIcon />
-          </EclipseTransparentButton>
-          {/* 眼睛按钮 */}
-          <EclipseTransparentButton
-            sx={{
-              bgcolor: '#f9fbfd !important',
-              '&:hover': {
-                bgcolor: '#FFFFFF !important',
-              },
-              '& svg': {
-                color: '#3d3b4f',
-              },
-              height: '32px',
-            }}
-            onClick={handleEyeClick}
-          >
-            <VisibilityIcon />
-          </EclipseTransparentButton>
-          {embeddingButton}
-        </Stack>
+              }}
+              renderInput={params => (
+                <TextField
+                  {...params}
+                  placeholder={intl.messages['serviceOverview.allItems']}
+                />
+              )}
+            />
+            {/* 搜索栏 */}
+            <ChipTextField
+              value={searchValue}
+              setValue={setSearchValue}
+              contentList={searchList}
+              setContentList={setSearchList}
+              isDuplicate={isDuplicate}
+              startAdornment={<SearchIcon />}
+              sx={{
+                width: 'calc(100% - 300px)',
+                '& .MuiOutlinedInput-input.MuiInputBase-input': {
+                  // padding: '6px 12px !important',
+                  fontSize: '12px',
+                  fontWeight: 600,
+                  fontStyle: 'normal',
+                  fontStretch: 'normal',
+                  lineHeight: 1.67,
+                  letterSpacing: 'normal',
+                  color: '#36435c',
+                  height: '20px',
+                },
+              }}
+              onFocus={handleSearchFocus}
+              onBlur={handleSearchBlur}
+              enterBlur={true}
+              id='service-search-input'
+            />
+            {/* 刷新按钮 */}
+            <EclipseTransparentButton
+              sx={{
+                bgcolor: '#f9fbfd !important',
+                '&:hover': {
+                  bgcolor: '#FFFFFF !important',
+                },
+                '& svg': {
+                  color: '#3d3b4f',
+                },
+                height: '32px',
+              }}
+            >
+              <RefreshIcon />
+            </EclipseTransparentButton>
+            {/* 眼睛按钮 */}
+            <EclipseTransparentButton
+              sx={{
+                bgcolor: '#f9fbfd !important',
+                '&:hover': {
+                  bgcolor: '#FFFFFF !important',
+                },
+                '& svg': {
+                  color: '#3d3b4f',
+                },
+                height: '32px',
+              }}
+              onClick={handleEyeClick}
+            >
+              <VisibilityIcon />
+            </EclipseTransparentButton>
+            {embeddingButton}
+          </Stack>
+        )}
       </Box>
       <StyledTableContainer sx={{ bgcolor: '#FFF' }}>
         <Table
@@ -659,6 +761,7 @@ export default function ServiceOverview(props) {
                         disableRipple
                         size='small'
                         checked={selectedItems.includes(row.id)}
+                        onChange={event => handleRowCheck(event, row.id)}
                       />
                     </StyledTableBodyCell>
 
@@ -780,6 +883,32 @@ export default function ServiceOverview(props) {
           pb: '12px',
         }}
       />
+      <Fragment>
+        <Dialog
+          open={deleteDialogOpen}
+          TransitionComponent={Transition}
+          keepMounted
+          onClose={handleDeleteDialogClose}
+          aria-describedby='alert-delete-service-description'
+        >
+          <DialogTitle>
+            {intl.messages['serviceOverview.deleteServicesTitle']}
+          </DialogTitle>
+          <DialogContent>
+            <DialogContentText id='alert-delete-service-description'>
+              {intl.messages['serviceOverview.deleteServicesDescription']}
+            </DialogContentText>
+          </DialogContent>
+          <DialogActions>
+            <Button onClick={handleDeleteDialogClose}>
+              {intl.messages['common.cancel']}
+            </Button>
+            <Button onClick={handleDeleteService}>
+              {intl.messages['common.confirm']}
+            </Button>
+          </DialogActions>
+        </Dialog>
+      </Fragment>
     </Box>
   );
 }
