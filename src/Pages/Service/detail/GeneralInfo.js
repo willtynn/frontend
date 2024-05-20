@@ -2,7 +2,7 @@
  * src\Pages\Service\detail\GeneralInfo.js
  */
 import { useEffect, useState } from 'react';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import {
   Box,
   Stack,
@@ -21,6 +21,8 @@ import { useNavigate, useParams } from 'react-router-dom';
 import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
 import { StyledPopover } from '../../../components/Popover';
 import { useIntl } from 'react-intl';
+import { deleteService } from '@/actions/serviceAction'; // 引入删除服务的action
+
 
 const labelStyle = {
   fontSize: '12px',
@@ -50,6 +52,7 @@ const valueStyle = {
 
 export default function GeneralInfo(props) {
   const navigate = useNavigate();
+  const dispatch = useDispatch();
   const intl = useIntl();
   const [moreOperationAnchorEl, setMoreOperationAnchorEl] = useState(null);
   const moreOperationOpen = Boolean(moreOperationAnchorEl);
@@ -61,11 +64,6 @@ export default function GeneralInfo(props) {
     };
   });
 
-  const items = [
-    [<EditService />, intl.messages['serviceOverview.editService'], () => {}],
-    [<Delete16 />, intl.messages['common.delete'], () => { console.log("已删除") }],
-  ];
-
   useEffect(() => {
     const from = localStorage.getItem("serviceFrom");
     if(from === "dependency") {
@@ -73,7 +71,7 @@ export default function GeneralInfo(props) {
     } else {
       setBackText(intl.messages['common.service']);
     }
-  }, []);
+  }, [intl.messages]);
 
   const handleReturn = () => {
     const from = localStorage.getItem("serviceFrom");
@@ -88,6 +86,24 @@ export default function GeneralInfo(props) {
   const handleMoreOperation = e => {
     setMoreOperationAnchorEl(e.currentTarget);
   };
+
+
+  const handleDeleteService = () => {
+      if (exactService && exactService.id) {
+          dispatch(deleteService(exactService.id))
+              .then(() => {
+                  navigate('/service/query');
+              })
+              .catch((error) => {
+                  console.error(intl.formatMessage({ id: 'serviceDependency.deleteServiceError' }), error);
+              });
+      }
+  };
+
+  const items = [
+      [<EditService />, intl.messages['serviceOverview.editService'], () => {}],
+      [<Delete16 />, intl.messages['common.delete'], handleDeleteService],
+  ];
 
   return (
     <Stack

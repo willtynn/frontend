@@ -20,6 +20,12 @@ export const UPDATE_EDGE_DATA = 'UPDATE_EDGE_DATA';
 
 export const UPDATE_EDGE_LIST = 'UPDATE_EDGE_LIST';
 
+export const DELETE_SERVICE_REQUEST = 'DELETE_SERVICE_REQUEST';
+
+export const DELETE_SERVICE_SUCCESS = 'DELETE_SERVICE_SUCCESS';
+
+export const DELETE_SERVICE_FAILURE = 'DELETE_SERVICE_FAILURE';
+
 // const baseURLLink = 'http://192.168.1.104:31931';
 export const UPDATE_SEARCH_POD = 'UPDATE_SEARCH_POD';
 
@@ -398,6 +404,52 @@ export function searchPodsByServiceName(cluster, name) {
         )
       );
       dispatch({ type: UPDATE_INTERFACE_DEPENDENCY, data: [] });
+    }
+  };
+}
+
+export function deleteService(id) {
+  const url = '/service/delete';
+  const data = { serviceId: id };
+  return async dispatch => {
+    dispatch({ type: DELETE_SERVICE_REQUEST });
+    try {
+      const res = await axios_instance.post(url, data, {
+        headers: {
+          'Content-Type': 'application/json',
+          'accept': 'application/json',
+        },
+      });
+      console.log('Response:', res); // Debug log
+      if (res.data.code === 200 || res.data.code === 0) {
+        dispatch({ type: DELETE_SERVICE_SUCCESS, data: res.data.data });
+        dispatch(
+            setSnackbarMessageAndOpen(
+                'serviceDependency.deleteServiceSuccess',
+                { msg: 'Service deleted successfully.' },
+                SEVERITIES.success
+            )
+        );
+      } else {
+        dispatch({ type: DELETE_SERVICE_FAILURE, error: res.data.message });
+        dispatch(
+            setSnackbarMessageAndOpen(
+                'serviceDependency.deleteServiceError',
+                { msg: res.data.message },
+                SEVERITIES.warning
+            )
+        );
+      }
+    } catch (error) {
+      console.error('Error deleting service:', error); // Debug log
+      dispatch({ type: DELETE_SERVICE_FAILURE, error: error.message });
+      dispatch(
+          setSnackbarMessageAndOpen(
+              'serviceDependency.deleteServiceError',
+              { msg: 'Error deleting service.' },
+              SEVERITIES.error
+          )
+      );
     }
   };
 }
