@@ -59,7 +59,7 @@ export function TimeAdaptiveAreaChart(props) {
     } else {
       setTicks([]);
     }
-  }, [tickNum]);
+  }, [tickNum, data]);
 
   const adaptChart = () => {
     if (chart && chart.current) {
