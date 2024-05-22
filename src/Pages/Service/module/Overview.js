@@ -19,6 +19,7 @@ import {
   Stack,
   TextField,
   Button,
+  Slide,
 } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 import { transformVersion } from '@/utils/commonUtils';
@@ -50,8 +51,14 @@ import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
 import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
-
-import Slide from '@mui/material/Slide';
+import {
+  SERVICE_TAG,
+  SEARCHLIST_FLAG,
+  PAGE_NUM_FLAG,
+  PAGE_SIZE_FLAG,
+  ORDER_BY_FLAG,
+  ORDER_FLAG,
+} from '../../../utils/page_persist';
 
 const Transition = forwardRef(function Transition(props, ref) {
   return <Slide direction='up' ref={ref} {...props} />;
@@ -94,9 +101,12 @@ export const SUCCEEDED = 'Succeeded';
 
 export default function ServiceOverview(props) {
   const { data, setIndex, selectedIndex } = props;
+  const SEARCHLIST_TAG = `${SERVICE_TAG}_${SEARCHLIST_FLAG}`;
+  const PAGE_NUM_TAG = `${SERVICE_TAG}_${PAGE_NUM_FLAG}`;
+  const PAGE_SIZE_TAG = `${SERVICE_TAG}_${PAGE_SIZE_FLAG}`;
+  const ORDER_TAG = `${SERVICE_TAG}_${ORDER_FLAG}`;
+  const ORDER_BY_TAG = `${SERVICE_TAG}_${ORDER_BY_FLAG}`;
   const intl = useIntl();
-  const [orderType, setOrderType] = useState('version'); //排序的表头
-  const [orderAs, setOrderAs] = useState('asc'); //排序的顺序
   const [selected, setSelected] = useState([]);
   const [loading, setLoading] = useState(false);
 
@@ -204,6 +214,33 @@ export default function ServiceOverview(props) {
 
   useEffect(() => {
     dispatch({ type: UPDATE_SEARCH_SERVICE, data: data });
+    const persistentOrderBy = localStorage.getItem(ORDER_BY_TAG);
+    const persistentOrder = localStorage.getItem(ORDER_TAG);
+    const persistentPageSize = localStorage.getItem(PAGE_SIZE_TAG);
+    const persistentPageNum = localStorage.getItem(PAGE_NUM_TAG);
+    const persistentSearchList = localStorage.getItem(SEARCHLIST_TAG);
+    if (persistentOrderBy !== null) {
+      setOrderBy(persistentOrderBy);
+    }
+    if (persistentOrder !== null) {
+      setOrder(persistentOrder);
+    }
+    if (persistentPageSize !== null) {
+      dispatch({ type: CHANGE_PAGE_SIZE, data: parseInt(persistentPageSize) });
+    }
+    if (persistentPageNum !== null) {
+      dispatch({ type: CHANGE_PAGE_NUM, data: parseInt(persistentPageNum) });
+    }
+    if (persistentSearchList !== null) {
+      setSearchList(JSON.parse(persistentSearchList));
+    }
+    return () => {
+      localStorage.setItem(ORDER_BY_TAG, orderBy);
+      localStorage.setItem(ORDER_TAG, order);
+
+      localStorage.setItem(PAGE_SIZE_TAG, pageSize);
+      localStorage.setItem(SEARCHLIST_TAG, JSON.stringify(searchList));
+    };
   }, []);
 
   useEffect(() => {
@@ -252,9 +289,9 @@ export default function ServiceOverview(props) {
   }, [queryResult]);
 
   const handleRequestSort = (_event, property) => {
-    const isAsc = orderType === property && orderAs === 'asc';
-    setOrderAs(isAsc ? 'desc' : 'asc');
-    setOrderType(property);
+    const isAsc = orderBy === property && order === 'asc';
+    setOrder(isAsc ? 'desc' : 'asc');
+    setOrderBy(property);
   };
 
   const filtering = () => {
@@ -307,7 +344,7 @@ export default function ServiceOverview(props) {
 
   const visibleRows = useMemo(() => {
     const tmpData = filtering();
-    if (pageSize * (pageNum - 1) > count) {
+    if (pageSize * (pageNum - 1) > count && count > 0) {
       dispatch({ type: CHANGE_PAGE_NUM, data: 1 });
       return stableSort(tmpData, getComparator(order, orderBy)).slice(
         0,
@@ -367,6 +404,7 @@ export default function ServiceOverview(props) {
 
   //改变页码
   const handlePageChange = (_event, newPage) => {
+    localStorage.setItem(PAGE_NUM_TAG, newPage);
     dispatch({ type: CHANGE_PAGE_NUM, data: newPage });
   };
 
