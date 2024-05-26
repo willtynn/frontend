@@ -1,12 +1,23 @@
-# 开发流程
-## 1. src/Menu/index.js
-该文件内定义左侧和顶部的导航栏，其中使用`<Outlet>`组件引用了Router内子组件，按钮点击后页面跳转使用`onClick={() => {navigate('/test/table2');}}`跳转到对应的页面
-## 2. 在src/Pages目录下创建对应页面的文件夹并开发对应页面
-## 3. src/Route/index.js
-新添加的页面参考如下方式，放到外层的路由里
-```javascript
-<Route path='/test/' element={<Menu />} >
-  <Route path='table1' element={<BasicTable/>} />
-  <Route path='table2' element={<CustomizedTables/>} />
-</Route>
+# Frontend
+## Introduction
+**Frontend** is a Javascript implementation based on the React front-end framework, designed to provide user graphical interface for the system.
+
+## Installation and Running
+1. Clone the repository:
+```
+git clone https://github.com/your_username/your_repo.git
+```
+2. Navigate to the project directory:
+```
+cd frontend
+```
+3. Build the Docker image:
+```
+docker build -t <you_image_url> .
+```
+4. Deploying to Kubernetes:
+Make sure you have a Kubernetes cluster set up and kubectl configured to communicate with the cluster.
+   Modify the image, namespace and other information in the deployment.yaml configuration file.
+```
+kubectl apply -f deployment.yaml
 ```
