@@ -121,7 +121,7 @@ export default memo(({ data, isConnectable }) => {
               </Stack>
               <Stack direction='row' spacing={0.5}>
                 <Box sx={labelStyle}>{intl.messages['routeTrace.popWindowTimeConsuming']}</Box>
-                <Box sx={valueStyle}>{data.duration}</Box>
+                <Box sx={valueStyle}>{data.duration}&#181;s</Box>
               </Stack>
               <Stack direction='row' spacing={0.5}>
                 <Box sx={labelStyle}>Host</Box>

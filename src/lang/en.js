@@ -417,7 +417,7 @@ export const messages = {
 
     timeFormat: 'MM/DD/YYYY HH:mm:ss',
 
-    popWindowTimeConsuming: 'Time Consuming',
+    popWindowTimeConsuming: 'Duration',
     popWindowNoLinkDiagram: 'No Link Diagram',
 
     popWindowToday: 'Today',
