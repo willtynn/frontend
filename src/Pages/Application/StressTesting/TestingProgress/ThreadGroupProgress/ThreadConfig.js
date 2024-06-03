@@ -29,8 +29,8 @@ import {
   UPDATE_STOP_USERS_PERIOD,
   UPDATE_FLIGHTTIME,
   UPDATE_RAMP_UP,
-  UPDATE_STOP_USERS_RATE,
 } from '../../../../../actions/applicationAction';
+import { StaticLineChart } from '@/components/Charts/LineChart';
 
 const regExp = new RegExp(/^[a-zA-Z0-9][a-zA-Z0-9 -]{0,251}[a-zA-Z0-9]$/);
 
@@ -40,6 +40,9 @@ export function ThreadConfig(props) {
 
   const [groupNameError, setGroupNameError] = useState(false);
   const [groupNameErrorType, setGroupNameErrorType] = useState(0);
+
+  const [steppingLineChartData, setSteppingLineChartData] = useState([]);
+  const [steppingPeriod, setSteppingPeriod] = useState(10);
 
   const onSampleErrorData = [
     ['continue', intl.messages['common.continue']],
@@ -67,7 +70,8 @@ export function ThreadConfig(props) {
     startUsersCount,
     startUsersCountBurst,
     startUsersPeriod,
-    stopUsersRate,
+    stopUsersCount,
+    stopUsersPeriod,
     flighttime,
     rampUp,
   } = useSelector(state => {
@@ -90,7 +94,8 @@ export function ThreadConfig(props) {
       startUsersCount: state.Application.startUsersCount,
       startUsersCountBurst: state.Application.startUsersCountBurst,
       startUsersPeriod: state.Application.startUsersPeriod,
-      stopUsersRate: state.Application.stopUsersRate,
+      stopUsersCount: state.Application.stopUsersCount,
+      stopUsersPeriod: state.Application.stopUsersPeriod,
       flighttime: state.Application.flighttime,
       rampUp: state.Application.rampUp,
     };
@@ -101,6 +106,101 @@ export function ThreadConfig(props) {
   useEffect(() => {
     setThreadConfigError(groupNameError);
   }, [groupNameError]);
+
+  useEffect(() => {
+    if(startUsersCount == 0 || startUsersPeriod == 0) {
+      return;
+    }
+    let currentUser = 0;
+    let currentTime = 0;
+    const data = [
+      {
+        x: 0,
+        y: 0,
+      },
+    ];
+    if (initialDelay > 0) {
+      data.push({ x: initialDelay, y: 0 });
+    }
+    // 处理burst
+    if (startUsersCountBurst > 0) {
+      [currentUser, currentTime] = processRampUp(
+        data,
+        rampUp,
+        startUsersCountBurst,
+        currentUser,
+        currentTime
+      );
+      if (flighttime > 0) {
+        data.push({ x: currentTime + flighttime, y: currentUser });
+        currentTime += flighttime;
+      }
+    }
+    // 处理周期
+    const maxIter = Math.floor(numThreads / startUsersCount);
+    console.log(maxIter, "maxIter")
+    for (let i = 0; i < maxIter; i++) {
+      [currentUser, currentTime] = processRampUp(
+        data,
+        rampUp,
+        startUsersCount,
+        currentUser,
+        currentTime
+      );
+      if (flighttime > 0) {
+        data.push({ x: currentTime + flighttime, y: currentUser });
+        currentTime += flighttime;
+      }
+    }
+    // 处理残差
+    const residual = Math.floor(numThreads % startUsersCount);
+    if (residual > 0) {
+      [currentUser, currentTime] = processRampUp(
+        data,
+        rampUp,
+        residual,
+        currentUser,
+        currentTime
+      );
+      if (flighttime > 0) {
+        data.push({ x: currentTime + flighttime, y: currentUser });
+        currentTime += flighttime;
+      }
+    }
+
+    // 处理exit
+    if (stopUsersCount == 0 || stopUsersPeriod == 0) {
+      // 瞬间停止
+      data.push({ x: currentTime, y: 0 });
+      currentUser = 0;
+    } else {
+      while (currentUser >= stopUsersCount) {
+        data.push({ x: currentTime, y: currentUser - startUsersCount });
+        currentUser -= startUsersCount;
+        // 处理正好为0的情况
+        if (currentUser > 0) {
+          data.push({ x: currentTime + startUsersPeriod, y: currentUser });
+          currentTime += stopUsersPeriod;
+        }
+      }
+      if (currentUser > 0) {
+        data.push({ x: currentTime + startUsersPeriod, y: 0 });
+        currentTime += stopUsersPeriod;
+      }
+    }
+    setSteppingLineChartData(data);
+    setSteppingPeriod(currentTime);
+  }, [
+    numThreads,
+    initialDelay,
+    startUsersCount,
+    startUsersCountBurst,
+    startUsersPeriod,
+    stopUsersCount,
+    stopUsersPeriod,
+    flighttime,
+    rampUp,
+  ]);
 
   const handleGroupNameChange = e => {
     if (e.target.value === '') {
@@ -155,8 +255,12 @@ export function ThreadConfig(props) {
     dispatch({ type: UPDATE_START_USERS_PERIOD, data: e.target.value });
   };
 
-  const handleStopUsersRateChange = e => {
-    dispatch({ type: UPDATE_STOP_USERS_RATE, data: e.target.value });
+  const handleStopUsersCountChange = e => {
+    dispatch({ type: UPDATE_STOP_USERS_COUNT, data: e.target.value });
+  };
+
+  const handleStopUsersPeriodChange = e => {
+    dispatch({ type: UPDATE_STOP_USERS_PERIOD, data: e.target.value });
   };
 
   const handleFlighttimeChange = e => {
@@ -165,6 +269,117 @@ export function ThreadConfig(props) {
 
   const handleRampUpChange = e => {
     dispatch({ type: UPDATE_RAMP_UP, data: e.target.value });
+  };
+
+  const processRampUp = (
+    data,
+    rampUp,
+    usersCount,
+    currentUser = 0,
+    currentTime = 0
+  ) => {
+    if (rampUp > 0) {
+      const burstStepPeriod = rampTime / usersCount;
+      for (let i = 0; i < usersCount; i++) {
+        data.push({ x: currentTime, y: i + 1 + currentUser });
+        if (i != usersCount - 1) {
+          data.push({
+            x: currentTime + (i + 1) * burstStepPeriod,
+            y: i + 1 + currentUser,
+          });
+        }
+        currentUser++;
+        currentTime += (i + 1) * burstStepPeriod;
+      }
+    } else {
+      data.push({ x: currentTime, y: usersCount });
+      currentUser += usersCount;
+    }
+    return [currentUser, currentTime];
+  };
+
+  const generateLineChartData = () => {
+    let currentUser = 0;
+    let currentTime = 0;
+    const data = [
+      {
+        x: 0,
+        y: 0,
+      },
+    ];
+    if (initialDelay > 0) {
+      data.push({ x: initialDelay, y: 0 });
+    }
+
+    // 处理burst
+    if (startUsersCountBurst > 0) {
+      [currentUser, currentTime] = processRampUp(
+        data,
+        rampUp,
+        startUsersCountBurst,
+        currentUser,
+        currentTime
+      );
+      if (flighttime > 0) {
+        data.push({ x: currentTime + flighttime, y: currentUser });
+        currentTime += flighttime;
+      }
+    }
+
+    // 处理周期
+    const maxIter = Math.floor(numThreads / startUsersCount);
+    for (let i = 0; i < maxIter; i++) {
+      [currentUser, currentTime] = processRampUp(
+        data,
+        rampUp,
+        startUsersCount,
+        currentUser,
+        currentTime
+      );
+      if (flighttime > 0) {
+        data.push({ x: currentTime + flighttime, y: currentUser });
+        currentTime += flighttime;
+      }
+    }
+
+    // 处理残差
+    const residual = Math.floor(numThreads % startUsersCount);
+    if (residual > 0) {
+      [currentUser, currentTime] = processRampUp(
+        data,
+        rampUp,
+        residual,
+        currentUser,
+        currentTime
+      );
+      if (flighttime > 0) {
+        data.push({ x: currentTime + flighttime, y: currentUser });
+        currentTime += flighttime;
+      }
+    }
+
+    // 处理exit
+    if (stopUsersCount == 0 || stopUsersPeriod == 0) {
+      // 瞬间停止
+      data.push({ x: currentTime, y: 0 });
+      currentUser = 0;
+    } else {
+      while (currentUser >= stopUsersCount) {
+        data.push({ x: currentTime, y: currentUser - startUsersCount });
+        currentUser -= startUsersCount;
+        // 处理正好为0的情况
+        if (currentUser > 0) {
+          data.push({ x: currentTime + startUsersPeriod, y: currentUser });
+          currentTime += stopUsersPeriod;
+        }
+      }
+      if (currentUser > 0) {
+        data.push({ x: currentTime + startUsersPeriod, y: 0 });
+        currentTime += stopUsersPeriod;
+      }
+    }
+
+    return [data, currentTime];
   };
 
   return (
@@ -280,14 +495,29 @@ export function ThreadConfig(props) {
               onChange={handleFlighttimeChange}
             />
             <KubeInput
-              label={intl.messages['stressTesting.concurrentKillsPerSecond']}
+              label={intl.messages['stressTesting.stopUsersCount']}
               requried={true}
-              id='stepping-group-concurrent-kill-per-second'
+              id='stepping-group-stop-users-count'
               variant='outlined'
-              value={stopUsersRate}
-              onChange={handleStopUsersRateChange}
+              value={stopUsersCount}
+              onChange={handleStopUsersCountChange}
             />
-
+            <KubeInput
+              label={intl.messages['stressTesting.stopUsersPeriod']}
+              requried={true}
+              id='stepping-group-stop-users-period'
+              variant='outlined'
+              value={stopUsersPeriod}
+              onChange={handleStopUsersPeriodChange}
+            />
+            <StaticLineChart
+              data={steppingLineChartData}
+              period={steppingPeriod}
+              keyName='x'
+              valueName='y'
+              labelY={intl.messages['stressTesting.cpuUsage']}
+              labelName={intl.messages['common.usage']}
+            />
           </>
         ) : (
           <>

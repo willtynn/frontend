@@ -38,7 +38,7 @@ export function StyledRadioGroup(props) {
             return (
               <StyledFormControlLabel
                 value={value[0]}
-                control={<StyledRadio size='1' disableRipple />}
+                control={<StyledRadio size='small' disableRipple />}
                 label={value[1]}
               />
             );

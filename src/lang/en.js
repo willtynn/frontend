@@ -377,7 +377,8 @@ export const messages = {
     increasePeriod: "Increase period",
     rampUpPerPeriod: "Luanch time per round",
     flighttime: "Flight time",
-    concurrentKillsPerSecond: "Number of concurrent kills per second"
+    stopUsersCount: "Number of concurrent periodic stops",
+    stopUsersPeriod: "Concurrent stop period",
   },
   routectl:{
     jsonConfig: 'Configure Routerule through JSON',

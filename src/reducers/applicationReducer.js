@@ -29,7 +29,8 @@ const initState = {
   startUsersCount: 0,
   startUsersCountBurst: 0,
   startUsersPeriod: 0,
-  stopUsersRate: 1,
+  stopUsersCount: 0,
+  stopUsersPeriod: 0,
   flighttime: 0,
   rampUp: 0,
 
@@ -61,7 +62,7 @@ const initState = {
 
   aggregateReport: null,
   changeFlag: 0,
-  startAndEnd: [-1, -1]
+  startAndEnd: [-1, -1],
 };
 
 export default function ApplicationReducer(state = initState, action) {
@@ -280,124 +281,130 @@ export default function ApplicationReducer(state = initState, action) {
         requestHeader: data.requestHeader,
 
         timer: data.timer,
-      }
+      };
     case actions.UPDATE_GROUP_EDIT_INDEX:
       return {
         ...state,
-        groupEditIndex: data
-      }
+        groupEditIndex: data,
+      };
 
     case actions.UPDATE_TEST_PLAN_PAGE_NUM:
       return {
         ...state,
-        pageNum: data
-      }
-    
+        pageNum: data,
+      };
+
     case actions.UPDATE_TEST_PLAN_PAGE_SIZE:
       return {
         ...state,
-        pageSize: data
-      }
+        pageSize: data,
+      };
 
     case actions.UPDATE_CURRENT_PLAN:
       return {
         ...state,
-        currentPlan: data
-      }
-    
+        currentPlan: data,
+      };
+
     case actions.UPDATE_CURRENT_TEST_RESULTS:
       return {
         ...state,
-        currrentTestResults: data
-      }
+        currrentTestResults: data,
+      };
     case actions.UPDATE_TEST_PLANS:
       return {
         ...state,
-        testPlans: data
-      }
+        testPlans: data,
+      };
     case actions.UPDATE_CURRENT_TEST_RESULT:
       return {
         ...state,
-        currentResult: data
-      }
+        currentResult: data,
+      };
 
     case actions.UPDATE_AGGREGATE_REPORT:
       return {
         ...state,
-        aggregateReport: data
-      }
+        aggregateReport: data,
+      };
 
     case actions.UPDATE_CHANGE_FLAG:
       return {
         ...state,
-        changeFlag: data
-      }
+        changeFlag: data,
+      };
 
     case actions.UPDATE_START_AND_END:
       return {
         ...state,
-        startAndEnd: data
-      }
+        startAndEnd: data,
+      };
 
     case actions.UPDATE_PLAN_NAMESPACE:
       return {
         ...state,
-        namespace: data
-      }
-    
+        namespace: data,
+      };
+
     case actions.UPDATE_PLAN_PODNAME:
       return {
         ...state,
-        podName: data
-      }
+        podName: data,
+      };
 
     case actions.UPDATE_IS_BOUNDARY:
       return {
         ...state,
-        isBoundary: data
-      }
-    
+        isBoundary: data,
+      };
+
     case actions.UPDATE_INITIAL_DELAY:
       return {
         ...state,
-        initialDelay: data
-      }
+        initialDelay: data,
+      };
 
     case actions.UPDATE_START_USERS_COUNT:
       return {
         ...state,
-        startUsersCount: data
-      }
+        startUsersCount: data,
+      };
 
     case actions.UPDATE_START_USERS_COUNT_BURST:
       return {
         ...state,
-        startUsersCountBurst: data
-      }
+        startUsersCountBurst: data,
+      };
 
     case actions.UPDATE_START_USERS_PERIOD:
       return {
         ...state,
-        startUsersPeriod: data
-      }
+        startUsersPeriod: data,
+      };
 
-    case actions.UPDATE_STOP_USERS_RATE:
+    case actions.UPDATE_STOP_USERS_COUNT:
       return {
         ...state,
-        stopUsersRate: data
-      }
+        stopUsersCount: data,
+      };
+
+    case actions.UPDATE_STOP_USERS_PERIOD:
+      return {
+        ...state,
+        stopUsersPeriod: data,
+      };
 
     case actions.UPDATE_FLIGHTTIME:
       return {
         ...state,
-        flighttime: data
-      }
+        flighttime: data,
+      };
 
     case actions.UPDATE_RAMP_UP:
       return {
         ...state,
-        rampUp: data
-      }
+        rampUp: data,
+      };
 
     default:
       return state;
