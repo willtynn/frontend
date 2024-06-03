@@ -17,7 +17,8 @@ import {
   UPDATE_SERIALIZE_THREADGROUPS,
   UPDATE_TEARDOWN_ON_SHUTDOWN,
   UPDATE_PLAN_NAMESPACE,
-  UPDATE_PLAN_PODNAME
+  UPDATE_PLAN_PODNAME,
+  UPDATE_IS_BOUNDARY
 } from '../../../../actions/applicationAction';
 import { getNamaspaces, getInstanceStatus } from '@/actions/instanceAction';
 
@@ -35,6 +36,7 @@ export function TestPlan(props) {
     namespaces,
     namespace,
     podName,
+    isBoundary,
     gottenInstances
   } = useSelector(state => {
     return {
@@ -46,6 +48,7 @@ export function TestPlan(props) {
       namespaces: state.Instance.namespaces,
       namespace: state.Application.namespace,
       podName: state.Application.podName,
+      isBoundary: state.Application.isBoundary,
       gottenInstances: state.Instance.gottenInstances,
     };
   });
@@ -192,6 +195,7 @@ export function TestPlan(props) {
       </Stack>
 
       <Stack direction='column' spacing={1}>
+        <StyledCheckbox checked={isBoundary} setChecked={(checked) => dispatch({ type: UPDATE_IS_BOUNDARY, data: checked })} msg={intl.messages["stressTesting.performBoundaryTest"]} />
         <StyledCheckbox checked={serializeThreadgroups} setChecked={(checked) => dispatch({ type: UPDATE_SERIALIZE_THREADGROUPS, data: checked })} msg={intl.messages["stressTesting.serializeThreadgroupsDescription"]} />
         <StyledCheckbox checked={tearDownOnShutdown} setChecked={(checked) => dispatch({ type: UPDATE_TEARDOWN_ON_SHUTDOWN, data: checked })} msg={intl.messages["stressTesting.tearDownOnShutdownDescription"]} />
         <StyledCheckbox checked={functionalMode} setChecked={(checked) => dispatch({ type: UPDATE_FUNCTIONAL_MODE, data: checked })} msg={intl.messages["stressTesting.functionalModeDescription"]} />

@@ -380,7 +380,15 @@ export const messages = {
     noOptionalNamespace: "无可选命名空间",
     noOptionalPod: "无可选Pod",
     planName: "测试名称",
-    performancePressureTest: "性能压测"
+    performancePressureTest: "性能压测",
+    performBoundaryTest: "执行边界测试",
+    delayedStartTime: "延迟启动时间（秒）",
+    newConcurrentRequestsPerRound: "每轮新增并发数",
+    initialUsersCount: "初始并发数",
+    increasePeriod: "增长周期（秒）",
+    rampUpPerPeriod: "每轮并发数启动时间（秒）",
+    flighttime: "每轮持续时间（秒）",
+    concurrentKillsPerSecond: "每秒杀死并发数",
   },
   routeTrace: {
     title: '路由链路',

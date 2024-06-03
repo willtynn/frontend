@@ -370,7 +370,14 @@ export const messages = {
     noOptionalPod: "No Optional Pod",
     planName: "Plan Name",
     performancePressureTest: "Performance Pressure Test",
-
+    performBoundaryTest: "Perform Boundary Test",
+    delayedStartTime: "Delayed start time (s)",
+    newConcurrentRequestsPerRound: "Number of new concurrent requests per round",
+    initialUsersCount: "Initial concurrency",
+    increasePeriod: "Increase period",
+    rampUpPerPeriod: "Luanch time per round",
+    flighttime: "Flight time",
+    concurrentKillsPerSecond: "Number of concurrent kills per second"
   },
   routectl:{
     jsonConfig: 'Configure Routerule through JSON',

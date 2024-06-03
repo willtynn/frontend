@@ -9,6 +9,7 @@ const initState = {
   serializeThreadgroups: false,
   namespace: '',
   podName: '',
+  isBoundary: false,
 
   // Thread Group
   threadGroups: [],
@@ -24,6 +25,13 @@ const initState = {
   scheduler: false,
   duration: null,
   delay: null,
+  initialDelay: 0,
+  startUsersCount: 0,
+  startUsersCountBurst: 0,
+  startUsersPeriod: 0,
+  stopUsersRate: 1,
+  flighttime: 0,
+  rampUp: 0,
 
   requestDefaultName: 'HTTP请求默认值',
   webServerProtocol: '',
@@ -341,6 +349,54 @@ export default function ApplicationReducer(state = initState, action) {
       return {
         ...state,
         podName: data
+      }
+
+    case actions.UPDATE_IS_BOUNDARY:
+      return {
+        ...state,
+        isBoundary: data
+      }
+    
+    case actions.UPDATE_INITIAL_DELAY:
+      return {
+        ...state,
+        initialDelay: data
+      }
+
+    case actions.UPDATE_START_USERS_COUNT:
+      return {
+        ...state,
+        startUsersCount: data
+      }
+
+    case actions.UPDATE_START_USERS_COUNT_BURST:
+      return {
+        ...state,
+        startUsersCountBurst: data
+      }
+
+    case actions.UPDATE_START_USERS_PERIOD:
+      return {
+        ...state,
+        startUsersPeriod: data
+      }
+
+    case actions.UPDATE_STOP_USERS_RATE:
+      return {
+        ...state,
+        stopUsersRate: data
+      }
+
+    case actions.UPDATE_FLIGHTTIME:
+      return {
+        ...state,
+        flighttime: data
+      }
+
+    case actions.UPDATE_RAMP_UP:
+      return {
+        ...state,
+        rampUp: data
       }
 
     default:
