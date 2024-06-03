@@ -148,7 +148,7 @@ export default function MiniDrawer() {
                   fontFamily: 'Segoe Print',
                 }}
               >
-                Cloud Edge Platform
+                MicroForge
               </Box>
             </Stack>
           </Grid>

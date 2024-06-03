@@ -93,7 +93,7 @@ export function HeadBar() {
                   fontFamily: 'Segoe Print',
                 }}
               >
-                Cloud Edge Platform
+                MicroForge
               </Box>
             </Stack>
           </Grid>
