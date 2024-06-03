@@ -18,10 +18,12 @@ export const CHANGE_PAGE_SIZE = 'CHANGE_REQUEST_OF_SERVICE_PAGE_SIZE';
 export const CHANGE_PAGE_NUM = 'CHANGE_REQUEST_OF_SERVICE_PAGE_NUM';
 
 
-
+let getRouteServiceNum = 0;
 export function getRouteService(start, end) {
   const url = "/trace/service";
   return async dispatch => {
+    getRouteServiceNum++;
+    const nowNum = getRouteServiceNum;
     try {
       const res = await axios_instance.get(
         url,
@@ -37,6 +39,9 @@ export function getRouteService(start, end) {
           }
         }
       )
+      if (getRouteServiceNum !== nowNum) {
+        return;
+      }
       if (res.status === 200) {
         dispatch({ type: UPDATE_ROUTE_SERVICE, data: res.data });
       } else{
@@ -44,15 +49,21 @@ export function getRouteService(start, end) {
       }
       dispatch({ type: UPDATE_FAILED, data: false });
     } catch {
+      if (getRouteServiceNum !== nowNum) {
+        return;
+      }
       dispatch({ type: UPDATE_ROUTE_SERVICE, data: null });
       dispatch({ type: UPDATE_FAILED, data: true });
     }
   }
 }
 
+let getRouteTraceNum = 0;
 export function getRouteTrace(start, end, service, api) {
   const url = "/trace";
   return async dispatch => {
+    getRouteTraceNum++;
+    const nowNum = getRouteTraceNum;
     try {
       const res = await axios_instance.get(
         url,
@@ -70,6 +81,9 @@ export function getRouteTrace(start, end, service, api) {
           }
         }
       )
+      if (getRouteTraceNum !== nowNum) {
+        return;
+      }
       if (res.status === 200) {
         dispatch({ type: UPDATE_ROUTE_TRACE, data: res.data });
       } else{
@@ -77,6 +91,9 @@ export function getRouteTrace(start, end, service, api) {
       }
       dispatch({ type: UPDATE_FAILED, data: false });
     } catch {
+      if (getRouteTraceNum !== nowNum) {
+        return;
+      }
       dispatch({ type: UPDATE_ROUTE_TRACE, data: null });
       dispatch({ type: UPDATE_FAILED, data: true });
     }
@@ -84,9 +101,12 @@ export function getRouteTrace(start, end, service, api) {
 }
 
 
+let getRouteTraceDetailNum = 0;
 export function getRouteTraceDetail(id) {
   const url = "/trace/detail";
   return async dispatch => {
+    getRouteTraceDetailNum++;
+    const nowNum = getRouteTraceDetailNum;
     try {
       const res = await axios_instance.get(
         url,
@@ -101,6 +121,9 @@ export function getRouteTraceDetail(id) {
           }
         }
       )
+      if (getRouteTraceDetailNum !== nowNum) {
+        return;
+      }
       if (res.status === 200) {
         dispatch({ type: UPDATE_ROUTE_TRACE_DETAIL, data: res.data });
       } else{
@@ -108,6 +131,9 @@ export function getRouteTraceDetail(id) {
       }
       dispatch({ type: UPDATE_FAILED, data: false });
     } catch {
+      if (getRouteTraceDetailNum !== nowNum) {
+        return;
+      }
       dispatch({ type: UPDATE_ROUTE_TRACE_DETAIL, data: null });
       dispatch({ type: UPDATE_FAILED, data: true });
     }
