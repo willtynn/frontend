@@ -74,8 +74,8 @@ export const UPDATE_AGGREGATE_REPORT = 'UPDATE_AGGREGATE_REPORT';
 export const UPDATE_CHANGE_FLAG = 'UPDATE_CHANGE_FLAG';
 export const UPDATE_START_AND_END = 'UPDATE_START_AND_END';
 
-const baseURLLink = 'http://192.168.1.104:14447';
-// const baseURLLink = 'http://localhost:8848';
+// const baseURLLink = 'http://192.168.1.104:14447';
+const baseURLLink = 'http://localhost:8848';
 
 const axios_instance = axios.create({
   baseURL: baseURLLink,
@@ -606,6 +606,61 @@ export function getAggregateExcel(
       dispatch(
         setSnackbarMessageAndOpen(
           'stressTesting.aggregateExcelExportFailedMsg',
+          {},
+          SEVERITIES.warning
+        )
+      );
+    }
+  };
+}
+
+
+export function createBoundaryTestPlan(testPlan) {
+  console.log("testPlan", testPlan)
+  const url = '/pressureMeasurement/createBoundaryTest';
+  return async dispatch => {
+    try {
+      const res = await axios_instance.post(
+        url,
+        {
+          ...testPlan,
+        },
+        {
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        }
+      );
+      if (res.data.code === 200 || res.data.code === 0) {
+        dispatch(
+          setSnackbarMessageAndOpen(
+            'stressTesting.planCreatedMsg',
+            {},
+            SEVERITIES.success
+          )
+        );
+      } else if (res.data.code === 1) {
+        // alert(res.data.message)
+        dispatch(
+          setSnackbarMessageAndOpen(
+            'common.errorMessage',
+            { msg: res.data.message },
+            SEVERITIES.warning
+          )
+        );
+      } else {
+        dispatch(
+          setSnackbarMessageAndOpen(
+            'stressTesting.planCreationFailedMsg',
+            {},
+            SEVERITIES.warning
+          )
+        );
+      }
+    } catch {
+      dispatch(
+        setSnackbarMessageAndOpen(
+          'stressTesting.planCreationFailedMsg',
           {},
           SEVERITIES.warning
         )

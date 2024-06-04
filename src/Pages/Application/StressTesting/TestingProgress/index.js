@@ -25,7 +25,8 @@ import {
   RESET_GROUP,
   RESET_PLAN,
   UPDATE_GROUP_EDIT_INDEX,
-  createTestPlan
+  createTestPlan,
+  createBoundaryTestPlan,
 } from '../../../../actions/applicationAction';
 import {
   CONSTANT_TIMER,
@@ -93,17 +94,55 @@ const composeTestParams = testPlan => {
     let httpArguments = {};
     group.requestParameters.forEach((parameter, index) => {
       httpArguments[parameter.name] = parameter.value;
-    })
+    });
+    if (group.isBoundary) {
+      return {
+        threadGroupName: group.groupName,
+        threadNum: group.numThreads,
+        rampUp: group.rampUp,
+        stepping: true,
+        initialDelay: group.initialDelay,
+        startUsersCount: group.startUsersCount,
+        startUsersCountBurst: group.startUsersCountBurst,
+        startUsersPeriod: group.startUsersPeriod,
+        stopUsersCount: group.stopUsersCount,
+        stopUsersPeriod: group.stopUsersPeriod,
+        flighttime: group.flighttime,
+        loopControllerVO: {
+          loopControllerName: 'Loop Controller',
+          loopNum: group.loops,
+          continueForerever: group.loopsContinueForever,
+        },
+        httpSamplerProxyVO: {
+          name: group.requestDefaultName,
+          protocol: group.webServerProtocol,
+          server: group.webServerNameOrIP,
+          path: group.httpRequestPath,
+          port: group.webServerPort,
+          method: group.httpRequestMethod,
+          body: group.requestBodyData,
+          useKeepAlive: 'true',
+          followRedirects: 'true',
+          arguments: httpArguments,
+        },
+        headerManagerVO: {
+          headerManagerName: 'header manager',
+          headerList: headerManager,
+        },
+        timers: timerList,
+      };
+    }
     return {
       threadGroupName: group.groupName,
       threadNum: group.numThreads,
       rampUp: group.rampTime,
+      stepping: false,
       // scheduler: group.scheduler,
       // duration: group.duration,
       // delay: group.delay,
       // 如何确定是否loop？
       loopControllerVO: {
-        loopControllerName: "Loop Controller",
+        loopControllerName: 'Loop Controller',
         loopNum: group.loops,
         continueForerever: group.loopsContinueForever,
       },
@@ -117,7 +156,7 @@ const composeTestParams = testPlan => {
         body: group.requestBodyData,
         useKeepAlive: 'true',
         followRedirects: 'true',
-        arguments: httpArguments
+        arguments: httpArguments,
       },
       headerManagerVO: {
         headerManagerName: 'header manager',
@@ -134,6 +173,8 @@ const composeTestParams = testPlan => {
     comment: testPlan.planComment,
     namespace: testPlan.namespace,
     podName: testPlan.podName,
+    podName: testPlan.podName,
+    isBoundary: testPlan.isBoundary,
     threadGroupList: testPlan.threadGroups,
   };
 };
@@ -184,6 +225,15 @@ export function TestingProgress(props) {
     requestHeader,
     timer,
     groupEditIndex,
+    isBoundary,
+    initialDelay,
+    startUsersCount,
+    startUsersCountBurst,
+    startUsersPeriod,
+    stopUsersCount,
+    stopUsersPeriod,
+    flighttime,
+    rampUp,
   } = useSelector(state => {
     return {
       planName: state.Application.planName,
@@ -220,6 +270,15 @@ export function TestingProgress(props) {
       requestHeader: state.Application.requestHeader,
       timer: state.Application.timer,
       groupEditIndex: state.Application.groupEditIndex,
+      isBoundary: state.Application.isBoundary,
+      initialDelay: state.Application.initialDelay,
+      startUsersCount: state.Application.startUsersCount,
+      startUsersCountBurst: state.Application.startUsersCountBurst,
+      startUsersPeriod: state.Application.startUsersPeriod,
+      stopUsersCount: state.Application.stopUsersCount,
+      stopUsersPeriod: state.Application.stopUsersPeriod,
+      flighttime: state.Application.flighttime,
+      rampUp: state.Application.rampUp,
     };
   });
 
@@ -299,6 +358,15 @@ export function TestingProgress(props) {
           requestBodyData: requestBodyData,
           requestHeader: requestHeader,
           timer: timer,
+          isBoundary: isBoundary,
+          initialDelay: initialDelay,
+          startUsersCount: startUsersCount,
+          startUsersCountBurst: startUsersCountBurst,
+          startUsersPeriod: startUsersPeriod,
+          stopUsersCount: stopUsersCount,
+          stopUsersPeriod: stopUsersPeriod,
+          flighttime: flighttime,
+          rampUp: rampUp,
         };
         dispatch({ type: UPDATE_THREAD_GROUPS, data: tmpGroups });
         dispatch({ type: UPDATE_GROUP_EDIT_INDEX, data: null });
@@ -331,6 +399,15 @@ export function TestingProgress(props) {
               requestBodyData: requestBodyData,
               requestHeader: requestHeader,
               timer: timer,
+              isBoundary: isBoundary,
+              initialDelay: initialDelay,
+              startUsersCount: startUsersCount,
+              startUsersCountBurst: startUsersCountBurst,
+              startUsersPeriod: startUsersPeriod,
+              stopUsersCount: stopUsersCount,
+              stopUsersPeriod: stopUsersPeriod,
+              flighttime: flighttime,
+              rampUp: rampUp,
             },
           ],
         });
@@ -342,7 +419,6 @@ export function TestingProgress(props) {
         setShowError(true);
       } else {
         setShowError(false);
-        
         const testPlanData = composeTestParams({
           planName: planName,
           planComment: planComment,
@@ -351,10 +427,15 @@ export function TestingProgress(props) {
           serializeThreadgroups: serializeThreadgroups,
           namespace: namespace,
           podName: podName,
+          isBoundary: isBoundary,
           threadGroups: threadGroups,
         });
-        // console.log(testPlanData);
-        dispatch(createTestPlan(testPlanData));
+        if (!isBoundary) {
+          dispatch(createTestPlan(testPlanData));
+        } else {
+          dispatch(createBoundaryTestPlan(testPlanData));
+        }
+
         handleConfirmClick();
         setCurrentStage(1);
         dispatch({ type: RESET_PLAN });
@@ -377,7 +458,10 @@ export function TestingProgress(props) {
 
   return (
     <Box sx={style}>
-      <KubeDeploymentCard title={intl.messages['stressTesting.createTestPlan']} handleClose={handleCancelClick}>
+      <KubeDeploymentCard
+        title={intl.messages['stressTesting.createTestPlan']}
+        handleClose={handleCancelClick}
+      >
         <Stack
           direction='row'
           spacing={0}
