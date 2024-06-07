@@ -387,7 +387,7 @@ export const messages = {
     initialUsersCount: "初始并发数",
     increasePeriod: "增长周期（秒）",
     rampUpPerPeriod: "每轮并发数启动时间（秒）",
-    flighttime: "每轮持续时间（秒）",
+    flighttime: "并发峰值持续时间（秒）",
     stopUsersCount: "周期停止并发数",
     stopUsersPeriod: "并发停止周期（秒）",
   },
