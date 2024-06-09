@@ -63,6 +63,9 @@ const initState = {
   aggregateReport: null,
   changeFlag: 0,
   startAndEnd: [-1, -1],
+
+  boundaryResult: [],
+  bound: null,
 };
 
 export default function ApplicationReducer(state = initState, action) {
@@ -413,6 +416,18 @@ export default function ApplicationReducer(state = initState, action) {
       return {
         ...state,
         rampUp: data,
+      };
+
+    case actions.UPDATE_BOUNDARY_RESULT:
+      return {
+        ...state,
+        boundaryResult: data,
+      };
+
+    case actions.UPDATE_BOUND:
+      return {
+        ...state,
+        bound: data,
       };
 
     default:
