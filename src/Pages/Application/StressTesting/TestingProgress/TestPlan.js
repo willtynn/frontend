@@ -18,7 +18,7 @@ import {
   UPDATE_TEARDOWN_ON_SHUTDOWN,
   UPDATE_PLAN_NAMESPACE,
   UPDATE_PLAN_PODNAME,
-  UPDATE_IS_BOUNDARY
+  UPDATE_IS_BOUNDARY,
 } from '../../../../actions/applicationAction';
 import { getNamaspaces, getInstanceStatus } from '@/actions/instanceAction';
 
@@ -37,7 +37,7 @@ export function TestPlan(props) {
     namespace,
     podName,
     isBoundary,
-    gottenInstances
+    gottenInstances,
   } = useSelector(state => {
     return {
       planName: state.Application.planName,
@@ -72,17 +72,14 @@ export function TestPlan(props) {
       namespace !== ''
     ) {
       dispatch(
-        getInstanceStatus(
-          localStorage.getItem('current_cluster'),
-          namespace
-        )
+        getInstanceStatus(localStorage.getItem('current_cluster'), namespace)
       );
     }
   }, [namespace]);
 
   useEffect(() => {
     setError(planNameError);
-  }, [planNameError])
+  }, [planNameError]);
 
   const handlePlanNameChange = e => {
     if (e.target.value === '') {
@@ -103,12 +100,12 @@ export function TestPlan(props) {
   };
 
   return (
-    <Stack sx={{ p: '32px 64px', bgcolor: '#FFFFFF', height: "calc(100% - 244px)" }} direction='column' justifyContent='space-between' >
-      <Stack
-
-        direction='column'
-        spacing={2}
-      >
+    <Stack
+      sx={{ p: '32px 64px', bgcolor: '#FFFFFF', height: 'calc(100% - 244px)' }}
+      direction='column'
+      justifyContent='space-between'
+    >
+      <Stack direction='column' spacing={2}>
         <KubeInput
           label={intl.messages['common.name']}
           decription={intl.messages['stressTesting.planNameDescription']}
@@ -118,7 +115,11 @@ export function TestPlan(props) {
           value={planName}
           onChange={handlePlanNameChange}
           error={planNameError && showError}
-          errorMessage={intl.messages['stressTesting.nameEmptyErrorMsg']}
+          errorMessage={
+            planNameErrorType == 0
+              ? intl.messages['stressTesting.nameEmptyErrorMsg']
+              : intl.messages['stressTesting.namePatternErrorMsg']
+          }
         />
 
         <KubeInput
@@ -153,10 +154,12 @@ export function TestPlan(props) {
             letterSpacing: 'normal',
           }}
           renderInput={params => (
-            <TextField {...params} placeholder={intl.messages['common.namespace']} />
+            <TextField
+              {...params}
+              placeholder={intl.messages['common.namespace']}
+            />
           )}
         />
-
 
         <KubeAutocomplete
           height='32px'
@@ -167,13 +170,17 @@ export function TestPlan(props) {
           }}
           id='plan_podName_autocomplete'
           noOptionsText={intl.messages['stressTesting.noOptionalPod']}
-          options={(gottenInstances && gottenInstances.items)? gottenInstances.items.map((value, index) => { return value.metadata.name }) : []}
+          options={
+            gottenInstances && gottenInstances.items
+              ? gottenInstances.items.map((value, index) => {
+                  return value.metadata.name;
+                })
+              : []
+          }
           filterOptions={(options, params) => {
             const { inputValue } = params;
             return options.filter((option, index) => {
-              return (
-                option.includes(inputValue)
-              );
+              return option.includes(inputValue);
             });
           }}
           sx={{
@@ -187,18 +194,39 @@ export function TestPlan(props) {
             lineHeight: 1.67,
             letterSpacing: 'normal',
           }}
-          renderInput={params => (
-            <TextField {...params} placeholder='Pod' />
-          )}
+          renderInput={params => <TextField {...params} placeholder='Pod' />}
         />
-
       </Stack>
 
       <Stack direction='column' spacing={1}>
-        <StyledCheckbox checked={isBoundary} setChecked={(checked) => dispatch({ type: UPDATE_IS_BOUNDARY, data: checked })} msg={intl.messages["stressTesting.performBoundaryTest"]} />
-        <StyledCheckbox checked={serializeThreadgroups} setChecked={(checked) => dispatch({ type: UPDATE_SERIALIZE_THREADGROUPS, data: checked })} msg={intl.messages["stressTesting.serializeThreadgroupsDescription"]} />
-        <StyledCheckbox checked={tearDownOnShutdown} setChecked={(checked) => dispatch({ type: UPDATE_TEARDOWN_ON_SHUTDOWN, data: checked })} msg={intl.messages["stressTesting.tearDownOnShutdownDescription"]} />
-        <StyledCheckbox checked={functionalMode} setChecked={(checked) => dispatch({ type: UPDATE_FUNCTIONAL_MODE, data: checked })} msg={intl.messages["stressTesting.functionalModeDescription"]} />
+        <StyledCheckbox
+          checked={isBoundary}
+          setChecked={checked =>
+            dispatch({ type: UPDATE_IS_BOUNDARY, data: checked })
+          }
+          msg={intl.messages['stressTesting.performBoundaryTest']}
+        />
+        <StyledCheckbox
+          checked={serializeThreadgroups}
+          setChecked={checked =>
+            dispatch({ type: UPDATE_SERIALIZE_THREADGROUPS, data: checked })
+          }
+          msg={intl.messages['stressTesting.serializeThreadgroupsDescription']}
+        />
+        <StyledCheckbox
+          checked={tearDownOnShutdown}
+          setChecked={checked =>
+            dispatch({ type: UPDATE_TEARDOWN_ON_SHUTDOWN, data: checked })
+          }
+          msg={intl.messages['stressTesting.tearDownOnShutdownDescription']}
+        />
+        <StyledCheckbox
+          checked={functionalMode}
+          setChecked={checked =>
+            dispatch({ type: UPDATE_FUNCTIONAL_MODE, data: checked })
+          }
+          msg={intl.messages['stressTesting.functionalModeDescription']}
+        />
       </Stack>
     </Stack>
   );

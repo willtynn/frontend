@@ -301,6 +301,7 @@ export const messages = {
     planCommentDescription: 'Additional explanation for the plan.',
     groupCommentDescription: 'Additional explanation for thread groups.',
     nameEmptyErrorMsg: 'Please set a name.',
+    namePatternErrorMsg: 'The name can only contain letters, numbers, and hyphens (-), and must start and end with a letter or number, with a maximum length of 253 characters.',
     serializeThreadgroupsDescription: 'Run each thread group independently',
     tearDownOnShutdownDescription: 'After the main thread ends, run the tearDown thread group',
     functionalModeDescription:

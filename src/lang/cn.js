@@ -311,6 +311,7 @@ export const messages = {
     planCommentDescription: '对于计划的补充说明。',
     groupCommentDescription: '对于线程组的补充说明。',
     nameEmptyErrorMsg: '请设置一个名称。',
+    namePatternErrorMsg: '名称只能包含字母、数字和连字符（-），必须以字母或数字开头和结尾，最长 253 个字符。',
     serializeThreadgroupsDescription: '独立运行每个线程组',
     tearDownOnShutdownDescription: '主线程结束后运行tearDown线程组',
     functionalModeDescription:
