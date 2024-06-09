@@ -224,6 +224,14 @@ export default function ApplicationReducer(state = initState, action) {
         scheduler: false,
         duration: null,
         delay: null,
+        initialDelay: 0,
+        startUsersCount: 0,
+        startUsersCountBurst: 0,
+        startUsersPeriod: 0,
+        stopUsersCount: 0,
+        stopUsersPeriod: 0,
+        flighttime: 0,
+        rampUp: 0,
 
         requestDefaultName: 'HTTP请求默认值',
         webServerProtocol: '',
@@ -249,6 +257,7 @@ export default function ApplicationReducer(state = initState, action) {
         functionalMode: false,
         tearDownOnShutdown: false,
         serializeThreadgroups: false,
+        isBoundary: false,
         threadGroups: [],
       };
     case actions.FILL_GROUP_FORM:

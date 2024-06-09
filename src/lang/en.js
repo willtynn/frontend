@@ -116,7 +116,8 @@ export const messages = {
     cpu: "CPU",
     portsDetails: "Ports Details",
     deleteServiceError: "Failed to delete a service",
-    deleteServiceSuccess: "Deleted successfully"
+    deleteServiceSuccess: "Deleted successfully",
+    boundaryTest: "Boundary Test",
   },
   lang: {
     language: 'Language',
@@ -379,6 +380,7 @@ export const messages = {
     flighttime: "Flight time (s)",
     stopUsersCount: "Number of concurrent periodic stops",
     stopUsersPeriod: "Concurrent stop period (s)",
+    boundaryTest: "Boundary Test",
   },
   routectl:{
     jsonConfig: 'Configure Routerule through JSON',

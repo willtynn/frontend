@@ -396,7 +396,7 @@ export function ChipTextField(props) {
 }
 
 export function KubeInput(props) {
-  const { label, decription, requried, errorMessage, ...others } = props;
+  const { label, decription, requried, errorMessage, autocomplete="off", ...others } = props;
 
   return (
     <Box sx={{width: "100%"}}>
@@ -427,7 +427,7 @@ export function KubeInput(props) {
             <></>
           )}
         </Stack>
-        <KubeTextField {...others} />
+        <KubeTextField autoComplete={autocomplete} {...others} />
         {others.error === true ? (
           <Box
             sx={{

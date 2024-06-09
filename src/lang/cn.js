@@ -116,7 +116,8 @@ export const messages = {
     cpu: "CPU",
     portsDetails: "端口详情",
     deleteServiceError: "删除服务失败",
-    deleteServiceSuccess: "删除服务成功"
+    deleteServiceSuccess: "删除服务成功",
+    boundaryTest: "边界测试",
   },
   lang: {
     language: '语言',
@@ -390,6 +391,7 @@ export const messages = {
     flighttime: "并发峰值持续时间（秒）",
     stopUsersCount: "周期停止并发数",
     stopUsersPeriod: "并发停止周期（秒）",
+    boundaryTest: "边界测试",
   },
   routeTrace: {
     title: '路由链路',

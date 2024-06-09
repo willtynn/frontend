@@ -95,7 +95,7 @@ const composeTestParams = testPlan => {
     group.requestParameters.forEach((parameter, index) => {
       httpArguments[parameter.name] = parameter.value;
     });
-    if (group.isBoundary) {
+    if (group.boundary) {
       return {
         threadGroupName: group.groupName,
         threadNum: group.numThreads,
@@ -174,7 +174,7 @@ const composeTestParams = testPlan => {
     namespace: testPlan.namespace,
     podName: testPlan.podName,
     podName: testPlan.podName,
-    isBoundary: testPlan.isBoundary,
+    boundary: testPlan.boundary,
     threadGroupList: testPlan.threadGroups,
   };
 };
@@ -358,7 +358,7 @@ export function TestingProgress(props) {
           requestBodyData: requestBodyData,
           requestHeader: requestHeader,
           timer: timer,
-          isBoundary: isBoundary,
+          boundary: isBoundary,
           initialDelay: initialDelay,
           startUsersCount: startUsersCount,
           startUsersCountBurst: startUsersCountBurst,
@@ -399,7 +399,7 @@ export function TestingProgress(props) {
               requestBodyData: requestBodyData,
               requestHeader: requestHeader,
               timer: timer,
-              isBoundary: isBoundary,
+              boundary: isBoundary,
               initialDelay: initialDelay,
               startUsersCount: startUsersCount,
               startUsersCountBurst: startUsersCountBurst,
@@ -427,12 +427,13 @@ export function TestingProgress(props) {
           serializeThreadgroups: serializeThreadgroups,
           namespace: namespace,
           podName: podName,
-          isBoundary: isBoundary,
+          boundary: isBoundary,
           threadGroups: threadGroups,
         });
         if (!isBoundary) {
           dispatch(createTestPlan(testPlanData));
         } else {
+          console.log("boundary", testPlanData)
           dispatch(createBoundaryTestPlan(testPlanData));
         }
 

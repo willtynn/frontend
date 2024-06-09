@@ -161,7 +161,7 @@ export default function StressTesting() {
     intl.messages['common.status'],
   ]);
 
-  const [colDisplay, setColDisplay] = useState([true, true, true, true, true]);
+  const [colDisplay, setColDisplay] = useState([true, true, true, true, true, true]);
   const [customContentAnchorEl, setCustomContentAnchorEl] = useState(null);
   const customContentOpen = Boolean(customContentAnchorEl);
 
@@ -233,12 +233,21 @@ export default function StressTesting() {
       'center'
     ),
     createRow(
+      'boundary',
+      intl.messages['common.boundaryTest'],
+      false,
+      '120px',
+      '130px',
+      colDisplay[4],
+      'center'
+    ),
+    createRow(
       'comment',
       intl.messages['common.description'],
       false,
       '120px',
       '130px',
-      colDisplay[3],
+      colDisplay[5],
       'center'
     ),
   ];
@@ -250,6 +259,7 @@ export default function StressTesting() {
   };
 
   const filtering = () => {
+    console.log(tableData)
     let tmpData = JSON.parse(JSON.stringify(tableData));
     setCount(tableData.length);
     searchList.forEach((value, _) => {
@@ -719,10 +729,21 @@ export default function StressTesting() {
                           ? intl.messages['common.yes']
                           : intl.messages['common.no']}
                       </StyledTableBodyCell>
+
                       <StyledTableBodyCell
                         align={'center'}
                         sx={{
-                          display: headRow[4].show ? 'table-cell' : 'none',
+                          display: headRow[5].show ? 'table-cell' : 'none',
+                        }}
+                      >
+                        {row.boundary
+                          ? intl.messages['common.yes']
+                          : intl.messages['common.no']}
+                      </StyledTableBodyCell>
+                      <StyledTableBodyCell
+                        align={'center'}
+                        sx={{
+                          display: headRow[6].show ? 'table-cell' : 'none',
                         }}
                       >
                         {row.comment}
