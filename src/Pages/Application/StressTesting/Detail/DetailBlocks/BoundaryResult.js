@@ -243,7 +243,7 @@ export function BoundaryResult() {
                             minWidth: headRow[6].minWidth,
                           }}
                         >
-                          {`${item.p50} ms`}
+                          {`${item.p95} ms`}
                         </StyledTableBodyCell>
                         <StyledTableBodyCell
                           align={headRow[7].align}
@@ -339,7 +339,7 @@ export function BoundaryResult() {
                 valueName={[
                   'average',
                   'median',
-                  'p50',
+                  'p90',
                   'p95',
                   'p99',
                   'min',
@@ -508,7 +508,7 @@ export function BoundaryResult() {
                         minWidth: headRow[6].minWidth,
                       }}
                     >
-                      {`${bound.p50} ms`}
+                      {`${bound.p90} ms`}
                     </StyledTableBodyCell>
                     <StyledTableBodyCell
                       align={headRow[7].align}
