@@ -243,7 +243,7 @@ export function BoundaryResult() {
                             minWidth: headRow[6].minWidth,
                           }}
                         >
-                          {`${item.p95} ms`}
+                          {`${item.p90} ms`}
                         </StyledTableBodyCell>
                         <StyledTableBodyCell
                           align={headRow[7].align}
