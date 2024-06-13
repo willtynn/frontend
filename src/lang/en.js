@@ -149,7 +149,7 @@ export const messages = {
     inputSize: 'Input Size',
     outputSize: 'Output Size',
     cpuResource: 'CPU',
-    ramResourceL: 'RAM',
+    ramResource: 'RAM',
     diskResource: 'Disk',
     gpuCoreResource: 'GPU-core',
     gpuMemResource: 'GPU Memory',
