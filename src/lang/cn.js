@@ -150,7 +150,7 @@ export const messages = {
     inputSize: '输入数据大小',
     outputSize: '输出数据大小',
     cpuResource: 'CPU资源',
-    ramResources: 'RAM资源',
+    ramResource: 'RAM资源',
     diskResource: 'Disk资源',
     gpuCoreResource: 'gpu-core资源',
     gpuMemResource: 'gpu内存资源',
