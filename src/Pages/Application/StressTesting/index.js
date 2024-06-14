@@ -51,15 +51,15 @@ import {
 } from '../../../actions/applicationAction';
 
 export const RUNNING = 'Running';
-export const PENDING = 'Pending';
+export const CREATED = 'Created';
 export const FAILED = 'Failed';
-export const SUCCEEDED = 'Succeeded';
+export const COMPLETED = 'Completed';
 
 const StatusIcon = phase => {
   if (phase === RUNNING) {
     return <RunningIcon />;
   }
-  if (phase === PENDING) {
+  if (phase === CREATED) {
     return <PendingIcon />;
   }
   if (phase === FAILED) {
@@ -72,15 +72,15 @@ const StatusText = phase => {
   if (phase === RUNNING) {
     return <span>Running&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>;
   }
-  if (phase === PENDING) {
-    return <span>Pending&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>;
+  if (phase === CREATED) {
+    return <span>Created&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>;
   }
   if (phase === FAILED) {
     return (
       <span>Failed&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
     );
   }
-  return <span>Succeeded</span>;
+  return <span>Completed</span>;
 };
 
 function descendingComparator(a, b, orderBy) {
