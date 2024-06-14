@@ -13,7 +13,7 @@ import {
   StyledTableRowCell,
   StyledTableContainer,
 } from '@/components/DisplayTable';
-import { getBoundaryTestResult } from '@/actions/applicationAction';
+import { getBoundaryTestResult, getBoundartExcel } from '@/actions/applicationAction';
 import { useParams } from 'react-router';
 import Question from '@/assets/Question.svg';
 import { NormalBoldFont, SmallLightFont } from '@/components/Fonts';
@@ -93,10 +93,6 @@ export function BoundaryResult() {
     dispatch(getBoundaryTestResult(testPlanId));
   }, [testPlanId]);
 
-  useEffect(() => {
-    console.log('bound', bound);
-  }, [bound]);
-
   return (
     <Stack direction='column' sx={{ pb: '40px' }} spacing={2}>
       <Stack direction='row' justifyContent='space-between' spacing={2}>
@@ -105,7 +101,7 @@ export function BoundaryResult() {
             sx={{
               width: '40%',
             }}
-            onClick={() => {}}
+            onClick={() => {dispatch(getBoundartExcel(testPlanId))}}
           >
             {intl.messages['stressTesting.exportXlsReport']}
           </KubeConfirmButton>

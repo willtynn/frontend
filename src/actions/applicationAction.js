@@ -620,7 +620,6 @@ export function getAggregateExcel(
 }
 
 export function createBoundaryTestPlan(testPlan) {
-  console.log('testPlan', testPlan);
   const url = '/pressureMeasurement/createBoundaryTest';
   return async dispatch => {
     try {
@@ -644,7 +643,6 @@ export function createBoundaryTestPlan(testPlan) {
           )
         );
       } else if (res.data.code === 1) {
-        // alert(res.data.message)
         dispatch(
           setSnackbarMessageAndOpen(
             'common.errorMessage',
@@ -665,6 +663,49 @@ export function createBoundaryTestPlan(testPlan) {
       dispatch(
         setSnackbarMessageAndOpen(
           'stressTesting.planCreationFailedMsg',
+          {},
+          SEVERITIES.warning
+        )
+      );
+    }
+  };
+}
+
+export function getBoundartExcel(planId) {
+  const url = '/pressureMeasurement/boundaryExcel';
+  return async dispatch => {
+    try {
+      const res = await axios_instance.post(
+        url,
+        null,
+        {
+          responseType: 'blob',
+          params: {
+            planId: planId,
+          },
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        }
+      );
+      if (res.status === 200) {
+        let blob = new Blob([res.data], {
+          type: 'application/vnd.ms-excel;charset=UTF-8',
+        });
+        saveAs(blob, `Boundary-Report-${planId}.xls`);
+      } else {
+        dispatch(
+          setSnackbarMessageAndOpen(
+            'stressTesting.aggregateExcelExportFailedMsg',
+            {},
+            SEVERITIES.warning
+          )
+        );
+      }
+    } catch {
+      dispatch(
+        setSnackbarMessageAndOpen(
+          'stressTesting.aggregateExcelExportFailedMsg',
           {},
           SEVERITIES.warning
         )

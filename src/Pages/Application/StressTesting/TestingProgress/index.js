@@ -433,7 +433,6 @@ export function TestingProgress(props) {
         if (!isBoundary) {
           dispatch(createTestPlan(testPlanData));
         } else {
-          console.log("boundary", testPlanData)
           dispatch(createBoundaryTestPlan(testPlanData));
         }
 

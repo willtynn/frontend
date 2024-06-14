@@ -259,7 +259,6 @@ export default function StressTesting() {
   };
 
   const filtering = () => {
-    console.log(tableData)
     let tmpData = JSON.parse(JSON.stringify(tableData));
     setCount(tableData.length);
     searchList.forEach((value, _) => {
