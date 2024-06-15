@@ -173,7 +173,6 @@ const composeTestParams = testPlan => {
     comment: testPlan.planComment,
     namespace: testPlan.namespace,
     podName: testPlan.podName,
-    podName: testPlan.podName,
     isBoundary: testPlan.isBoundary,
     threadGroupList: testPlan.threadGroups,
   };

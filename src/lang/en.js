@@ -146,7 +146,7 @@ export const messages = {
     inputSize: "Input Size",
     outputSize: "Output Size",
     cpuResource: "CPU",
-    ramResourceL: "RAM",
+    ramResource: "RAM",
     diskResource: "Disk",
     gpuCoreResource: "GPU-core",
     gpuMemResource: "GPU Memory",
@@ -184,6 +184,34 @@ export const messages = {
     cancelSelect: "Deselect",
     deleteServicesTitle: "Delete the selected services?",
     deleteServicesDescription: "The deletion cannot be restored.",
+    addService:"Add Service",
+    newService: "New Service",
+    serviceIDDescription:
+    "The ID can only contain letters, numbers, and hyphens (-), and must start and end with a letter or number, with a maximum length of 253 characters.",
+    serviceNameDescription:
+    "The Name can only contain letters, numbers, and hyphens (-), and must start and end with a letter or number, with a maximum length of 253 characters.",
+    serviceCommentDescription: "Additional explanation for the service.",
+    serviceDetails:"Service Details",
+    codeRepository:"Code Repository",
+    imageURLandTAG:"Image URL & TAG",
+    apiCollection:"Interface Collection",
+    addApiEntry:"INTERFACE",
+    api:"INTERFACE",
+    apiPath:"REQUESTED PATH",
+    apiMethod:"REQUEST METHOD",
+    apiInputSize:"INPUT SIZE",
+    apiOutputSize:"OUTPUT SIZE",
+    apiDescription:"DESCRIPTION",
+    resourceAndCapacity:"Resource And Capability",
+    idleResources:"Occupation during idle time",
+    cpuResources:"CPU",
+    ramResources:"RANM",
+    diskResources:"DISK",
+    gpuCoreResources:"GPU-CORE",
+    gpuMemoryResources:"GPU MEMORY",
+    majorVersion:"Major Version",
+    minorVersion:"Minor Version",
+    patchVersion:"Patch Version",
   },
   serviceDependency: {
     serviceDependencyNotFound:
@@ -213,7 +241,9 @@ export const messages = {
     noOptionalInterface: "No Optional Interface",
     optionalInterface: "Optional Interface",
     deleteServiceError: "Failed to delete a service dependency",
-    deleteServiceSuccess: "Deleted successfully"
+    deleteServiceSuccess: "Deleted successfully",
+    addServiceSuccess: "Service added successfully",
+    addServiceError: "Error adding service"
   },
   cluster: {
     clustersSearchError:

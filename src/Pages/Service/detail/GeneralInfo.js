@@ -95,7 +95,7 @@ export default function GeneralInfo(props) {
                   navigate('/service/query');
               })
               .catch((error) => {
-                  console.error(intl.formatMessage({ id: 'serviceDependency.deleteServiceError' }), error);
+                  console.error(intl.formatMessage({ id: 'common.deleteServiceError' }), error);
               });
       }
   };

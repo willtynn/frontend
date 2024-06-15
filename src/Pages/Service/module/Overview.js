@@ -2,12 +2,14 @@
  * src\Pages\Service\module\Overview.js
  */
 import { useEffect, useState, useMemo, forwardRef, Fragment } from 'react';
+import { StyledModal } from '../../../components/Modal';
 import {
   StyledTableContainer,
   StyledTableBodyCell,
   StyledTableFooter,
   StyledTableHead,
 } from '@/components/DisplayTable';
+import { ContainedButton, KubeConfirmButton } from '@/components/Button';
 import {
   TableRow,
   Box,
@@ -33,7 +35,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { StyledAutocomplete, ChipTextField } from '../../../components/Input';
 import {
   CHANGE_PAGE_NUM,
-  CHANGE_PAGE_SIZE,
+  CHANGE_PAGE_SIZE, RESET_SERVICE, UPDATE_SERVICE_EDIT,
 } from '../../../actions/serviceAction';
 import {
   UPDATE_SEARCH_SERVICE,
@@ -59,7 +61,7 @@ import {
   ORDER_BY_FLAG,
   ORDER_FLAG,
 } from '../../../utils/page_persist';
-
+import {AddService} from "./addService";
 const Transition = forwardRef(function Transition(props, ref) {
   return <Slide direction='up' ref={ref} {...props} />;
 });
@@ -133,6 +135,9 @@ export default function ServiceOverview(props) {
 
   const [checkAll, setCheckAll] = useState(false);
   const [selectedItems, setSelectedItems] = useState([]);
+
+  const [AddOpen, setAddOpen] = useState(false);
+  const [showError, setShowError] = useState(false);
 
   const selectFlag = selectedItems && selectedItems.length > 0;
 
@@ -491,6 +496,30 @@ export default function ServiceOverview(props) {
     );
   };
 
+  const handleAddClick = () => {
+    setAddOpen(true);
+  };
+
+  const resetParameters = () => {
+    dispatch({ type: UPDATE_SERVICE_EDIT, data: false });
+    dispatch({ type: RESET_SERVICE });
+  };
+
+  const handleClose = () => {
+    resetParameters();
+    setAddOpen(false);
+  };
+
+  const handleCancelClick = () => {
+    resetParameters();
+    setAddOpen(false);
+  };
+
+  const handleConfirmClick = () => {
+    resetParameters();
+    setAddOpen(false);
+  };
+
   // service/query左侧表格新
   return (
     // <BrowserRouter>
@@ -744,6 +773,25 @@ export default function ServiceOverview(props) {
             >
               <VisibilityIcon />
             </EclipseTransparentButton>
+
+            <KubeConfirmButton
+                sx={{
+                  width: '200px',
+                }}
+                onClick={handleAddClick}
+            >
+              {intl.messages['serviceOverview.addService']}
+            </KubeConfirmButton>
+
+            <StyledModal open={AddOpen} onClose={handleClose}>
+              <AddService
+                  handleConfirmClick={handleConfirmClick}
+                  handleCancelClick={handleCancelClick}
+                  showError={showError}
+                  setShowError={setShowError}
+              />
+            </StyledModal>
+
             {embeddingButton}
           </Stack>
         )}

@@ -26,6 +26,55 @@ export const DELETE_SERVICE_SUCCESS = 'DELETE_SERVICE_SUCCESS';
 
 export const DELETE_SERVICE_FAILURE = 'DELETE_SERVICE_FAILURE';
 
+export const RESET_SERVICE = 'RESET_SERVICE';
+
+export const UPDATE_SERVICE_EDIT = 'UPDATE_SERVICE_EDIT';
+
+export const UPDATE_SERVICE_EDIT_INDEX = 'UPDATE_SERVICE_EDIT_INDEX';
+
+export const UPDATE_SERVICE_CONFIG = 'UPDATE_SERVICE_CONFIG';
+
+export const UPDATE_SERVICE_ID = 'UPDATE_SERVICE_ID';
+
+export const UPDATE_SERVICE_NAME = 'UPDATE_SERVICE_NAME';
+
+export const UPDATE_SERVICE_CODEREPOSITORY = 'UPDATE_SERVICE_CODEREPOSITORY';
+
+export const UPDATE_SERVICE_IMAGE_URL_AND_TAG = 'UPDATE_SERVICE_IMAGEURLANDTAG';
+
+export const UPDATE_SERVICE_MAJOR = 'UPDATE_SERVICE_MAJOR';
+
+export const UPDATE_SERVICE_MINOR = 'UPDATE_SERVICE_MINOR';
+
+export const UPDATE_SERVICE_PATCH = 'UPDATE_SERVICE_PATCH';
+
+export const UPDATE_INTERFACES = 'UPDATE_INTERFACES';
+
+export const ADD_SERVICE_SUCCESS = 'ADD_SERVICE_SUCCESS';
+
+export const UPDATE_SERVICE_IDELCPU = 'UPDATE_SERVICE_IDELCPU';
+
+export const UPDATE_SERVICE_IDELRAM = 'UPDATE_SERVICE_IDELRAM';
+
+export const UPDATE_SERVICE_IDELDISK = 'UPDATE_SERVICE_IDELDISK';
+
+export const UPDATE_SERVICE_IDELGPUCORE = 'UPDATE_SERVICE_IDELGPUCORE';
+
+export const UPDATE_SERVICE_IDELGPUMEM = 'UPDATE_SERVICE_IDELGPUMEM';
+
+export const UPDATE_SERVICE_DESIREDCPU = 'UPDATE_SERVICE_DESIREDCPU';
+
+export const UPDATE_SERVICE_DESIREDRAM = 'UPDATE_SERVICE_DESIREDRAM';
+
+export const UPDATE_SERVICE_DESIREDDISK = 'UPDATE_SERVICE_DESIREDDISK';
+
+export const UPDATE_SERVICE_DESIREDGPUCORE = 'UPDATE_SERVICE_DESIREDGPUCORE';
+
+export const UPDATE_SERVICE_DESIREDGPUMEM = 'UPDATE_SERVICE_DESIREDGPUMEM';
+
+export const UPDATE_SERVICE_PROCESSCAPABILITY = 'UPDATE_SERVICE_PROCESSCAPABILITY';
+
+
 // const baseURLLink = 'http://192.168.1.104:31931';
 export const UPDATE_SEARCH_POD = 'UPDATE_SEARCH_POD';
 
@@ -425,7 +474,7 @@ export function deleteService(id) {
         dispatch({ type: DELETE_SERVICE_SUCCESS, data: res.data.data });
         dispatch(
             setSnackbarMessageAndOpen(
-                'serviceDependency.deleteServiceSuccess',
+                'common.deleteServiceSuccess',
                 { msg: 'Service deleted successfully.' },
                 SEVERITIES.success
             )
@@ -448,6 +497,59 @@ export function deleteService(id) {
               'serviceDependency.deleteServiceError',
               { msg: 'Error deleting service.' },
               SEVERITIES.error
+          )
+      );
+    }
+  };
+}
+
+export function addService(newservice) {
+  const url = '/service/add';
+  return async dispatch => {
+    try {
+      const res = await axios_instance.post(
+          url,
+          {
+            ...newservice
+          },
+          {
+            headers: {
+              'Content-Type': 'application/json',
+            },
+          }
+      );
+      if (res.data.code === 200 || res.data.code === 0) {
+        dispatch({type: ADD_SERVICE_SUCCESS, data: res.data.data});
+        dispatch(
+            setSnackbarMessageAndOpen(
+                'serviceDependency.addServiceSuccess',
+                {},
+                SEVERITIES.success
+            )
+        );
+      } else if (res.data.code === 1) {
+        dispatch(
+            setSnackbarMessageAndOpen(
+                'serviceDependency.addServiceError',
+                {msg: res.data.message},
+                SEVERITIES.warning
+            )
+        );
+      } else {
+      dispatch(
+          setSnackbarMessageAndOpen(
+              'serviceDependency.addServiceError',
+              {},
+              SEVERITIES.warning
+          )
+       );
+     }
+    } catch {
+      dispatch(
+          setSnackbarMessageAndOpen(
+              'serviceDependency.addServiceError',
+              {},
+              SEVERITIES.warning
           )
       );
     }
