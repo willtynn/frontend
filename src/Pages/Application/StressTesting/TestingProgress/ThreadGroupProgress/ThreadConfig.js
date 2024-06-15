@@ -157,7 +157,7 @@ export function ThreadConfig(props) {
         currentUser,
         currentTime
       );
-      if (startUsersPeriod > 0) {
+      if (startUsersPeriod > 0 && Number(numThreads) != Number(currentUser)) {
         data.push({
           x: currentTime + Number(startUsersPeriod),
           y: currentUser,
@@ -244,55 +244,146 @@ export function ThreadConfig(props) {
   };
 
   const handleNumThreadsChange = e => {
-    dispatch({ type: UPDATE_NUM_THREADS, data: e.target.value });
+    if (e.target.value == '') {
+      dispatch({ type: UPDATE_NUM_THREADS, data: 0 });
+    }
+    const numThreadsValue = Number(e.target.value);
+    if (isNaN(numThreadsValue)) {
+      return;
+    }
+    dispatch({ type: UPDATE_NUM_THREADS, data: numThreadsValue });
   };
 
   const handleRampTimeChange = e => {
-    dispatch({ type: UPDATE_RAMP_TIME, data: e.target.value });
+    if (e.target.value == '') {
+      dispatch({ type: UPDATE_RAMP_TIME, data: 0 });
+    }
+    const rampTimeValue = Number(e.target.value);
+    if (isNaN(rampTimeValue)) {
+      return;
+    }
+    dispatch({ type: UPDATE_RAMP_TIME, data: rampTimeValue });
   };
 
   const handleLoopsChange = e => {
-    dispatch({ type: UPDATE_LOOPS, data: e.target.value });
+    if (e.target.value == '') {
+      dispatch({ type: UPDATE_LOOPS, data: 0 });
+    }
+    const loopsValue = Number(e.target.value);
+    if (isNaN(loopsValue)) {
+      return;
+    }
+    dispatch({ type: UPDATE_LOOPS, data: loopsValue });
   };
 
   const handleDurationChange = e => {
-    dispatch({ type: UPDATE_DURATION, data: e.target.value });
+    if (e.target.value == '') {
+      dispatch({ type: UPDATE_DURATION, data: 0 });
+    }
+    const durationValue = Number(e.target.value);
+    if (isNaN(durationValue)) {
+      return;
+    }
+    dispatch({ type: UPDATE_DURATION, data: durationValue });
   };
 
   const handleDelayChange = e => {
-    dispatch({ type: UPDATE_DELAY, data: e.target.value });
+    if (e.target.value == '') {
+      dispatch({ type: UPDATE_DELAY, data: 0 });
+    }
+    const delayValue = Number(e.target.value);
+    if (isNaN(delayValue)) {
+      return;
+    }
+    dispatch({ type: UPDATE_DELAY, data: delayValue });
   };
 
   const handleInitialDelayChange = e => {
-    dispatch({ type: UPDATE_INITIAL_DELAY, data: e.target.value });
+    if (e.target.value == '') {
+      dispatch({ type: UPDATE_INITIAL_DELAY, data: 0 });
+    }
+    const initialDelayValue = Number(e.target.value);
+    if (isNaN(initialDelayValue)) {
+      return;
+    }
+    dispatch({ type: UPDATE_INITIAL_DELAY, data: initialDelayValue });
   };
 
   const handleStartUsersCountChange = e => {
-    dispatch({ type: UPDATE_START_USERS_COUNT, data: e.target.value });
+    if (e.target.value == '') {
+      dispatch({ type: UPDATE_START_USERS_COUNT, data: 0 });
+    }
+    const startUsersCountValue = Number(e.target.value);
+    if (isNaN(startUsersCountValue)) {
+      return;
+    }
+    dispatch({ type: UPDATE_START_USERS_COUNT, data: startUsersCountValue });
   };
 
   const handleStartUsersCountBurstChange = e => {
-    dispatch({ type: UPDATE_START_USERS_COUNT_BURST, data: e.target.value });
+    if (e.target.value == '') {
+      dispatch({ type: UPDATE_START_USERS_COUNT_BURST, data: 0 });
+    }
+    const startUsersCountBurstValue = Number(e.target.value);
+    if (isNaN(startUsersCountBurstValue)) {
+      return;
+    }
+    dispatch({ type: UPDATE_START_USERS_COUNT_BURST, data: startUsersCountBurstValue });
   };
 
   const handleStartUsersPeriodChange = e => {
-    dispatch({ type: UPDATE_START_USERS_PERIOD, data: e.target.value });
+    if (e.target.value == '') {
+      dispatch({ type: UPDATE_START_USERS_PERIOD, data: 0 });
+    }
+    const startUsersPeriodValue = Number(e.target.value);
+    if (isNaN(startUsersPeriodValue)) {
+      return;
+    }
+    dispatch({ type: UPDATE_START_USERS_PERIOD, data: startUsersPeriodValue });
   };
 
   const handleStopUsersCountChange = e => {
-    dispatch({ type: UPDATE_STOP_USERS_COUNT, data: e.target.value });
+    if (e.target.value == '') {
+      dispatch({ type: UPDATE_STOP_USERS_COUNT, data: 0 });
+    }
+    const stopUsersCountValue = Number(e.target.value);
+    if (isNaN(stopUsersCountValue)) {
+      return;
+    }
+    dispatch({ type: UPDATE_STOP_USERS_COUNT, data: stopUsersCountValue });
   };
 
   const handleStopUsersPeriodChange = e => {
-    dispatch({ type: UPDATE_STOP_USERS_PERIOD, data: e.target.value });
+    if (e.target.value == '') {
+      dispatch({ type: UPDATE_STOP_USERS_PERIOD, data: 0 });
+    }
+    const stopUsersPeriodValue = Number(e.target.value);
+    if (isNaN(stopUsersPeriodValue)) {
+      return;
+    }
+    dispatch({ type: UPDATE_STOP_USERS_PERIOD, data: stopUsersPeriodValue });
   };
 
   const handleFlighttimeChange = e => {
-    dispatch({ type: UPDATE_FLIGHTTIME, data: e.target.value });
+    if (e.target.value == '') {
+      dispatch({ type: UPDATE_FLIGHTTIME, data: 0 });
+    }
+    const flighttimeValue = Number(e.target.value);
+    if (isNaN(flighttimeValue)) {
+      return;
+    }
+    dispatch({ type: UPDATE_FLIGHTTIME, data: flighttimeValue });
   };
 
   const handleRampUpChange = e => {
-    dispatch({ type: UPDATE_RAMP_UP, data: e.target.value });
+    if (e.target.value == '') {
+      dispatch({ type: UPDATE_RAMP_UP, data: 0 });
+    }
+    const rampUpValue = Number(e.target.value);
+    if (isNaN(rampUpValue)) {
+      return;
+    }
+    dispatch({ type: UPDATE_RAMP_UP, data: rampUpValue });
   };
 
   const processRampUp = (
@@ -380,6 +471,7 @@ export function ThreadConfig(props) {
           variant='outlined'
           value={numThreads}
           onChange={handleNumThreadsChange}
+
         />
 
         {isBoundary ? (

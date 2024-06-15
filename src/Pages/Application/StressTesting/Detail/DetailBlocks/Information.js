@@ -82,18 +82,66 @@ export function Information() {
   });
 
   const parameterHeadRow = [
-    createRow('key', intl.messages['common.key'], false, '70px', '70px', true, 'center'),
-    createRow('value', intl.messages['common.value'], false, '70px', '70px', true, 'center'),
+    createRow(
+      'key',
+      intl.messages['common.key'],
+      false,
+      '70px',
+      '70px',
+      true,
+      'center'
+    ),
+    createRow(
+      'value',
+      intl.messages['common.value'],
+      false,
+      '70px',
+      '70px',
+      true,
+      'center'
+    ),
   ];
 
   const requestHeadHeadRow = [
-    createRow('key', intl.messages['common.key'], false, '70px', '70px', true, 'center'),
-    createRow('value', intl.messages['common.value'], false, '70px', '70px', true, 'center'),
+    createRow(
+      'key',
+      intl.messages['common.key'],
+      false,
+      '70px',
+      '70px',
+      true,
+      'center'
+    ),
+    createRow(
+      'value',
+      intl.messages['common.value'],
+      false,
+      '70px',
+      '70px',
+      true,
+      'center'
+    ),
   ];
 
   const timerHeadRow = [
-    createRow('name', intl.messages['common.name'], false, '70px', '70px', true, 'center'),
-    createRow('threadDelay', intl.messages['stressTesting.threadDelay'], false, '70px', '70px', true, 'center'),
+    createRow(
+      'name',
+      intl.messages['common.name'],
+      false,
+      '70px',
+      '70px',
+      true,
+      'center'
+    ),
+    createRow(
+      'threadDelay',
+      intl.messages['stressTesting.threadDelay'],
+      false,
+      '70px',
+      '70px',
+      true,
+      'center'
+    ),
     createRow(
       'constantDelayOffset',
       intl.messages['stressTesting.constantDelayOffset'],
@@ -249,7 +297,7 @@ export function Information() {
                 direction='column'
                 spacing={1.5}
               >
-                <Stack direction='row' spacing={3}>
+                <Stack direction='row' spacing={4}>
                   <Box sx={labelStyle}>{intl.messages['common.name']}</Box>
                   <Box sx={valueStyle}>
                     {currentPlan &&
@@ -259,7 +307,7 @@ export function Information() {
                       : ''}
                   </Box>
                 </Stack>
-                <Stack direction='row' spacing={3}>
+                <Stack direction='row' spacing={4}>
                   <Box sx={labelStyle}>{intl.messages['common.threadNum']}</Box>
                   <Box sx={valueStyle}>
                     {currentPlan &&
@@ -269,17 +317,11 @@ export function Information() {
                       : ''}
                   </Box>
                 </Stack>
-                <Stack direction='row' spacing={3}>
-                  <Box sx={labelStyle}>Ramp Up</Box>
-                  <Box sx={valueStyle}>
-                    {currentPlan &&
-                    currentPlan.threadGroupList[currentThreadGroup] !== null
-                      ? currentPlan.threadGroupList[currentThreadGroup].rampUp
-                      : ''}
+
+                <Stack direction='row' spacing={4}>
+                  <Box sx={labelStyle}>
+                    {intl.messages['common.cycleIndex']}
                   </Box>
-                </Stack>
-                <Stack direction='row' spacing={3}>
-                  <Box sx={labelStyle}>{intl.messages['common.cycleIndex']}</Box>
                   <Box sx={valueStyle}>
                     {currentPlan &&
                     currentPlan.threadGroupList[currentThreadGroup] !== null
@@ -288,6 +330,129 @@ export function Information() {
                       : ''}
                   </Box>
                 </Stack>
+                {currentPlan &&
+                currentPlan.threadGroupList[currentThreadGroup] !== null &&
+                currentPlan.threadGroupList[currentThreadGroup].stepping ? (
+                  <>
+                    <Stack direction='row' spacing={4}>
+                      <Box sx={labelStyle}>
+                        {intl.messages['stressTesting.delayedStartTime']}
+                      </Box>
+                      <Box sx={valueStyle}>
+                        {currentPlan &&
+                        currentPlan.threadGroupList[currentThreadGroup] !== null
+                          ? currentPlan.threadGroupList[currentThreadGroup]
+                              .initialDelay
+                          : ''}
+                      </Box>
+                    </Stack>
+                    <Stack direction='row' spacing={4}>
+                      <Box sx={labelStyle}>
+                        {intl.messages['stressTesting.initialUsersCount']}
+                      </Box>
+                      <Box sx={valueStyle}>
+                        {currentPlan &&
+                        currentPlan.threadGroupList[currentThreadGroup] !== null
+                          ? currentPlan.threadGroupList[currentThreadGroup]
+                              .startUsersCountBurst
+                          : ''}
+                      </Box>
+                    </Stack>
+                    <Stack direction='row' spacing={4}>
+                      <Box sx={labelStyle}>
+                        {
+                          intl.messages[
+                            'stressTesting.newConcurrentRequestsPerRound'
+                          ]
+                        }
+                      </Box>
+                      <Box sx={valueStyle}>
+                        {currentPlan &&
+                        currentPlan.threadGroupList[currentThreadGroup] !== null
+                          ? currentPlan.threadGroupList[currentThreadGroup]
+                              .startUsersCount
+                          : ''}
+                      </Box>
+                    </Stack>
+                    <Stack direction='row' spacing={4}>
+                      <Box sx={labelStyle}>
+                        {intl.messages['stressTesting.increasePeriod']}
+                      </Box>
+                      <Box sx={valueStyle}>
+                        {currentPlan &&
+                        currentPlan.threadGroupList[currentThreadGroup] !== null
+                          ? currentPlan.threadGroupList[currentThreadGroup]
+                              .startUsersPeriod
+                          : ''}
+                      </Box>
+                    </Stack>
+
+                    <Stack direction='row' spacing={4}>
+                      <Box sx={labelStyle}>
+                        {intl.messages['stressTesting.rampUpPerPeriod']}
+                      </Box>
+                      <Box sx={valueStyle}>
+                        {currentPlan &&
+                        currentPlan.threadGroupList[currentThreadGroup] !== null
+                          ? currentPlan.threadGroupList[currentThreadGroup]
+                              .rampUp
+                          : ''}
+                      </Box>
+                    </Stack>
+
+                    <Stack direction='row' spacing={4}>
+                      <Box sx={labelStyle}>
+                        {intl.messages['stressTesting.flighttime']}
+                      </Box>
+                      <Box sx={valueStyle}>
+                        {currentPlan &&
+                        currentPlan.threadGroupList[currentThreadGroup] !== null
+                          ? currentPlan.threadGroupList[currentThreadGroup]
+                              .flighttime
+                          : ''}
+                      </Box>
+                    </Stack>
+
+                    <Stack direction='row' spacing={4}>
+                      <Box sx={labelStyle}>
+                        {intl.messages['stressTesting.stopUsersCount']}
+                      </Box>
+                      <Box sx={valueStyle}>
+                        {currentPlan &&
+                        currentPlan.threadGroupList[currentThreadGroup] !== null
+                          ? currentPlan.threadGroupList[currentThreadGroup]
+                              .stopUsersCount
+                          : ''}
+                      </Box>
+                    </Stack>
+
+                    <Stack direction='row' spacing={4}>
+                      <Box sx={labelStyle}>
+                        {intl.messages['stressTesting.stopUsersPeriod']}
+                      </Box>
+                      <Box sx={valueStyle}>
+                        {currentPlan &&
+                        currentPlan.threadGroupList[currentThreadGroup] !== null
+                          ? currentPlan.threadGroupList[currentThreadGroup]
+                              .stopUsersPeriod
+                          : ''}
+                      </Box>
+                    </Stack>
+                  </>
+                ) : (
+                  <>
+                    <Stack direction='row' spacing={4}>
+                      <Box sx={labelStyle}>Ramp Up</Box>
+                      <Box sx={valueStyle}>
+                        {currentPlan &&
+                        currentPlan.threadGroupList[currentThreadGroup] !== null
+                          ? currentPlan.threadGroupList[currentThreadGroup]
+                              .rampUp
+                          : ''}
+                      </Box>
+                    </Stack>
+                  </>
+                )}
               </Stack>
             </Stack>
             <Stack direction='column' spacing={1}>
@@ -350,7 +515,9 @@ export function Information() {
                   </Box>
                 </Stack>
                 <Stack direction='row' spacing={3}>
-                  <Box sx={labelStyle}>{intl.messages['common.requestMethod']}</Box>
+                  <Box sx={labelStyle}>
+                    {intl.messages['common.requestMethod']}
+                  </Box>
                   <Box sx={valueStyle}>
                     {currentPlan &&
                     currentPlan.threadGroupList[currentThreadGroup] !== null
@@ -364,8 +531,10 @@ export function Information() {
                   <Box sx={valueStyle}>
                     {currentPlan &&
                     currentPlan.threadGroupList[currentThreadGroup] !== null
-                      ? getBoolString(currentPlan.threadGroupList[currentThreadGroup]
-                          .httpSamplerProxyVO.useKeepAlive)
+                      ? getBoolString(
+                          currentPlan.threadGroupList[currentThreadGroup]
+                            .httpSamplerProxyVO.useKeepAlive
+                        )
                       : ''}
                   </Box>
                 </Stack>
@@ -374,8 +543,10 @@ export function Information() {
                   <Box sx={valueStyle}>
                     {currentPlan &&
                     currentPlan.threadGroupList[currentThreadGroup] !== null
-                      ? getBoolString(currentPlan.threadGroupList[currentThreadGroup]
-                          .httpSamplerProxyVO.followRedirects)
+                      ? getBoolString(
+                          currentPlan.threadGroupList[currentThreadGroup]
+                            .httpSamplerProxyVO.followRedirects
+                        )
                       : ''}
                   </Box>
                 </Stack>
@@ -386,7 +557,9 @@ export function Information() {
                 currentPlan.threadGroupList[currentThreadGroup]
                   .httpSamplerProxyVO ? (
                   <Stack direction='row' spacing={3}>
-                    <Box sx={labelStyle}>{intl.messages['common.requestBody']}</Box>
+                    <Box sx={labelStyle}>
+                      {intl.messages['common.requestBody']}
+                    </Box>
                     <Box sx={valueStyle}>
                       {
                         currentPlan.threadGroupList[currentThreadGroup]
@@ -402,13 +575,15 @@ export function Information() {
                 {currentPlan &&
                 currentPlan.threadGroupList[currentThreadGroup] &&
                 currentPlan.threadGroupList[currentThreadGroup]
-                .httpSamplerProxyVO.arguments &&
+                  .httpSamplerProxyVO.arguments &&
                 Object.keys(
                   currentPlan.threadGroupList[currentThreadGroup]
                     .httpSamplerProxyVO.arguments
                 ).length > 0 ? (
                   <Stack direction='row' spacing={3}>
-                    <Box sx={labelStyle}>{intl.messages['common.requestParameters']}</Box>
+                    <Box sx={labelStyle}>
+                      {intl.messages['common.requestParameters']}
+                    </Box>
                     <Box sx={valueStyle}>
                       <StyledTableContainer sx={{ maxHeight: '680px' }}>
                         <Table
@@ -492,14 +667,16 @@ export function Information() {
                 {/* 请求头 */}
                 {currentPlan &&
                 currentPlan.threadGroupList[currentThreadGroup] &&
-                currentPlan.threadGroupList[currentThreadGroup]
-                    .headerManagerVO.headerList &&
+                currentPlan.threadGroupList[currentThreadGroup].headerManagerVO
+                  .headerList &&
                 Object.keys(
                   currentPlan.threadGroupList[currentThreadGroup]
                     .headerManagerVO.headerList
                 ).length > 0 ? (
                   <Stack direction='row' spacing={3}>
-                    <Box sx={labelStyle}>{intl.messages['common.requestHeader']}</Box>
+                    <Box sx={labelStyle}>
+                      {intl.messages['common.requestHeader']}
+                    </Box>
                     <Box sx={valueStyle}>
                       <StyledTableContainer sx={{ maxHeight: '680px' }}>
                         <Table
@@ -627,10 +804,13 @@ export function Information() {
                           ))}
                         </TableRow>
                       </TableHead>
-                      {currentPlan.threadGroupList[currentThreadGroup].timers && currentPlan.threadGroupList[currentThreadGroup].timers
+                      {currentPlan.threadGroupList[currentThreadGroup].timers &&
+                      currentPlan.threadGroupList[currentThreadGroup].timers
                         .length > 0 ? (
                         <TableBody>
-                          {currentPlan.threadGroupList[currentThreadGroup].timers.map((timer, index) => (
+                          {currentPlan.threadGroupList[
+                            currentThreadGroup
+                          ].timers.map((timer, index) => (
                             <TableRow
                               key={timer.type + '' + index}
                               aria-checked={false}
@@ -663,9 +843,7 @@ export function Information() {
                                   minWidth: timerHeadRow[1].minWidth,
                                 }}
                               >
-                                {
-                                  timer.threadDelay ?? "/"
-                                }
+                                {timer.threadDelay ?? '/'}
                               </StyledTableBodyCell>
                               <StyledTableBodyCell
                                 align={timerHeadRow[2].align}
@@ -674,9 +852,7 @@ export function Information() {
                                   minWidth: timerHeadRow[2].minWidth,
                                 }}
                               >
-                                {
-                                  timer.constantDelayOffset ?? "/"
-                                }
+                                {timer.constantDelayOffset ?? '/'}
                               </StyledTableBodyCell>
                               <StyledTableBodyCell
                                 align={timerHeadRow[3].align}
@@ -685,9 +861,7 @@ export function Information() {
                                   minWidth: timerHeadRow[3].minWidth,
                                 }}
                               >
-                                {
-                                  timer.randomDelayMaximum ?? "/"
-                                }
+                                {timer.randomDelayMaximum ?? '/'}
                               </StyledTableBodyCell>
                               <StyledTableBodyCell
                                 align={timerHeadRow[4].align}
@@ -696,9 +870,7 @@ export function Information() {
                                   minWidth: timerHeadRow[4].minWidth,
                                 }}
                               >
-                                {
-                                  timer.deviation ?? "/"
-                                }
+                                {timer.deviation ?? '/'}
                               </StyledTableBodyCell>
                               <StyledTableBodyCell
                                 align={timerHeadRow[5].align}
@@ -707,9 +879,7 @@ export function Information() {
                                   minWidth: timerHeadRow[5].minWidth,
                                 }}
                               >
-                                {
-                                  timer.lambda ?? "/"
-                                }
+                                {timer.lambda ?? '/'}
                               </StyledTableBodyCell>
                             </TableRow>
                           ))}
@@ -727,10 +897,20 @@ export function Information() {
                               }}
                             >
                               <Question />
-                              <NormalBoldFont>{intl.messages['common.serviceTableContentNoData']}</NormalBoldFont>
+                              <NormalBoldFont>
+                                {
+                                  intl.messages[
+                                    'common.serviceTableContentNoData'
+                                  ]
+                                }
+                              </NormalBoldFont>
 
                               <SmallLightFont>
-                                {intl.messages['common.serviceTableContentNoDataHint']}
+                                {
+                                  intl.messages[
+                                    'common.serviceTableContentNoDataHint'
+                                  ]
+                                }
                               </SmallLightFont>
                             </TableCell>
                           </TableRow>

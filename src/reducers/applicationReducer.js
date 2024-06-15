@@ -63,6 +63,9 @@ const initState = {
   aggregateReport: null,
   changeFlag: 0,
   startAndEnd: [-1, -1],
+
+  boundaryResult: [],
+  bound: null,
 };
 
 export default function ApplicationReducer(state = initState, action) {
@@ -224,6 +227,14 @@ export default function ApplicationReducer(state = initState, action) {
         scheduler: false,
         duration: null,
         delay: null,
+        initialDelay: 0,
+        startUsersCount: 0,
+        startUsersCountBurst: 0,
+        startUsersPeriod: 0,
+        stopUsersCount: 0,
+        stopUsersPeriod: 0,
+        flighttime: 0,
+        rampUp: 0,
 
         requestDefaultName: 'HTTP请求默认值',
         webServerProtocol: '',
@@ -249,6 +260,7 @@ export default function ApplicationReducer(state = initState, action) {
         functionalMode: false,
         tearDownOnShutdown: false,
         serializeThreadgroups: false,
+        isBoundary: false,
         threadGroups: [],
       };
     case actions.FILL_GROUP_FORM:
@@ -404,6 +416,18 @@ export default function ApplicationReducer(state = initState, action) {
       return {
         ...state,
         rampUp: data,
+      };
+
+    case actions.UPDATE_BOUNDARY_RESULT:
+      return {
+        ...state,
+        boundaryResult: data,
+      };
+
+    case actions.UPDATE_BOUND:
+      return {
+        ...state,
+        bound: data,
       };
 
     default:

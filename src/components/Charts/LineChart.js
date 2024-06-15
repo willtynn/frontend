@@ -1,6 +1,17 @@
 import { useState, useRef, useEffect } from 'react';
 import './LineChart.css';
 import { Box, Stack } from '@mui/material';
+import {
+  LineChart,
+  Line,
+  XAxis,
+  YAxis,
+  CartesianGrid,
+  Tooltip,
+  Legend,
+  ResponsiveContainer,
+  Label,
+} from 'recharts';
 
 export const StaticLineChart = props => {
   const { data, period, count, tickCount } = props;
@@ -24,8 +35,6 @@ export const StaticLineChart = props => {
   // 生成刻度数组
   const xTicks = Array.from({ length: tickCount }, (_, i) => i * xTickGap);
   const yTicks = Array.from({ length: tickCount }, (_, i) => i * yTickGap);
-
-  
 
   useEffect(() => {
     if (chartRef.current) {
@@ -85,94 +94,128 @@ export const StaticLineChart = props => {
   }
 
   return (
-    <Stack sx={{
-      width: "100%"
-    }}
-      alignItems="center"
+    <Stack
+      sx={{
+        width: '100%',
+      }}
+      alignItems='center'
       justifyContent='center'
     >
-    <Box
-      sx={{
-        paddingY: `${paddingVertical}px`,
-        paddingX: `${paddingHorizon}px`,
-      }}
-    >
-      <Box className='line-chart' ref={chartRef}>
-        <svg
-          key='linechart-key'
-          width={chartSize.width}
-          height={chartSize.height}
-          viewBox={`0 0 ${chartSize.width} ${chartSize.height}`}
-          onMouseMove={handleMouseMove}
-          onMouseLeave={handleMouseLeave}
-          style={{
-            whiteSpace: 'nowrap',
-            overflow: 'visible',
-          }}
-        >
-          {/* x轴刻度 */}
-          {xTicks.map((tick, index) => (
-            <g key={generateUUID() + tick}>
-              <line
-                x1={(tick * chartSize.width) / Math.max(maxX)}
-                y1={chartSize.height - 5}
-                x2={(tick * chartSize.width) / Math.max(maxX)}
-                y2={chartSize.height + 5}
-                style={{ stroke: 'black', strokeWidth: 2 }}
-              />
-              <text
-                x={(tick * chartSize.width) / Math.max(maxX)}
-                y={chartSize.height + 20}
-                textAnchor='middle'
-              >
-                {tick.toFixed(1)}
-              </text>
-            </g>
-          ))}
+      <Box
+        sx={{
+          paddingY: `${paddingVertical}px`,
+          paddingX: `${paddingHorizon}px`,
+        }}
+      >
+        <Box className='line-chart' ref={chartRef}>
+          <svg
+            key='linechart-key'
+            width={chartSize.width}
+            height={chartSize.height}
+            viewBox={`0 0 ${chartSize.width} ${chartSize.height}`}
+            onMouseMove={handleMouseMove}
+            onMouseLeave={handleMouseLeave}
+            style={{
+              whiteSpace: 'nowrap',
+              overflow: 'visible',
+            }}
+          >
+            {/* x轴刻度 */}
+            {xTicks.map((tick, index) => (
+              <g key={generateUUID() + tick}>
+                <line
+                  x1={(tick * chartSize.width) / Math.max(maxX)}
+                  y1={chartSize.height - 5}
+                  x2={(tick * chartSize.width) / Math.max(maxX)}
+                  y2={chartSize.height + 5}
+                  style={{ stroke: 'black', strokeWidth: 2 }}
+                />
+                <text
+                  x={(tick * chartSize.width) / Math.max(maxX)}
+                  y={chartSize.height + 20}
+                  textAnchor='middle'
+                >
+                  {tick.toFixed(1)}
+                </text>
+              </g>
+            ))}
 
-          {/* y轴刻度 */}
-          {yTicks.map((tick, index) => (
-            <g key={generateUUID() + tick}>
-              <line
-                x1={-5}
-                y1={
-                  chartSize.height -
-                  (tick * chartSize.height) / Math.max(maxY)
-                }
-                x2={5}
-                y2={
-                  chartSize.height -
-                  (tick * chartSize.height) / Math.max(maxY)
-                }
-                style={{ stroke: 'black', strokeWidth: 2 }}
-              />
-              <text
-                x={-20}
-                y={
-                  chartSize.height -
-                  (tick * chartSize.height) / Math.max(maxY)
-                }
-                textAnchor='end'
-              >
-                {tick.toFixed(1)}
+            {/* y轴刻度 */}
+            {yTicks.map((tick, index) => (
+              <g key={generateUUID() + tick}>
+                <line
+                  x1={-5}
+                  y1={
+                    chartSize.height -
+                    (tick * chartSize.height) / Math.max(maxY)
+                  }
+                  x2={5}
+                  y2={
+                    chartSize.height -
+                    (tick * chartSize.height) / Math.max(maxY)
+                  }
+                  style={{ stroke: 'black', strokeWidth: 2 }}
+                />
+                <text
+                  x={-20}
+                  y={
+                    chartSize.height -
+                    (tick * chartSize.height) / Math.max(maxY)
+                  }
+                  textAnchor='end'
+                >
+                  {tick.toFixed(1)}
+                </text>
+              </g>
+            ))}
+            <polyline
+              points={`0 ${chartSize.height}, ${points}`}
+              style={{ fill: 'none', stroke: 'blue', strokeWidth: 2 }}
+            />
+            {/* 坐标轴颜色 */}
+            <line x1='0' y1='0' x2='0' y2='100%' stroke='black' />
+            <line x1='0' y1='100%' x2='100%' y2='100%' stroke='black' />
+            {hoveredPoint && (
+              <text x='90%' y='10%' fontSize='3' fill='black'>
+                {`(${hoveredPoint.x}, ${hoveredPoint.y})`}
               </text>
-            </g>
-          ))}
-          <polyline
-            points={`0 ${chartSize.height}, ${points}`}
-            style={{ fill: 'none', stroke: 'blue', strokeWidth: 2 }}
-          />
-          {/* 坐标轴颜色 */}
-          <line x1='0' y1='0' x2='0' y2='100%' stroke='black' />
-          <line x1='0' y1='100%' x2='100%' y2='100%' stroke='black' />
-          {hoveredPoint && (
-            <text x='90%' y='10%' fontSize='3' fill='black'>
-              {`(${hoveredPoint.x}, ${hoveredPoint.y})`}
-            </text>
-          )}
-        </svg>
+            )}
+          </svg>
+        </Box>
       </Box>
-    </Box>
     </Stack>
+  );
+};
+
+export const KubeLineChart = props => {
+  const {
+    data,
+    keyName,
+    valueName,
+    color,
+    labelX,
+    labelY,
+    labelName,
+    width = 500,
+    height = 500,
+    pxGap = 120,
+  } = props;
+
+  return (
+    <LineChart
+      width={730}
+      height={250}
+      data={data}
+      margin={{ top: 5, right: 30, left: 20, bottom: 5 }}
+    >
+      <CartesianGrid strokeDasharray='3 3' />
+      <XAxis dataKey={keyName}>
+      <Label value={labelX} offset={0} position="insideBottom" />
+      </XAxis>
+      <YAxis><Label value={labelY} offset={0} position="insideLeft" angle={-90}/></YAxis>
+      <Tooltip />
+      <Legend />
+      {valueName.map((item, index) => (<Line type='linear' dataKey={item} stroke={color[index]} />))}
+    </LineChart>
   );
 };

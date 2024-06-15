@@ -82,7 +82,7 @@ export function AggregateReport() {
     createRow('median', 'Median', false, '70px', '70px', true, 'center'),
     createRow('min', 'Min', false, '70px', '70px', true, 'center'),
     createRow('max', 'Max', false, '70px', '70px', true, 'center'),
-    createRow('p50', 'p50', false, '70px', '70px', true, 'center'),
+    createRow('p90', 'p90', false, '70px', '70px', true, 'center'),
     createRow('p95', 'p95', false, '70px', '70px', true, 'center'),
     createRow('p99', 'p99', false, '70px', '70px', true, 'center'),
     createRow('tps', 'TPS', false, '70px', '70px', true, 'center'),
@@ -342,7 +342,7 @@ export function AggregateReport() {
                         minWidth: headRow[6].minWidth,
                       }}
                     >
-                      {`${aggregateReport.p50} ms`}
+                      {`${aggregateReport.p90} ms`}
                     </StyledTableBodyCell>
                     <StyledTableBodyCell
                       align={headRow[7].align}

@@ -9,9 +9,9 @@ export const UPDATE_SERIALIZE_THREADGROUPS = 'UPDATE_SERIALIZE_THREADGROUPS';
 export const UPDATE_FUNCTIONAL_MODE = 'UPDATE_FUNCTIONAL_MODE';
 export const UPDATE_TEARDOWN_ON_SHUTDOWN = 'UPDATE_TEARDOWN_ON_SHUTDOWN';
 
-export const UPDATE_PLAN_NAMESPACE = "UPDATE_PLAN_NAMESPACE";
-export const UPDATE_PLAN_PODNAME = "UPDATE_PLAN_PODNAME";
-export const UPDATE_IS_BOUNDARY = "UPDATE_IS_BOUNDARY";
+export const UPDATE_PLAN_NAMESPACE = 'UPDATE_PLAN_NAMESPACE';
+export const UPDATE_PLAN_PODNAME = 'UPDATE_PLAN_PODNAME';
+export const UPDATE_IS_BOUNDARY = 'UPDATE_IS_BOUNDARY';
 
 export const UPDATE_GROUP_NAME = 'UPDATE_GROUP_NAME';
 export const UPDATE_GROUP_COMMENT = 'UPDATE_GROUP_COMMENT';
@@ -73,6 +73,9 @@ export const UPDATE_CURRENT_TEST_RESULT = 'UPDATE_CURRENT_TEST_RESULT';
 export const UPDATE_AGGREGATE_REPORT = 'UPDATE_AGGREGATE_REPORT';
 export const UPDATE_CHANGE_FLAG = 'UPDATE_CHANGE_FLAG';
 export const UPDATE_START_AND_END = 'UPDATE_START_AND_END';
+
+export const UPDATE_BOUNDARY_RESULT = 'UPDATE_BOUNDARY_RESULT';
+export const UPDATE_BOUND = "UPDATE_BOUND";
 
 const baseURLLink = 'http://192.168.1.104:14447';
 // const baseURLLink = 'http://localhost:8848';
@@ -591,8 +594,10 @@ export function getAggregateExcel(
         }
       );
       if (res.status === 200) {
-        let blob = new Blob([res.data], {type: 'application/vnd.ms-excel;charset=UTF-8'});
-        saveAs(blob, `Aggregate-Report-${planId}.xls`)
+        let blob = new Blob([res.data], {
+          type: 'application/vnd.ms-excel;charset=UTF-8',
+        });
+        saveAs(blob, `Aggregate-Report-${planId}.xls`);
       } else {
         dispatch(
           setSnackbarMessageAndOpen(
@@ -614,9 +619,7 @@ export function getAggregateExcel(
   };
 }
 
-
 export function createBoundaryTestPlan(testPlan) {
-  console.log("testPlan", testPlan)
   const url = '/pressureMeasurement/createBoundaryTest';
   return async dispatch => {
     try {
@@ -640,7 +643,6 @@ export function createBoundaryTestPlan(testPlan) {
           )
         );
       } else if (res.data.code === 1) {
-        // alert(res.data.message)
         dispatch(
           setSnackbarMessageAndOpen(
             'common.errorMessage',
@@ -661,6 +663,108 @@ export function createBoundaryTestPlan(testPlan) {
       dispatch(
         setSnackbarMessageAndOpen(
           'stressTesting.planCreationFailedMsg',
+          {},
+          SEVERITIES.warning
+        )
+      );
+    }
+  };
+}
+
+export function getBoundartExcel(planId) {
+  const url = '/pressureMeasurement/boundaryExcel';
+  return async dispatch => {
+    try {
+      const res = await axios_instance.post(
+        url,
+        null,
+        {
+          responseType: 'blob',
+          params: {
+            planId: planId,
+          },
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        }
+      );
+      if (res.status === 200) {
+        let blob = new Blob([res.data], {
+          type: 'application/vnd.ms-excel;charset=UTF-8',
+        });
+        saveAs(blob, `Boundary-Report-${planId}.xls`);
+      } else {
+        dispatch(
+          setSnackbarMessageAndOpen(
+            'stressTesting.aggregateExcelExportFailedMsg',
+            {},
+            SEVERITIES.warning
+          )
+        );
+      }
+    } catch {
+      dispatch(
+        setSnackbarMessageAndOpen(
+          'stressTesting.aggregateExcelExportFailedMsg',
+          {},
+          SEVERITIES.warning
+        )
+      );
+    }
+  };
+}
+
+export function getBoundaryTestResult(planId) {
+  const url = '/pressureMeasurement/getBoundaryTestResult';
+  return async dispatch => {
+    try {
+      const res = await axios_instance.get(
+        url,
+        {
+          params: {
+            planId: planId,
+          },
+        },
+        {
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        }
+      );
+      if (res.data.code === 200 || res.data.code === 0) {
+        const boundaryResult = res.data.data;
+        if(boundaryResult.length > 1) {
+          dispatch({ type: UPDATE_BOUNDARY_RESULT, data: boundaryResult.slice(0, boundaryResult.length - 1) });
+          dispatch({ type: UPDATE_BOUND, data: boundaryResult[boundaryResult.length - 1] });
+        } else {
+          dispatch({ type: UPDATE_BOUNDARY_RESULT, data: boundaryResult });
+          dispatch({ type: UPDATE_BOUND, data: null });
+        }
+        
+      } else if (res.data.code === 1) {
+        dispatch({ type: UPDATE_BOUNDARY_RESULT, data: [] });
+        dispatch(
+          setSnackbarMessageAndOpen(
+            'common.errorMessage',
+            { msg: res.data.message },
+            SEVERITIES.warning
+          )
+        );
+      } else {
+        dispatch({ type: UPDATE_BOUNDARY_RESULT, data: [] });
+        dispatch(
+          setSnackbarMessageAndOpen(
+            'stressTesting.resultsSearchError',
+            {},
+            SEVERITIES.warning
+          )
+        );
+      }
+    } catch {
+      dispatch({ type: UPDATE_BOUNDARY_RESULT, data: [] });
+      dispatch(
+        setSnackbarMessageAndOpen(
+          'stressTesting.resultsSearchError',
           {},
           SEVERITIES.warning
         )

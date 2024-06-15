@@ -1,13 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import {
-  Box,
-  Stack,
-  Tooltip,
-} from '@mui/material';
-import {
-  KubeCancelButton,
-} from '@/components/Button';
+import { Box, Stack, Tooltip } from '@mui/material';
+import { KubeCancelButton } from '@/components/Button';
 import { fontFamily } from '@/utils/commonUtils';
 import DetailBG from '@/assets/DetailBG.svg';
 import Service21 from '@/assets/Service21.svg';
@@ -52,7 +46,7 @@ export default function GeneralInfo(props) {
 
   const [moreOperationAnchorEl, setMoreOperationAnchorEl] = useState(null);
   const moreOperationOpen = Boolean(moreOperationAnchorEl);
-  const [backText, setBackText] = useState("能力测试");
+  const [backText, setBackText] = useState('能力测试');
   const dispatch = useDispatch();
   const intl = useIntl();
 
@@ -62,10 +56,9 @@ export default function GeneralInfo(props) {
     };
   });
 
-
   const items = [
-    [<EditService />, '编辑计划', () => { }],
-    [<Delete16 />, '删除', () => { }],
+    [<EditService />, '编辑计划', () => {}],
+    [<Delete16 />, '删除', () => {}],
   ];
 
   const handleReturn = () => {
@@ -75,7 +68,6 @@ export default function GeneralInfo(props) {
   const handleMoreOperation = e => {
     setMoreOperationAnchorEl(e.currentTarget);
   };
-
 
   return (
     <Stack
@@ -146,7 +138,7 @@ export default function GeneralInfo(props) {
               sx: {
                 '& .MuiTooltip-tooltip': {
                   backgroundColor: '#242e42',
-                  margin: "0 !important"
+                  margin: '0 !important',
                 },
               },
             }}
@@ -163,9 +155,9 @@ export default function GeneralInfo(props) {
                 lineHeight: 1.4,
                 letterSpacing: 'normal',
                 color: '#36435C',
-                textOverflow: "ellipsis",
-                overflow: "hidden",
-                whiteSpace: 'nowrap'
+                textOverflow: 'ellipsis',
+                overflow: 'hidden',
+                whiteSpace: 'nowrap',
               }}
             >
               {currentPlan !== null ? currentPlan.testPlanName : ''}
@@ -178,17 +170,22 @@ export default function GeneralInfo(props) {
           spacing={1.5}
           alignItems='center'
         >
-          <KubeCancelButton sx={{ height: '32px', width: '96px' }} onClick={() => {
-            dispatch(measure(currentPlan.id));
-          }}>
-            {intl.messages["stressTesting.startTest"]}
+          <KubeCancelButton
+            sx={{ height: '32px', width: '96px' }}
+            onClick={() => {
+              dispatch(measure(currentPlan.id));
+            }}
+          >
+            {intl.messages['stressTesting.startTest']}
           </KubeCancelButton>
           <KubeCancelButton
             onClick={handleMoreOperation}
             sx={{ height: '32px', width: '96px' }}
           >
             <Stack direction='row' alignItems='center' justifyContent='center'>
-              <Box sx={{ ml: '4px' }}>{intl.messages['common.moreOperation']}</Box>
+              <Box sx={{ ml: '4px' }}>
+                {intl.messages['common.moreOperation']}
+              </Box>
               <ArrowDropDownIcon fontSize='small' />
             </Stack>
           </KubeCancelButton>
@@ -231,19 +228,33 @@ export default function GeneralInfo(props) {
           <Stack direction='row' spacing={0.75}>
             <Box sx={labelStyle}>{intl.messages['common.serialized']}</Box>
             <Box sx={valueStyle}>
-              {currentPlan !== null ? getBoolString(currentPlan.serialized) : ''}
+              {currentPlan !== null
+                ? getBoolString(currentPlan.serialized)
+                : ''}
             </Box>
           </Stack>
           <Stack direction='row' spacing={0.75}>
             <Box sx={labelStyle}>{intl.messages['common.functionMode']}</Box>
             <Box sx={valueStyle}>
-              {currentPlan !== null ? getBoolString(currentPlan.functionalMode) : ''}
+              {currentPlan !== null
+                ? getBoolString(currentPlan.functionalMode)
+                : ''}
             </Box>
           </Stack>
           <Stack direction='row' spacing={0.75}>
             <Box sx={labelStyle}>tear</Box>
             <Box sx={valueStyle}>
               {currentPlan !== null ? getBoolString(currentPlan.tearDown) : ''}
+            </Box>
+          </Stack>
+          <Stack direction='row' spacing={0.75}>
+            <Box sx={labelStyle}>{intl.messages['common.boundaryTest']}</Box>
+            <Box sx={valueStyle}>
+              {currentPlan !== null
+                ? currentPlan.boundary
+                  ? intl.messages['common.yes']
+                  : intl.messages['common.no']
+                : ''}
             </Box>
           </Stack>
           <Stack direction='row' spacing={0.75}>

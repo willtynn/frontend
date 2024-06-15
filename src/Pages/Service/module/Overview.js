@@ -603,7 +603,6 @@ export default function ServiceOverview(props) {
           }}
         >
           {colDisplay.map((value, index) => {
-            // console.log(colDisplay)
             return (
               <Stack
                 direction='row'

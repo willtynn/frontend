@@ -51,15 +51,15 @@ import {
 } from '../../../actions/applicationAction';
 
 export const RUNNING = 'Running';
-export const PENDING = 'Pending';
+export const CREATED = 'Created';
 export const FAILED = 'Failed';
-export const SUCCEEDED = 'Succeeded';
+export const COMPLETED = 'Completed';
 
 const StatusIcon = phase => {
   if (phase === RUNNING) {
     return <RunningIcon />;
   }
-  if (phase === PENDING) {
+  if (phase === CREATED) {
     return <PendingIcon />;
   }
   if (phase === FAILED) {
@@ -72,15 +72,15 @@ const StatusText = phase => {
   if (phase === RUNNING) {
     return <span>Running&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>;
   }
-  if (phase === PENDING) {
-    return <span>Pending&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>;
+  if (phase === CREATED) {
+    return <span>Created&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>;
   }
   if (phase === FAILED) {
     return (
       <span>Failed&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
     );
   }
-  return <span>Succeeded</span>;
+  return <span>Completed</span>;
 };
 
 function descendingComparator(a, b, orderBy) {
@@ -161,7 +161,7 @@ export default function StressTesting() {
     intl.messages['common.status'],
   ]);
 
-  const [colDisplay, setColDisplay] = useState([true, true, true, true, true]);
+  const [colDisplay, setColDisplay] = useState([true, true, true, true, true, true]);
   const [customContentAnchorEl, setCustomContentAnchorEl] = useState(null);
   const customContentOpen = Boolean(customContentAnchorEl);
 
@@ -233,12 +233,21 @@ export default function StressTesting() {
       'center'
     ),
     createRow(
+      'boundary',
+      intl.messages['common.boundaryTest'],
+      false,
+      '120px',
+      '130px',
+      colDisplay[4],
+      'center'
+    ),
+    createRow(
       'comment',
       intl.messages['common.description'],
       false,
       '120px',
       '130px',
-      colDisplay[3],
+      colDisplay[5],
       'center'
     ),
   ];
@@ -719,10 +728,21 @@ export default function StressTesting() {
                           ? intl.messages['common.yes']
                           : intl.messages['common.no']}
                       </StyledTableBodyCell>
+
                       <StyledTableBodyCell
                         align={'center'}
                         sx={{
-                          display: headRow[4].show ? 'table-cell' : 'none',
+                          display: headRow[5].show ? 'table-cell' : 'none',
+                        }}
+                      >
+                        {row.boundary
+                          ? intl.messages['common.yes']
+                          : intl.messages['common.no']}
+                      </StyledTableBodyCell>
+                      <StyledTableBodyCell
+                        align={'center'}
+                        sx={{
+                          display: headRow[6].show ? 'table-cell' : 'none',
                         }}
                       >
                         {row.comment}
