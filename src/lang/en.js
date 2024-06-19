@@ -120,6 +120,8 @@ export const messages = {
     boundaryTest: 'Boundary Test',
     tps: "Transaction Per Second",
     errorRate: "Error Rate",
+    clusterNetwork:'Cluster Network',
+    clusterNetworkDescription: 'Used to simulate different network environments, setting network latency, bandwidth, and other parameters between different servers.',
   },
   lang: {
     language: 'Language',
@@ -205,6 +207,7 @@ export const messages = {
     apiInputSize:"INPUT SIZE",
     apiOutputSize:"OUTPUT SIZE",
     apiDescription:"DESCRIPTION",
+    swaggerUrl:"swaggerUrl",
     resourceAndCapacity:"Resource And Capability",
     idleResources:"Occupation during idle time",
     cpuResources:"CPU",
@@ -286,6 +289,7 @@ export const messages = {
     imageAddress: 'Image Url',
     makeDeployment: 'Make Deployment',
     podSetting: 'Pod Setting',
+    clusterNodeNetworkInfo:'Cluster Node Network Information',
   },
   instance: {
     deploySuccess: 'Instance deployment successful!',

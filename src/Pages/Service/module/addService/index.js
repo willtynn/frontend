@@ -18,7 +18,7 @@ import {
     RESET_SERVICE,
     UPDATE_SERVICE_CONFIG,
     addService,
-    UPDATE_INTERFACES,
+    //UPDATE_INTERFACES,
 } from '../../../../actions/serviceAction';
 import ProgressIndicator from "../../../Cluster/deploy/DeployProgress/ProgressIndicator";
 
@@ -36,6 +36,7 @@ const style = {
     overflow: 'hidden',
 };
 
+/*
 const composeServiceParams = (Service, Interfaces) => {
     return {
         id: Service.serviceID,
@@ -73,6 +74,38 @@ const composeServiceParams = (Service, Interfaces) => {
         }))
     };
 };
+*/
+
+const composeServiceParams = (Service) => {
+    return {
+        id: Service.serviceID,
+        name: Service.serviceName,
+        repo: Service.codeRepository,
+        imageUrl: Service.imageURLandTAG,
+        version: {
+            major: Service.major,
+            minor: Service.minor,
+            patch: Service.patch
+        },
+        idleResource: {
+            cpu: Service.idleCPU,
+            ram: Service.idleRAM,
+            disk: Service.idleDISK,
+            gpuCore: Service.idleGPUCORE,
+            gpuMem: Service.idleGPUMEM
+        },
+        desiredResource: {
+            cpu: Service.desiredCPU,
+            ram: Service.desiredRAM,
+            disk: Service.desiredDISK,
+            gpuCore: Service.desiredGPUCORE,
+            gpuMem: Service.desiredGPUMEM
+        },
+        desiredCapability: Service.processCapability,
+        swaggerUrl:Service.swaggerUrl,
+
+    };
+};
 
 export function AddService(props) {
     const { handleConfirmClick, handleCancelClick, showError, setShowError } = props;
@@ -105,15 +138,18 @@ export function AddService(props) {
         serviceEditIndex,
         serviceConfig,
         serviceConfigError,
-        interfaces,
+        //interfaces,
+        swaggerUrl,
     } = useSelector(state => state.Service);
 
+    /*
     useEffect(() => {
         if (!interfaces || interfaces.length === 0) {
             dispatch({ type: UPDATE_INTERFACES, data: [{ id:'', path: '', inputSize: 0, outputSize: 0, method: '', description: '' }] });
         }
     }, [dispatch, interfaces]);
 
+     */
     const handleCancelButtonClick = () => {
         if (serviceEdit) {
             if (serviceEditIndex !== null) {
@@ -126,6 +162,7 @@ export function AddService(props) {
         dispatch({ type: RESET_SERVICE });
     };
 
+    /*
     const handleConfirmButtonClick = () => {
         if (serviceEdit) {
             if (serviceEditIndex !== null) {
@@ -212,6 +249,104 @@ export function AddService(props) {
                     desiredGPUMEM,
                     processCapability
                 }, interfaces);
+                console.log(serviceData); // 打印请求数据
+                dispatch(addService(serviceData));
+                handleConfirmClick();
+                dispatch({ type: RESET_SERVICE });
+            }
+        }
+    };
+     */
+
+    const handleConfirmButtonClick = () => {
+        if (serviceEdit) {
+            if (serviceEditIndex !== null) {
+                const tmpConfig = JSON.parse(JSON.stringify(serviceConfig));
+                tmpConfig[serviceEditIndex] = composeServiceParams({
+                    serviceID,
+                    serviceName,
+                    codeRepository,
+                    imageURLandTAG,
+                    resourceAndCapacity,
+                    major,
+                    minor,
+                    patch,
+                    idleCPU,
+                    idleRAM,
+                    idleDISK,
+                    idleGPUCORE,
+                    idleGPUMEM,
+                    desiredCPU,
+                    desiredRAM,
+                    desiredDISK,
+                    desiredGPUCORE,
+                    desiredGPUMEM,
+                    processCapability,
+                    swaggerUrl,
+                });
+                dispatch({ type: UPDATE_SERVICE_CONFIG, data: tmpConfig });
+                dispatch({ type: UPDATE_SERVICE_EDIT_INDEX, data: null });
+            } else {
+                dispatch({
+                    type: UPDATE_SERVICE_CONFIG,
+                    data: [
+                        ...serviceConfig,
+                        composeServiceParams({
+                            serviceID,
+                            serviceName,
+                            codeRepository,
+                            imageURLandTAG,
+                            resourceAndCapacity,
+                            version,
+                            major,
+                            minor,
+                            patch,
+                            idleCPU,
+                            idleRAM,
+                            idleDISK,
+                            idleGPUCORE,
+                            idleGPUMEM,
+                            desiredCPU,
+                            desiredRAM,
+                            desiredDISK,
+                            desiredGPUCORE,
+                            desiredGPUMEM,
+                            processCapability,
+                            swaggerUrl,
+                        })
+                    ]
+                });
+            }
+            dispatch({ type: UPDATE_SERVICE_EDIT, data: false });
+            dispatch({ type: RESET_SERVICE });
+        } else {
+            if (serviceConfigError) {
+                setShowError(true);
+            } else {
+                setShowError(false);
+                const serviceData = composeServiceParams({
+                    serviceID,
+                    serviceName,
+                    codeRepository,
+                    imageURLandTAG,
+                    resourceAndCapacity,
+                    version,
+                    major,
+                    minor,
+                    patch,
+                    idleCPU,
+                    idleRAM,
+                    idleDISK,
+                    idleGPUCORE,
+                    idleGPUMEM,
+                    desiredCPU,
+                    desiredRAM,
+                    desiredDISK,
+                    desiredGPUCORE,
+                    desiredGPUMEM,
+                    processCapability,
+                    swaggerUrl
+                });
                 console.log(serviceData); // 打印请求数据
                 dispatch(addService(serviceData));
                 handleConfirmClick();

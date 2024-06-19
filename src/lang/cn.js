@@ -120,6 +120,9 @@ export const messages = {
     boundaryTest: '边界测试',
     tps: '每秒事务处理量',
     errorRate: "错误率",
+    clusterNetwork:'集群网络',
+    clusterNetworkDescription: '用于模拟不同的网络环境，设置不同服务器之间的网络延迟、带宽等。',
+
   },
   lang: {
     language: '语言',
@@ -198,6 +201,7 @@ export const messages = {
     serviceDetails:"服务详情",
     codeRepository:"代码仓库地址",
     imageURLandTAG:"镜像仓库地址&TAG",
+    swaggerUrl:"swaggerUrl",
     apiCollection:"接口集合",
     addApiEntry:"添加接口",
     api:"接口",
@@ -274,6 +278,7 @@ export const messages = {
     imageAddress: '镜像地址',
     makeDeployment: '创建Deployment',
     podSetting: '容器组设置',
+    clusterNodeNetworkInfo:'集群节点网络信息',
   },
   instance: {
     deploySuccess: '实例部署成功！',

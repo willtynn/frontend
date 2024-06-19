@@ -33,7 +33,8 @@ const initState = {
   desiredGPUCORE: 0.0 ,
   desiredGPUMEM: 0.0 ,
   processCapability: 0 ,
-  interfaces:[],
+  //interfaces:[],
+  swaggerUrl:'',
 };
 
 export default function ServiceReducer(state = initState, action) {
@@ -182,11 +183,18 @@ export default function ServiceReducer(state = initState, action) {
         ...state,
         processCapability: data
       };
-
+/*
     case actions.UPDATE_INTERFACES:
       return {
         ...state,
         interfaces: data
+      };
+
+ */
+    case actions.UPDATE_SERVICE_SWAGGERURL:
+      return {
+        ...state,
+        swaggerUrl: data
       };
     default:
       return state;

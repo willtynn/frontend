@@ -27,13 +27,14 @@ import {
     UPDATE_SERVICE_DESIREDGPUCORE,
     UPDATE_SERVICE_DESIREDGPUMEM,
     UPDATE_SERVICE_PROCESSCAPABILITY,
-    UPDATE_INTERFACES,
+    UPDATE_SERVICE_SWAGGERURL,
+    //UPDATE_INTERFACES,
 } from '../../../../actions/serviceAction';
 
 const nameRegExp = new RegExp(/^[a-zA-Z0-9][a-zA-Z0-9 -]{0,251}[a-zA-Z0-9]$/);
 
 export function Service(props) {
-    const { showError, setError } = props;
+    const {showError, setError} = props;
 
     const {
         serviceID,
@@ -54,7 +55,8 @@ export function Service(props) {
         desiredGPUCORE,
         desiredGPUMEM,
         processCapability,
-        interfaces,
+        //interfaces,
+        swaggerUrl,
     } = useSelector(state => ({
         serviceID: state.Service.serviceID,
         serviceName: state.Service.serviceName,
@@ -74,7 +76,8 @@ export function Service(props) {
         desiredGPUCORE: state.Service.desiredGPUCORE,
         desiredGPUMEM: state.Service.desiredGPUMEM,
         processCapability: state.Service.processCapability,
-        interfaces: state.Service.interfaces,
+        //interfaces: state.Service.interfaces,
+        swaggerUrl: state.Service.swaggerUrl,
     }));
 
     const [serviceIDError, setServiceIDError] = useState(false);
@@ -88,6 +91,7 @@ export function Service(props) {
         setError(serviceIDError || serviceNameError);
     }, [serviceIDError, serviceNameError]);
 
+    /*
     const handleAddInterface = () => {
         const updatedInterfaces = [...interfaces, { id: '', path: '', inputSize: 0.0, outputSize: 0.0, method: '', description: '' }];
         dispatch({ type: UPDATE_INTERFACES, data: updatedInterfaces });
@@ -105,10 +109,18 @@ export function Service(props) {
         dispatch({ type: UPDATE_INTERFACES, data: updatedInterfaces });
     };
 
+     */
+
+    const handleSwaggerUrlChange = e => {
+        const value = e.target.value;
+        setServiceIDError(value === '');
+        dispatch({type: UPDATE_SERVICE_SWAGGERURL, data: value});
+    };
+
     const handleServiceIDChange = e => {
         const value = e.target.value;
         setServiceIDError(value === '');
-        dispatch({ type: UPDATE_SERVICE_ID, data: value });
+        dispatch({type: UPDATE_SERVICE_ID, data: value});
     };
 
     const handleServiceNameChange = e => {
@@ -122,89 +134,90 @@ export function Service(props) {
         } else {
             setServiceNameError(false);
         }
-        dispatch({ type: UPDATE_SERVICE_NAME, data: value });
+        dispatch({type: UPDATE_SERVICE_NAME, data: value});
     };
 
     const handleCodeRepositoryChange = e => {
         const value = e.target.value;
-        dispatch({ type: UPDATE_SERVICE_CODEREPOSITORY, data: value });
+        dispatch({type: UPDATE_SERVICE_CODEREPOSITORY, data: value});
     };
 
     const handleImageURLandTAGChange = e => {
         const value = e.target.value;
-        dispatch({ type: UPDATE_SERVICE_IMAGE_URL_AND_TAG, data: value });
+        dispatch({type: UPDATE_SERVICE_IMAGE_URL_AND_TAG, data: value});
     };
 
     const handleMajorChange = e => {
         const value = e.target.value;
-        dispatch({ type: UPDATE_SERVICE_MAJOR, data: value });
+        dispatch({type: UPDATE_SERVICE_MAJOR, data: value});
     };
 
     const handleMinorChange = e => {
         const value = e.target.value;
-        dispatch({ type: UPDATE_SERVICE_MINOR, data: value });
+        dispatch({type: UPDATE_SERVICE_MINOR, data: value});
     };
 
     const handlePatchChange = e => {
         const value = e.target.value;
-        dispatch({ type: UPDATE_SERVICE_PATCH, data: value });
+        dispatch({type: UPDATE_SERVICE_PATCH, data: value});
     };
 
     const handleIdleCPUChange = e => {
         const value = e.target.value;
-        dispatch({ type: UPDATE_SERVICE_IDELCPU, data: value });
+        dispatch({type: UPDATE_SERVICE_IDELCPU, data: value});
     };
 
     const handleIdleRAMChange = e => {
         const value = e.target.value;
-        dispatch({ type: UPDATE_SERVICE_IDELRAM, data: value });
+        dispatch({type: UPDATE_SERVICE_IDELRAM, data: value});
     };
 
     const handleIdleDISKChange = e => {
         const value = e.target.value;
-        dispatch({ type: UPDATE_SERVICE_IDELDISK, data: value });
+        dispatch({type: UPDATE_SERVICE_IDELDISK, data: value});
     };
     const handleIdleGPUCOREChange = e => {
         const value = e.target.value;
-        dispatch({ type: UPDATE_SERVICE_IDELGPUCORE, data: value });
+        dispatch({type: UPDATE_SERVICE_IDELGPUCORE, data: value});
     };
 
     const handleIdleGPUMEMChange = e => {
         const value = e.target.value;
-        dispatch({ type: UPDATE_SERVICE_IDELGPUMEM, data: value });
+        dispatch({type: UPDATE_SERVICE_IDELGPUMEM, data: value});
     };
 
     const handleDesiredCPUChange = e => {
         const value = e.target.value;
-        dispatch({ type: UPDATE_SERVICE_DESIREDCPU, data: value });
+        dispatch({type: UPDATE_SERVICE_DESIREDCPU, data: value});
     };
 
     const handleDesiredRAMChange = e => {
         const value = e.target.value;
-        dispatch({ type: UPDATE_SERVICE_DESIREDRAM, data: value });
+        dispatch({type: UPDATE_SERVICE_DESIREDRAM, data: value});
     };
 
     const handleDesiredDISKChange = e => {
         const value = e.target.value;
-        dispatch({ type: UPDATE_SERVICE_DESIREDDISK, data: value });
+        dispatch({type: UPDATE_SERVICE_DESIREDDISK, data: value});
     };
     const handleDesiredGPUCOREChange = e => {
         const value = e.target.value;
-        dispatch({ type: UPDATE_SERVICE_DESIREDGPUCORE, data: value });
+        dispatch({type: UPDATE_SERVICE_DESIREDGPUCORE, data: value});
     };
 
     const handleDesiredGPUMEMChange = e => {
         const value = e.target.value;
-        dispatch({ type: UPDATE_SERVICE_DESIREDGPUMEM, data: value });
+        dispatch({type: UPDATE_SERVICE_DESIREDGPUMEM, data: value});
     };
 
     const handleProcessCapabilityChange = e => {
         const value = e.target.value;
-        dispatch({ type: UPDATE_SERVICE_PROCESSCAPABILITY, data: value });
+        dispatch({type: UPDATE_SERVICE_PROCESSCAPABILITY, data: value});
     };
 
     return (
-        <Stack sx={{ p: '32px 64px', bgcolor: '#FFFFFF', height: "calc(100% - 244px)", overflow: 'auto' }} direction='column' justifyContent='space-between'>
+        <Stack sx={{p: '32px 64px', bgcolor: '#FFFFFF', height: "calc(100% - 244px)", overflow: 'auto'}}
+               direction='column' justifyContent='space-between'>
             <Stack direction='column' spacing={2}>
                 <Box>
                     <h3>{intl.messages['serviceOverview.serviceDetails']}</h3>
@@ -287,6 +300,18 @@ export function Service(props) {
                         variant='outlined'
                         value={patch}
                         onChange={handlePatchChange}
+                    />
+                </Box>
+
+                <Box>
+                    <KubeInput
+                        label={intl.messages['serviceOverview.swaggerUrl']}
+                        description=""
+                        required={false}
+                        id='swaggerUrl-input'
+                        variant='outlined'
+                        value={swaggerUrl}
+                        onChange={handleSwaggerUrlChange}
                     />
                 </Box>
 
@@ -427,7 +452,12 @@ export function Service(props) {
                 </Box>
             </Stack>
 
-            <Stack spacing={2} mt={4}>
+        </Stack>
+    );
+}
+
+
+            /*<Stack spacing={2} mt={4}>
                 <h3>{intl.messages['serviceOverview.apiCollection']}</h3>
                 {interfaces.map((interfaceItem, index) => (
                     <Box key={index} sx={{ mt: 4, p: 2, border: '1px solid #e0e0e0', borderRadius: '8px' }}>
@@ -498,6 +528,5 @@ export function Service(props) {
                     <AddCircleIcon />
                 </IconButton>
             </Stack>
-        </Stack>
-    );
-}
+            */
+

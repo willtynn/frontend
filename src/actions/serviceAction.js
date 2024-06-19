@@ -48,7 +48,9 @@ export const UPDATE_SERVICE_MINOR = 'UPDATE_SERVICE_MINOR';
 
 export const UPDATE_SERVICE_PATCH = 'UPDATE_SERVICE_PATCH';
 
-export const UPDATE_INTERFACES = 'UPDATE_INTERFACES';
+//export const UPDATE_INTERFACES = 'UPDATE_INTERFACES';
+
+export const UPDATE_SERVICE_SWAGGERURL = 'UPDATE_SERVICE_SWAGGERURL';
 
 export const ADD_SERVICE_SUCCESS = 'ADD_SERVICE_SUCCESS';
 
@@ -504,7 +506,7 @@ export function deleteService(id) {
 }
 
 export function addService(newservice) {
-  const url = '/service/add';
+  const url = '/service/autoAdd';
   return async dispatch => {
     try {
       const res = await axios_instance.post(
