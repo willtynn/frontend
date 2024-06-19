@@ -86,7 +86,7 @@ export function AggregateReport() {
     createRow('p95', 'p95', false, '70px', '70px', true, 'center'),
     createRow('p99', 'p99', false, '70px', '70px', true, 'center'),
     createRow('tps', 'TPS', false, '70px', '70px', true, 'center'),
-    createRow('error_rate', 'Error %', false, '70px', '70px', true, 'center'),
+    createRow('errorRate', 'Error %', false, '70px', '70px', true, 'center'),
   ];
 
   useEffect(() => {
