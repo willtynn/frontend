@@ -19,7 +19,7 @@ const rootReducer = combineReducers({
     Image: ImageReducer,
     Lang: LangReducer,
     Scheme: SchemeReducer,
-    Evolution: EvolutionReducer
+    Evolution: EvolutionReducer,
 });
 
 export default rootReducer;

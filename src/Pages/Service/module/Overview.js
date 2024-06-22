@@ -61,7 +61,9 @@ import {
   ORDER_BY_FLAG,
   ORDER_FLAG,
 } from '../../../utils/page_persist';
+
 import {AddService} from "./addService";
+
 const Transition = forwardRef(function Transition(props, ref) {
   return <Slide direction='up' ref={ref} {...props} />;
 });
@@ -795,6 +797,7 @@ export default function ServiceOverview(props) {
           </Stack>
         )}
       </Box>
+
       <StyledTableContainer sx={{ bgcolor: '#FFF' }}>
         <Table
           stickyHeader

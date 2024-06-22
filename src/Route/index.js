@@ -21,6 +21,8 @@ import SchemeDeploy from '../Pages/Cluster/scheme';
 import EvolutionPlan from '../Pages/Evolution';
 import { EvolutionPlanDetail } from '../Pages/Evolution/Detail';
 import SchemeDetail from '../Pages/Cluster/scheme/SchemeDetail';
+import ClusterNetwork from '../Pages/Cluster/network';
+
 
 export default function MyRoute() {
   return (
@@ -44,6 +46,7 @@ export default function MyRoute() {
           <Route path='overview' element={<ClusterOverview />} />
           <Route path='scheme' element={<SchemeDeploy />} />
           <Route path='deploy' element={<InstanceDeploy />} />
+          <Route path='network' element={<ClusterNetwork />} />
         </Route>
         <Route path='service/'>
           {/* <Route path='overview' element={<ServiceOverview />} /> */}

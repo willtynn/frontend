@@ -288,6 +288,20 @@ export default function MiniDrawer() {
                       {intl.messages['common.serviceInstance']}
                     </Box>
                   </ListItemButton>
+
+                  <ListItemButton
+                        sx={styleListButton}
+                        onClick={() => {
+                            navigate('/cluster/network');
+                        }}
+                    >
+                        <Box
+                            sx={{ ...styledFont, color: currentPath ==='/cluster/network' ? '#55bc8a' : '#242e42' }}
+                        >
+                            {intl.messages['common.clusterNetwork']}
+                        </Box>
+                  </ListItemButton>
+
                 </List>
               </Collapse>
             </List>
