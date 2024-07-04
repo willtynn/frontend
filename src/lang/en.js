@@ -139,7 +139,7 @@ export const messages = {
     getFail: 'The deployment scheme fails to be obtained.',
     addScheme: 'Add Scheme',
     deploySuccess: 'Scheme deployment is successful.',
-    deployFail: 'Scheme deployment failed.',
+    deployFail: 'Scheme deployment failed, please try again...',
     deployScheme: 'Deploy Scheme',
     schemeName: 'Scheme Name',
   },

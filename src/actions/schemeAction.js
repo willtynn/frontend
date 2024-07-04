@@ -56,36 +56,25 @@ export function getSchemes(cluster, namespace, name) {
   const url = '/deployment/scheme';
   return async dispatch => {
     try {
-      const res = await axios_instance.get(
-        url,
-        {
-          params: {
-            cluster: cluster,
-            namespace: namespace,
-            name: name
-          },
-        }
-      );
+      const res = await axios_instance.get(url, {
+        params: {
+          cluster: cluster,
+          namespace: namespace,
+          name: name,
+        },
+      });
       if (res.data.code === 200 || res.data.code === 0) {
         dispatch({ type: UPDATE_SCHEMES, data: res.data.data });
       } else {
         dispatch({ type: UPDATE_SCHEMES, data: [] });
         dispatch(
-          setSnackbarMessageAndOpen(
-            'scheme.getFail',
-            {},
-            SEVERITIES.warning
-          )
+          setSnackbarMessageAndOpen('scheme.getFail', {}, SEVERITIES.warning)
         );
       }
     } catch {
       dispatch({ type: UPDATE_SCHEMES, data: [] });
       dispatch(
-        setSnackbarMessageAndOpen(
-          'scheme.getFail',
-          {},
-          SEVERITIES.warning
-        )
+        setSnackbarMessageAndOpen('scheme.getFail', {}, SEVERITIES.warning)
       );
     }
   };
@@ -100,7 +89,7 @@ export function schemeDeploy(id, name, namespace) {
         {
           id: id,
           name: name,
-          namespace: namespace
+          namespace: namespace,
         },
         {
           headers: {
@@ -109,9 +98,23 @@ export function schemeDeploy(id, name, namespace) {
         }
       );
       if (res.data.code === 200 || res.data.code === 0) {
-        dispatch(
-          setSnackbarMessageAndOpen('scheme.deploySuccess', {}, SEVERITIES.success)
-        );
+        if (res.data.data == 'Fail') {
+          dispatch(
+            setSnackbarMessageAndOpen(
+              'scheme.deployFail',
+              {},
+              SEVERITIES.warning
+            )
+          );
+        } else {
+          dispatch(
+            setSnackbarMessageAndOpen(
+              'scheme.deploySuccess',
+              {},
+              SEVERITIES.success
+            )
+          );
+        }
       } else {
         dispatch(
           setSnackbarMessageAndOpen('scheme.deployFail', {}, SEVERITIES.warning)
@@ -125,41 +128,28 @@ export function schemeDeploy(id, name, namespace) {
   };
 }
 
-
 export function getScheme(id) {
   const url = '/deployment/scheme/detail';
   return async dispatch => {
     try {
-      const res = await axios_instance.get(
-        url,
-        {
-          params: {
-            id: id
-          },
-        }
-      );
+      const res = await axios_instance.get(url, {
+        params: {
+          id: id,
+        },
+      });
       if (res.data.code === 200 || res.data.code === 0) {
         dispatch({ type: UPDATE_CURRENT_SCHEME, data: res.data.data });
       } else {
         dispatch({ type: UPDATE_CURRENT_SCHEME, data: null });
         dispatch(
-          setSnackbarMessageAndOpen(
-            'scheme.getFail',
-            {},
-            SEVERITIES.warning
-          )
+          setSnackbarMessageAndOpen('scheme.getFail', {}, SEVERITIES.warning)
         );
       }
     } catch {
       dispatch({ type: UPDATE_CURRENT_SCHEME, data: null });
       dispatch(
-        setSnackbarMessageAndOpen(
-          'scheme.getFail',
-          {},
-          SEVERITIES.warning
-        )
+        setSnackbarMessageAndOpen('scheme.getFail', {}, SEVERITIES.warning)
       );
     }
   };
 }
-
