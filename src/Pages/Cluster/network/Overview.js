@@ -85,7 +85,7 @@ function createRow(
     };
 }
 
-const localIPPattern = new RegExp(/^(本地Ip|LocalIp):/);
+const localIPPattern = new RegExp(/^(源Ip|LocalIp):/);
 
 export default function NetworkNodeControl(props) {
     const { data, embeddingButton } = props;

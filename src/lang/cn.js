@@ -280,7 +280,7 @@ export const messages = {
     podSetting: '容器组设置',
     clusterNodeNetworkInfo:'集群节点网络信息',
     getNetworkControlInfoError:'获取集群节点控制信息失败',
-    localIp:'本地Ip',
+    localIp:'源Ip',
     targetIp:'目标Ip',
     bandWidth:'带宽',
     setBandwidth:'设置带宽控制',
