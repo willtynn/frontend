@@ -140,7 +140,7 @@ export const messages = {
     getFail: '部署方案获取失败',
     addScheme: '添加方案',
     deploySuccess: '方案部署成功',
-    deployFail: '方案部署失败',
+    deployFail: '方案部署失败，请重试...',
     deployScheme: '部署方案',
     editScheme: '编辑方案',
     schemeName: '方案名称',
