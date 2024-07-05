@@ -3,7 +3,7 @@
  */
 import React, { useState, useEffect } from 'react';
 import { Box, Stack, FormControl, MenuItem,  InputAdornment, Select } from '@mui/material';
-import { KubeInput, KubeAutocomplete } from '@/components/Input';
+import { KubeInput } from '@/components/Input';
 
 import { useIntl } from 'react-intl';
 import { useSelector, useDispatch } from 'react-redux';
@@ -132,7 +132,7 @@ export function Networkcontrol(props) {
                                             value={bandwidthUnit}
                                             onChange={handleBandwidthUnitChange}
                                             displayEmpty
-                                            sx={{ width: 100 }} // 设置选择框的宽度
+                                            sx={{ width: 90 }} // 设置选择框的宽度
                                         >
                                             {bandwidthUnits.map(unit => (
                                                 <MenuItem key={unit} value={unit}>
