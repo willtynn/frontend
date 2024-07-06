@@ -1,3 +1,6 @@
+/**
+ * src\Pages\Cluster\overview\ClusterInfo.js
+ */
 import Check from '@mui/icons-material/Check';
 import {
   Stack,

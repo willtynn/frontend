@@ -44,7 +44,7 @@ export const UPDATE_CONTROL_CONFIG = 'UPDATE_CONTROL_CONFIG';
 export const UPDATE_IP = 'UPDATE_IP';
 
 
-const baseURLLink = 'http://192.168.1.104:32318';
+const baseURLLink = 'http://100.105.103.116:32318';
 
 const axios_instance = axios.create({
   baseURL: baseURLLink,
@@ -129,7 +129,7 @@ export function getNetworkControlInfo(ip) {
             setSnackbarMessageAndOpen(
             )
         );
-        return [];
+        return {payload: []};
       }
     } catch (error) {
       console.error(`Error requesting network control info for IP ${ip}:`, error);
@@ -140,7 +140,7 @@ export function getNetworkControlInfo(ip) {
               SEVERITIES.warning
           )
       );
-      return null;
+      return { payload: null };
     }
   };
 }

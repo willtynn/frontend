@@ -33,7 +33,7 @@ const defaultValue =
     serviceId: '1',\n\
     serviceName: 'alexnet',\n\
     namespace: 'wangteng',\n\
-    imageUrl: '192.168.1.104:5000/wangteng/alexnet-all:v1.0',\n\
+    imageUrl: '100.105.103.116:5000/wangteng/alexnet-all:v1.0',\n\
     replicas: 1,\n\
     ports: [\n\
       {\n\

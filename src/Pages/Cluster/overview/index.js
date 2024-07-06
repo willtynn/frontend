@@ -1,13 +1,17 @@
-import { useEffect, useState } from 'react';
+/**
+ * src\Pages\Cluster\overview\index.js
+ */
+import {useEffect, useRef, useState} from 'react';
 import { Box, Stack, TextField, Typography } from '@mui/material';
 import { useDispatch, useSelector } from 'react-redux';
 import { ClusterTopologyOnlyCanvas } from './ClusterTopology';
-import { UPDATE_SELECTED_SERVER } from '@/actions/clusterAction';
+import { getNetworkControlInfo,UPDATE_SELECTED_SERVER } from '@/actions/clusterAction';
 import ClusterInfo from './ClusterInfo';
 import { useIntl } from 'react-intl';
 import ClusterNode from '@/assets/ClusterNode.svg';
 import { StyledAutocomplete } from '@/components/Input';
 import { fontFamily } from '../../../utils/commonUtils';
+import {MarkerType} from "reactflow";
 
 const fakeInstancesData = {
   items: [
@@ -175,15 +179,21 @@ const fakeInstancesData = {
 
 export default function ClusterOverview() {
   const [clusterData, setClusterData] = useState({});
-  const [targetCluster, setTargetCluster] = useState('');
+  const [targetCluster, setTargetCluster] = useState('cluster1');
   // cluster id 构成的数组
-  const [clusterList, setClusterList] = useState([]);
+  const [clusterList, setClusterList] = useState(['cluster1']);
   // const currentServer = useRef('');
   const [currentServer, setCurrentServer] = useState(null);
   const [instancesData, setInstancesData] = useState({});
+  const parentRef = useRef(null);
 
   const dispatch = useDispatch();
   const intl = useIntl();
+
+  const { networkControlInfo } = useSelector((state) => ({
+    networkControlInfo: state.Cluster.networkControlInfo,
+  }));
+
 
   const { selectedInstanceName, clusters, selectedServer } = useSelector(
     state => {
@@ -195,7 +205,47 @@ export default function ClusterOverview() {
     }
   );
 
-  const fakeClusters = [
+  useEffect(() => {
+    const fetchAllNetworkControlInfo = async () => {
+      const ips = ['192.168.1.104', '192.168.1.171', '192.168.1.172', '192.168.1.173', '192.168.1.181'];
+      const allNetworkControlInfo = [];
+
+      for (const ip of ips) {
+        const response = await dispatch(getNetworkControlInfo(ip));
+        if (response && response.length > 0) {
+          allNetworkControlInfo.push(...response);
+        }
+      }
+
+      const servers = [
+        { id: 'cluster1::h1', label: 'cluster1::h1', hostname: '192.168.1.104', ip: '192.168.1.104', configuredRes: { cpu: 1, memory: 100 }, usedRes: { cpu: 1, memory: 50 }, totalRes: { cpu: 1, memory: 100 }, cpuInfo: '无', description: 'Description', pos: { x: 500, y: 300 } },
+        { id: 'cluster1::h2', label: 'cluster1::h2', hostname: '192.168.1.171', ip: '192.168.1.171', configuredRes: { cpu: 1, memory: 100 }, usedRes: { cpu: 1, memory: 50 }, totalRes: { cpu: 1, memory: 100 }, cpuInfo: '无', description: 'Description', pos: { x: 300, y: 100 } },
+        { id: 'cluster1::h3', label: 'cluster1::h3', hostname: '192.168.1.172', ip: '192.168.1.172', configuredRes: { cpu: 1, memory: 100 }, usedRes: { cpu: 1, memory: 50 }, totalRes: { cpu: 1, memory: 100 }, cpuInfo: '无', description: 'Description', pos: { x: 700, y: 100 } },
+        { id: 'cluster1::h4', label: 'cluster1::h4', hostname: '192.168.1.173', ip: '192.168.1.173', configuredRes: { cpu: 1, memory: 100 }, usedRes: { cpu: 1, memory: 50 }, totalRes: { cpu: 1, memory: 100 }, cpuInfo: '无', description: 'Description', pos: { x: 300, y: 500 } },
+        { id: 'cluster1::h5', label: 'cluster1::h5', hostname: '192.168.1.181', ip: '192.168.1.181', configuredRes: { cpu: 1, memory: 100 }, usedRes: { cpu: 1, memory: 50 }, totalRes: { cpu: 1, memory: 100 }, cpuInfo: '无', description: 'Description', pos: { x: 700, y: 500 } },
+      ];
+
+      const network = allNetworkControlInfo
+          .filter(info => info.bandWidth)
+          .map(info => ({
+            srcId: `cluster1::h${ips.indexOf(info.localIp) + 1}`,
+            desId: `cluster1::h${ips.indexOf(info.targetIp) + 1}`,
+            bandwidth: info.bandWidth,
+          }));
+
+      const cluster1Data = {
+        id: 'cluster1',
+        servers: servers,
+        network: network,
+      };
+
+      setClusterData({ cluster1: cluster1Data });
+    };
+
+    fetchAllNetworkControlInfo();
+  }, [dispatch]);
+
+  /*const fakeClusters = [
     {
       id: 'cluster1',
       servers: [
@@ -318,31 +368,7 @@ export default function ClusterOverview() {
     },
   ];
 
-  useEffect(() => {
-    // dispatch(searchAllClusters());
-    dispatch({ type: 'UPDATE_CLUSTERS', data: fakeClusters });
-  }, []);
-
-  useEffect(() => {
-    if (clusters === null) return;
-    const tmpClusterData = {};
-    const tmpClusterList = [];
-    clusters.forEach(cluster => {
-      tmpClusterData[cluster.id] = {
-        servers: cluster.servers,
-        network: cluster.network,
-      };
-      tmpClusterList.push(cluster.id);
-    });
-    setClusterData(tmpClusterData);
-    setClusterList(tmpClusterList);
-  }, [clusters]);
-
-  useEffect(() => {
-    if (clusterList && clusterList.length !== 0) {
-      setTargetCluster(clusterList[0]);
-    }
-  }, [clusterList]);
+   */
 
   useEffect(() => {
     if (selectedServer === null) {
@@ -367,6 +393,7 @@ export default function ClusterOverview() {
     dispatch({ type: UPDATE_SELECTED_SERVER, data: fakeInstancesData });
     setCurrentServer(id);
   };
+
 
   return (
     <Box>
@@ -447,56 +474,12 @@ export default function ClusterOverview() {
       <Stack direction='column' spacing={4}>
         <ClusterTopologyOnlyCanvas
           clusterId={targetCluster}
-          points={
-            clusterData[targetCluster] && clusterData[targetCluster].servers
-          }
-          graph={
-            clusterData[targetCluster] && clusterData[targetCluster].network
-          }
+          points={clusterData[targetCluster]?.servers || []}
+          graph={clusterData[targetCluster]?.network || []}
           handleNodeClick={handleNodeClick}
         />
         <ClusterInfo data={clusterData[targetCluster]} />
-
-        {/* <InstanceList
-            sx={{
-              minHeight: "400px"
-            }}
-            instances={currentServer === null ? null : fakeInstancesData.items}
-            // instances={clusterData[currentServer]}
-          />
-          <Box>
-            <InstanceInfo instance={instancesData[selectedInstanceName]} />
-          </Box> */}
       </Stack>
-
-      {/* <Stack direction='row' justifyContent='space-between' spacing={4}>
-        <Stack direction='column' spacing={2} sx={{ minWidth: '45%' }}>
-          {clusters &&
-            clusters.map((item, index) => {
-              return (
-                <ClusterTopology
-                  clusterId={item.id}
-                  graph={item.network}
-                  handleNodeClick={handleNodeClick}
-                />
-              );
-            })}
-        </Stack>
-        {listOpen ? (
-          <InstanceList
-            sx={{
-              minWidth: '45%',
-            }}
-            handleClose={() => {
-              setListOpen(false);
-            }}
-            instances={fakeInstancesData.items}
-            // instances={clusterData[currentServer]}
-          />
-        ) : (
-          <></>
-        )}
-      </Stack> */}
     </Box>
   );
 }

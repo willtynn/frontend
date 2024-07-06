@@ -1,9 +1,12 @@
+/**
+ * src\Pages\Cluster\overview\canvas.js
+ */
 import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Box } from '@mui/material';
 import ReactFlow, { Controls, Background, MarkerType } from 'reactflow';
 import { useIntl } from 'react-intl';
-import { CustomEdge, CustomNode } from '@/components/Reactflow';
+import { CustomEdge, CustomNode } from '../../../components/Reactflow';
 import dagre from 'dagre';
 
 import 'reactflow/dist/style.css';
@@ -17,32 +20,41 @@ const edgeTypes = {
 
 const snapGrid = [20, 20];
 
-const findNode = (nodes, id) => nodes.find(n => n.id === id) || null;
 
 const getLayout = (nodes, edges) => {
-  const dagreGraph = new dagre.graphlib.Graph();
-  dagreGraph.setDefaultEdgeLabel(() => ({}));
-  dagreGraph.setGraph({ rankdir: 'TB' }); // 设置布局方向为从上到下，从左到右为LR
-  nodes.forEach(node => {
-    dagreGraph.setNode(node.id, { width: 300, height: 170 });
-  });
-  edges.forEach(edge => {
-    dagreGraph.setEdge(edge.source, edge.target);
-  });
-  dagre.layout(dagreGraph);
+  // 设置固定的节点位置
+  const positions = {
+    'cluster1::h1': { x: 500, y: 100 }, // 上面
+    'cluster1::h2': { x: -100, y: 300 }, // 下面左一
+    'cluster1::h3': { x: 300, y: 300 }, // 下面左二
+    'cluster1::h4': { x: 700, y: 300 }, // 下面右一
+    'cluster1::h5': { x: 1100, y: 300 }, // 下面右二
+  };
 
   nodes.forEach(node => {
-    const n = dagreGraph.node(node.id);
-    //node.targetPosition = 'top';
-    //node.sourcePosition = 'bottom';
-    node.position = {
-      x: n.x - 150, // 300 / 2
-      y: n.y - 85, // 170 / 2
-    };
-    return node;
+    node.position = positions[node.id];
   });
+
+  edges.forEach(edge => {
+    const sourceNode = nodes.find(node => node.id === edge.source);
+    const targetNode = nodes.find(node => node.id === edge.target);
+
+    if (sourceNode && targetNode) {
+      const midX = (sourceNode.position.x + targetNode.position.x) / 2;
+      const midY = (sourceNode.position.y + targetNode.position.y) / 2;
+
+      // 增加曲线控制点，确保连线不穿过节点
+      edge.data.controlPoints = [
+        { x: midX, y: sourceNode.position.y },
+        { x: midX, y: targetNode.position.y },
+      ];
+    }
+  });
+
   return { nodes, edges };
 };
+
+
 
 export function ClusterCanvas(props) {
   const { id, nodes, links, handleNodeClick, parent } = props;
@@ -55,6 +67,8 @@ export function ClusterCanvas(props) {
   const [noData, setNoData] = useState(false);
 
   useEffect(() => {
+    //console.log('nodes:', nodes);
+    //console.log('links:', links);
     let nodes_tmp = [];
     let edges_tmp = [];
 
@@ -93,7 +107,7 @@ export function ClusterCanvas(props) {
           strokeWidth: 1.75,
         },
         data: {
-          label: item.label,
+          label: item.data.label, // 显示带宽信息
         },
         type: 'customEdge',
       });
@@ -101,52 +115,55 @@ export function ClusterCanvas(props) {
 
     const res = getLayout(nodes_tmp, edges_tmp);
 
+    //console.log('nodes:', res.nodes);
+    //console.log('edges:', res.edges);
+
     setN(res.nodes);
     setE(res.edges);
   }, [nodes, links]);
 
   return (
-    <div
-      style={{
-        width: parent.current.clientWidth,
-        height: parent.current.clientHeight,
-      }}
-    >
-      {noData ? (
-        <Box
-          sx={{
-            width: '90%',
-            height: '200px',
-            display: 'flex',
-            justifyContent: 'center',
-            alignItems: 'center',
-            border: '1px solid #BFBFBF',
-            boxShadow: '2px 0px 8px rgba(35,45,65,.28)',
+      <div
+          style={{
+            width: parent.current ? parent.current.clientWidth : '100%',
+            height: parent.current ? parent.current.clientHeight : '400px',
           }}
-        >
-          <span>{intl.messages['routeTrace.popWindowNoLinkDiagram']}</span>
-        </Box>
-      ) : (
-        <ReactFlow
-          style={{ backgroundColor: '#FFFFFF' }}
-          nodes={n}
-          edges={e}
-          nodeTypes={nodeTypes}
-          edgeTypes={edgeTypes}
-          // onNodesChange={onNodesChange}
-          // onEdgesChange={onEdgesChange}
-          snapToGrid={true}
-          snapGrid={snapGrid}
-          fitView
-          // attributionPosition="bottom-left"
-          nodesConnectable={false}
-          elementsSelectable={false}
-        >
-          <Controls />
-          <Background />
-        </ReactFlow>
-      )}
-    </div>
+      >
+        {noData ? (
+            <Box
+                sx={{
+                  width: '90%',
+                  height: '200px',
+                  display: 'flex',
+                  justifyContent: 'center',
+                  alignItems: 'center',
+                  border: '1px solid #BFBFBF',
+                  boxShadow: '2px 0px 8px rgba(35,45,65,.28)',
+                }}
+            >
+              <span>{intl.messages['routeTrace.popWindowNoLinkDiagram']}</span>
+            </Box>
+        ) : (
+            <ReactFlow
+                style={{ backgroundColor: '#FFFFFF' }}
+                nodes={n}
+                edges={e}
+                nodeTypes={nodeTypes}
+                edgeTypes={edgeTypes}
+                // onNodesChange={onNodesChange}
+                // onEdgesChange={onEdgesChange}
+                snapToGrid={true}
+                snapGrid={snapGrid}
+                fitView
+                // attributionPosition="bottom-left"
+                nodesConnectable={false}
+                elementsSelectable={false}
+            >
+              <Controls />
+              <Background />
+            </ReactFlow>
+        )}
+      </div>
   );
 }
 

@@ -1,11 +1,11 @@
 import {
-  getBezierPath,
-  EdgeLabelRenderer,
-  BaseEdge,
-  Handle,
-  Position,
-  BezierEdge,
-  EdgeProps,
+    getBezierPath,
+    EdgeLabelRenderer,
+    BaseEdge,
+    Handle,
+    Position,
+    BezierEdge,
+    EdgeProps, getMarkerEnd,
 } from 'reactflow';
 import { memo } from 'react';
 import { Box, Stack } from '@mui/material';
@@ -46,7 +46,24 @@ export const CustomEdge = ({
         markerEnd={markerEnd}
       />
       <EdgeLabelRenderer>
-       
+          {data.label && (
+              <div
+                  style={{
+                      position: 'absolute',
+                      transform: `translate(-50%, -50%) translate(${labelX}px,${labelY}px)`,
+                      background: 'white',
+                      padding: '2px 4px',
+                      borderRadius: '2px',
+                      fontSize: '12px',
+                      color: '#000',
+                      textAnchor: 'middle',
+                      pointerEvents: 'none',
+                      fontWeight: 'bold',
+                  }}
+              >
+                  {data.label}
+              </div>
+          )}
       </EdgeLabelRenderer>
     </>
   );
