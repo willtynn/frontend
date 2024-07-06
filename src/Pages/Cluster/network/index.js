@@ -8,14 +8,19 @@ import { useIntl } from 'react-intl';
 import ClusterNode from '@/assets/ClusterNode.svg';
 import { StyledAutocomplete } from '@/components/Input';
 import { fontFamily } from '../../../utils/commonUtils';
-
+import { getAllNetworkControlInfo } from '../../../actions/clusterAction';
 import NetworkNodeControl from './Overview';
 
 export default function ClusterNetwork() {
     const dispatch = useDispatch();
     const intl = useIntl();
 
-    const data = useSelector(state => state.Cluster.networkControlInfo);
+    //const data = useSelector(state => state.Cluster.networkControlInfo);
+    const data = useSelector(state => state.Cluster.allNetworkControlInfo);
+
+    useEffect(() => {
+        dispatch(getAllNetworkControlInfo());
+    }, [dispatch]);
 
     return (
         <Box>

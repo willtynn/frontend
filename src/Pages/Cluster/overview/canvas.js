@@ -22,37 +22,51 @@ const snapGrid = [20, 20];
 
 
 const getLayout = (nodes, edges) => {
-  // 设置固定的节点位置
-  const positions = {
-    'cluster1::h1': { x: 500, y: 100 }, // 上面
-    'cluster1::h2': { x: -100, y: 300 }, // 下面左一
-    'cluster1::h3': { x: 300, y: 300 }, // 下面左二
-    'cluster1::h4': { x: 700, y: 300 }, // 下面右一
-    'cluster1::h5': { x: 1100, y: 300 }, // 下面右二
-  };
+  const radius = 300; // 圆的半径
+  const centerX = 600; // 圆心的 x 坐标
+  const centerY = 400; // 圆心的 y 坐标
+  const angleStep = (2 * Math.PI) / nodes.length; // 每个节点的角度步长
+  const offset = 30; // 标签偏移量
 
-  nodes.forEach(node => {
-    node.position = positions[node.id];
+  nodes.forEach((node, index) => {
+    const angle = index * angleStep; // 计算每个节点的角度
+    node.position = {
+      x: centerX + radius * Math.cos(angle),
+      y: centerY + radius * Math.sin(angle),
+    };
   });
 
-  edges.forEach(edge => {
+  edges.forEach((edge, index) => {
     const sourceNode = nodes.find(node => node.id === edge.source);
     const targetNode = nodes.find(node => node.id === edge.target);
 
     if (sourceNode && targetNode) {
       const midX = (sourceNode.position.x + targetNode.position.x) / 2;
       const midY = (sourceNode.position.y + targetNode.position.y) / 2;
+      const offset = 20; // 偏移量
+
+      // 根据索引调整标签的位置
+      const offsetX = midX + offset * Math.cos(index * angleStep);
+      const offsetY = midY + offset * Math.sin(index * angleStep);
 
       // 增加曲线控制点，确保连线不穿过节点
       edge.data.controlPoints = [
         { x: midX, y: sourceNode.position.y },
         { x: midX, y: targetNode.position.y },
       ];
+
+      // 设置标签位置
+      edge.label = {
+        position: { x: offsetX, y: offsetY },
+        text: edge.data.label,
+      };
     }
   });
 
   return { nodes, edges };
 };
+
+
 
 
 

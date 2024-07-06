@@ -43,6 +43,8 @@ export const UPDATE_CONTROL_CONFIG = 'UPDATE_CONTROL_CONFIG';
 
 export const UPDATE_IP = 'UPDATE_IP';
 
+export const UPDATE_ALL_NETWORK_CONTROL_INFO = 'UPDATE_ALL_NETWORK_CONTROL_INFO';
+
 
 const baseURLLink = 'http://100.105.103.116:32318';
 
@@ -247,6 +249,45 @@ export function deleteBandwidthControl(localIp, targetIp) {
       );
     }
   };
+}
+
+// 获取所有网络节点间的带宽控制信息
+export function getAllNetworkControlInfo() {
+    const url = '/api/network/get/all';
+    return async dispatch => {
+        try {
+            const res = await axios_instance.get(
+                url,
+                {
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                }
+            );
+            if (res.data.code === 200 || res.data.code === 0) {
+                dispatch({ type: UPDATE_ALL_NETWORK_CONTROL_INFO, data: res.data.data });
+                return res.data.data;
+            } else {
+                dispatch(
+                    setSnackbarMessageAndOpen(
+                        'cluster.getAllNetworkControlInfoError',
+                        { msg: res.data.message },
+                        SEVERITIES.warning
+                    )
+                );
+                return null;
+            }
+        } catch (error) {
+            dispatch(
+                setSnackbarMessageAndOpen(
+                    'cluster.getAllNetworkControlInfoError',
+                    { msg: error.message },
+                    SEVERITIES.warning
+                )
+            );
+            return null;
+        }
+    };
 }
 // export function searchClusterById(id) {
 //   const url = '/cluster/get';

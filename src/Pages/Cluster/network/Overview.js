@@ -38,8 +38,10 @@ import {
     UPDATE_CONTROL_EDIT,
     UPDATE_NETWORK_CONTROL_INFO,
     DELETE_BANDWIDTH_CONTROL,
+    getAllNetworkControlInfo,
     getNetworkControlInfo,
     deleteBandwidthControl,
+    UPDATE_ALL_NETWORK_CONTROL_INFO,
 } from '../../../actions/clusterAction';
 import { EclipseTransparentButton } from '../../../components/Button';
 import { KubeCheckbox } from '../../../components/Checkbox';
@@ -131,9 +133,28 @@ export default function NetworkNodeControl(props) {
         };
     });
 
-    const [allData, setAllData] = useState([]);
+    const [allData, setAllData] = useState(data || []);
 
     useEffect(() => {
+        setAllData(data);
+    }, [data]);
+
+    /*useEffect(() => {
+        const fetchData = async () => {
+            const result = await dispatch(getAllNetworkControlInfo());
+            console.log('Fetched data:', result);
+            if (result && Array.isArray(result)) {
+                setAllData(result);
+            } else {
+                setAllData([]); // 确保 allData 为数组
+            }
+        };
+        fetchData();
+    }, [dispatch]);
+
+     */
+
+    /*useEffect(() => {
         const fetchData = async () => {
             const ips = ['192.168.1.104','192.168.1.171','192.168.1.172','192.168.1.173','192.168.1.181'];
             const promises = ips.map(ip => dispatch(getNetworkControlInfo(ip)));
@@ -143,6 +164,8 @@ export default function NetworkNodeControl(props) {
         };
         fetchData();
     }, [dispatch]);
+
+     */
 
     const headFirstRow = [
         createRow(
@@ -192,7 +215,8 @@ export default function NetworkNodeControl(props) {
     ];
 
     useEffect(() => {
-        dispatch({ type: UPDATE_NETWORK_CONTROL_INFO, data: data });
+        //dispatch({ type: UPDATE_NETWORK_CONTROL_INFO, data: data });
+        //dispatch({ type: UPDATE_ALL_NETWORK_CONTROL_INFO, data: data });
         const persistentOrderBy = localStorage.getItem(ORDER_BY_TAG);
         const persistentOrder = localStorage.getItem(ORDER_TAG);
         const persistentPageSize = localStorage.getItem(PAGE_SIZE_TAG);
@@ -234,7 +258,7 @@ export default function NetworkNodeControl(props) {
     }, [intl.messages]);
 
 
-    useEffect(() => {
+    /*useEffect(() => {
         if (!allData) {
             return;
         }
@@ -247,6 +271,22 @@ export default function NetworkNodeControl(props) {
                 targetIp: value.targetIp || '',
                 bandWidth: value.bandWidth || '',
             }));
+        console.log('tmpData:', tmpData);
+        setCount(tmpData.length);
+        setTableData(tmpData);
+        setFilteredData(tmpData);
+    }, [allData]);
+
+     */
+    useEffect(() => {
+        if (!allData) {
+            return;
+        }
+        const tmpData = allData.map(value => ({
+            localIp: value.localIp || '',
+            targetIp: value.targetIp || '',
+            bandWidth: value.bandWidth || value.defaultBandWidth || '',
+        }));
         console.log('tmpData:', tmpData);
         setCount(tmpData.length);
         setTableData(tmpData);

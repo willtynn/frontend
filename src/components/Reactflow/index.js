@@ -33,6 +33,8 @@ export const CustomEdge = ({
     targetPosition,
   });
 
+    const offsetLabelX = data.labelPosition ? data.labelPosition.x : labelX;
+    const offsetLabelY = data.labelPosition ? data.labelPosition.y : labelY;
   return (
     <>
       <BaseEdge
@@ -50,7 +52,7 @@ export const CustomEdge = ({
               <div
                   style={{
                       position: 'absolute',
-                      transform: `translate(-50%, -50%) translate(${labelX}px,${labelY}px)`,
+                      transform: `translate(-50%, -50%) translate(${offsetLabelX}px,${offsetLabelY}px)`,
                       background: 'white',
                       padding: '2px 4px',
                       borderRadius: '2px',

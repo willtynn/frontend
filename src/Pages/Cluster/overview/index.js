@@ -5,7 +5,8 @@ import {useEffect, useRef, useState} from 'react';
 import { Box, Stack, TextField, Typography } from '@mui/material';
 import { useDispatch, useSelector } from 'react-redux';
 import { ClusterTopologyOnlyCanvas } from './ClusterTopology';
-import { getNetworkControlInfo,UPDATE_SELECTED_SERVER } from '@/actions/clusterAction';
+//import { getNetworkControlInfo,UPDATE_SELECTED_SERVER } from '@/actions/clusterAction';
+import { getAllNetworkControlInfo, UPDATE_SELECTED_SERVER } from '@/actions/clusterAction';
 import ClusterInfo from './ClusterInfo';
 import { useIntl } from 'react-intl';
 import ClusterNode from '@/assets/ClusterNode.svg';
@@ -207,16 +208,10 @@ export default function ClusterOverview() {
 
   useEffect(() => {
     const fetchAllNetworkControlInfo = async () => {
+      const allNetworkControlInfo = await dispatch(getAllNetworkControlInfo());
+      if (!allNetworkControlInfo) return;
+
       const ips = ['192.168.1.104', '192.168.1.171', '192.168.1.172', '192.168.1.173', '192.168.1.181'];
-      const allNetworkControlInfo = [];
-
-      for (const ip of ips) {
-        const response = await dispatch(getNetworkControlInfo(ip));
-        if (response && response.length > 0) {
-          allNetworkControlInfo.push(...response);
-        }
-      }
-
       const servers = [
         { id: 'cluster1::h1', label: 'cluster1::h1', hostname: '192.168.1.104', ip: '192.168.1.104', configuredRes: { cpu: 1, memory: 100 }, usedRes: { cpu: 1, memory: 50 }, totalRes: { cpu: 1, memory: 100 }, cpuInfo: '无', description: 'Description', pos: { x: 500, y: 300 } },
         { id: 'cluster1::h2', label: 'cluster1::h2', hostname: '192.168.1.171', ip: '192.168.1.171', configuredRes: { cpu: 1, memory: 100 }, usedRes: { cpu: 1, memory: 50 }, totalRes: { cpu: 1, memory: 100 }, cpuInfo: '无', description: 'Description', pos: { x: 300, y: 100 } },
@@ -226,11 +221,11 @@ export default function ClusterOverview() {
       ];
 
       const network = allNetworkControlInfo
-          .filter(info => info.bandWidth)
+          .filter(info => info.bandWidth || info.defaultBandWidth)
           .map(info => ({
             srcId: `cluster1::h${ips.indexOf(info.localIp) + 1}`,
             desId: `cluster1::h${ips.indexOf(info.targetIp) + 1}`,
-            bandwidth: info.bandWidth,
+            bandwidth: info.bandWidth ||  info.defaultBandWidth,
           }));
 
       const cluster1Data = {

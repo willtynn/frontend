@@ -17,6 +17,7 @@ const initState = {
   target:'',
   bandwidth:'',
   ip:'',
+  allNetworkControlInfo: [],
 }
 
 export default function ClusterReducer(state = initState, action) {
@@ -93,6 +94,11 @@ export default function ClusterReducer(state = initState, action) {
       return {
         ...state,
         ip: data
+      }
+    case actions.UPDATE_ALL_NETWORK_CONTROL_INFO:
+      return {
+        ...state,
+        allNetworkControlInfo: data
       }
     default:
       return state
