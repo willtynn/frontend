@@ -294,6 +294,7 @@ export const messages = {
     newBandwidth:'新增带宽控制',
     editBandwidth:'编辑带宽控制',
     operation:'操作',
+    getAllNetworkControlInfoError:'获取集群拓扑信息失败',
   },
   instance: {
     deploySuccess: '实例部署成功！',

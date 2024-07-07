@@ -1,3 +1,6 @@
+/**
+ * src\components\Reactflow\index.js
+ */
 import {
     getBezierPath,
     EdgeLabelRenderer,
@@ -5,7 +8,7 @@ import {
     Handle,
     Position,
     BezierEdge,
-    EdgeProps, getMarkerEnd,
+    EdgeProps,
 } from 'reactflow';
 import { memo } from 'react';
 import { Box, Stack } from '@mui/material';
@@ -33,9 +36,13 @@ export const CustomEdge = ({
     targetPosition,
   });
 
-    const offsetLabelX = data.labelPosition ? data.labelPosition.x : labelX;
-    const offsetLabelY = data.labelPosition ? data.labelPosition.y : labelY;
-  return (
+    //const offsetLabelX = data.labelPosition ? data.labelPosition.x : labelX;
+    //const offsetLabelY = data.labelPosition ? data.labelPosition.y : labelY;
+    // 使用固定的偏移量，确保标签相对于路径的正确位置
+    const offsetX = 0;
+    const offsetY = parseInt(sourceX) < parseInt(targetX) ? -8 : 8;
+    console.log(`CustomEdge id: ${id}`, { sourceX, sourceY, targetX, targetY, sourcePosition, targetPosition, data, markerEnd });
+    return (
     <>
       <BaseEdge
         id={id}
@@ -52,15 +59,16 @@ export const CustomEdge = ({
               <div
                   style={{
                       position: 'absolute',
-                      transform: `translate(-50%, -50%) translate(${offsetLabelX}px,${offsetLabelY}px)`,
+                      transform: `translate(-50%, -50%) translate(${labelX + offsetX}px, ${labelY + offsetY}px)`,
                       background: 'white',
                       padding: '2px 4px',
                       borderRadius: '2px',
-                      fontSize: '12px',
+                      fontSize: '6px',
                       color: '#000',
                       textAnchor: 'middle',
                       pointerEvents: 'none',
                       fontWeight: 'bold',
+                      zIndex: 100 ,/* 确保标签在其他元素之上 */
                   }}
               >
                   {data.label}
@@ -229,7 +237,7 @@ export const CustomNode = memo(({ data, isConnectable }) => {
     <>
       <Handle
         type='target'
-        position={Position.Top}
+        position={data.target}
         style={{
           backgroundColor: '#FFF',
           borderColor: '#000',
@@ -275,8 +283,8 @@ export const CustomNode = memo(({ data, isConnectable }) => {
           {data.infoList &&
             data.infoList.map((item, index) => (
               <Stack direction='row' spacing={0.5}>
-                <Box sx={labelStyle}>{item}</Box>
-                <Box sx={valueStyle}>{data[item]}</Box>
+                  <Box sx={labelStyle }>{item}</Box>
+                  <Box sx={valueStyle }>{data[item]}</Box>
               </Stack>
             ))}
         </Stack>
@@ -284,7 +292,7 @@ export const CustomNode = memo(({ data, isConnectable }) => {
 
       <Handle
         type='source'
-        position={Position.Bottom}
+        position={data.source}
         style={{
           backgroundColor: '#FFF',
           borderColor: '#000',

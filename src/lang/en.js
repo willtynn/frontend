@@ -305,6 +305,7 @@ export const messages = {
     newBandwidth:'Add Bandwidth Control',
     editBandwidth:'Edit Bandwidth Control',
     operation:'Operation',
+    getAllNetworkControlInfoError:'Failed to retrieve all network control information',
   },
   instance: {
     deploySuccess: 'Instance deployment successful!',

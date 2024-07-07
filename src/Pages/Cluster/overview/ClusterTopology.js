@@ -22,6 +22,14 @@ export function ClusterTopologyOnlyCanvas(props) {
     if (points && points.length > 0) {
       //console.log('points:', points);
       //console.log('graph:', graph);
+      const positionMap = {
+        'cluster1::h1': { source: 'bottom', target: 'bottom' },
+        'cluster1::h2': { source: 'left', target: 'left' },
+        'cluster1::h3': { source: 'top', target: 'top' },
+        'cluster1::h4': { source: 'top', target: 'top' },
+        'cluster1::h5': { source: 'right', target: 'right' }
+      };
+
       const tmpNodes = points.map(server => ({
         id: server.id,
         label: server.id,
@@ -29,11 +37,14 @@ export function ClusterTopologyOnlyCanvas(props) {
         ip: server.ip,
         description: server.description,
         position: server.pos,
+        data: positionMap[server.id] || { source: 'bottom', target: 'top' },
       }));
 
       const tmpLinks = graph.map(link => ({
         source: link.srcId,
         target: link.desId,
+        sourcePosition: positionMap[link.srcId]?.source || 'bottom',
+        targetPosition: positionMap[link.desId]?.target || 'top',
         data: { label: `${intl.messages['common.bandwidth']}: ${link.bandwidth}` },
         markerEnd: {
           type: MarkerType.Arrow,
