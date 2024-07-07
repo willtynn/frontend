@@ -77,7 +77,7 @@ export const UPDATE_START_AND_END = 'UPDATE_START_AND_END';
 export const UPDATE_BOUNDARY_RESULT = 'UPDATE_BOUNDARY_RESULT';
 export const UPDATE_BOUND = "UPDATE_BOUND";
 
-const baseURLLink = 'http://100.105.103.116:14447';
+const baseURLLink = 'http://192.168.1.104:14447';
 // const baseURLLink = 'http://localhost:8848';
 
 const axios_instance = axios.create({

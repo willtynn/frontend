@@ -9,7 +9,7 @@ export const UPDATE_CURRENT_SERVICE='UPDATE_CURRENT_SERVICE';
 
 export const UPDATE_ROUTERULES = 'UPDATE_ROUTERULES';
 export const UPDATE_ROUTERULE = 'UPDATE_ROUTERULE';
-const baseURLLink = 'http://100.105.103.116:30760';
+const baseURLLink = 'http://192.168.1.104:30760';
 
 const axios_instance = axios.create({
   baseURL: baseURLLink,
