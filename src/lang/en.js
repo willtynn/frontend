@@ -562,4 +562,21 @@ export const messages = {
     pullError: 'Images caching failed... Please try again.',
     pullSuccess: 'The image cache is successful',
   },
+  dataSource: {
+    dataSourceManagement: 'DataSource Management',
+    dataSourceInfo: 'Data Source Information',
+    dataSourceDescription: 'Data Source Information',
+    dataSource: 'Data Source',
+    dataType:'Data Type',
+    startTime: 'Start Time',
+    endTime:'End Time',
+    query:'Query',
+    dataSourceFetchError:'Failed to fetch data source',
+    dataSourceDataFetchError:'Failed to fetch data',
+    ID:'ID',
+    value:'Value',
+    noData:'No Data',
+    noDataHint:'Please choose a data source and a data type',
+
+  },
 };

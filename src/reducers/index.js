@@ -9,6 +9,8 @@ import ImageReducer from "./imageReducer";
 import LangReducer from './langReducer';
 import SchemeReducer from './schemeReducer';
 import EvolutionReducer from './evolutionReducer';
+import DataSourceReducer from './dataSourceReducer';
+
 const rootReducer = combineReducers({
     Service: ServiceReducer,
     Cluster: ClusterReducer,
@@ -20,6 +22,7 @@ const rootReducer = combineReducers({
     Lang: LangReducer,
     Scheme: SchemeReducer,
     Evolution: EvolutionReducer,
+    DataSource: DataSourceReducer,
 });
 
 export default rootReducer;

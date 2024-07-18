@@ -54,6 +54,8 @@ export default function MiniDrawer() {
     setClusterSelectOpen(true);
   };
 
+
+
   const styledFont = {
     color: '#242e42',
     fontSize: '12px',
@@ -494,6 +496,40 @@ export default function MiniDrawer() {
                 </List>
               </Collapse>
             </List>
+              <List sx={{ paddingTop: '0px', paddingBottom: '0px' }}>
+                  {/* 数据源管理菜单 */}
+                  <ListItemButton
+                      sx={{
+                          ...styleListButton,
+                          paddingLeft: '12px',
+                      }}
+                      onClick={() => {setCurrentPath('/datasource')}}
+                  >
+                      <Box sx={styledIcon}>
+                          <Application16 />
+                      </Box>
+                      <Box sx={{ ...styledFont, color: currentPath.includes('/datasource') ? '#55bc8a' : '#242e42' }}>
+                          {intl.messages['dataSource.dataSourceManagement']}
+                      </Box>
+                      {currentPath.includes('/datasource') ? <ExpandLess /> : <ExpandMore />}
+                  </ListItemButton>
+                  <Collapse in={currentPath.includes('/datasource')} timeout='auto' unmountOnExit={true}>
+                      <List component='div' disablePadding>
+                          <ListItemButton
+                              sx={styleListButton}
+                              onClick={() => {
+                                  navigate('/datasource/info');
+                              }}
+                          >
+                              <Box
+                                  sx={{ ...styledFont, color: currentPath === '/datasource/info' ? '#55bc8a' : '#242e42' }}
+                              >
+                                  {intl.messages['dataSource.dataSourceInfo']}
+                              </Box>
+                          </ListItemButton>
+                      </List>
+                  </Collapse>
+              </List>
           </Box>
         </Box>
         <Box sx={{ backgroundColor: '#eff4f9', width: 'calc(100% - 230px)' }}>
