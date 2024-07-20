@@ -1,13 +1,13 @@
-import React, { useState, useEffect } from 'react';
-import { useSelector, useDispatch } from 'react-redux';
+import React, {useState, useEffect} from 'react';
+import {useSelector, useDispatch} from 'react-redux';
 import {Box, Stack, TextField, Autocomplete, Table, TableBody, TableCell, TableRow, TableHead} from '@mui/material';
-import { useIntl } from 'react-intl';
-import { KubeConfirmButton } from '@/components/Button';
+import {useIntl} from 'react-intl';
+import {KubeConfirmButton} from '@/components/Button';
 import dayjs from 'dayjs';
-import { fetchAllDataSources, fetchDataSourceData } from '@/actions/dataSourceAction';
-import { StyledTableContainer, StyledTableBodyCell, StyledTableHead } from '@/components/DisplayTable';
+import {fetchAllDataSources, fetchDataSourceData} from '@/actions/dataSourceAction';
+import {StyledTableContainer, StyledTableBodyCell, StyledTableHead} from '@/components/DisplayTable';
 import Question from '@/assets/Question.svg';
-import { NormalBoldFont, SmallLightFont } from '@/components/Fonts';
+import {NormalBoldFont, SmallLightFont} from '@/components/Fonts';
 
 export default function DataSourceComponent() {
     const [dataTypes, setDataTypes] = useState([]);
@@ -49,7 +49,10 @@ export default function DataSourceComponent() {
 
     const handleQuery = () => {
         if (selectedDataSource && selectedDataType) {
-            dispatch(fetchDataSourceData(selectedDataSource.name, selectedDataType.name));
+            // convert to long if set, else -1 (unset state, will be  ignored in fetchDataSourceData())
+            const serializedStartDate = startDate ? 1 * startDate : -1;
+            const serializedEndDate = endDate ? 1 * endDate : -1;
+            dispatch(fetchDataSourceData(selectedDataSource.name, selectedDataType.name, serializedStartDate, serializedEndDate));
         }
     };
 
@@ -106,13 +109,13 @@ export default function DataSourceComponent() {
     };
 
     const headFirstRow = [
-        { id: 'id', label: intl.messages['dataSource.ID'], minWidth: 150, align: 'left' },
-        { id: 'value', label: intl.messages['dataSource.value'], minWidth: 150, align: 'left' }
+        {id: 'id', label: intl.messages['dataSource.ID'], minWidth: 150, align: 'left'},
+        {id: 'value', label: intl.messages['dataSource.value'], minWidth: 150, align: 'left'}
     ];
 
     return (
-        <Box sx={{ p: 3 }}>
-            <Stack direction="row" spacing={2} sx={{ mb: 2 }}>
+        <Box sx={{p: 3}}>
+            <Stack direction="row" spacing={2} sx={{mb: 2}}>
                 <Autocomplete
                     options={dataSources || []}
                     getOptionLabel={(option) => option.name}
@@ -125,7 +128,7 @@ export default function DataSourceComponent() {
                             sx={autocompleteStyles}
                         />
                     )}
-                    sx={{ width: 300 }}
+                    sx={{width: 300}}
                 />
                 <Autocomplete
                     options={dataTypes || []}
@@ -139,38 +142,38 @@ export default function DataSourceComponent() {
                             sx={autocompleteStyles}
                         />
                     )}
-                    sx={{ width: 300 }}
+                    sx={{width: 300}}
                 />
                 <TextField
                     placeholder={intl.messages['dataSource.startTime']}
                     value={startDate}
                     onChange={(event) => setStartDate(event.target.value)}
                     variant="outlined"
-                    sx={{ width: 200, ...textFieldStyles }}
+                    sx={{width: 200, ...textFieldStyles}}
                 />
                 <TextField
                     placeholder={intl.messages['dataSource.endTime']}
                     value={endDate}
                     onChange={(event) => setEndDate(event.target.value)}
                     variant="outlined"
-                    sx={{ width: 200, ...textFieldStyles }}
+                    sx={{width: 200, ...textFieldStyles}}
                 />
                 <KubeConfirmButton
-                    sx={{ width: '150px' }}
+                    sx={{width: '150px'}}
                     onClick={handleQuery}
                 >
                     {intl.messages['dataSource.query']}
                 </KubeConfirmButton>
             </Stack>
-            <StyledTableContainer sx={{ bgcolor: '#FFF' }}>
-                <Table stickyHeader size="small" sx={{ tableLayout: 'auto' }}>
+            <StyledTableContainer sx={{bgcolor: '#FFF'}}>
+                <Table stickyHeader size="small" sx={{tableLayout: 'auto'}}>
                     <TableHead>
                         <TableRow>
                             {headFirstRow.map((column) => (
                                 <TableCell
                                     key={column.id}
                                     align={column.align}
-                                    style={{ minWidth: column.minWidth, color: '#A0A0A0', fontSize: '12px' }}
+                                    style={{minWidth: column.minWidth, color: '#A0A0A0', fontSize: '12px'}}
                                 >
                                     {column.label}
                                 </TableCell>
@@ -186,9 +189,9 @@ export default function DataSourceComponent() {
                                 </TableRow>
                             ))
                         ) : (
-                            <TableRow style={{ height: '220px' }}>
+                            <TableRow style={{height: '220px'}}>
                                 <TableCell colSpan={2} align="center">
-                                    <Question />
+                                    <Question/>
                                     <NormalBoldFont>
                                         {intl.messages['dataSource.noData']}
                                     </NormalBoldFont>

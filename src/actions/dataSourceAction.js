@@ -2,8 +2,8 @@
  * src\actions\dataSourceAction.js
  */
 import axios from 'axios';
-import { setSnackbarMessageAndOpen } from './snackbarAction';
-import { SEVERITIES } from '../components/CommonSnackbar';
+import {setSnackbarMessageAndOpen} from './snackbarAction';
+import {SEVERITIES} from '../components/CommonSnackbar';
 
 export const UPDATE_DATA_SOURCE = 'UPDATE_DATA_SOURCE';
 export const SELECT_DATA_SOURCE = 'SELECT_DATA_SOURCE';
@@ -33,7 +33,7 @@ export function fetchAllDataSources() {
                 }
             );
             if (res.status === 200) {
-                dispatch({ type: UPDATE_DATA_SOURCE, data: res.data });
+                dispatch({type: UPDATE_DATA_SOURCE, data: res.data});
             } else {
                 dispatch(
                     setSnackbarMessageAndOpen(
@@ -42,7 +42,7 @@ export function fetchAllDataSources() {
                         SEVERITIES.warning
                     )
                 );
-                dispatch({ type: UPDATE_DATA_SOURCE, data: [] });
+                dispatch({type: UPDATE_DATA_SOURCE, data: []});
             }
         } catch {
             dispatch(
@@ -52,13 +52,20 @@ export function fetchAllDataSources() {
                     SEVERITIES.warning
                 )
             );
-            dispatch({ type: UPDATE_DATA_SOURCE, data: [] });
+            dispatch({type: UPDATE_DATA_SOURCE, data: []});
         }
     };
 }
 
-export function fetchDataSourceData(name, type) {
-    const url = `/data-source/${name}/data/${type}`;
+export function fetchDataSourceData(name, type, start, end) {
+    const urlBuilder = new URL(`/data-source/${name}/data/${type}`,baseURLLink);
+    if (start > 0) {
+        urlBuilder.searchParams.append('start', start);
+    }
+    if (end > 0) {
+        urlBuilder.searchParams.append('end', end);
+    }
+    const url = urlBuilder.href;
     return async dispatch => {
         try {
             const res = await axios_instance.get(
@@ -70,7 +77,7 @@ export function fetchDataSourceData(name, type) {
                 }
             );
             if (res.status === 200) {
-                dispatch({ type: UPDATE_TABLE_DATA, data: res.data });
+                dispatch({type: UPDATE_TABLE_DATA, data: res.data});
             } else {
                 dispatch(
                     setSnackbarMessageAndOpen(
@@ -79,7 +86,7 @@ export function fetchDataSourceData(name, type) {
                         SEVERITIES.warning
                     )
                 );
-                dispatch({ type: UPDATE_TABLE_DATA, data: [] });
+                dispatch({type: UPDATE_TABLE_DATA, data: []});
             }
         } catch {
             dispatch(
@@ -89,7 +96,7 @@ export function fetchDataSourceData(name, type) {
                     SEVERITIES.warning
                 )
             );
-            dispatch({ type: UPDATE_TABLE_DATA, data: [] });
+            dispatch({type: UPDATE_TABLE_DATA, data: []});
         }
     };
 }
