@@ -580,6 +580,7 @@ export const messages = {
 
   },
   industry:{
+    label: 'Industrial Internet Platform',
     overview: 'Overview',
     log: 'Service Logs',
     serviceManage: 'Service Management',

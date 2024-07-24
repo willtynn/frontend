@@ -547,6 +547,7 @@ export const messages = {
     noDataHint:'请选择数据源与数据类型',
   },
   industry:{
+    label: '工业互联网平台',
     overview: '概览',
     log: '日志管理',
     serviceManage: '服务管理',

@@ -543,7 +543,7 @@ export default function MiniDrawer() {
                   <Application16 />
                 </Box>
                 <Box sx={{ ...styledFont, color: currentPath.includes('/industry') ? '#55bc8a' : '#242e42' }}>
-                  {intl.messages['dataSource.dataSourceManagement']}
+                  {intl.messages['industry.label']}
                 </Box>
                 {currentPath.includes('/industry') ? <ExpandLess /> : <ExpandMore />}
               </ListItemButton>
