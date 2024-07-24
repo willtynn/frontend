@@ -579,4 +579,11 @@ export const messages = {
     noDataHint:'Please choose a data source and a data type',
 
   },
+  industry:{
+    overview: 'Overview',
+    log: 'Service Logs',
+    serviceManage: 'Service Management',
+    serviceConfig: 'Service Configuration',
+    serviceMonitor: 'Service Monitor',
+  }
 };

@@ -20,6 +20,7 @@
     "dagre-d3": "^0.6.4",
     "date-fns": "^2.30.0",
     "dayjs": "^1.11.9",
+    "echarts": "^5.5.1",
     "express": "^4.19.2",
     "file-saver": "^2.0.5",
     "http-proxy-middleware": "^3.0.0",

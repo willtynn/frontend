@@ -546,4 +546,11 @@ export const messages = {
     noData:'无数据',
     noDataHint:'请选择数据源与数据类型',
   },
+  industry:{
+    overview: '概览',
+    log: '日志管理',
+    serviceManage: '服务管理',
+    serviceConfig: '服务配置',
+    serviceMonitor: '服务监控'
+  }
 };

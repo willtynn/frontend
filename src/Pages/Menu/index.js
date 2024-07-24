@@ -496,7 +496,7 @@ export default function MiniDrawer() {
                 </List>
               </Collapse>
             </List>
-              <List sx={{ paddingTop: '0px', paddingBottom: '0px' }}>
+            <List sx={{ paddingTop: '0px', paddingBottom: '0px' }}>
                   {/* 数据源管理菜单 */}
                   <ListItemButton
                       sx={{
@@ -530,6 +530,96 @@ export default function MiniDrawer() {
                       </List>
                   </Collapse>
               </List>
+            <List sx={{ paddingTop: '0px', paddingBottom: '0px' }}>
+              {/* 数据源管理菜单 */}
+              <ListItemButton
+                sx={{
+                  ...styleListButton,
+                  paddingLeft: '12px',
+                }}
+                onClick={() => {setCurrentPath('/industry')}}
+              >
+                <Box sx={styledIcon}>
+                  <Application16 />
+                </Box>
+                <Box sx={{ ...styledFont, color: currentPath.includes('/industry') ? '#55bc8a' : '#242e42' }}>
+                  {intl.messages['dataSource.dataSourceManagement']}
+                </Box>
+                {currentPath.includes('/industry') ? <ExpandLess /> : <ExpandMore />}
+              </ListItemButton>
+              <Collapse in={currentPath.includes('/industry')} timeout='auto' unmountOnExit={true}>
+                <List component='div' disablePadding>
+                  <ListItemButton
+                    sx={styleListButton}
+                    onClick={() => {
+                      navigate('/industry/overview');
+                    }}
+                  >
+                    <Box
+                      sx={{ ...styledFont, color: currentPath === '/industry/overview' ? '#55bc8a' : '#242e42' }}
+                    >
+                      {intl.messages['industry.overview']}
+                    </Box>
+                  </ListItemButton>
+                </List>
+                <List component='div' disablePadding>
+                  <ListItemButton
+                    sx={styleListButton}
+                    onClick={() => {
+                      navigate('/industry/management');
+                    }}
+                  >
+                    <Box
+                      sx={{ ...styledFont, color: currentPath === '/industry/management' ? '#55bc8a' : '#242e42' }}
+                    >
+                      {intl.messages['industry.serviceManage']}
+                    </Box>
+                  </ListItemButton>
+                </List>
+                <List component='div' disablePadding>
+                  <ListItemButton
+                    sx={styleListButton}
+                    onClick={() => {
+                      navigate('/industry/monitoring');
+                    }}
+                  >
+                    <Box
+                      sx={{ ...styledFont, color: currentPath === '/industry/monitoring' ? '#55bc8a' : '#242e42' }}
+                    >
+                      {intl.messages['industry.serviceMonitor']}
+                    </Box>
+                  </ListItemButton>
+                </List>
+                <List component='div' disablePadding>
+                  <ListItemButton
+                    sx={styleListButton}
+                    onClick={() => {
+                      navigate('/industry/configuration');
+                    }}
+                  >
+                    <Box
+                      sx={{ ...styledFont, color: currentPath === '/industry/configuration' ? '#55bc8a' : '#242e42' }}
+                    >
+                      {intl.messages['industry.serviceConfig']}
+                    </Box>
+                  </ListItemButton>
+                </List>
+                <List component='div' disablePadding>
+                  <ListItemButton
+                    sx={styleListButton}
+                    onClick={() => {
+                      navigate('/industry/log');
+                    }}
+                  >
+                    <Box
+                      sx={{ ...styledFont, color: currentPath === '/industry/log' ? '#55bc8a' : '#242e42' }}
+                    >
+                      {intl.messages['industry.log']}
+                    </Box>
+                  </ListItemButton>
+                </List>
+              </Collapse>
+            </List>
           </Box>
         </Box>
         <Box sx={{ backgroundColor: '#eff4f9', width: 'calc(100% - 230px)' }}>

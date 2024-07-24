@@ -23,7 +23,11 @@ import { EvolutionPlanDetail } from '../Pages/Evolution/Detail';
 import SchemeDetail from '../Pages/Cluster/scheme/SchemeDetail';
 import ClusterNetwork from '../Pages/Cluster/network';
 import DataSourceInfo from '../Pages/DataSource/info'; // 导入数据源信息页面
-
+import IndustryOverview from '../Pages/Industry/Overview';
+import Log from '../Pages/Industry/Log';
+import ServiceMonitoring from "../Pages/Industry/ServiceMonitoring";
+import ServiceConfiguration from "../Pages/Industry/ServiceConfiguration";
+import ServiceManagement from "../Pages/Industry/ServiceManagement";
 
 export default function MyRoute() {
   return (
@@ -70,6 +74,13 @@ export default function MyRoute() {
         </Route>
         <Route path='datasource/'>  {/* 新增数据源管理路由 */}
           <Route path='info' element={<DataSourceInfo />} />  {/* 新增数据源信息路由 */}
+        </Route>
+        <Route path='industry/'>  {/* 新增数据源管理路由 */}
+          <Route path='overview' element={<IndustryOverview />} />
+          <Route path='log' element={<Log />} />
+          <Route path='monitoring' element={<ServiceMonitoring />} />
+          <Route path='configuration' element={<ServiceConfiguration />} />
+          <Route path='management' element={<ServiceManagement />} />
         </Route>
       </Route>
     </Routes>
