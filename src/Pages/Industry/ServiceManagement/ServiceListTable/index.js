@@ -32,7 +32,7 @@ export default function ServiceListTable() {
     <Table sx={{height: '200px'}}>
       <StyledTableHead headRowCells={headRowCells} />
       <TableBody>
-        {serviceList.map(item => {
+        {serviceList ? serviceList.map(item => {
           return(
             <TableRow>
               <StyledTableBodyCell>{item.id}</StyledTableBodyCell>
@@ -42,7 +42,7 @@ export default function ServiceListTable() {
               <StyledTableBodyCell>{item.version}</StyledTableBodyCell>
             </TableRow>
           )
-        })}
+        }) : null}
         <TableRow>
           <TablePagination sx={{ borderBottom: 'none' }} page={0} rowsPerPage={10} count={100}  onPageChange={() => {}}/>
         </TableRow>
