@@ -20,10 +20,15 @@ export function Section1() {
       flexDirection: 'row',
       backgroundColor:'#fff',
       justifyContent:'space-between',
-      padding:'16px',
-      gap:'16px',
       boxShadow: '0px 4px 10px rgb( 46 38 61 / 0.12)'
-    }}>
+    }}
+    onMouseDown={(e) => {
+      e.stopPropagation()
+      if (e.currentTarget !== e.target) {
+        return
+      }
+    }}
+    >
       <ServiceStatusBox status={SERVICE_STATUS.PUBLISH} title={publish} />
       <ServiceStatusBox status={SERVICE_STATUS.RUN} title={run} />
       <ServiceStatusBox status={SERVICE_STATUS.ABNORMAL} title={abnormal} />

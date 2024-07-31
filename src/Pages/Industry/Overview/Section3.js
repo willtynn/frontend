@@ -7,6 +7,12 @@ export function Section3() {
       backgroundColor:'#fff',
       height:'100%',
       flexGrow:10
+    }}
+    onMouseDown={(e) => {
+      e.stopPropagation()
+      if (e.currentTarget !== e.target) {
+        return
+      }
     }}>
       <SummaryBox title={'服务列表'} type={SUMMARY_TYPE.TABLE} children={
         <Box sx={{
