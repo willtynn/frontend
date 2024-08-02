@@ -1,7 +1,7 @@
 import * as echarts from 'echarts';
 import { Box } from "@mui/material";
 import { useEffect, useRef } from 'react';
-export default function BarChart({label, value, num}) {
+export default function BarChart({label, value, num, unit}) {
 
   // 根据value对label进行排序
   function sortData(labels, values) {
@@ -13,12 +13,16 @@ export default function BarChart({label, value, num}) {
     return { sortedLabels, sortedValues };
   }
 
+  console.log(label,value,num,unit)
+  
+
   const chartRef = useRef(null)
   useEffect(() => {
     if (!chartRef.current) return; // 确保DOM元素已挂载
     const chartDom = chartRef.current;
     const myChart = echarts.init(chartDom,null,{
-      height: num*30+'px'
+      // height: num*35+'px'
+      width: chartRef.current.offsetWidth - 5,
     });
     const { sortedLabels, sortedValues } = sortData(label, value);
     const option = {
@@ -30,17 +34,27 @@ export default function BarChart({label, value, num}) {
       },
       legend: {},
       grid: {
-        top:'0',
-        left: '0',
+        top:'1%',
+        left: '1%',
         right: '5%',
-        bottom: '1%',
+        bottom: '10%',
         containLabel: true
       },
       xAxis: {
         type: 'value',
+        name: unit,
+        nameLocation: 'center',
+        nameTextStyle: {
+          fontWeight: 'bold',
+          lineHeight: 40
+        },
+        nameGap: 20,
         boundaryGap: [0, 0],
         splitLine: {
           show: true
+        },
+        axisLabel: {
+          formatter: '{value}'
         }
       },
       yAxis: {
@@ -65,9 +79,9 @@ export default function BarChart({label, value, num}) {
   return (
     <Box ref={chartRef} sx={{
       width: '100%',
-      height: '300px',
+      height: '100%',
       overflowX:'clip',
-      overflowY:'auto'
+      overflowY:'clip'
     }} />
   )
 }

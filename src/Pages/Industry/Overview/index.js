@@ -1,7 +1,8 @@
 import { Stack } from "@mui/material";
-import { Section1 } from "./Section1";
-import { Section2 } from "./Section2";
-import { Section3 } from "./Section3";
+import { RunStatus } from "./module/RunStatus";
+import { CpuRank } from "./module/CpuRank";
+import { MemRank } from "./module/MemRank";
+import { ServiceList } from "./module/ServiceList";
 import {Box} from "@mui/system";
 
 import RGL, { WidthProvider } from "react-grid-layout";
@@ -12,7 +13,8 @@ export default function IndustryOverview() {
 
   const layout = [
     { i: "aaa", x: 0, y: 0, w: 12, h: 3 },
-    { i: "bbb", x: 0, y: 4, w: 12, h: 12 },
+    { i: "bbb", x: 0, y: 4, w: 6, h: 12 },
+    { i: "bbbb", x: 6, y: 4, w: 6, h: 12 },
     { i: "ccc", x: 0, y: 17, w: 12, h: 15 }
   ];
 
@@ -34,17 +36,22 @@ export default function IndustryOverview() {
               paddingLeft: '10px',
             }}
             onMouseDown={(e) => e.preventDefault()}
-            ><Section1/></div>
+            ><RunStatus/></div>
             <div key="bbb" style={{
               paddingLeft: '10px',
             }}
             onMouseDown={(e) => e.preventDefault()}
-            ><Section2/></div>
+            ><CpuRank/></div>
+            <div key="bbbb" style={{
+              paddingLeft: '10px',
+            }}
+            onMouseDown={(e) => e.preventDefault()}
+            ><MemRank/></div>
             <div key="ccc" style={{
               paddingLeft: '10px',
             }}
             onMouseDown={(e) => e.preventDefault()}
-            ><Section3/></div>
+            ><ServiceList/></div>
           </ReactGridLayout>
       </Box>
   )
