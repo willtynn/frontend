@@ -2,7 +2,7 @@ import { Stack } from "@mui/material";
 import ServiceStatusBox, { SERVICE_STATUS } from "../../components/ServiceStatusBox";
 import { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import {getServiceStatus} from '@/actions/industryAction';
+import { getServiceStatus } from '@/actions/industryAction';
 
 
 
@@ -19,8 +19,8 @@ export function RunStatus() {
     <Stack sx={{
       flexDirection: 'row',
       backgroundColor:'#fff',
-      justifyContent:'space-between',
-      boxShadow: '0px 4px 10px rgb( 46 38 61 / 0.12)'
+      boxShadow: '0px 4px 10px rgb( 46 38 61 / 0.12)',
+      width:'100%',
     }}
     onMouseDown={(e) => {
       e.stopPropagation()

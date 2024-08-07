@@ -23,6 +23,7 @@
     "echarts": "^5.5.1",
     "express": "^4.19.2",
     "file-saver": "^2.0.5",
+    "gridstack": "^10.3.1",
     "http-proxy-middleware": "^3.0.0",
     "json5": "^2.2.3",
     "moment": "^2.29.4",

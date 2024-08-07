@@ -1,7 +1,7 @@
 import { Stack } from "@mui/material";
 import SummaryBox, { SUMMARY_TYPE } from "../../components/SummaryBox";
 import BarChart from "../../components/ECharts/BarChar";
-import {useSelector} from "react-redux";
+import { useSelector } from "react-redux";
 
 
 
@@ -69,7 +69,6 @@ function processData(data){
   const unit = data.map(num => getUnit(num))
   const mostFrequent = findMostFrequent(unit)
   const mid = findMedian(mostFrequent)
-  // console.log(mid)
   let unitStr
   switch(mid){
     case 1_000:
@@ -96,14 +95,12 @@ export function MemRank() {
   }
   const dataLength = services.length
   const [data, unit] = processData(memUsed)
-  console.log("AAA", data, unit)
-
   
   return (
     <Stack sx={{
-      width: '100%',
+      width: 'auto',
+      height: '100%',
       flexGrow:7,
-      height: '90%'
     }}
     onMouseDown={(e) => {
       e.stopPropagation()

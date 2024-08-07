@@ -1,7 +1,7 @@
 import { Stack } from "@mui/material";
 import SummaryBox, { SUMMARY_TYPE } from "../../components/SummaryBox";
 import BarChart from "../../components/ECharts/BarChar";
-import {useSelector} from "react-redux";
+import { useSelector } from "react-redux";
 
 export function CpuRank() {
   const { serviceList } = useSelector(state => state.Industry)
@@ -17,8 +17,8 @@ export function CpuRank() {
   return (
     <Stack sx={{
       width: '100%',
+      height: '100%',
       flexGrow:7,
-      height: '90%'
     }}
     onMouseDown={(e) => {
       e.stopPropagation()
