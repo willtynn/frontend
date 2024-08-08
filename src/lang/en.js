@@ -582,6 +582,24 @@ export const messages = {
   industry:{
     label: 'Industrial Internet Platform',
     overview: 'Overview',
+    overviews: {
+      cpuCard: 'CPU Usage Ranking',
+      memCard: 'Memory Usage Ranking',
+      statusCard: {
+        1: 'Published',
+        2: 'Running',
+        3: 'Abnormal',
+        4: 'Stopped',
+      },
+      serviceList: 'Service List',
+      serviceLists: {
+        id: 'ID',
+        name: 'Name',
+        status: 'Status',
+        releaseTime: 'Release Time',
+        version: 'Version',
+      },
+    },
     log: 'Service Logs',
     serviceManage: 'Service Management',
     serviceConfig: 'Service Configuration',

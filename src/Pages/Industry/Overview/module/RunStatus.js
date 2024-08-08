@@ -4,16 +4,13 @@ import { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { getServiceStatus } from '@/actions/industryAction';
 
-
-
 export function RunStatus() {
 
   const dispatch = useDispatch();
   useEffect(() => {
     dispatch(getServiceStatus());
   },[]);
-
-  const {publish, run, abnormal, stop} = useSelector(state=>state.Industry)
+  const {publish, run, abnormal, stop} = useSelector(state=>state.Industry);
 
   return (
     <Stack sx={{
@@ -21,14 +18,7 @@ export function RunStatus() {
       backgroundColor:'#fff',
       boxShadow: '0px 4px 10px rgb( 46 38 61 / 0.12)',
       width:'100%',
-    }}
-    onMouseDown={(e) => {
-      e.stopPropagation()
-      if (e.currentTarget !== e.target) {
-        return
-      }
-    }}
-    >
+    }}>
       <ServiceStatusBox status={SERVICE_STATUS.PUBLISH} title={publish} />
       <ServiceStatusBox status={SERVICE_STATUS.RUN} title={run} />
       <ServiceStatusBox status={SERVICE_STATUS.ABNORMAL} title={abnormal} />

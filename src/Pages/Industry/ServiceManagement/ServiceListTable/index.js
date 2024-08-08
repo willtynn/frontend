@@ -5,7 +5,10 @@ import { getServiceList } from "../../../../actions/industryAction";
 import {useEffect} from "react";
 import moment from 'moment';
 
+import { useIntl } from 'react-intl';
+
 export default function ServiceListTable() {
+  const intl = useIntl();
 
   const dispatch = useDispatch()
   useEffect(() => {
@@ -14,18 +17,24 @@ export default function ServiceListTable() {
 
   const { serviceList } = useSelector(state => state.Industry)
   const headRowCells = [
-    createTableHeadCell({ label: "服务ID" }),
-    createTableHeadCell({ label: "服务名称" }),
-    createTableHeadCell({ label: "状态" }),
-    createTableHeadCell({ label: "发布时间" }),
-    createTableHeadCell({ label: "版本" })
+    createTableHeadCell({ label: intl.messages['industry.overviews.serviceLists.id'] }),
+    createTableHeadCell({ label: intl.messages['industry.overviews.serviceLists.name'] }),
+    createTableHeadCell({ label: intl.messages['industry.overviews.serviceLists.status'] }),
+    createTableHeadCell({ label: intl.messages['industry.overviews.serviceLists.releaseTime'] }),
+    createTableHeadCell({ label: intl.messages['industry.overviews.serviceLists.version'] }),
   ]
 
   const convertW2C = (word) => {
-    if(word === 'release') return "已发布"
-    else if (word === 'stop') return "已停止"
-    else if (word === 'running') return "运行中"
-    else return "异常"
+    // if(word === 'release') return "已发布"
+    // else if (word === 'stop') return "已停止"
+    // else if (word === 'running') return "运行中"
+    // else return "异常"
+    const index = {
+      'release': 1,
+      'stop': 4,
+      'running': 2
+    }[word] || 3; // 方便与ServiceStatusBox的SERVICE_STATUS对应
+    return intl.messages[`industry.overviews.statusCard.${index}`];
   }
 
   return (

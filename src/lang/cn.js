@@ -549,6 +549,24 @@ export const messages = {
   industry:{
     label: '工业互联网平台',
     overview: '概览',
+    overviews:{
+      cpuCard: '服务CPU占用排名',
+      memCard: '服务内存占用排名',
+      statusCard: {
+        1: '已发布',
+        2: '运行中',
+        3: '异常服务',
+        4: '已停止',
+      },
+      serviceList: '服务列表',
+      serviceLists: {
+        id: '服务ID',
+        name: '服务名称',
+        status: '状态',
+        releaseTime: '发布时间',
+        version: '版本',
+      }
+    },
     log: '日志管理',
     serviceManage: '服务管理',
     serviceConfig: '服务配置',

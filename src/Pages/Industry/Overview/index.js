@@ -15,6 +15,8 @@ import React, {
   useLayoutEffect
 } from 'react';
 
+// import { useIntl } from 'react-intl';
+
 import { RunStatus } from "./module/RunStatus";
 import { CpuRank } from "./module/CpuRank";
 import { MemRank } from "./module/MemRank";
@@ -23,6 +25,7 @@ import {Box} from "@mui/system";
 
 
 export default function IndustryOverview() {
+  // const intl = useIntl();
 
   let grid = null
   const refs = useRef({});

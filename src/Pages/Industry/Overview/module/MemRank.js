@@ -3,7 +3,7 @@ import SummaryBox, { SUMMARY_TYPE } from "../../components/SummaryBox";
 import BarChart from "../../components/ECharts/BarChar";
 import { useSelector } from "react-redux";
 
-
+import { useIntl } from 'react-intl';
 
 function retain(value, n) {
   if(n === 'null' || n === 'undefined' || n === 0) return parseInt(value);
@@ -11,24 +11,25 @@ function retain(value, n) {
   let tranV = tran.toString();
   let newVal = tranV.indexOf('.');
   if(newVal < 0) {
-    tranV += '.'
+    tranV += '.';
   };
   for(let i = tranV.length - tranV.indexOf('.'); i <= n; i++) {
     tranV += '0';
   };
-  return tranV
+  return tranV;
 }
 
 function getUnit(value){
   if (value < 1000) {
     return 1;
   } else if (value < 1000_000) {
-    return 1000_000
+    return 1000_000;
   } else if (value < 1000_000_000) {
-    return 1000_000_000
+    return 1000_000_000;
   } else if (value < 1000_000_000_000) {
-    return 1000_000_000_000
+    return 1000_000_000_000;
   }
+  return -1;
 }
 
 function findMostFrequent(arr) {
@@ -55,60 +56,53 @@ function findMostFrequent(arr) {
 
 function findMedian(arr) {
   if (arr.length === 0) return null; // 处理空数组的情况
-
   // 对数组进行排序
   const sortedArr = [...arr].sort((a, b) => a - b);
-
   const midIndex = Math.floor((sortedArr.length - 1) / 2);
-
   // 判断数组长度是奇数还是偶数
   return sortedArr[midIndex];
 }
 
 function processData(data){
-  const unit = data.map(num => getUnit(num))
-  const mostFrequent = findMostFrequent(unit)
-  const mid = findMedian(mostFrequent)
-  let unitStr
+  const unit = data.map(num => getUnit(num));
+  const mostFrequent = findMostFrequent(unit);
+  const mid = findMedian(mostFrequent);
+  let unitStr;
   switch(mid){
     case 1_000:
-      unitStr = "KB"
-      break
+      unitStr = "KB";
+      break;
     case 1_000_000:
-      unitStr = "MB"
-      break
+      unitStr = "MB";
+      break;
     case 1_000_000_000:
-      unitStr = "GB"
-      break
+      unitStr = "GB";
+      break;
   }
-  return [data.map(num => retain(num / mid, 3)), unitStr]
+  return [data.map(num => retain(num / mid, 3)), unitStr];
 }
 
 export function MemRank() {
-  const { serviceList } = useSelector(state => state.Industry)
+  const { serviceList } = useSelector(state => state.Industry);
   if (serviceList){
-    var services = serviceList.map(item => item.name)
-    var memUsed = serviceList.map(item => item.mem)
+    var services = serviceList.map(item => item.name);
+    var memUsed = serviceList.map(item => item.mem);
   } else {
-    var services = []
-    var memUsed = []
+    var services = [];
+    var memUsed = [];
   }
-  const dataLength = services.length
-  const [data, unit] = processData(memUsed)
+  const dataLength = services.length;
+  const [data, unit] = processData(memUsed);
+
+  const intl = useIntl();
   
   return (
     <Stack sx={{
       width: '100%',
       height: '100%',
       flexGrow:7,
-    }}
-    onMouseDown={(e) => {
-      e.stopPropagation()
-      if (e.currentTarget !== e.target) {
-        return
-      }
     }}>
-      <SummaryBox title={"服务内存占用排名"} type={SUMMARY_TYPE.GRAPH} children={
+      <SummaryBox title={intl.messages['industry.overviews.memCard']} type={SUMMARY_TYPE.GRAPH} children={
         <BarChart label={services} value={data} num={dataLength} unit={unit} />
       }/>
     </Stack>

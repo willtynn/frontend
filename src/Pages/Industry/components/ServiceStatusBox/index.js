@@ -4,6 +4,9 @@ import SlideshowIcon from '@mui/icons-material/Slideshow';
 import ReportProblemOutlinedIcon from '@mui/icons-material/ReportProblemOutlined';
 import StopCircleOutlinedIcon from '@mui/icons-material/StopCircleOutlined';
 import { fontFamily } from "../../utils/commonUtils";
+
+import { useIntl } from 'react-intl';
+
 export const SERVICE_STATUS = {
   PUBLISH: 1,
   RUN: 2,
@@ -17,7 +20,11 @@ const iconStyle = {
   borderRadius: '6px',
   color: '#fff'
 }
+
 export default function ServiceStatusBox({ status, title }) {
+  
+  const intl = useIntl();
+
   return (
     <Box sx={{
       backgroundColor: 'rgb(243,246,251)',
@@ -53,10 +60,11 @@ export default function ServiceStatusBox({ status, title }) {
             fontFamily:fontFamily
           }}>
             {
-              status === SERVICE_STATUS.PUBLISH ? "已发布"
-                : (status === SERVICE_STATUS.RUN ? "运行中"
-                  : (status === SERVICE_STATUS.ABNORMAL ? "异常服务"
-                    : "已停止"))
+              // status === SERVICE_STATUS.PUBLISH ? "已发布"
+              //   : (status === SERVICE_STATUS.RUN ? "运行中"
+              //     : (status === SERVICE_STATUS.ABNORMAL ? "异常服务"
+              //       : "已停止"))
+              intl.messages[`industry.overviews.statusCard.${status}`]
             }
           </Typography>
         </Stack>
