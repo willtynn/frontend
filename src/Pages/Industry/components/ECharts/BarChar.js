@@ -63,8 +63,6 @@ export default function BarChart({label, value, num, unit}) {
     };
     myChart.setOption(option);
 
-    console.log("LOAD A");
-
     const resizeObserver = new ResizeObserver(entries => {
       for (const entry of entries) {
         if (entry.target === chartRef.current) {
@@ -72,7 +70,7 @@ export default function BarChart({label, value, num, unit}) {
           requestAnimationFrame(() => {
             // 套上requestAnimationFrame可以避免ResizeObserver loop completed with undelivered notifications.的问题
             // 因为resizeObserver的回调函数中会改变大小，会导致递归调用。
-            myChart && myChart.resize({
+            myChart && !myChart.isDisposed() && myChart.resize({
               width: entry.contentRect.width - 5,
               height: entry.contentRect.height
             });

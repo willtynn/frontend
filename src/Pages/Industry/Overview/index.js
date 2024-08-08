@@ -30,8 +30,8 @@ export default function IndustryOverview() {
 
   const initalItems = [
     { id: "RunStatus", component: <RunStatus />, x:0, y:0, w:12, h:1, minW:8, minH:1, maxW:12, maxH:1 },
-    { id: "CpuRank", component: <CpuRank />, x:0, y:1, w:6, h:4, minW:6, minH:4, maxW:6, maxH:4 },
-    { id: "MemRank", component: <MemRank />, x:6, y:1, w:6, h:4, minW:6, minH:4, maxW:6, maxH:4 },
+    { id: "CpuRank", component: <CpuRank />, x:0, y:1, w:6, h:4, minW:4, minH:4, maxW:8, maxH:6 },
+    { id: "MemRank", component: <MemRank />, x:6, y:1, w:6, h:4, minW:4, minH:4, maxW:8, maxH:6 },
     { id: "ServiceList", component: <ServiceList />, x:0, y:5, w:12, h:5, minW:12, minH:4, maxW:12, maxH:8 }
   ]
 
@@ -67,33 +67,21 @@ export default function IndustryOverview() {
       handle: '.drag-handle',
     });
 
-    // grid.on("dragstart", (event, element) => {
-    //   const node = element.gridstackNode;
-    //   console.log(`dragging node #${node.id} from ${node.x},${node.y}`);
-    // });
-
-    grid.on("dragstop", (_, __) => {
+    grid.on("change", (_, items_) => {
       // 修改items中的属性并且更新localStorage
-      const items_ = gridRef.current.querySelectorAll('.grid-stack-item');
-      const newItems = Array.from(items_).map(item => {
-        const node = item.gridstackNode;
+      const newItems = items.map(item => {
+        const node = items_.find(i => i.id === item.id);
+        if (!node) return item;
         return {
-          ...items.find(i => i.id === node.id),
-          x: node.x,
-          y: node.y,
-          w: node.w,
-          h: node.h
+          ...item,
+          x: node.x, y: node.y, w: node.w, h: node.h
         }
       });
       setItems(newItems);
       
       const mem = newItems.map(item => {
         return {
-          id: item.id,
-          x: item.x,
-          y: item.y,
-          w: item.w,
-          h: item.h
+          id: item.id, x: item.x, y: item.y, w: item.w, h: item.h
         }
       });
       localStorage.setItem('industry_overview_position_memory', JSON.stringify(mem));
@@ -146,7 +134,7 @@ export default function IndustryOverview() {
                     }}>
                     <div className="drag-handle" style={{
                         width: '13px',
-                        height: 'calc(100% - 10px)',
+                        height: 'calc(98% - 10px)',
                         display: 'flex',
                         justifyContent: 'center',
                         alignItems: 'center',
