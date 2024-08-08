@@ -98,7 +98,7 @@ export function MemRank() {
   
   return (
     <Stack sx={{
-      width: 'auto',
+      width: '100%',
       height: '100%',
       flexGrow:7,
     }}

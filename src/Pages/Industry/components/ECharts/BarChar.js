@@ -12,8 +12,6 @@ export default function BarChart({label, value, num, unit}) {
       .sort((a, b) => a - b);
     return { sortedLabels, sortedValues };
   }
-
-  console.log(label,value,num,unit)
   
 
   const chartRef = useRef(null)
@@ -21,7 +19,6 @@ export default function BarChart({label, value, num, unit}) {
     if (!chartRef.current) return; // 确保DOM元素已挂载
     const chartDom = chartRef.current;
     const myChart = echarts.init(chartDom,null,{
-      // height: num*35+'px'
       width: chartRef.current.offsetWidth - 5,
     });
     const { sortedLabels, sortedValues } = sortData(label, value);
@@ -34,11 +31,7 @@ export default function BarChart({label, value, num, unit}) {
       },
       legend: {},
       grid: {
-        top:'1%',
-        left: '1%',
-        right: '5%',
-        bottom: '10%',
-        containLabel: true
+        top:'1%', left: '1%', right: '5%', bottom: '10%', containLabel: true
       },
       xAxis: {
         type: 'value',
@@ -69,10 +62,31 @@ export default function BarChart({label, value, num, unit}) {
       ],
     };
     myChart.setOption(option);
-    return () => {
-      if (myChart) {
-        myChart.dispose();
+
+    console.log("LOAD A");
+
+    const resizeObserver = new ResizeObserver(entries => {
+      for (const entry of entries) {
+        if (entry.target === chartRef.current) {
+          // console.log(entry.contentRect.width)
+          requestAnimationFrame(() => {
+            // 套上requestAnimationFrame可以避免ResizeObserver loop completed with undelivered notifications.的问题
+            // 因为resizeObserver的回调函数中会改变大小，会导致递归调用。
+            myChart && myChart.resize({
+              width: entry.contentRect.width - 5,
+              height: entry.contentRect.height
+            });
+          });
+        }
       }
+    })
+    if (chartRef.current) {
+      resizeObserver.observe(chartRef.current);
+    }
+
+    return () => {
+      myChart && myChart.dispose();
+      resizeObserver && resizeObserver.unobserve(chartRef.current);
     };
   }, [label, value, num]);
 
