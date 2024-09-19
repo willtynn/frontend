@@ -57,7 +57,41 @@ const initState = {
 
   aggregateReport: null,
   changeFlag: 0,
-  startAndEnd: [-1, -1]
+  startAndEnd: [-1, -1],
+
+  //此处是后续添加的变量，由于演化计划还没有确定，所以上面的变量暂时不删除
+  //并且为了做出命名上的区别采用下划线的命名方式
+  //用于展示的列表
+  evo_plans:[],
+  current_evo_plan:{},
+  data_resource_list:[{name:"example1"},{name:"example2"}],
+  trigger_list:["per minute","per second","per hour","per day"],
+  exe_alg_list:[{name:"example1"},{name:"example2"}],
+  ana_alg_list:[{name:"example1"},{name:"example2"}],
+  exe_mtd_list:["now","after notice"],
+  current_data_resource:{},
+  current_alg_list:[],
+  ana_data_mapping:[],
+  exe_data_mapping:[],
+  //进入详情界面后展示出来的某一演化计划的详细信息
+  evo_id:'-1',
+  evo_name:'',
+  cre_time:"",
+  exe_times:"0",
+  last_time:"",
+  evo_enable:"0",
+  evo_remarks:"none",
+  data_resource:"",
+  trigger:"",
+  ana_alg:"",
+  exe_alg:"",
+  exe_mtd:"",
+  create_by:"admin",
+  exe_times:"0",
+  evo_enable:"0"
+
+  //结束
+  
 };
 
 export default function EvolutionReducer(state = initState, action) {
@@ -347,6 +381,170 @@ export default function EvolutionReducer(state = initState, action) {
         podName: data
       }
 
+    //以下演化功能新增内容
+    case actions.EVO_GET_EVOLIST:
+      return {
+        ...state,
+        evo_plans: data
+      }
+    
+    case actions.EVO_GET_ONE:
+      return {
+        ...state,
+        current_evo_plan: data,
+      }
+
+    case actions.EVO_DEL_ONE:
+      return{
+        ...state,
+        evo_plans: data.filter(function(item){
+          return item.evo_id !== data;
+        })
+      }
+    
+    case actions.EVO_MODIFY:
+      return{
+        ...state,
+        evo_id:data.evo_id,
+        evo_name:data.evo_name,
+        cre_time:data.cre_time,
+        exe_times:data.exe_times,
+        last_time:data.last_time,
+        evo_enable:data.evo_remarks,
+        evo_remarks:data.evo_remarks,
+        data_resource:data.data_resource,
+        trigger:data.trigger,
+        ana_alg:data.ana_alg,
+        exe_alg:data.exe_alg,
+        exe_mtd:data.exe_mtd,
+        create_by:data.create_by,
+      }
+    
+      case actions.EVO_GET_DATASOURCE:
+        return{
+          ...state,
+          data_resource_list:data
+        }
+      
+      //因为把一个数组改成对象了，这个字段不合理
+      // case actions.EVO_ADD_PLAN:
+      //   return{
+      //     ...state,
+      //     evo_plan:data
+      //   }
+      
+
+      case actions.EVO_GET_ALGORITHM:
+        return{
+          ...state,
+          exe_alg_list:data.planAlgorithmList,
+          ana_alg_list:data.analyzeAlgorithmList,
+          exe_mtd_list:data.executeAlgorithmList,
+        }
+      
+
+      case actions.EVO_UPDATE_TRIGGER:
+        return{
+          ...state,
+          trigger:data
+        }
+      
+      case actions.EVO_UPDATE_DATARESOURCE:
+        return{
+          ...state,
+          data_resource:data
+        }
+      
+      case actions.EVO_UPDATE_ANA_ALG:
+        return{
+          ...state,
+          ana_alg:data
+        }
+      
+      case actions.EVO_UPDATE_EXE_ALG:
+        return{
+          ...state,
+          exe_alg:data
+        }
+
+      case actions.EVO_UPDATE_EXE_MTD:
+        return{
+          ...state,
+          exe_mtd:data
+        }
+
+      case actions.EVO_UPDATE_NAME:
+        return{
+          ...state,
+          evo_name:data
+        }
+
+      case actions.EVO_UPDATE_REMARKS:
+        return{
+          ...state,
+          evo_remarks:data
+        }
+      
+      case actions.EVO_UPDATE_FROM_CURRENT:
+        return{
+          ...state,
+          evo_id: data.evo_id,
+          evo_name:data.evo_name,
+          cre_time:data.cre_time,
+          exe_times:data.exe_times,
+          last_time:data.last_time,
+          evo_enable:data.evo_enable,
+          evo_remarks:data.evo_remarks,
+          data_resource:data.data_resource,
+          trigger:data.trigger,
+          ana_alg:data.ana_alg,
+          exe_alg:data.exe_alg,
+          exe_mtd:data.exe_mtd,
+          create_by:data.create_by,
+        }
+      case actions.EVO_RESET_FORM:
+        return{
+          ...state,
+          evo_id:"-1",
+          evo_name:'',
+          cre_time:"",
+          exe_times:"0",
+          last_time:"",
+          evo_enable:"0",
+          evo_remarks:"none",
+          data_resource:"",
+          trigger:"",
+          ana_alg:"",
+          exe_alg:"",
+          exe_mtd:"",
+          create_by:"",
+        }
+    
+    case actions.EVO_UPDATE_CURRENT_DATARESOURCE:
+      return{
+        ...state,
+        current_data_resource: data,
+      }
+    
+    case actions.EVO_UPDATE_CURRENT_ALGLIST:
+      return{
+        ...state,
+        current_alg_list: data,
+      }
+
+    case actions.EVO_UPDATE_ENABLE:
+      return{
+        ...state,
+        evo_enable: data,
+      }
+    
+    case actions.EVO_GET_ALGORITHM_DATA_MAPPING:
+      return{
+        ...state,
+        ana_data_mapping:data.anaMapping,
+        exe_data_mapping:data.planMapping,
+      }
+    //新增结束
     default:
       return state;
   }

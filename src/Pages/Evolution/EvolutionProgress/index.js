@@ -17,6 +17,9 @@ import { AnalyseConfiguration } from './AnalyseConfiguration';
 import { PlanConfiguration } from './PlanConfiguration';
 import { ExecuteConfiguration } from './ExecuteConfiguration';
 
+import { EVO_RESET_FORM, evo_add, evo_getPlanList, evo_modify } from '../../../actions/evolutionAction';
+import { useNavigate } from 'react-router-dom';
+
 const style = {
   position: 'absolute',
   top: '50%',
@@ -31,11 +34,12 @@ const style = {
 const totalStage = 4;
 
 export function EvolutionProgress(props) {
-  const { handleConfirmClick, handleCancelClick, showError, setShowError } =
+  const { handleConfirmClick, handleCancelClick, showError, setShowError,state } =
     props;
   const [currentStage, setCurrentStage] = useState(1);
   const [evolutionPlanError, setEvolutionPlanError] = useState(0);
 
+  const navigate = useNavigate();
   const intl = useIntl();
   const dispatch = useDispatch();
 
@@ -46,10 +50,16 @@ export function EvolutionProgress(props) {
   const nextStep = () => {
     if (currentStage === 1 && evolutionPlanError) {
         setShowError(true);
-      } else {
+    } else {
         setCurrentStage(prevStage => prevStage + 1);
         setShowError(false);
-      }
+    }
+    //此处想要加入表单验证
+    // if(currentPage === 1 && evolutionPlanError){
+    //   if(evo_name == ""){
+
+    //   }
+    // }
   };
 
   const handleCancelButtonClick = () => {
@@ -57,7 +67,64 @@ export function EvolutionProgress(props) {
     setCurrentStage(1);
   };
 
-  const handleConfirmButtonClick = () => {};
+  //获取到相关的需要提交的变量
+  const {
+    evo_id,
+    evo_name,
+    data_resource,
+    trigger,
+    ana_alg,
+    exe_alg,
+    exe_mtd,
+    evo_remarks,
+    create_by,
+    cre_time,
+  } = useSelector(state => {
+    return {
+      evo_id: state.Evolution.evo_id,
+      evo_name: state.Evolution.evo_name,
+      data_resource: state.Evolution.data_resource,
+      trigger: state.Evolution.trigger,
+      ana_alg: state.Evolution.ana_alg,
+      exe_alg: state.Evolution.exe_alg,
+      exe_mtd: state.Evolution.exe_mtd,
+      evo_remarks: state.Evolution.evo_remakes,
+      create_by: state.Evolution.create_by,
+      cre_time: state.Evolution.cre_time,
+    };
+  });
+  //提交表单，此处还可以做一个验证
+  const handleConfirmButtonClick = () => {
+    const plan = {
+      evo_id:evo_id,
+      evo_name: evo_name,
+      data_resource: data_resource,
+      cre_time:cre_time,
+      trigger: trigger,
+      ana_alg: ana_alg,
+      exe_alg: exe_alg,
+      exe_mtd: exe_mtd,
+      evo_enable: "1",
+      evo_remarks: evo_remarks,
+      create_by: create_by,
+    }
+    //如果用户没有输入备注。那么就存为none
+    if(evo_remarks == undefined){
+      plan.evo_remarks = "none";
+    }
+    //如果id不等于-1，那么说明是修改，如果id = -1 那么是新建
+    if(evo_id == "-1"){
+      dispatch(evo_add(plan));
+    }else{
+      dispatch(evo_modify(plan));
+    }
+    //无论如何，恢复默认数据，更新计划列表，返回主页
+    dispatch({type:EVO_RESET_FORM});
+    dispatch(evo_getPlanList("",""));
+    //关闭窗口
+    handleConfirmClick();
+    navigate("/evolution/plan")
+  };
 
   const currentPage = () => {
     if (currentStage === 1) {
@@ -71,9 +138,17 @@ export function EvolutionProgress(props) {
     }
   };
 
+  const checkState = () =>{
+    if(state == "modify"){
+      return intl.messages['evolution.modifyEvolutionPlan']
+    }else{
+      return intl.messages['evolution.createEvolutionPlan']
+    }
+  }
+
   return (
     <Box sx={style}>
-      <KubeDeploymentCard title={intl.messages['stressTesting.createTestPlan']} handleClose={handleCancelClick}>
+      <KubeDeploymentCard title={checkState()} handleClose={handleCancelClick}>
         <Stack
           direction='row'
           spacing={0}
@@ -148,7 +223,7 @@ export function EvolutionProgress(props) {
               sx={{ height: '32px', p: '5px 23px' }}
               onClick={handleConfirmButtonClick}
             >
-              {intl.messages['common.create']}
+              {state == "add" ? intl.messages['common.create'] : intl.messages['common.modify']}
             </KubeConfirmButton>
           )}
         </Stack>

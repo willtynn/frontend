@@ -12,7 +12,9 @@ import {
 } from '@mui/material';
 import { useDispatch, useSelector } from 'react-redux';
 import { KubeConfirmButton } from '@/components/Button';
-import { fontFamily } from '@/utils/commonUtils';
+import { 
+  fontFamily,
+  formatDatetimeString } from '@/utils/commonUtils';
 import {
   StyledTableContainer,
   StyledTableBodyCell,
@@ -45,6 +47,14 @@ import {
   getTestPlans,
 } from '../../actions/applicationAction';
 import { StyledModal } from '../../components/Modal';
+import { 
+  evo_getPlanList,
+  evo_get_dataSource,
+  evo_modify,
+  evo_get_algorithm_data_mapping,
+} from '../../actions/evolutionAction';
+import LeftArrow from '@/assets/WhiteLeftArrow.svg';
+import RightArrow from '@/assets/WhiteRightArrow.svg';
 
 export const RUNNING = 'Running';
 export const PENDING = 'Pending';
@@ -135,7 +145,7 @@ function createRow(
   };
 }
 
-const statusPattern = new RegExp(/^(状态|Status):/);
+const createTimePattern = new RegExp(/^(创建时间|Create Time):/);
 const namePattern = new RegExp(/^(名称|Name):/);
 
 export default function EvolutionPlan() {
@@ -157,17 +167,24 @@ export default function EvolutionPlan() {
     intl.messages['common.createTime'],
   ]);
 
+  //TODO:此处只是权宜之计，上面的searchBy不能切换语言，而且考虑到setSearchBy暂未使用，所以干脆以不变的数组表示搜索项
+  const searchByList = [
+    intl.messages['common.name'],
+    intl.messages['common.createTime'],
+  ]
+
   const [colDisplay, setColDisplay] = useState([true, true, true, true, true]);
   const [customContentAnchorEl, setCustomContentAnchorEl] = useState(null);
   const customContentOpen = Boolean(customContentAnchorEl);
 
   const [searchList, setSearchList] = useState([]);
 
-  const { pageSize, pageNum, evolutionPlans } = useSelector(state => {
+  const { pageSize, pageNum, evolutionPlans,evo_plans} = useSelector(state => {
     return {
-      pageSize: state.Evolution.pageSize,
-      pageNum: state.Evolution.pageNum,
+      pageSize: state.Evolution.pageSize || [],
+      pageNum: state.Evolution.pageNum || [],
       evolutionPlans: state.Evolution.evolutionPlans,
+      evo_plans: state.Evolution.evo_plans,
     };
   });
 
@@ -175,12 +192,21 @@ export default function EvolutionPlan() {
   const navigate = useNavigate();
 
   useEffect(() => {
-    dispatch(getTestPlans());
+    //获取到对应的evolist，dataSource和算法与data的匹配表
+    dispatch(evo_getPlanList("",""));
+    dispatch(evo_get_dataSource());
+    dispatch(evo_get_algorithm_data_mapping());
   }, []);
 
+  useEffect(() =>{
+    searchByTwo();
+  },[searchList]);
+
+  //此处修有改
   useEffect(() => {
-    setTableData(evolutionPlans);
-  }, [evolutionPlans]);
+    // setTableData(evolutionPlans);
+    setTableData(evo_plans);
+  }, [evo_plans]);
 
   const headRow = [
     createRow(
@@ -249,13 +275,13 @@ export default function EvolutionPlan() {
     let tmpData = JSON.parse(JSON.stringify(tableData));
     setCount(tableData.length);
     searchList.forEach((value, _) => {
-      if (value.startsWith(`${intl.messages['common.status']}:`)) {
+      if (value.startsWith(`${intl.messages['common.createTime']}:`)) {
         tmpData = tmpData.filter((tableRow, _) => {
-          return tableRow.status.includes(value.replace(statusPattern, ''));
+          return tableRow.cre_time.includes(value.replace(createTimePattern, ''));
         });
       } else if (value.startsWith(`${intl.messages['common.name']}:`)) {
         tmpData = tmpData.filter((tableRow, _) => {
-          return tableRow.testPlanName.includes(value.replace(namePattern, ''));
+          return tableRow.evo_name.includes(value.replace(namePattern, ''));
         });
       } else {
         tmpData = tmpData.filter((tableRow, _) => {
@@ -266,32 +292,51 @@ export default function EvolutionPlan() {
     return tmpData;
   };
 
-  // const visibleRows = useMemo(() => {
-  //   const tmpData = filtering();
-  //   if (pageSize * (pageNum - 1) > count) {
-  //     dispatch({ type: UPDATE_TEST_PLAN_PAGE_NUM, data: 1 });
-  //     return stableSort(tmpData, getComparator(order, orderBy)).slice(
-  //       0,
-  //       pageSize
-  //     );
-  //   }
-  //   return stableSort(tmpData, getComparator(order, orderBy)).slice(
-  //     (pageNum - 1) * pageSize,
-  //     (pageNum - 1) * pageSize + pageSize
-  //   );
-  // }, [order, orderBy, pageNum, pageSize, tableData, searchList]);
-
-  const visibleRows = [
-    {
-      id: 1,
-      evolutionPlanName: '演示计划1',
-      createTime: '2024-03-27 09:27:35',
-      executionNumber: 51,
-      lastExecutionTime: '2024-03-27 09:27:35',
-      enableOrDisable: true,
-      remark: 'none'
+  const searchByTwo = () => {
+    const listSearchName = [];
+    const listSearchTime = [];
+    searchList.forEach((value, _) => {
+      if (value.startsWith(`${intl.messages['common.createTime']}:`)) {
+        listSearchTime.push(value.replace(createTimePattern, ''))
+      } else if (value.startsWith(`${intl.messages['common.name']}:`)) {
+        listSearchName.push(value.replace(namePattern, ''))
+      } else {
+        return evo_plans;
+      }
+    });
+    
+    //暂时先只允许第一个参数起效
+    //TODO 后续可能需要改成允许同时查询多个名称
+    if(listSearchName.length!=0 && listSearchTime!=0){
+      dispatch(evo_getPlanList(listSearchName[0],listSearchTime[0]))
+    }else if(listSearchName.length != 0){
+      dispatch(evo_getPlanList(listSearchName[0],""))
+    }else if(listSearchTime.length != 0){
+      dispatch(evo_getPlanList("",listSearchTime[0]))
+    }else{
+      dispatch(evo_getPlanList("",""))
     }
-  ]
+    
+   };
+   
+  const visibleRows = useMemo(() => {
+    //当前计划的总数是evo_plans中的长度
+    setCount(evo_plans.length);
+    //如果页码超过了最大页码就返回1
+    if (pageSize * (pageNum - 1) > count) {
+      dispatch({ type: UPDATE_TEST_PLAN_PAGE_NUM, data: 1 });
+      return evo_plans.slice(
+        0,
+        pageSize
+      );
+    }
+    return evo_plans.slice(
+      (pageNum - 1) * pageSize,
+      (pageNum - 1) * pageSize + pageSize
+    );
+  },[pageNum, pageSize,searchList,evo_plans]);
+
+  // const visibleRows = evo_plans
 
   const handlePlanClick = () => {
     setPlanOpen(true);
@@ -304,6 +349,11 @@ export default function EvolutionPlan() {
 
   //改变页码
   const handlePageChange = (_event, newPage) => {
+    //页码小于1直接返回
+    if(newPage <= 0){
+      return; 
+    }
+    console.log(newPage)
     dispatch({ type: UPDATE_TEST_PLAN_PAGE_NUM, data: newPage });
   };
 
@@ -368,6 +418,10 @@ export default function EvolutionPlan() {
       return tmpDisplay;
     });
   };
+
+  const handleRefresh = () => {
+    setSearchList([]);
+  }
 
   return (
     <Stack>
@@ -437,7 +491,8 @@ export default function EvolutionPlan() {
               fontFamily: fontFamily,
             }}
           >
-            {searchBy.map((value, index) => {
+            {/* //TODO:此处修改，可能需要调整回searchBy */}
+            {searchByList.map((value, index) => {
               return (
                 <Box
                   sx={{
@@ -572,6 +627,7 @@ export default function EvolutionPlan() {
                 },
                 height: '32px',
               }}
+              onClick={handleRefresh}
             >
               <RefreshIcon />
             </EclipseTransparentButton>
@@ -618,13 +674,12 @@ export default function EvolutionPlan() {
               orderBy={orderBy}
               onRequestSort={handleRequestSort}
             />
-
             <TableBody>
               {!loading && visibleRows !== null && visibleRows.length !== 0 ? (
                 visibleRows.map((row, index) => {
                   return (
                     <TableRow
-                      key={row.id + '' + index}
+                      key={row.evo_id + '' + index}
                       aria-checked={false}
                       sx={{
                         '&:last-child td, &:last-child th': {
@@ -663,10 +718,10 @@ export default function EvolutionPlan() {
                               },
                             }}
                             onClick={() => {
-                              navigate(`/detail/evolutionplan/${row.id}`);
+                              navigate(`/detail/evolutionplan/${row.evo_id}`);
                             }}
                           >
-                            {row.evolutionPlanName}
+                            {row.evo_name}
                           </Box>
                         </Stack>
                       </StyledTableBodyCell>
@@ -676,7 +731,7 @@ export default function EvolutionPlan() {
                           display: headRow[1].show ? 'table-cell' : 'none',
                         }}
                       >
-                        {row.createTime}
+                        {formatDatetimeString(row.cre_time)}
                       </StyledTableBodyCell>
                       <StyledTableBodyCell
                         align={'center'}
@@ -684,7 +739,7 @@ export default function EvolutionPlan() {
                           display: headRow[2].show ? 'table-cell' : 'none',
                         }}
                       >
-                        {row.executionNumber}
+                        {row.exe_times}
                       </StyledTableBodyCell>
                       <StyledTableBodyCell
                         align={'center'}
@@ -692,7 +747,7 @@ export default function EvolutionPlan() {
                           display: headRow[3].show ? 'table-cell' : 'none',
                         }}
                       >
-                        {row.lastExecutionTime}
+                        {formatDatetimeString(row.last_time)}
                       </StyledTableBodyCell>
                       <StyledTableBodyCell
                         align={'center'}
@@ -700,7 +755,7 @@ export default function EvolutionPlan() {
                           display: headRow[4].show ? 'table-cell' : 'none',
                         }}
                       >
-                        {row.enableOrDisable
+                        {row.evo_enable == '1'
                           ? intl.messages['common.yes']
                           : intl.messages['common.no']}
                       </StyledTableBodyCell>
@@ -710,7 +765,7 @@ export default function EvolutionPlan() {
                           display: headRow[5].show ? 'table-cell' : 'none',
                         }}
                       >
-                        {row.remark}
+                        {row.evo_remarks}
                       </StyledTableBodyCell>
                     </TableRow>
                   );
@@ -746,6 +801,7 @@ export default function EvolutionPlan() {
             </TableBody>
           </Table>
         </StyledTableContainer>
+
         <StyledTableFooter
           pageNum={pageNum}
           pageSize={pageSize}
@@ -761,10 +817,11 @@ export default function EvolutionPlan() {
       </Box>
       <StyledModal open={planOpen} onClose={handleClose}>
         <EvolutionProgress
-          handleConfirmClick={() => { }}
+          handleConfirmClick={handleConfirmClick}
           handleCancelClick={handleCancelClick}
           showError={showError}
           setShowError={setShowError}
+          state="add"
         />
       </StyledModal>
     </Stack>

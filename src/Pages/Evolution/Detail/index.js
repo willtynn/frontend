@@ -1,18 +1,17 @@
 
-import { useEffect } from 'react';
-import { useDispatch } from 'react-redux';
+import { useEffect} from 'react';
+import { useDispatch} from 'react-redux';
 import { Stack } from '@mui/material';
 import { useParams } from 'react-router';
 import GeneralInfo from './GeneralInfo';
-import { getEvolutionPlanById } from '../../../actions/evolutionAction';
+import { evo_getone } from '../../../actions/evolutionAction';
 import DetailInfo from './DetailInfo';
 
 export function EvolutionPlanDetail() {
-  const { evolutionPlanId } = useParams();
+  const { evo_id } = useParams();
   const dispatch = useDispatch();
-
   useEffect(() => {
-    dispatch(getEvolutionPlanById(evolutionPlanId));
+    dispatch(evo_getone(evo_id));
   }, []);
 
   return (
