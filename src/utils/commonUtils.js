@@ -130,6 +130,14 @@ export const getBoolString = str => {
   }
 }
 
+export const getBoolChar = str => {
+  if(str == '1' || str > 0){
+    return "是"
+  }else{
+    return "否"
+  }
+}
+
 export const parseServiceName = serviceName => {
   const terms = serviceName.split("/");
   if(terms.length <= 0) {

@@ -7,8 +7,11 @@ import {
 } from '@mui/material';
 import {
   KubeCancelButton,
+  KubeConfirmButton,
 } from '@/components/Button';
-import { fontFamily } from '@/utils/commonUtils';
+import { 
+  fontFamily,
+  formatDatetimeString } from '@/utils/commonUtils';
 import DetailBG from '@/assets/DetailBG.svg';
 import Service21 from '@/assets/Service21.svg';
 import EditService from '@/assets/EditService.svg';
@@ -19,7 +22,19 @@ import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
 import { StyledPopover } from '@/components/Popover';
 import { measure } from '@/actions/applicationAction';
 import { useIntl } from 'react-intl';
-import { getBoolString } from '../../../utils/commonUtils';
+import { getBoolChar, getBoolString } from '../../../utils/commonUtils';
+import * as React from 'react';
+import Button from '@mui/material/Button';
+import Dialog from '@mui/material/Dialog';
+import DialogActions from '@mui/material/DialogActions';
+import DialogContent from '@mui/material/DialogContent';
+import DialogContentText from '@mui/material/DialogContentText';
+import DialogTitle from '@mui/material/DialogTitle';
+import { EVO_RESET_FORM, EVO_UPDATE_FROM_CURRENT, evo_delete, evo_getPlanList, evo_modify } from '../../../actions/evolutionAction';
+import { EvolutionProgress } from '../EvolutionProgress';
+import { StyledModal } from '@/components/Modal';
+import Warning from '@/assets/popup/warning.svg'
+import { EVO_UPDATE_ENABLE } from '../../../actions/evolutionAction';
 
 const labelStyle = {
   fontSize: '12px',
@@ -57,14 +72,72 @@ export default function GeneralInfo(props) {
   const backText = intl.messages['evolution.evolutionPlan']
   const { currentPlan } = useSelector(state => {
     return {
-      currentPlan: state.Evolution.currentPlan,
+      currentPlan: state.Evolution.current_evo_plan || {},
     };
   });
 
+  const [deleltDialogOpen, setDeleteDialogOpen] = React.useState(false);
+  const handleDeleteDialogOpen = () => {
+    setDeleteDialogOpen(true);
+  };
+
+  const handleDeleteDialogClose = () => {
+    setDeleteDialogOpen(false);
+  };
+
+  function handleDelete() {
+    setDeleteDialogOpen(false);
+    dispatch(evo_delete(currentPlan.evo_id));
+    navigate('/evolution/plan')
+  }
+
+  function handleExecute() {
+    if(currentPlan.evo_enable=="1"){
+      currentPlan.evo_enable="0";
+    }else{
+      currentPlan.evo_enable="1";
+    }
+    dispatch({type:EVO_UPDATE_ENABLE,data:currentPlan.evo_enable})
+    console.log(currentPlan)
+    dispatch(evo_modify(currentPlan));
+    console.log("修改计划的启用和禁用")
+
+  }
+
+  const [planOpen, setPlanOpen] = useState(false);
+  const [showError, setShowError] = useState(false);
+  //关闭修改计划的界面
+  const handleClose = () => {
+    resetParameters();
+    setPlanOpen(false);
+  };
+
+  //取消修改计划
+  const handleCancelClick = () => {
+    resetParameters();
+    setPlanOpen(false);
+  };
+
+  //确认修改计划
+  const handleConfirmClick = () => {
+    //修改的请求放入EvolutionProgress组件
+    setPlanOpen(false);
+  };
+  //重新设置参数
+  const resetParameters = () => {
+    dispatch({type:EVO_RESET_FORM})
+    // 此处应该恢复plan内容为默认
+  }
+
+  const setNowParameters = () => {
+    dispatch({type:EVO_UPDATE_FROM_CURRENT,data:currentPlan})
+  }
 
   const items = [
-    [<EditService />, '编辑计划', () => { }],
-    [<Delete16 />, '删除', () => { }],
+    //此处加入编辑计划的框，可以复用之前的框，但是数据要与现在计划相同
+    [<EditService />, intl.messages['common.edit'], () => { setPlanOpen(true);setNowParameters(); }],
+    //传参进行删除
+    [<Delete16 />, intl.messages['common.delete'], () => { handleDeleteDialogOpen(); }],
   ];
 
   const handleReturn = () => {
@@ -75,6 +148,16 @@ export default function GeneralInfo(props) {
     setMoreOperationAnchorEl(e.currentTarget);
   };
 
+  const getEvoEnable = () => {
+    if(currentPlan == null){
+      return "";
+    }else if(currentPlan.evo_enable == "0"){
+      return intl.messages['common.no']
+    }else{
+      return intl.messages['common.yes']
+    }
+  }
+
 
   return (
     <Stack
@@ -82,7 +165,7 @@ export default function GeneralInfo(props) {
       sx={{ position: 'relative', boxShadow: '0 4px 8px 0 rgba(36,46,66,.06)' }}
     >
       <StyledPopover
-        id='service-detail-more-operation'
+        id='evoplan-detail-more-operation'
         open={moreOperationOpen}
         anchorEl={moreOperationAnchorEl}
         handleClose={() => setMoreOperationAnchorEl(null)}
@@ -133,6 +216,55 @@ export default function GeneralInfo(props) {
             </Box>
           </Stack>
         </KubeCancelButton>
+
+        {/* 确认删除提示框 */}
+        <Dialog
+          open={deleltDialogOpen}
+          onClose={handleDeleteDialogClose}
+          aria-labelledby="alert-dialog-title"
+          aria-describedby="alert-dialog-description"
+        >
+          <DialogTitle id="alert-dialog-title"
+            sx={{
+              fontSize: '25px',
+              alignItems: 'center',
+            }}>
+            <Warning />
+            <span sx={{
+              fontSize: '25px',
+              alignItems: 'center',
+              display: 'flex'
+            }}>{intl.messages['evolution.deleteWarning']}</span>
+          </DialogTitle>
+          <DialogContent>
+            <DialogContentText id="alert-dialog-description">
+              {intl.messages['evolution.deleteNotice']}
+            </DialogContentText>
+          </DialogContent>
+          <DialogActions>
+          <Stack
+          sx={{ mt: '12px' }}
+          direction='row'
+          spacing={1.5}
+          alignItems='center'
+        >
+          <KubeCancelButton sx={{ height: '32px', minWidth: '96px' }} onClick={() => {
+            handleDeleteDialogClose()
+          }}>
+            {intl.messages['common.cancel']}
+          </KubeCancelButton>
+          <KubeCancelButton
+            onClick={handleDelete}
+            sx={{ height: '32px', minWidth: '96px' }}
+          >
+            <Stack direction='row' alignItems='center' justifyContent='center'>
+              <Box sx={{ ml: '4px' }}>{intl.messages['common.confirm']}</Box>
+            </Stack>
+          </KubeCancelButton>
+        </Stack>
+          </DialogActions>
+        </Dialog>
+
         <Stack
           sx={{ mt: '12px' }}
           direction='row'
@@ -149,7 +281,7 @@ export default function GeneralInfo(props) {
                 },
               },
             }}
-            title={currentPlan !== null ? currentPlan.evolutionPlanName : ''}
+            title={currentPlan !== null ? currentPlan.evo_name : ''}
             placement='bottom'
           >
             <Box
@@ -167,7 +299,7 @@ export default function GeneralInfo(props) {
                 whiteSpace: 'nowrap'
               }}
             >
-              {currentPlan !== null ? currentPlan.evolutionPlanName : ''}
+              {currentPlan !== null ? currentPlan.evo_name : ''}
             </Box>
           </Tooltip>
         </Stack>
@@ -178,9 +310,9 @@ export default function GeneralInfo(props) {
           alignItems='center'
         >
           <KubeCancelButton sx={{ height: '32px', minWidth: '96px' }} onClick={() => {
-            dispatch(measure(currentPlan.id));
+            handleExecute();
           }}>
-            {intl.messages["evolution.executeEvolution"]}
+            {intl.messages["evolution.executeEvolutionOrUnable"]}
           </KubeCancelButton>
           <KubeCancelButton
             onClick={handleMoreOperation}
@@ -224,35 +356,47 @@ export default function GeneralInfo(props) {
           <Stack direction='row' spacing={0.75}>
             <Box sx={labelStyle}>{intl.messages['common.createTime']}</Box>
             <Box sx={valueStyle}>
-              {currentPlan !== null ? currentPlan.createTime : ''}
+              {currentPlan !== null ? formatDatetimeString(currentPlan.cre_time) : ''}
             </Box>
           </Stack>
           <Stack direction='row' spacing={0.75}>
             <Box sx={labelStyle}>{intl.messages['common.executionNumber']}</Box>
             <Box sx={valueStyle}>
-              {currentPlan !== null ? currentPlan.executionNumber : ''}
+              {currentPlan !== null ? currentPlan.exe_times : ''}
             </Box>
           </Stack>
           <Stack direction='row' spacing={0.75}>
             <Box sx={labelStyle}>{intl.messages['common.lastExecutionTime']}</Box>
             <Box sx={valueStyle}>
-              {currentPlan !== null ? currentPlan.lastExecutionTime : ''}
+              {currentPlan !== null ? formatDatetimeString(currentPlan.last_time) : ''}
             </Box>
           </Stack>
           <Stack direction='row' spacing={0.75}>
             <Box sx={labelStyle}>{intl.messages['common.enableOrDisable']}</Box>
             <Box sx={valueStyle}>
-              {currentPlan !== null ? getBoolString(currentPlan.enableOrDisable) : ''}
+              {getEvoEnable()}
             </Box>
           </Stack>
           <Stack direction='row' spacing={0.75}>
             <Box sx={labelStyle}>{intl.messages['common.remark']}</Box>
             <Box sx={valueStyle}>
-              {currentPlan !== null ? currentPlan.remark : ''}
+              {currentPlan !== null ? currentPlan.evo_remarks : ''}
             </Box>
           </Stack>
         </Stack>
       </Box>
+
+      <StyledModal open={planOpen} onClose={handleClose}>
+        <EvolutionProgress
+          handleConfirmClick={() => { }}
+          handleCancelClick={handleCancelClick}
+          showError={showError}
+          setShowError={setShowError}
+          state="modify"
+        />
+      </StyledModal>
+
+
     </Stack>
   );
 }

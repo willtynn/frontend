@@ -65,8 +65,36 @@ export const UPDATE_AGGREGATE_REPORT = 'UPDATE_AGGREGATE_REPORT';
 export const UPDATE_CHANGE_FLAG = 'UPDATE_CHANGE_FLAG';
 export const UPDATE_START_AND_END = 'UPDATE_START_AND_END';
 
+//演化功能对应的一些变量，前面会加上EVO以便于区别，后续再和其他开发人员交流是否保留上述内容
+export const EVO_GET_EVOLIST = 'EVO_GET_EVOLIST'
+export const EVO_GET_ONE = 'EVO_GET_ONE'
+export const EVO_DEL_ONE = 'EVO_DEL_ONE'
+export const EVO_MODIFY = 'EVO_MODIFY'
+export const EVO_GET_DATASOURCE = 'EVO_GET_DATASOURCE'
+//暂时禁用，逻辑错误
+// export const EVO_ADD_PLAN = 'EVO_ADD_PLAN'
+export const EVO_GET_ALGORITHM = 'EVO_GET_ALGORITHM'
+export const EVO_UPDATE_TRIGGER = 'EVO_UPDATE_TRIGGER'
+export const EVO_UPDATE_DATARESOURCE = 'EVO_UPDATE_DATARESOURCE'
+export const EVO_UPDATE_ANA_ALG = 'EVO_UPDATE_ANA_ALG'
+export const EVO_UPDATE_EXE_ALG = 'EVO_UPDATE_EXE_ALG'
+export const EVO_UPDATE_EXE_MTD = 'EVO_UPDATE_EXE_MTD'
+export const EVO_UPDATE_NAME = 'EVO_UPDATE_NAME'
+export const EVO_UPDATE_REMARKS = 'EVO_UPDATE_REMARKS'
+export const EVO_UPDATE_FROM_CURRENT = 'EVO_UPDATE_FROM_CURRENT'
+export const EVO_RESET_FORM = 'EVO_RESET_FORM'
+export const EVO_UPDATE_CURRENT_DATARESOURCE = 'EVO_UPDATE_CURRENT_DATARESOURCE'
+export const EVO_UPDATE_CURRENT_ALGLIST = 'EVO_UPDATE_CURRENT_ALGLIST'
+export const EVO_UPDATE_ENABLE = 'EVO_UPDATE_ENABLE'
+export const EVO_GET_ALGORITHM_DATA_MAPPING = 'EVO_GET_ALGORITHM_DATA_MAPPING'
+
+
 const baseURLLink = 'http://192.168.1.104:14447';
 // const baseURLLink = 'http://localhost:8848';
+
+//演化功能对应开发环境下的的baseURL
+// const baseURL = 'http://172.31.0.3:1234';
+const baseURL = 'http://localhost:1234';
 
 const axios_instance = axios.create({
   baseURL: baseURLLink,
@@ -582,7 +610,7 @@ export function getAggregateExcel(
         }
       );
       if (res.status === 200) {
-        let blob = new Blob([res.data], {type: 'application/vnd.ms-excel;charset=UTF-8'});
+        let blob = new Blob([res.data], { type: 'application/vnd.ms-excel;charset=UTF-8' });
         saveAs(blob, `Aggregate-Report-${planId}.xls`)
       } else {
         dispatch(
@@ -598,6 +626,375 @@ export function getAggregateExcel(
         setSnackbarMessageAndOpen(
           'stressTesting.aggregateExcelExportFailedMsg',
           {},
+          SEVERITIES.warning
+        )
+      );
+    }
+  };
+}
+
+
+
+
+
+//以下为新增内容，与学长提供的参数和方法并不完全相同，所以需要重新定义
+
+const axios_for_evolution = axios.create({
+  baseURL: baseURL,
+  timeout: 10000,
+  // withCredentials: isCookie,
+  crossDomain: true,
+});
+
+export function evo_getPlanList(evo_name, cre_time) {
+  const url = '/evolution/getlist';
+  return async dispatch => {
+    try {
+      const res = await axios_for_evolution.get(
+        url,
+        {
+          params: {
+            evo_name: evo_name,
+            cre_time: cre_time,
+          },
+        },
+        {
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        }
+      );
+      if(res.status !== 200){      //未能正确返回则提示用户  status为返回头自带的状态字段，暂时可以用来表示是否成功返回，但是不够灵活
+        dispatch(
+          setSnackbarMessageAndOpen(
+            'common.errorMessage',
+            {msg: res.data},
+            SEVERITIES.warning
+          )
+        );
+      }else{        //正确返回的情况下则更新演化计划列表以便于展示
+        dispatch({ type: EVO_GET_EVOLIST, data: res.data });
+      }
+    } catch {
+      dispatch(
+        setSnackbarMessageAndOpen(
+          'stressTesting.aggregateExcelExportFailedMsg',
+          {},
+          SEVERITIES.warning
+        )
+      );
+    }
+  };
+}
+
+export function evo_getone(id){
+  const url = '/evolution/getone/'+id.toString()
+  return async dispatch => {
+    try {
+      const res = await axios_for_evolution.get(
+        url,
+        {
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        }
+      );
+      if(res.status !== 200){      //未能正确返回则提示用户  status为返回头自带的状态字段，暂时可以用来表示是否成功返回，但是不够灵活
+        dispatch(
+          setSnackbarMessageAndOpen(
+            'common.errorMessage',
+            {msg: res.data},
+            SEVERITIES.warning
+          )
+        );
+      }else{        //正确返回的情况下则更新演化计划列表以便于展示
+        dispatch({ type: EVO_GET_ONE, data: res.data });
+        dispatch(
+          setSnackbarMessageAndOpen(
+            'common.confirm',
+            {},
+            SEVERITIES.success
+          )
+        );
+
+      }
+    } catch {
+      dispatch(
+        setSnackbarMessageAndOpen(
+          'common.erroMessage',
+          {msg: "未能成功连接后端，请等待后端服务重启"},
+          SEVERITIES.warning
+        )
+      );
+    }
+  };
+}
+
+export function evo_delete(id){
+  const url = '/evolution/delete/' + id.toString()
+  return async dispatch => {
+    try {
+      const res = await axios_for_evolution.delete(
+        url,
+        {
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        }
+      );
+      if(res.status !== 200){      //未能正确返回则提示用户  status为返回头自带的状态字段，暂时可以用来表示是否成功返回，但是不够灵活
+        dispatch(
+          setSnackbarMessageAndOpen(
+            'common.errorMessage',
+            {msg: "删除错误"},
+            SEVERITIES.warning
+          )
+        );
+      }else{        //正确返回的情况下则更新演化计划列表以便于展示
+        dispatch({ type: EVO_DEL_ONE});
+      }
+    } catch {
+      dispatch(
+        setSnackbarMessageAndOpen(
+          'common.erroMessage',
+          {msg: "未能成功连接后端，请等待后端服务重启"},
+          SEVERITIES.success
+        )
+      );
+    }
+  };
+}
+
+export function evo_modify(newPlan){
+  const url = '/evolution/modify'
+  return async dispatch => {
+    try {
+      const res = await axios_for_evolution.post(
+        url,
+        {
+          ...newPlan
+        },
+        {
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        }
+      );
+      if(res.status !== 200){      //未能正确返回则提示用户  status为返回头自带的状态字段，暂时可以用来表示是否成功返回，但是不够灵活
+        dispatch(
+          setSnackbarMessageAndOpen(
+            'common.errorMessage',
+            {msg: "修改错误"},
+            SEVERITIES.warning
+          )
+        );
+      }else{        //正确返回的情况下则更新演化计划列表以便于展示
+        //TODO:此处修改未必正确
+        if(res.data.code === 403){
+          dispatch(
+            setSnackbarMessageAndOpen(
+              'common.errorMessage',
+              {msg: "演化计划重名，请重新修改"},
+              SEVERITIES.warning
+            )
+          );
+          return;
+        }
+        dispatch({ type: EVO_MODIFY,data: res.data});
+        dispatch(
+          setSnackbarMessageAndOpen(
+            'common.confirm',
+            {},
+            SEVERITIES.success
+          )
+        );
+      }
+    } catch {
+      dispatch(
+        setSnackbarMessageAndOpen(
+          'common.erroMessage',
+          {msg: "未能成功连接后端，请等待后端服务重启"},
+          SEVERITIES.warning
+        )
+      );
+    }
+  };
+}
+
+export function evo_get_dataSource(){
+  const url = '/data-source'
+  return async dispatch => {
+    try {
+      const res = await axios_for_evolution.get(
+        url,
+        {
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        }
+      );
+      if(res.status !== 200){      //未能正确返回则提示用户  status为返回头自带的状态字段，暂时可以用来表示是否成功返回，但是不够灵活
+        dispatch(
+          setSnackbarMessageAndOpen(
+            'common.errorMessage',
+            {msg: "获取数据源错误，请等待数据源重启"},
+            SEVERITIES.warning
+          )
+        );
+      }else{        //正确返回的情况下则更新演化计划列表以便于展示
+        dispatch({ type: EVO_GET_DATASOURCE,data: res.data});
+        dispatch(
+          setSnackbarMessageAndOpen(
+            'common.confirm',
+            {},
+            SEVERITIES.success
+          )
+        );
+      }
+    } catch {
+      dispatch(
+        setSnackbarMessageAndOpen(
+          'common.erroMessage',
+          {msg: "未能成功连接后端，请等待后端服务重启"},
+          SEVERITIES.warning
+        )
+      );
+    }
+  };
+}
+
+export function evo_add(evo_plan){
+  const url = '/evolution/add'
+  return async dispatch => {
+    try {
+      const res = await axios_for_evolution.post(
+        url,
+        {
+          ...evo_plan
+        },
+        {
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        }
+      );
+      if(res.status !== 200){      //未能正确返回则提示用户  status为返回头自带的状态字段，暂时可以用来表示是否成功返回，但是不够灵活
+        dispatch(
+          setSnackbarMessageAndOpen(
+            'common.errorMessage',
+            {msg: "创建演化计划失败，请检查算法和数据源是否匹配"},
+            SEVERITIES.warning
+          )
+        );
+      }else{        //正确返回的情况提示用户
+        console.log(123123);
+        if(res.data.code === 403){
+          dispatch(
+            setSnackbarMessageAndOpen(
+              'common.errorMessage',
+              {msg: "创建演化计划失败，名称重复"},
+              SEVERITIES.warning
+            )
+          );
+          return;
+        }
+        dispatch(
+          setSnackbarMessageAndOpen(
+            'common.confirm',
+            {},
+            SEVERITIES.success
+          )
+        );
+      }
+    } catch {
+      dispatch(
+        setSnackbarMessageAndOpen(
+          'common.erroMessage',
+          {msg: "未能成功连接后端，请等待后端服务重启"},
+          SEVERITIES.warning
+        )
+      );
+    }
+  };
+}
+
+export function evo_get_algorithm(){
+  const url = '/evolution/algorithm';
+  return async dispatch => {
+    try {
+      const res = await axios_for_evolution.get(
+        url,
+        {
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        }
+      );
+      if(res.status !== 200){      //未能正确返回则提示用户  status为返回头自带的状态字段，暂时可以用来表示是否成功返回，但是不够灵活
+        dispatch(
+          setSnackbarMessageAndOpen(
+            'common.errorMessage',
+            {msg: "获取算法失败，请等待后端重启"},
+            SEVERITIES.warning
+          )
+        );
+      }else{        //正确返回的情况下则更新演化计划列表以便于展示
+        dispatch({ type: EVO_GET_ALGORITHM,data: res.data});
+        dispatch(
+          setSnackbarMessageAndOpen(
+            'common.confirm',
+            {},
+            SEVERITIES.success
+          )
+        );
+      }
+    } catch {
+      dispatch(
+        setSnackbarMessageAndOpen(
+          'common.erroMessage',
+          {msg: "未能成功连接后端，请等待后端服务重启"},
+          SEVERITIES.warning
+        )
+      );
+    }
+  };
+}
+
+export function evo_get_algorithm_data_mapping(){
+  const url = '/evolution/getAlgorithmMapping';
+  return async dispatch => {
+    try {
+      const res = await axios_for_evolution.get(
+        url,
+        {
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        }
+      );
+      if(res.status !== 200){      //未能正确返回则提示用户  status为返回头自带的状态字段，暂时可以用来表示是否成功返回，但是不够灵活
+        dispatch(
+          setSnackbarMessageAndOpen(
+            'common.errorMessage',
+            {msg: "获取匹配表失败，请等待后端重启服务"},
+            SEVERITIES.warning
+          )
+        );
+      }else{        //正确返回的情况下则更新演化计划列表以便于展示
+        dispatch({ type: EVO_GET_ALGORITHM_DATA_MAPPING,data:res.data});
+        dispatch(
+          setSnackbarMessageAndOpen(
+            'common.confirm',
+            {},
+            SEVERITIES.success
+          )
+        );
+      }
+    } catch {
+      dispatch(
+        setSnackbarMessageAndOpen(
+          'common.erroMessage',
+          {msg: "未能成功连接后端，请等待后端服务重启"},
           SEVERITIES.warning
         )
       );

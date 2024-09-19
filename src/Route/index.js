@@ -39,7 +39,7 @@ export default function MyRoute() {
         <Route path='service/:serviceId' element={<ServiceDetail />}/>
         <Route path='scheme/:schemeId' element={<SchemeDetail />} />
         <Route path='testplan/:testPlanId' element={<TestPlanDetail />}/>
-        <Route path='evolutionplan/:evolutionPlanId' element={<EvolutionPlanDetail />}/>
+        <Route path='evolutionplan/:evo_id' element={<EvolutionPlanDetail />}/>
         <Route path='planresult/:testResultId' element={<ResultDetail />}/>
         <Route path='trace/:start/:end/:traceId' element={<RouteTraceInfoPage />}/>
       </Route>
