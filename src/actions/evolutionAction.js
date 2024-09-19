@@ -87,6 +87,7 @@ export const EVO_UPDATE_CURRENT_DATARESOURCE = 'EVO_UPDATE_CURRENT_DATARESOURCE'
 export const EVO_UPDATE_CURRENT_ALGLIST = 'EVO_UPDATE_CURRENT_ALGLIST'
 export const EVO_UPDATE_ENABLE = 'EVO_UPDATE_ENABLE'
 export const EVO_GET_ALGORITHM_DATA_MAPPING = 'EVO_GET_ALGORITHM_DATA_MAPPING'
+export const EVO_GET_PLAN_RESULT = 'EVO_GET_PLAN_RESULT'
 
 
 const baseURLLink = 'http://192.168.1.104:14447';
@@ -982,6 +983,49 @@ export function evo_get_algorithm_data_mapping(){
         );
       }else{        //正确返回的情况下则更新演化计划列表以便于展示
         dispatch({ type: EVO_GET_ALGORITHM_DATA_MAPPING,data:res.data});
+        dispatch(
+          setSnackbarMessageAndOpen(
+            'common.confirm',
+            {},
+            SEVERITIES.success
+          )
+        );
+      }
+    } catch {
+      dispatch(
+        setSnackbarMessageAndOpen(
+          'common.erroMessage',
+          {msg: "未能成功连接后端，请等待后端服务重启"},
+          SEVERITIES.warning
+        )
+      );
+    }
+  };
+}
+
+//获取到演化计划的执行情况
+export function evo_get_plan_result(id){
+  const url = '/evolution/getPlanResult/'+id.toString();
+  return async dispatch => {
+    try {
+      const res = await axios_for_evolution.get(
+        url,
+        {
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        }
+      );
+      if(res.status !== 200){      //未能正确返回则提示用户  status为返回头自带的状态字段，暂时可以用来表示是否成功返回，但是不够灵活
+        dispatch(
+          setSnackbarMessageAndOpen(
+            'common.errorMessage',
+            {msg: "获取演化计划运行结果失败，请等待后端重启服务"},
+            SEVERITIES.warning
+          )
+        );
+      }else{        //正确返回的情况下则更新演化计划的运行状态以便于展示
+        dispatch({ type: EVO_GET_PLAN_RESULT,data:res.data});
         dispatch(
           setSnackbarMessageAndOpen(
             'common.confirm',

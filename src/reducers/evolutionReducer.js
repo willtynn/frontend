@@ -88,7 +88,9 @@ const initState = {
   exe_mtd:"",
   create_by:"admin",
   exe_times:"0",
-  evo_enable:"0"
+  evo_enable:"0",
+  //存储对应演化计划的执行结果，是数组
+  evolution_plan_result_list:[],
 
   //结束
   
@@ -543,6 +545,12 @@ export default function EvolutionReducer(state = initState, action) {
         ...state,
         ana_data_mapping:data.anaMapping,
         exe_data_mapping:data.planMapping,
+      }
+
+    case actions.EVO_GET_PLAN_RESULT:
+      return{
+        ...state,
+        evolution_plan_result_list:data,
       }
     //新增结束
     default:
