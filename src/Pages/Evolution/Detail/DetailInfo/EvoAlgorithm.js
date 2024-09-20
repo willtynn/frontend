@@ -145,7 +145,7 @@ export function EvoAlgorithm() {
             {/* 算法名称和id */}
             <Box
                 sx={{
-                    maxHeight: '660px',
+                    maxHeight: '700px',
                     overflowY: 'auto',
                 }}
             >
@@ -173,11 +173,11 @@ export function EvoAlgorithm() {
                     <DialogContent>
                         {/* 用来装具体结果的表格 */}
                         <TableContainer component={Paper}>
-                            <Table sx={{ minWidth: 400 }} size="small" aria-label="a dense table">
+                            <Table sx={{ minWidth: 550 }} size="small" aria-label="a dense table">
                                 <TableHead>
                                     <TableRow>
-                                        <TableCell>算法名称</TableCell>
-                                        <TableCell align="right">执行结果</TableCell>
+                                        <TableCell>名称</TableCell>
+                                        <TableCell align="right">结果</TableCell>
                                         <TableCell align="right">结果描述</TableCell>
                                         <TableCell align="left">执行时间</TableCell>
                                     </TableRow>
