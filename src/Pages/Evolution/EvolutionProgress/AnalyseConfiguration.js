@@ -48,7 +48,9 @@ export function AnalyseConfiguration(props) {
   }, [planNameError])
 
   //符合匹配表的分析算法列表
+  console.log(ana_data_mapping)
   const ana_data_list = _.filter(ana_alg_list,function(obj){
+    console.log(data_resource)
     if(_.find(ana_data_mapping,{'analyze_name':obj.analyze_name,'data_resource':data_resource}) !== undefined){
       return obj;
     }

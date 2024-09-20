@@ -23,7 +23,7 @@ export function EvolutionPlanDetail() {
       justifyContent='space-between'
       alignItems='flex-start'
     >
-      <GeneralInfo />
+      <GeneralInfo evo_id={evo_id}/>
       <DetailInfo />
     </Stack>
   );

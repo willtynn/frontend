@@ -15,6 +15,7 @@ import {
   EVO_UPDATE_DATARESOURCE,
   EVO_UPDATE_NAME,
   evo_get_algorithm,
+  evo_get_algorithm_data_mapping,
  } from '../../../actions/evolutionAction';
 import { KubeTextField } from '../../../components/Input';
 import _, { functionsIn } from 'lodash';
@@ -50,6 +51,10 @@ export function MonitorConfiguration(props) {
 
   const intl = useIntl();
   const dispatch = useDispatch();
+
+  useEffect(() => {
+    dispatch(evo_get_algorithm_data_mapping());
+  },[])
 
   useEffect(() => {
     setError(DataSourceError);

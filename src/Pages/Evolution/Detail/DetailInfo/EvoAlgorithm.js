@@ -178,7 +178,7 @@ export function EvoAlgorithm() {
                                     <TableRow>
                                         <TableCell>名称</TableCell>
                                         <TableCell align="right">结果</TableCell>
-                                        <TableCell align="right">结果描述</TableCell>
+                                        <TableCell align="center">结果描述</TableCell>
                                         <TableCell align="left">执行时间</TableCell>
                                     </TableRow>
                                 </TableHead>

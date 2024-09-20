@@ -34,7 +34,13 @@ import { EVO_RESET_FORM, EVO_UPDATE_FROM_CURRENT, evo_delete, evo_getPlanList, e
 import { EvolutionProgress } from '../EvolutionProgress';
 import { StyledModal } from '@/components/Modal';
 import Warning from '@/assets/popup/warning.svg'
-import { EVO_UPDATE_ENABLE } from '../../../actions/evolutionAction';
+import { 
+  EVO_UPDATE_ENABLE,
+  evo_get_plan_result,
+  evo_getone,
+} from '../../../actions/evolutionAction';
+import RefreshIcon from '@mui/icons-material/Refresh';
+import { EclipseTransparentButton } from '@/components/Button';
 
 const labelStyle = {
   fontSize: '12px',
@@ -63,6 +69,7 @@ const valueStyle = {
 };
 
 export default function GeneralInfo(props) {
+  const {evo_id} = props;
   const navigate = useNavigate();
 
   const [moreOperationAnchorEl, setMoreOperationAnchorEl] = useState(null);
@@ -156,6 +163,14 @@ export default function GeneralInfo(props) {
     }else{
       return intl.messages['common.yes']
     }
+  }
+
+  const handleRefresh= (evo_id) =>{
+    console.log(evo_id)
+    //获取当前演化计划的详细信息
+    dispatch(evo_getone(evo_id));
+    //获取一下当前演化计划的执行结果
+    dispatch(evo_get_plan_result(evo_id));
   }
 
 
@@ -323,6 +338,24 @@ export default function GeneralInfo(props) {
               <ArrowDropDownIcon fontSize='small' />
             </Stack>
           </KubeCancelButton>
+          {/* 刷新按钮 */}
+          <EclipseTransparentButton
+              sx={{
+                bgcolor: '#f9fbfd !important',
+                '&:hover': {
+                  bgcolor: '#FFFFFF !important',
+                },
+                '& svg': {
+                  color: '#3d3b4f',
+                },
+                height: '32px',
+              }}
+              onClick={() =>handleRefresh(evo_id)}
+            >
+              <RefreshIcon />
+            </EclipseTransparentButton>
+
+
         </Stack>
       </Box>
       <Box
