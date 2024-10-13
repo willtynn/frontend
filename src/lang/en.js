@@ -569,6 +569,8 @@ export const messages = {
     algorithmDetail:'AlgorithmDetail',
     deleteNotice:'The operation is irreversible, are you sure you delete the evolution Plan?',
     deleteWarning: 'Delete Warning',
+    backendLog: 'Backend Log',
+    monitorLog: 'Monitor Log',
   },
   image: {
     listQueryError:

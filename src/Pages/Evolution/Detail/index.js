@@ -6,6 +6,7 @@ import { useParams } from 'react-router';
 import GeneralInfo from './GeneralInfo';
 import { evo_get_plan_result, evo_getone } from '../../../actions/evolutionAction';
 import DetailInfo from './DetailInfo';
+import { MonitorLog } from './DetailInfo/MonitorLog';
 
 export function EvolutionPlanDetail() {
   const { evo_id } = useParams();
@@ -24,7 +25,8 @@ export function EvolutionPlanDetail() {
       alignItems='flex-start'
     >
       <GeneralInfo evo_id={evo_id}/>
-      <DetailInfo />
+      <DetailInfo />  
+
     </Stack>
   );
 }

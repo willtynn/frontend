@@ -17,6 +17,7 @@ import { Algorithm } from './Algorithm';
 import { useIntl } from 'react-intl';
 import { EvoAlgorithm } from './EvoAlgorithm';
 import { DataDetail } from './DataDetail';
+import { MonitorLog } from "./MonitorLog";
 
 export default function DetailInfo() {
 
@@ -39,6 +40,7 @@ export default function DetailInfo() {
           <StyledTab value={5}>{intl.messages['evolution.evolutionAlgorithm']}</StyledTab> */}
           <StyledTab value={6}>{intl.messages['evolution.monitorConfiguration']}</StyledTab>
           <StyledTab value={7}>{intl.messages['evolution.algorithmDetail']}</StyledTab>
+          <StyledTab value={8}>{intl.messages['evolution.backendLog']}</StyledTab>
         </StyledTabsList>
         <StyledTabPanel value={1}>
           <Information />
@@ -60,6 +62,9 @@ export default function DetailInfo() {
         </StyledTabPanel>
         <StyledTabPanel value={7}>
           <EvoAlgorithm />
+        </StyledTabPanel>
+        <StyledTabPanel value={8}>
+          <MonitorLog />
         </StyledTabPanel>
       </Tabs>
     </Box>

@@ -545,6 +545,8 @@ export const messages = {
     algorithmDetail:'算法详情',
     deleteNotice: '该操作不可逆,您确认要删除该演化计划吗？',
     deleteWarning: '删除提示',
+    backendLog: '后台监控',
+    monitorLog: '监控日志',
   },
   dataSource:{
     dataSourceManagement: '数据源管理',
