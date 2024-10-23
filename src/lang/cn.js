@@ -100,6 +100,8 @@ export const messages = {
     routeControl: '路由控制',
     application: '应用模块',
     serviceCapabilityAutomaticTesting: '服务能力自动测试',
+    serviceCapabilityJointTesting: '多负载服务能力测试',
+    sonTestPlans: "子测试计划",
     imageManagement: '镜像管理',
     imageList: '镜像列表',
     bandwidth: '带宽',
@@ -441,6 +443,19 @@ export const messages = {
     stepReport: '阶梯报告',
     communicationPressureBoundary: '通信压力边界',
     stepPressureDiagram: '阶梯压力图',
+  },
+  jointStressTesting: {
+    performancePressureTest: '多负载性能压测',
+    stressTestingDescription:
+      '建立不同的测试场景（负载情况），对服务进行压测，并得到多场景下的性能数据',
+    createTestPlan:
+      '创建联合测试计划',
+      planCreatedMsg:
+      '创建联合测试计划成功',
+      planCreationFailedMsg:
+      '创建联合测试计划失败',
+      testStartMsg:
+      '执行联合测试计划成功'
   },
   routeTrace: {
     title: '路由链路',

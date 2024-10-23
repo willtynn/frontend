@@ -427,6 +427,20 @@ export default function MiniDrawer() {
                       {intl.messages['common.serviceCapabilityAutomaticTesting']}
                     </Box>
                   </ListItemButton>
+
+                  <ListItemButton
+                    sx={styleListButton}
+                    onClick={() => {
+                      navigate('/application/joint_stress_testing');
+                    }}
+                  >
+                    <Box
+                      sx={{ ...styledFont, color: currentPath === '/application/joint_stress_testing' ? '#55bc8a' : '#242e42' }}
+                    >
+                      {intl.messages['common.serviceCapabilityJointTesting']}
+                    </Box>
+                  </ListItemButton>
+                  
                 </List>
               </Collapse>
             </List>

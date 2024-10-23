@@ -2,6 +2,7 @@ import axios from 'axios';
 import { setSnackbarMessageAndOpen } from './snackbarAction';
 import { SEVERITIES } from '../components/CommonSnackbar';
 import { saveAs } from 'file-saver';
+import { Expand } from '@mui/icons-material';
 
 export const UPDATE_PLAN_NAME = 'UPDATE_PLAN_NAME';
 export const UPDATE_PLAN_COMMENT = 'UPDATE_PLAN_COMMENT';
@@ -77,8 +78,15 @@ export const UPDATE_START_AND_END = 'UPDATE_START_AND_END';
 export const UPDATE_BOUNDARY_RESULT = 'UPDATE_BOUNDARY_RESULT';
 export const UPDATE_BOUND = "UPDATE_BOUND";
 
-const baseURLLink = 'http://192.168.1.104:14447';
-// const baseURLLink = 'http://localhost:8848';
+export const UPDATE_JOINT_TEST_PLANS = 'UPDATE_JOINT_TEST_PLANS';
+export const UPDATE_JOINT_REPORT = 'UPDATE_JOINT_REPORT';
+export const UPDATE_CURRENT_JOINT_TEST_PLAN = 'UPDATE_CURRENT_JOINT_TEST_PLAN';
+export const UPDATE_CURRENT_JOINT_TEST_PLAN_SON = 'UPDATE_CURRENT_JOINT_TEST_PLAN_SON';
+export const UPDATE_AGGREGATE_ENHANCE_REPORT = 'UPDATE_AGGREGATE_ENHANCE_REPORT';
+
+
+//const baseURLLink = 'http://192.168.1.104:14447';
+ const baseURLLink = 'http://localhost:8848';
 
 const axios_instance = axios.create({
   baseURL: baseURLLink,
@@ -762,6 +770,420 @@ export function getBoundaryTestResult(planId) {
       }
     } catch {
       dispatch({ type: UPDATE_BOUNDARY_RESULT, data: [] });
+      dispatch(
+        setSnackbarMessageAndOpen(
+          'stressTesting.resultsSearchError',
+          {},
+          SEVERITIES.warning
+        )
+      );
+    }
+  };
+}
+
+
+/**
+ * 获取所有的联合测试计划
+ * @returns 
+ */
+export function getJointTestPlans() {
+  const url = '/jointMeasure/getJointTestPlans';
+  return async dispatch => {
+    try {
+      const res = await axios_instance.get(
+        url,
+        {},
+        {
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        }
+      );
+      if (res.data.code === 200 || res.data.code === 0) {
+        console.log("Fetched jointTestPlans:", res.data.data); 
+        dispatch({ type: UPDATE_JOINT_TEST_PLANS, data: res.data.data });
+      } else if (res.data.code === 1) {
+        // alert(res.data.message)
+        dispatch(
+          setSnackbarMessageAndOpen(
+            'common.errorMessage',
+            { msg: res.data.message },
+            SEVERITIES.warning
+          )
+        );
+      } else {
+        dispatch(
+          setSnackbarMessageAndOpen(
+            'stressTesting.planSearchError',
+            {},
+            SEVERITIES.warning
+          )
+        );
+      }
+    } catch {
+      dispatch(
+        setSnackbarMessageAndOpen(
+          'stressTesting.planSearchError',
+          {},
+          SEVERITIES.warning
+        )
+      );
+    }
+  };
+}
+
+
+/**
+ * 创建联合测试计划
+ * @param {*} jointTestPlan 
+ * @returns 
+ */
+export function createJointTestPlan(jointTestPlan) {
+  const url = '/jointMeasure/createJointPlans';
+  return async dispatch => {
+    try {
+      const res = await axios_instance.post(
+        url,
+        {
+          ...jointTestPlan,
+        },
+        {
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        }
+      );
+      if (res.data.code === 200 || res.data.code === 0) {
+        dispatch(
+          setSnackbarMessageAndOpen(
+            'jointStressTesting.planCreatedMsg',
+            {},
+            SEVERITIES.success
+          )
+        );
+      } else if (res.data.code === 1) {
+        // alert(res.data.message)
+        dispatch(
+          setSnackbarMessageAndOpen(
+            'common.errorMessage',
+            { msg: res.data.valueMap.msg },
+            SEVERITIES.warning
+          )
+        );
+      } else {
+        dispatch(
+          setSnackbarMessageAndOpen(
+            'jointStressTesting.planCreationFailedMsg',
+            {},
+            SEVERITIES.warning
+          )
+        );
+      }
+    } catch {
+      dispatch(
+        setSnackbarMessageAndOpen(
+          'jointStressTesting.planCreationFailedMsg',
+          {},
+          SEVERITIES.warning
+        )
+      );
+    }
+  };
+}
+
+/**
+ * 执行联合测试计划
+ * @param {} jointTestPlanId 
+ * @returns 
+ */
+export function measureJointPlan(jointPlanId) {
+  const url = '/jointMeasure/measurePlans';
+  return async dispatch => {
+    try {
+      const res = await axios_instance.get(
+        url,
+        {
+          params: {
+            jointPlanId: jointPlanId,
+          },
+        },
+        {
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        }
+      );
+      if (res.data.code === 200 || res.data.code === 0) {
+        dispatch(
+          setSnackbarMessageAndOpen(
+            'jointStressTesting.testStartMsg',
+            {},
+            SEVERITIES.success
+          )
+        );
+      } else if (res.data.code === 1) {
+        dispatch(
+          setSnackbarMessageAndOpen(
+            'common.errorMessage',
+            { msg: res.data.valueMap.msg },
+            SEVERITIES.warning
+          )
+        );
+      } else {
+        dispatch(
+          setSnackbarMessageAndOpen(
+            'stressTesting.testStartError',
+            {},
+            SEVERITIES.warning
+          )
+        );
+      }
+    } catch {
+      dispatch(
+        setSnackbarMessageAndOpen(
+          'stressTesting.testStartError',
+          {},
+          SEVERITIES.warning
+        )
+      );
+    }
+  };
+}
+
+
+/**
+ * 创建联合任务的聚合报告
+ * @param {联合任务Id} joinPlanId 
+ * @returns 
+ */
+export function createJointReport(joinPlanId) {
+  const url = '/jointMeasure/createJointReportByPlanId';
+  return async dispatch => {
+    try {
+      const res = await axios_instance.get(
+        url,
+        {
+          params: {
+            jointPlanId: joinPlanId,
+          },
+        },
+        {
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        }
+      );
+      if (res.data.code === 200 || res.data.code === 0) {
+        dispatch(
+          setSnackbarMessageAndOpen(
+            'stressTesting.aggregateReportCreateSuccess',
+            {},
+            SEVERITIES.success
+          )
+        );
+      } else {
+        dispatch(
+          setSnackbarMessageAndOpen(
+            'stressTesting.aggregateReportCreateError',
+            {},
+            SEVERITIES.warning
+          )
+        );
+      }
+    } catch {
+      dispatch(
+        setSnackbarMessageAndOpen(
+          'stressTesting.aggregateReportCreateError',
+          {},
+          SEVERITIES.warning
+        )
+      );
+    }
+  };
+}
+
+
+/**
+ * 获取联合任务的聚合报告
+ * @param {聚合测试Id} jointPlanId 
+ * @returns 
+ */
+export function getJointReportByPlanId(jointPlanId) {
+  const url = '/jointMeasure/getJointReportByPlanId';
+  return async dispatch => {
+    try {
+      const res = await axios_instance.get(
+        url,
+        {
+          params: {
+            jointPlanId: jointPlanId,
+          },
+        },
+        {
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        }
+      );
+      if (res.data.code === 200 || res.data.code === 0) {
+        dispatch({ type: UPDATE_JOINT_REPORT, data: res.data.data });
+      } else {
+        dispatch(
+          setSnackbarMessageAndOpen(
+            'stressTesting.aggregateReportError',
+            {},
+            SEVERITIES.warning
+          )
+        );
+        dispatch({ type: UPDATE_JOINT_REPORT, data: null });
+      }
+    } catch {
+      dispatch(
+        setSnackbarMessageAndOpen(
+          'stressTesting.aggregateReportError',
+          {},
+          SEVERITIES.warning
+        )
+      );
+      dispatch({ type: UPDATE_JOINT_REPORT, data: null });
+    }
+  };
+}
+
+export function getJointTestPlanById(jointPlanId) {
+  const url = '/jointMeasure/getJointTestPlanById';
+  return async dispatch => {
+    try {
+      const res = await axios_instance.get(
+        url,
+        {
+          params: {
+            jointPlanId: jointPlanId,
+          },
+        },
+        {
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        }
+      );
+      if (res.data.code === 200 || res.data.code === 0) {
+        dispatch({ type: UPDATE_CURRENT_JOINT_TEST_PLAN, data: res.data.data });
+      } else if (res.data.code === 1) {
+        dispatch(
+          setSnackbarMessageAndOpen(
+            'common.errorMessage',
+            { msg: res.data.message },
+            SEVERITIES.warning
+          )
+        );
+      } else {
+        dispatch(
+          setSnackbarMessageAndOpen(
+            'stressTesting.planSearchError',
+            {},
+            SEVERITIES.warning
+          )
+        );
+      }
+    } catch {
+      dispatch(
+        setSnackbarMessageAndOpen(
+          'stressTesting.planSearchError',
+          {},
+          SEVERITIES.warning
+        )
+      );
+    }
+  };
+}
+
+
+export function getJointTestPlanSonById(jointPlanId) {
+  const url = '/jointMeasure/getJointTestPlanSonById';
+  return async dispatch => {
+    try {
+      const res = await axios_instance.get(
+        url,
+        {
+          params: {
+            jointPlanId: jointPlanId,
+          },
+        },
+        {
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        }
+      );
+      if (res.data.code === 200 || res.data.code === 0) {
+        dispatch({ type: UPDATE_CURRENT_JOINT_TEST_PLAN_SON, data: res.data.data });
+      } else if (res.data.code === 1) {
+        dispatch(
+          setSnackbarMessageAndOpen(
+            'common.errorMessage',
+            { msg: res.data.message },
+            SEVERITIES.warning
+          )
+        );
+      } else {
+        dispatch(
+          setSnackbarMessageAndOpen(
+            'stressTesting.planSearchError',
+            {},
+            SEVERITIES.warning
+          )
+        );
+      }
+    } catch {
+      dispatch(
+        setSnackbarMessageAndOpen(
+          'stressTesting.planSearchError',
+          {},
+          SEVERITIES.warning
+        )
+      );
+    }
+  };
+}
+
+export function getJointReportByID(jointPlanId) {
+  const url = '/jointMeasure/getJointReportByPlanId';
+  return async dispatch => {
+    try {
+      const res = await axios_instance.get(
+        url,
+        {
+          params: {
+            jointPlanId: jointPlanId,
+          },
+        },
+        {
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        }
+      );
+      if (res.data.code === 200 || res.data.code === 0) {
+        dispatch({ type: UPDATE_AGGREGATE_ENHANCE_REPORT, data: res.data.data });
+      } else if (res.data.code === 1) {
+        dispatch(
+          setSnackbarMessageAndOpen(
+            'common.errorMessage',
+            { msg: res.data.message },
+            SEVERITIES.warning
+          )
+        );
+      } else {
+        dispatch(
+          setSnackbarMessageAndOpen(
+            'stressTesting.resultsSearchError',
+            {},
+            SEVERITIES.warning
+          )
+        );
+      }
+    } catch {
       dispatch(
         setSnackbarMessageAndOpen(
           'stressTesting.resultsSearchError',

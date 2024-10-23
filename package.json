@@ -21,6 +21,7 @@
     "date-fns": "^2.30.0",
     "dayjs": "^1.11.9",
     "echarts": "^5.5.1",
+    "echarts-for-react": "^3.0.2",
     "express": "^4.19.2",
     "file-saver": "^2.0.5",
     "gridstack": "^10.3.1",

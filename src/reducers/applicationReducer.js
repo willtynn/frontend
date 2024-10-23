@@ -66,6 +66,11 @@ const initState = {
 
   boundaryResult: [],
   bound: null,
+
+  jointTestPlans: [],
+  currentJointPlan: null,
+  currentJointPlanSon: [],
+  aggregateReportEnhance: [],
 };
 
 export default function ApplicationReducer(state = initState, action) {
@@ -430,6 +435,29 @@ export default function ApplicationReducer(state = initState, action) {
         bound: data,
       };
 
+    case actions.UPDATE_JOINT_TEST_PLANS:
+        return {
+          ...state,
+          jointTestPlans: data,
+      };
+
+      case actions.UPDATE_CURRENT_JOINT_TEST_PLAN:
+          return {
+            ...state,
+            currentJointPlan: data,
+      };
+
+      case actions.UPDATE_CURRENT_JOINT_TEST_PLAN_SON:
+          return {
+            ...state,
+            currentJointPlanSon: data,
+      };
+
+      case actions.UPDATE_AGGREGATE_ENHANCE_REPORT:
+          return {
+            ...state,
+            aggregateReportEnhance: data,
+      };
     default:
       return state;
   }
