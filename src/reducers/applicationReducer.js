@@ -67,6 +67,10 @@ const initState = {
   boundaryResult: [],
   bound: null,
 
+  //joint test plan
+  jointPlanName: null,
+  jointPlanComment: null,
+  testPlanIds: [],
   jointTestPlans: [],
   currentJointPlan: null,
   currentJointPlanSon: [],

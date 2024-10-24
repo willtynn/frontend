@@ -1,52 +1,100 @@
-import { useState, useEffect } from 'react';
-import { useSelector } from 'react-redux';
+import { useEffect, useState, useMemo } from 'react';
 import {
-  Stack,
   Box,
+  Stack,
   Table,
   TableBody,
-  TableRow,
   TableCell,
-  TableHead,
+  TableRow,
 } from '@mui/material';
-import API from '@/assets/API.svg';
-import WhiteAPI from '@/assets/WhiteAPI.svg';
+import { useDispatch, useSelector } from 'react-redux';
 import { fontFamily } from '@/utils/commonUtils';
 import {
   StyledTableBodyCell,
-  StyledTableRowCell,
-  StyledTableContainer,
+  StyledTableHead,
 } from '@/components/DisplayTable';
-import Question from '@/assets/Question.svg';
-import { NormalBoldFont, SmallLightFont } from '@/components/Fonts';
-import { getBoolString } from '@/utils/commonUtils';
 import { useIntl } from 'react-intl';
+import RunningIcon from '@/assets/RunningIcon.svg';
+import PendingIcon from '@/assets/PendingIcon.svg';
+import FailedIcon from '@/assets/FailedIcon.svg';
+import SucceededIcon from '@/assets/SucceededIcon.svg';
+import Question from '@/assets/Question.svg';
+import Task from '@/assets/Task.svg';
+import { NormalBoldFont, SmallLightFont } from '@/components/Fonts';
+import { useNavigate } from 'react-router-dom';
 
-const labelStyle = {
-  fontSize: '12px',
-  fontWeight: 400,
-  fontStyle: 'normal',
-  fontStretch: 'normal',
-  lineHeight: 1.67,
-  letterSpacing: 'normal',
-  color: '#5F708A',
-  mb: '12px',
-  width: '140px',
+import {
+  UPDATE_GROUP_EDIT,
+  RESET_GROUP,
+  RESET_PLAN,
+  UPDATE_TEST_PLAN_PAGE_NUM,
+  UPDATE_TEST_PLAN_PAGE_SIZE,
+} from '../../../../../actions/applicationAction';
+
+export const RUNNING = 'Running';
+export const CREATED = 'Created';
+export const FAILED = 'Failed';
+export const COMPLETED = 'Completed';
+
+const StatusIcon = phase => {
+  if (phase === RUNNING) {
+    return <RunningIcon />;
+  }
+  if (phase === CREATED) {
+    return <PendingIcon />;
+  }
+  if (phase === FAILED) {
+    return <FailedIcon />;
+  }
+  return <SucceededIcon />;
 };
 
-const valueStyle = {
-  fontSize: '12px',
-  fontWeight: 400,
-  fontStyle: 'normal',
-  fontStretch: 'normal',
-  lineHeight: 1.67,
-  letterSpacing: 'normal',
-  color: '#242e42',
-  mb: '12px',
-  width: 'calc(100% - 184px)',
-  overflowWrap: 'break-word',
-  wordBreak: 'break-all',
+const StatusText = phase => {
+  if (phase === RUNNING) {
+    return <span>Running&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>;
+  }
+  if (phase === CREATED) {
+    return <span>Created&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>;
+  }
+  if (phase === FAILED) {
+    return (
+      <span>Failed&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
+    );
+  }
+  return <span>Completed</span>;
 };
+
+function descendingComparator(a, b, orderBy) {
+  if (b[orderBy] < a[orderBy]) {
+    return -1;
+  }
+  if (b[orderBy] > a[orderBy]) {
+    return 1;
+  }
+  return 0;
+}
+
+function getComparator(order, orderBy) {
+  return order === 'desc'
+    ? (a, b) => descendingComparator(a, b, orderBy)
+    : (a, b) => -descendingComparator(a, b, orderBy);
+}
+
+// Since 2020 all major browsers ensure sort stability with Array.prototype.sort().
+// stableSort() brings sort stability to non-modern browsers (notably IE11). If you
+// only support modern browsers you can replace stableSort(exampleArray, exampleComparator)
+// with exampleArray.slice().sort(exampleComparator)
+function stableSort(array, comparator) {
+  const stabilizedThis = array.map((el, index) => [el, index]);
+  stabilizedThis.sort((a, b) => {
+    const order = comparator(a[0], b[0]);
+    if (order !== 0) {
+      return order;
+    }
+    return a[1] - b[1];
+  });
+  return stabilizedThis.map(el => el[0]);
+}
 
 function createRow(
   id,
@@ -55,7 +103,7 @@ function createRow(
   minWidth = '110px',
   maxWidth = '220px',
   show = true,
-  align = 'center',
+  align,
   colSpan = 1,
   rowSpan = 1
 ) {
@@ -72,862 +120,327 @@ function createRow(
   };
 }
 
+const statusPattern = new RegExp(/^(状态|Status):/);
+const namePattern = new RegExp(/^(名称|Name):/);
+
+
+
 export function Information() {
-  const [currentThreadGroup, setCurrentThreadGroup] = useState(null);
   const intl = useIntl();
-  const { currentPlan } = useSelector(state => {
+
+  const [loading, setLoading] = useState(false);
+  const [tableData, setTableData] = useState([]);
+  const [count, setCount] = useState(0);
+  const [order, setOrder] = useState('asc');
+  const [orderBy, setOrderBy] = useState('testPlanName');
+
+
+  const [colDisplay, setColDisplay] = useState([true, true, true, true, true, true]);
+
+  const [searchList, setSearchList] = useState([]);
+
+  const { pageSize, pageNum, testPlans } = useSelector(state => {
     return {
-      currentPlan: state.Application.currentPlan,
+      pageSize: state.Application.pageSize,
+      pageNum: state.Application.pageNum,
+      testPlans: state.Application.currentJointPlanSon,
     };
   });
 
-  const parameterHeadRow = [
-    createRow(
-      'key',
-      intl.messages['common.key'],
-      false,
-      '70px',
-      '70px',
-      true,
-      'center'
-    ),
-    createRow(
-      'value',
-      intl.messages['common.value'],
-      false,
-      '70px',
-      '70px',
-      true,
-      'center'
-    ),
-  ];
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
 
-  const requestHeadHeadRow = [
-    createRow(
-      'key',
-      intl.messages['common.key'],
-      false,
-      '70px',
-      '70px',
-      true,
-      'center'
-    ),
-    createRow(
-      'value',
-      intl.messages['common.value'],
-      false,
-      '70px',
-      '70px',
-      true,
-      'center'
-    ),
-  ];
-
-  const timerHeadRow = [
-    createRow(
-      'name',
-      intl.messages['common.name'],
-      false,
-      '70px',
-      '70px',
-      true,
-      'center'
-    ),
-    createRow(
-      'threadDelay',
-      intl.messages['stressTesting.threadDelay'],
-      false,
-      '70px',
-      '70px',
-      true,
-      'center'
-    ),
-    createRow(
-      'constantDelayOffset',
-      intl.messages['stressTesting.constantDelayOffset'],
-      false,
-      '70px',
-      '70px',
-      true,
-      'center'
-    ),
-    createRow(
-      'randomDelayMaximum',
-      intl.messages['stressTesting.randomDelayMaximum'],
-      false,
-      '70px',
-      '70px',
-      true,
-      'center'
-    ),
-    createRow('deviation', 'deviation', false, '70px', '70px', true, 'center'),
-    createRow('lambda', 'lambda', false, '70px', '70px', true, 'center'),
-  ];
 
   useEffect(() => {
-    if (
-      currentPlan &&
-      currentPlan.threadGroupList &&
-      currentPlan.threadGroupList.length > 0
-    ) {
-      setCurrentThreadGroup(0);
-    }
-  }, [currentPlan]);
+    setTableData(testPlans);
+  }, [testPlans]);
 
-  const handleThreadGroupChange = groupIndex => {
-    setCurrentThreadGroup(groupIndex);
+  const headRow = [
+    createRow(
+      'testPlanName',
+      intl.messages['stressTesting.planName'],
+      true,
+      '100px',
+      '100px',
+      true,
+      'left'
+    ),
+    createRow(
+      'status',
+      intl.messages['common.status'],
+      false,
+      '100px',
+      '100px',
+      colDisplay[0],
+      'center'
+    ),
+    createRow(
+      'serialized',
+      intl.messages['common.serialized'],
+      false,
+      '120px',
+      '130px',
+      colDisplay[1],
+      'center'
+    ),
+    createRow(
+      'functionalMode',
+      intl.messages['common.functionMode'],
+      false,
+      '120px',
+      '130px',
+      colDisplay[2],
+      'center'
+    ),
+    createRow(
+      'tearDown',
+      'tear down',
+      false,
+      '120px',
+      '130px',
+      colDisplay[3],
+      'center'
+    ),
+    createRow(
+      'boundary',
+      intl.messages['common.boundaryTest'],
+      false,
+      '120px',
+      '130px',
+      colDisplay[4],
+      'center'
+    ),
+    createRow(
+      'comment',
+      intl.messages['common.description'],
+      false,
+      '120px',
+      '130px',
+      colDisplay[5],
+      'center'
+    ),
+  ];
+
+  const handleRequestSort = (event, property) => {
+    const isAsc = orderBy === property && order === 'asc';
+    setOrder(isAsc ? 'desc' : 'asc');
+    setOrderBy(property);
   };
 
-  return (
-    <Stack direction='row' sx={{ pt: '20px', pb: '40px' }} spacing={2}>
-      {/* 左侧线程组列表 */}
-      <Box
-        sx={{
-          maxHeight: '660px',
-          overflowY: 'auto',
-        }}
-      >
-        <Stack direction='column' spacing={1}>
-          {currentPlan &&
-            currentPlan.threadGroupList &&
-            currentPlan.threadGroupList.map((threadGroup, index) => {
-              return (
-                <Stack
-                  sx={{
-                    padding: '8px 20px',
-                    width: '200px',
-                    height: '52px',
-                    borderRadius: '4px',
-                    bgcolor:
-                      currentThreadGroup === index ? '#55bc8a' : '#FFFFFF',
-                    color: currentThreadGroup === index ? '#FFFFFF' : '#242E42',
-                    '&:hover': {
-                      bgcolor: '#55bc8a',
-                      color: '#FFFFFF',
-                    },
-                    cursor: 'pointer',
-                    overflow: 'hidden',
-                    textOverflow: 'ellipsis',
-                    whiteSpace: 'nowrap',
-                  }}
-                  onClick={handleThreadGroupChange.bind(this, index)}
-                  direction='row'
-                  alignItems='center'
-                  spacing={2.5}
-                >
-                  <Box>
-                    {currentThreadGroup === index ? <WhiteAPI /> : <API />}
-                  </Box>
+  const filtering = () => {
+    let tmpData = JSON.parse(JSON.stringify(tableData));
+    setCount(tableData.length);
+    searchList.forEach((value, _) => {
+      if (value.startsWith(`${intl.messages['common.status']}:`)) {
+        tmpData = tmpData.filter((tableRow, _) => {
+          return tableRow.status.includes(value.replace(statusPattern, ''));
+        });
+      } else if (value.startsWith(`${intl.messages['common.name']}:`)) {
+        tmpData = tmpData.filter((tableRow, _) => {
+          return tableRow.testPlanName.includes(value.replace(namePattern, ''));
+        });
+      } else {
+        tmpData = tmpData.filter((tableRow, _) => {
+          return tableRow.testPlanName.includes(value);
+        });
+      }
+    });
+    return tmpData;
+  };
 
-                  <Box
+  const visibleRows = useMemo(() => {
+    const tmpData = filtering();
+    if (pageSize * (pageNum - 1) > count) {
+      dispatch({ type: UPDATE_TEST_PLAN_PAGE_NUM, data: 1 });
+      return stableSort(tmpData, getComparator(order, orderBy)).slice(
+        0,
+        pageSize
+      );
+    }
+    return stableSort(tmpData, getComparator(order, orderBy)).slice(
+      (pageNum - 1) * pageSize,
+      (pageNum - 1) * pageSize + pageSize
+    );
+  }, [order, orderBy, pageNum, pageSize, tableData, searchList]);
+
+
+
+  return (
+    <Table
+            stickyHeader
+            size='small'
+            sx={{
+              tableLayout: 'auto',
+            }}
+          >
+            <StyledTableHead
+              headRow={headRow}
+              selectAll={false}
+              order={order}
+              orderBy={orderBy}
+              onRequestSort={handleRequestSort}
+            />
+
+            <TableBody>
+              {!loading && visibleRows !== null && visibleRows.length !== 0 ? (
+                visibleRows.map((row, index) => {
+                  return (
+                    <TableRow
+                      key={row.id + '' + index}
+                      aria-checked={false}
+                      sx={{
+                        '&:last-child td, &:last-child th': {
+                          border: 0,
+                        },
+                        fontWeight: 600,
+                        maxWidth: '110px',
+                        position: 'sticky',
+                        left: 0,
+                        zIndex: 6,
+                      }}
+                      selected={false}
+                    >
+                      {/* <StyledTableBodyCell
+                        align='center'
+                        sx={{
+                          p: '0px 16px !important',
+                        }}
+                      ></StyledTableBodyCell> */}
+
+                      <StyledTableBodyCell
+                        align={'center'}
+                        sx={{
+                          padding: '6px 16px !important',
+                        }}
+                      >
+                        <Stack alignItems='center' direction='row' spacing={2}>
+                          <Task />
+                          <Box
+                            sx={{
+                              height: '30px',
+                              lineHeight: '30px',
+                              fontWeight: 600,
+                              cursor: 'pointer',
+                              '&:hover': {
+                                color: '#55bc8a',
+                              },
+                            }}
+                            onClick={() => {
+                              navigate(`/detail/testplan/${row.id}`);
+                            }}
+                          >
+                            {row.testPlanName}
+                          </Box>
+                        </Stack>
+                      </StyledTableBodyCell>
+
+                      <StyledTableBodyCell
+                        align={'center'}
+                        sx={{
+                          display: headRow[1].show ? 'table-cell' : 'none',
+                        }}
+                      >
+                        <Stack
+                          alignItems='center'
+                          direction='row'
+                          justifyContent='center'
+                          spacing={2}
+                        >
+                          {StatusIcon(row.status)}
+                          <span
+                            style={{
+                              height: '30px',
+                              lineHeight: '30px',
+                            }}
+                          >
+                            {StatusText(row.status)}
+                          </span>
+                        </Stack>
+                      </StyledTableBodyCell>
+
+                      <StyledTableBodyCell
+                        align={'center'}
+                        sx={{
+                          display: headRow[2].show ? 'table-cell' : 'none',
+                        }}
+                      >
+                        {row.serialized
+                          ? intl.messages['common.yes']
+                          : intl.messages['common.no']}
+                      </StyledTableBodyCell>
+
+                      <StyledTableBodyCell
+                        align={'center'}
+                        sx={{
+                          display: headRow[3].show ? 'table-cell' : 'none',
+                        }}
+                      >
+                        {row.functionalMode
+                          ? intl.messages['common.yes']
+                          : intl.messages['common.no']}
+                      </StyledTableBodyCell>
+
+                      <StyledTableBodyCell
+                        align={'center'}
+                        sx={{
+                          display: headRow[4].show ? 'table-cell' : 'none',
+                        }}
+                      >
+                        {row.tearDown
+                          ? intl.messages['common.yes']
+                          : intl.messages['common.no']}
+                      </StyledTableBodyCell>
+
+                      <StyledTableBodyCell
+                        align={'center'}
+                        sx={{
+                          display: headRow[5].show ? 'table-cell' : 'none',
+                        }}
+                      >
+                        {row.boundary
+                          ? intl.messages['common.yes']
+                          : intl.messages['common.no']}
+                      </StyledTableBodyCell>
+                      <StyledTableBodyCell
+                        align={'center'}
+                        sx={{
+                          display: headRow[6].show ? 'table-cell' : 'none',
+                        }}
+                      >
+                        {row.comment}
+                      </StyledTableBodyCell>
+                    </TableRow>
+                  );
+                })
+              ) : !loading ? (
+                <TableRow style={{ height: '220px' }}>
+                  <TableCell
+                    colSpan={colDisplay.reduce(
+                      (accumulator, currentValue) =>
+                        accumulator + (currentValue === true),
+                      2
+                    )}
                     sx={{
-                      width: '100%',
-                      overflow: 'hidden',
-                      textOverflow: 'ellipsis',
-                      whiteSpace: 'nowrap',
+                      textAlign: 'center',
+                      fontSize: '20px',
+                      fontFamily: fontFamily,
+                      fontStyle: 'normal',
                     }}
                   >
-                    <Box
-                      sx={{
-                        fontSize: '12px',
-                        fontFamily: fontFamily,
-                        fontStyle: 'normal',
-                        fontWeight: 700,
-                        lineHeight: 1.67,
-                        color: '#242e42',
-                        overflow: 'hidden',
-                        textOverflow: 'ellipsis',
-                        whiteSpace: 'nowrap',
-                      }}
-                    >
-                      {threadGroup.threadGroupName}
-                    </Box>
-                    <Box
-                      sx={{
-                        fontSize: '12px',
-                        fontFamily: fontFamily,
-                        fontStyle: 'normal',
-                        fontWeight: 400,
-                        lineHeight: 1.67,
-                        color: '#79879c',
-                      }}
-                    >
-                      Thread Group
-                    </Box>
-                  </Box>
-                </Stack>
-              );
-            })}
-        </Stack>
-      </Box>
+                    <Question />
+                    <NormalBoldFont>
+                      {intl.messages['common.serviceTableContentNoData']}
+                    </NormalBoldFont>
 
-      {/* 右侧请求详情 */}
-      <Stack
-        direction='column'
-        sx={{
-          width: 'calc(100% - 296px)',
-          borderRadius: '4px',
-          bgcolor: '#FFFFFF',
-          p: '20px',
-          boxShadow: '0 4px 8px 0 rgba(36,46,66,.06)',
-          '&:hover': {
-            boxShadow: '0 6px 16px 0 rgba(33,43,54,.2)',
-          },
-        }}
-        spacing={2}
-      >
-        {currentThreadGroup !== null ? (
-          <>
-            <Stack direction='column' spacing={1}>
-              <Box
-                sx={{
-                  color: '242e42',
-                  fontSize: '14px',
-                  fontWeight: 600,
-                }}
-              >
-                {intl.messages['common.basicInfo']}
-              </Box>
-              <Stack
-                sx={{
-                  borderRadius: '4px',
-                  bgcolor: '#F9FBFD',
-                  p: '20px',
-                }}
-                direction='column'
-                spacing={1.5}
-              >
-                <Stack direction='row' spacing={4}>
-                  <Box sx={labelStyle}>{intl.messages['common.name']}</Box>
-                  <Box sx={valueStyle}>
-                    {currentPlan &&
-                    currentPlan.threadGroupList[currentThreadGroup] !== null
-                      ? currentPlan.threadGroupList[currentThreadGroup]
-                          .threadGroupName
-                      : ''}
-                  </Box>
-                </Stack>
-                <Stack direction='row' spacing={4}>
-                  <Box sx={labelStyle}>{intl.messages['common.threadNum']}</Box>
-                  <Box sx={valueStyle}>
-                    {currentPlan &&
-                    currentPlan.threadGroupList[currentThreadGroup] !== null
-                      ? currentPlan.threadGroupList[currentThreadGroup]
-                          .threadNum
-                      : ''}
-                  </Box>
-                </Stack>
-
-                <Stack direction='row' spacing={4}>
-                  <Box sx={labelStyle}>
-                    {intl.messages['common.cycleIndex']}
-                  </Box>
-                  <Box sx={valueStyle}>
-                    {currentPlan &&
-                    currentPlan.threadGroupList[currentThreadGroup] !== null
-                      ? currentPlan.threadGroupList[currentThreadGroup]
-                          .loopControllerVO.loopNum
-                      : ''}
-                  </Box>
-                </Stack>
-                {currentPlan &&
-                currentPlan.threadGroupList[currentThreadGroup] !== null &&
-                currentPlan.threadGroupList[currentThreadGroup].stepping ? (
-                  <>
-                    <Stack direction='row' spacing={4}>
-                      <Box sx={labelStyle}>
-                        {intl.messages['stressTesting.delayedStartTime']}
-                      </Box>
-                      <Box sx={valueStyle}>
-                        {currentPlan &&
-                        currentPlan.threadGroupList[currentThreadGroup] !== null
-                          ? currentPlan.threadGroupList[currentThreadGroup]
-                              .initialDelay
-                          : ''}
-                      </Box>
-                    </Stack>
-                    <Stack direction='row' spacing={4}>
-                      <Box sx={labelStyle}>
-                        {intl.messages['stressTesting.initialUsersCount']}
-                      </Box>
-                      <Box sx={valueStyle}>
-                        {currentPlan &&
-                        currentPlan.threadGroupList[currentThreadGroup] !== null
-                          ? currentPlan.threadGroupList[currentThreadGroup]
-                              .startUsersCountBurst
-                          : ''}
-                      </Box>
-                    </Stack>
-                    <Stack direction='row' spacing={4}>
-                      <Box sx={labelStyle}>
-                        {
-                          intl.messages[
-                            'stressTesting.newConcurrentRequestsPerRound'
-                          ]
-                        }
-                      </Box>
-                      <Box sx={valueStyle}>
-                        {currentPlan &&
-                        currentPlan.threadGroupList[currentThreadGroup] !== null
-                          ? currentPlan.threadGroupList[currentThreadGroup]
-                              .startUsersCount
-                          : ''}
-                      </Box>
-                    </Stack>
-                    <Stack direction='row' spacing={4}>
-                      <Box sx={labelStyle}>
-                        {intl.messages['stressTesting.increasePeriod']}
-                      </Box>
-                      <Box sx={valueStyle}>
-                        {currentPlan &&
-                        currentPlan.threadGroupList[currentThreadGroup] !== null
-                          ? currentPlan.threadGroupList[currentThreadGroup]
-                              .startUsersPeriod
-                          : ''}
-                      </Box>
-                    </Stack>
-
-                    <Stack direction='row' spacing={4}>
-                      <Box sx={labelStyle}>
-                        {intl.messages['stressTesting.rampUpPerPeriod']}
-                      </Box>
-                      <Box sx={valueStyle}>
-                        {currentPlan &&
-                        currentPlan.threadGroupList[currentThreadGroup] !== null
-                          ? currentPlan.threadGroupList[currentThreadGroup]
-                              .rampUp
-                          : ''}
-                      </Box>
-                    </Stack>
-
-                    <Stack direction='row' spacing={4}>
-                      <Box sx={labelStyle}>
-                        {intl.messages['stressTesting.flighttime']}
-                      </Box>
-                      <Box sx={valueStyle}>
-                        {currentPlan &&
-                        currentPlan.threadGroupList[currentThreadGroup] !== null
-                          ? currentPlan.threadGroupList[currentThreadGroup]
-                              .flighttime
-                          : ''}
-                      </Box>
-                    </Stack>
-
-                    <Stack direction='row' spacing={4}>
-                      <Box sx={labelStyle}>
-                        {intl.messages['stressTesting.stopUsersCount']}
-                      </Box>
-                      <Box sx={valueStyle}>
-                        {currentPlan &&
-                        currentPlan.threadGroupList[currentThreadGroup] !== null
-                          ? currentPlan.threadGroupList[currentThreadGroup]
-                              .stopUsersCount
-                          : ''}
-                      </Box>
-                    </Stack>
-
-                    <Stack direction='row' spacing={4}>
-                      <Box sx={labelStyle}>
-                        {intl.messages['stressTesting.stopUsersPeriod']}
-                      </Box>
-                      <Box sx={valueStyle}>
-                        {currentPlan &&
-                        currentPlan.threadGroupList[currentThreadGroup] !== null
-                          ? currentPlan.threadGroupList[currentThreadGroup]
-                              .stopUsersPeriod
-                          : ''}
-                      </Box>
-                    </Stack>
-                  </>
-                ) : (
-                  <>
-                    <Stack direction='row' spacing={4}>
-                      <Box sx={labelStyle}>Ramp Up</Box>
-                      <Box sx={valueStyle}>
-                        {currentPlan &&
-                        currentPlan.threadGroupList[currentThreadGroup] !== null
-                          ? currentPlan.threadGroupList[currentThreadGroup]
-                              .rampUp
-                          : ''}
-                      </Box>
-                    </Stack>
-                  </>
-                )}
-              </Stack>
-            </Stack>
-            <Stack direction='column' spacing={1}>
-              <Box
-                sx={{
-                  color: '242e42',
-                  fontSize: '14px',
-                  fontWeight: 600,
-                }}
-              >
-                {intl.messages['common.httpRequest']}
-              </Box>
-              <Stack
-                sx={{
-                  borderRadius: '4px',
-                  bgcolor: '#F9FBFD',
-                  p: '20px',
-                }}
-                direction='column'
-                spacing={1.5}
-              >
-                <Stack direction='row' spacing={3}>
-                  <Box sx={labelStyle}>{intl.messages['common.hostIP']}</Box>
-                  <Box sx={valueStyle}>
-                    {currentPlan &&
-                    currentPlan.threadGroupList[currentThreadGroup] !== null
-                      ? currentPlan.threadGroupList[currentThreadGroup]
-                          .httpSamplerProxyVO.server
-                      : ''}
-                  </Box>
-                </Stack>
-                <Stack direction='row' spacing={3}>
-                  <Box sx={labelStyle}>{intl.messages['common.protocol']}</Box>
-                  <Box sx={valueStyle}>
-                    {currentPlan &&
-                    currentPlan.threadGroupList[currentThreadGroup] !== null
-                      ? currentPlan.threadGroupList[currentThreadGroup]
-                          .httpSamplerProxyVO.protocol
-                      : ''}
-                  </Box>
-                </Stack>
-                <Stack direction='row' spacing={3}>
-                  <Box sx={labelStyle}>{intl.messages['common.path']}</Box>
-                  <Box sx={valueStyle}>
-                    {currentPlan &&
-                    currentPlan.threadGroupList[currentThreadGroup] !== null
-                      ? currentPlan.threadGroupList[currentThreadGroup]
-                          .httpSamplerProxyVO.path
-                      : ''}
-                  </Box>
-                </Stack>
-                <Stack direction='row' spacing={3}>
-                  <Box sx={labelStyle}>{intl.messages['common.port']}</Box>
-                  <Box sx={valueStyle}>
-                    {currentPlan &&
-                    currentPlan.threadGroupList[currentThreadGroup] !== null
-                      ? currentPlan.threadGroupList[currentThreadGroup]
-                          .httpSamplerProxyVO.port
-                      : ''}
-                  </Box>
-                </Stack>
-                <Stack direction='row' spacing={3}>
-                  <Box sx={labelStyle}>
-                    {intl.messages['common.requestMethod']}
-                  </Box>
-                  <Box sx={valueStyle}>
-                    {currentPlan &&
-                    currentPlan.threadGroupList[currentThreadGroup] !== null
-                      ? currentPlan.threadGroupList[currentThreadGroup]
-                          .httpSamplerProxyVO.method
-                      : ''}
-                  </Box>
-                </Stack>
-                <Stack direction='row' spacing={3}>
-                  <Box sx={labelStyle}>KeepAlive</Box>
-                  <Box sx={valueStyle}>
-                    {currentPlan &&
-                    currentPlan.threadGroupList[currentThreadGroup] !== null
-                      ? getBoolString(
-                          currentPlan.threadGroupList[currentThreadGroup]
-                            .httpSamplerProxyVO.useKeepAlive
-                        )
-                      : ''}
-                  </Box>
-                </Stack>
-                <Stack direction='row' spacing={3}>
-                  <Box sx={labelStyle}>followRedirects</Box>
-                  <Box sx={valueStyle}>
-                    {currentPlan &&
-                    currentPlan.threadGroupList[currentThreadGroup] !== null
-                      ? getBoolString(
-                          currentPlan.threadGroupList[currentThreadGroup]
-                            .httpSamplerProxyVO.followRedirects
-                        )
-                      : ''}
-                  </Box>
-                </Stack>
-
-                {/* 请求体 */}
-                {currentPlan &&
-                currentPlan.threadGroupList[currentThreadGroup] &&
-                currentPlan.threadGroupList[currentThreadGroup]
-                  .httpSamplerProxyVO ? (
-                  <Stack direction='row' spacing={3}>
-                    <Box sx={labelStyle}>
-                      {intl.messages['common.requestBody']}
-                    </Box>
-                    <Box sx={valueStyle}>
-                      {
-                        currentPlan.threadGroupList[currentThreadGroup]
-                          .httpSamplerProxyVO.body
-                      }
-                    </Box>
-                  </Stack>
-                ) : (
-                  <></>
-                )}
-
-                {/* 请求参数 */}
-                {currentPlan &&
-                currentPlan.threadGroupList[currentThreadGroup] &&
-                currentPlan.threadGroupList[currentThreadGroup]
-                  .httpSamplerProxyVO.arguments &&
-                Object.keys(
-                  currentPlan.threadGroupList[currentThreadGroup]
-                    .httpSamplerProxyVO.arguments
-                ).length > 0 ? (
-                  <Stack direction='row' spacing={3}>
-                    <Box sx={labelStyle}>
-                      {intl.messages['common.requestParameters']}
-                    </Box>
-                    <Box sx={valueStyle}>
-                      <StyledTableContainer sx={{ maxHeight: '680px' }}>
-                        <Table
-                          stickyHeader
-                          size='small'
-                          sx={{
-                            tableLayout: 'auto',
-                            minWidth: '100%',
-                          }}
-                        >
-                          <TableHead>
-                            <TableRow>
-                              {parameterHeadRow.map((item, index) => (
-                                <StyledTableRowCell
-                                  key={item.id}
-                                  align={item.align}
-                                  sx={{
-                                    maxWidth: item.maxWidth,
-                                    minWidth: item.minWidth,
-                                  }}
-                                >
-                                  {item.label}
-                                </StyledTableRowCell>
-                              ))}
-                            </TableRow>
-                          </TableHead>
-                          <TableBody>
-                            {Object.keys(
-                              currentPlan.threadGroupList[currentThreadGroup]
-                                .httpSamplerProxyVO.arguments
-                            ).map((key, index) => (
-                              <TableRow
-                                key={key + '' + index}
-                                aria-checked={false}
-                                sx={{
-                                  '&:last-child td, &:last-child th': {
-                                    border: 0,
-                                  },
-                                  fontWeight: 600,
-                                  maxWidth: '110px',
-                                  position: 'sticky',
-                                  left: 0,
-                                  zIndex: 6,
-                                  backgroundColor: '#FFF !important',
-                                }}
-                                selected={false}
-                              >
-                                <StyledTableBodyCell
-                                  align={parameterHeadRow[0].align}
-                                  sx={{
-                                    maxWidth: parameterHeadRow[0].maxWidth,
-                                    minWidth: parameterHeadRow[0].minWidth,
-                                  }}
-                                >
-                                  {key}
-                                </StyledTableBodyCell>
-                                <StyledTableBodyCell
-                                  align={parameterHeadRow[1].align}
-                                  sx={{
-                                    maxWidth: parameterHeadRow[1].maxWidth,
-                                    minWidth: parameterHeadRow[1].minWidth,
-                                  }}
-                                >
-                                  {
-                                    currentPlan.threadGroupList[
-                                      currentThreadGroup
-                                    ].httpSamplerProxyVO.arguments[key]
-                                  }
-                                </StyledTableBodyCell>
-                              </TableRow>
-                            ))}
-                          </TableBody>
-                        </Table>
-                      </StyledTableContainer>
-                    </Box>
-                  </Stack>
-                ) : (
-                  <></>
-                )}
-
-                {/* 请求头 */}
-                {currentPlan &&
-                currentPlan.threadGroupList[currentThreadGroup] &&
-                currentPlan.threadGroupList[currentThreadGroup].headerManagerVO
-                  .headerList &&
-                Object.keys(
-                  currentPlan.threadGroupList[currentThreadGroup]
-                    .headerManagerVO.headerList
-                ).length > 0 ? (
-                  <Stack direction='row' spacing={3}>
-                    <Box sx={labelStyle}>
-                      {intl.messages['common.requestHeader']}
-                    </Box>
-                    <Box sx={valueStyle}>
-                      <StyledTableContainer sx={{ maxHeight: '680px' }}>
-                        <Table
-                          stickyHeader
-                          size='small'
-                          sx={{
-                            tableLayout: 'auto',
-                            minWidth: '100%',
-                          }}
-                        >
-                          <TableHead>
-                            <TableRow>
-                              {requestHeadHeadRow.map((item, index) => (
-                                <StyledTableRowCell
-                                  key={item.id}
-                                  align={item.align}
-                                  sx={{
-                                    maxWidth: item.maxWidth,
-                                    minWidth: item.minWidth,
-                                  }}
-                                >
-                                  {item.label}
-                                </StyledTableRowCell>
-                              ))}
-                            </TableRow>
-                          </TableHead>
-                          <TableBody>
-                            {Object.keys(
-                              currentPlan.threadGroupList[currentThreadGroup]
-                                .headerManagerVO.headerList
-                            ).map((key, index) => (
-                              <TableRow
-                                key={key + '' + index}
-                                aria-checked={false}
-                                sx={{
-                                  '&:last-child td, &:last-child th': {
-                                    border: 0,
-                                  },
-                                  fontWeight: 600,
-                                  maxWidth: '110px',
-                                  position: 'sticky',
-                                  left: 0,
-                                  zIndex: 6,
-                                  backgroundColor: '#FFF !important',
-                                }}
-                                selected={false}
-                              >
-                                <StyledTableBodyCell
-                                  align={requestHeadHeadRow[0].align}
-                                  sx={{
-                                    maxWidth: requestHeadHeadRow[0].maxWidth,
-                                    minWidth: requestHeadHeadRow[0].minWidth,
-                                  }}
-                                >
-                                  {key}
-                                </StyledTableBodyCell>
-                                <StyledTableBodyCell
-                                  align={requestHeadHeadRow[1].align}
-                                  sx={{
-                                    maxWidth: requestHeadHeadRow[1].maxWidth,
-                                    minWidth: requestHeadHeadRow[1].minWidth,
-                                  }}
-                                >
-                                  {
-                                    currentPlan.threadGroupList[
-                                      currentThreadGroup
-                                    ].headerManagerVO.headerList[key]
-                                  }
-                                </StyledTableBodyCell>
-                              </TableRow>
-                            ))}
-                          </TableBody>
-                        </Table>
-                      </StyledTableContainer>
-                    </Box>
-                  </Stack>
-                ) : (
-                  <></>
-                )}
-              </Stack>
-            </Stack>
-            <Stack direction='column' spacing={1}>
-              <Box
-                sx={{
-                  color: '242e42',
-                  fontSize: '14px',
-                  fontWeight: 600,
-                }}
-              >
-                {intl.messages['common.timer']}
-              </Box>
-              <Stack
-                sx={{
-                  borderRadius: '4px',
-                  bgcolor: '#F9FBFD',
-                  p: '20px',
-                }}
-                direction='column'
-                spacing={1.5}
-              >
-                {currentPlan &&
-                currentPlan.threadGroupList[currentThreadGroup] ? (
-                  <StyledTableContainer sx={{ maxHeight: '680px' }}>
-                    <Table
-                      stickyHeader
-                      size='small'
-                      sx={{
-                        tableLayout: 'auto',
-                        minWidth: '100%',
-                      }}
-                    >
-                      <TableHead>
-                        <TableRow>
-                          {timerHeadRow.map((item, index) => (
-                            <StyledTableRowCell
-                              key={item.id}
-                              align={item.align}
-                              sx={{
-                                maxWidth: item.maxWidth,
-                                minWidth: item.minWidth,
-                              }}
-                            >
-                              {item.label}
-                            </StyledTableRowCell>
-                          ))}
-                        </TableRow>
-                      </TableHead>
-                      {currentPlan.threadGroupList[currentThreadGroup].timers &&
-                      currentPlan.threadGroupList[currentThreadGroup].timers
-                        .length > 0 ? (
-                        <TableBody>
-                          {currentPlan.threadGroupList[
-                            currentThreadGroup
-                          ].timers.map((timer, index) => (
-                            <TableRow
-                              key={timer.type + '' + index}
-                              aria-checked={false}
-                              sx={{
-                                '&:last-child td, &:last-child th': {
-                                  border: 0,
-                                },
-                                fontWeight: 600,
-                                maxWidth: '110px',
-                                position: 'sticky',
-                                left: 0,
-                                zIndex: 6,
-                                backgroundColor: '#FFF !important',
-                              }}
-                              selected={false}
-                            >
-                              <StyledTableBodyCell
-                                align={timerHeadRow[0].align}
-                                sx={{
-                                  maxWidth: timerHeadRow[0].maxWidth,
-                                  minWidth: timerHeadRow[0].minWidth,
-                                }}
-                              >
-                                {timer.type}
-                              </StyledTableBodyCell>
-                              <StyledTableBodyCell
-                                align={timerHeadRow[1].align}
-                                sx={{
-                                  maxWidth: timerHeadRow[1].maxWidth,
-                                  minWidth: timerHeadRow[1].minWidth,
-                                }}
-                              >
-                                {timer.threadDelay ?? '/'}
-                              </StyledTableBodyCell>
-                              <StyledTableBodyCell
-                                align={timerHeadRow[2].align}
-                                sx={{
-                                  maxWidth: timerHeadRow[2].maxWidth,
-                                  minWidth: timerHeadRow[2].minWidth,
-                                }}
-                              >
-                                {timer.constantDelayOffset ?? '/'}
-                              </StyledTableBodyCell>
-                              <StyledTableBodyCell
-                                align={timerHeadRow[3].align}
-                                sx={{
-                                  maxWidth: timerHeadRow[3].maxWidth,
-                                  minWidth: timerHeadRow[3].minWidth,
-                                }}
-                              >
-                                {timer.randomDelayMaximum ?? '/'}
-                              </StyledTableBodyCell>
-                              <StyledTableBodyCell
-                                align={timerHeadRow[4].align}
-                                sx={{
-                                  maxWidth: timerHeadRow[4].maxWidth,
-                                  minWidth: timerHeadRow[4].minWidth,
-                                }}
-                              >
-                                {timer.deviation ?? '/'}
-                              </StyledTableBodyCell>
-                              <StyledTableBodyCell
-                                align={timerHeadRow[5].align}
-                                sx={{
-                                  maxWidth: timerHeadRow[5].maxWidth,
-                                  minWidth: timerHeadRow[5].minWidth,
-                                }}
-                              >
-                                {timer.lambda ?? '/'}
-                              </StyledTableBodyCell>
-                            </TableRow>
-                          ))}
-                        </TableBody>
-                      ) : (
-                        <TableBody>
-                          <TableRow style={{ height: '220px' }}>
-                            <TableCell
-                              colSpan={6}
-                              sx={{
-                                textAlign: 'center',
-                                fontSize: '20px',
-                                fontFamily: fontFamily,
-                                fontStyle: 'normal',
-                              }}
-                            >
-                              <Question />
-                              <NormalBoldFont>
-                                {
-                                  intl.messages[
-                                    'common.serviceTableContentNoData'
-                                  ]
-                                }
-                              </NormalBoldFont>
-
-                              <SmallLightFont>
-                                {
-                                  intl.messages[
-                                    'common.serviceTableContentNoDataHint'
-                                  ]
-                                }
-                              </SmallLightFont>
-                            </TableCell>
-                          </TableRow>
-                        </TableBody>
-                      )}
-                    </Table>
-                  </StyledTableContainer>
-                ) : (
-                  <></>
-                )}
-              </Stack>
-            </Stack>
-          </>
-        ) : (
-          <></>
-        )}
-      </Stack>
-    </Stack>
+                    <SmallLightFont>
+                      {intl.messages['common.serviceTableContentNoDataHint']}
+                    </SmallLightFont>
+                  </TableCell>
+                </TableRow>
+              ) : (
+                <div></div>
+              )}
+            </TableBody>
+          </Table>
   );
 }

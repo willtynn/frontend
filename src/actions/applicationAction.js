@@ -86,7 +86,7 @@ export const UPDATE_AGGREGATE_ENHANCE_REPORT = 'UPDATE_AGGREGATE_ENHANCE_REPORT'
 
 
 //const baseURLLink = 'http://192.168.1.104:14447';
- const baseURLLink = 'http://localhost:8848';
+ const baseURLLink = 'http://172.20.236.75:8848';
 
 const axios_instance = axios.create({
   baseURL: baseURLLink,
@@ -1194,3 +1194,4 @@ export function getJointReportByID(jointPlanId) {
     }
   };
 }
+

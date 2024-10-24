@@ -35,11 +35,9 @@ import PendingIcon from '@/assets/PendingIcon.svg';
 import FailedIcon from '@/assets/FailedIcon.svg';
 import SucceededIcon from '@/assets/SucceededIcon.svg';
 import Question from '@/assets/Question.svg';
-import { KubeCheckbox } from '@/components/Checkbox';
 import Task from '@/assets/Task.svg';
 import { NormalBoldFont, SmallLightFont } from '@/components/Fonts';
 import { useNavigate } from 'react-router-dom';
-
 import {
   UPDATE_GROUP_EDIT,
   RESET_GROUP,
@@ -48,6 +46,7 @@ import {
   UPDATE_TEST_PLAN_PAGE_SIZE,
   getJointTestPlans,
 } from '../../../actions/applicationAction';
+import { AddModal } from './Add/AddWindow';
 
 export const RUNNING = 'Running';
 export const CREATED = 'Created';
@@ -240,11 +239,11 @@ export default function JointStressTesting() {
         });
       } else if (value.startsWith(`${intl.messages['common.name']}:`)) {
         tmpData = tmpData.filter((tableRow, _) => {
-          return tableRow.testPlanName.includes(value.replace(namePattern, ''));
+          return tableRow.name.includes(value.replace(namePattern, ''));
         });
       } else {
         tmpData = tmpData.filter((tableRow, _) => {
-          return tableRow.testPlanName.includes(value);
+          return tableRow.name.includes(value);
         });
       }
     });
@@ -736,9 +735,16 @@ export default function JointStressTesting() {
         />
       </Box>
 
-      {/* <StyledModal open={planOpen} onClose={handleClose}>
-        
-       </StyledModal> */}
+       <StyledModal open={planOpen} onClose={handleClose}>
+              <AddModal
+                          handleConfirmClick={handleConfirmClick}
+                          handleCancelClick={handleCancelClick}
+                          showError={showError}
+                          setShowError={setShowError}
+              />
+       </StyledModal> 
+
+
     </Stack>
   );
 }
