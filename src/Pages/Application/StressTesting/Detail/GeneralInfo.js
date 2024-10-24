@@ -15,6 +15,7 @@ import { getBoolString } from '../../../../utils/commonUtils';
 import { measure } from '@/actions/applicationAction';
 import { useIntl } from 'react-intl';
 
+
 const labelStyle = {
   fontSize: '12px',
   fontWeight: 400,
@@ -61,8 +62,13 @@ export default function GeneralInfo(props) {
     [<Delete16 />, '删除', () => {}],
   ];
 
+  // const handleReturn = () => {
+  //   navigate('/application/stress_testing');
+  // };
+
+
   const handleReturn = () => {
-    navigate('/application/stress_testing');
+    navigate(-1); // 返回到上一个页面
   };
 
   const handleMoreOperation = e => {

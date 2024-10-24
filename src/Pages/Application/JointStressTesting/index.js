@@ -240,11 +240,11 @@ export default function JointStressTesting() {
         });
       } else if (value.startsWith(`${intl.messages['common.name']}:`)) {
         tmpData = tmpData.filter((tableRow, _) => {
-          return tableRow.testPlanName.includes(value.replace(namePattern, ''));
+          return tableRow.name.includes(value.replace(namePattern, ''));
         });
       } else {
         tmpData = tmpData.filter((tableRow, _) => {
-          return tableRow.testPlanName.includes(value);
+          return tableRow.name.includes(value);
         });
       }
     });
@@ -736,9 +736,14 @@ export default function JointStressTesting() {
         />
       </Box>
 
-      {/* <StyledModal open={planOpen} onClose={handleClose}>
-        
-       </StyledModal> */}
+       <StyledModal open={planOpen} onClose={handleClose}>
+       <TestingProgress
+          handleConfirmClick={handleConfirmClick}
+          handleCancelClick={handleCancelClick}
+          showError={showError}
+          setShowError={setShowError}
+        />
+       </StyledModal> 
     </Stack>
   );
 }

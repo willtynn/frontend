@@ -5,7 +5,7 @@ import { Stack } from '@mui/material';
 import { useParams } from 'react-router';
 import GeneralInfo from './GeneralInfo';
 import DetailInfo from './DetailInfo';
-import { getJointTestPlanById } from '@/actions/applicationAction';
+import { getJointTestPlanById,getJointTestPlanSonById } from '@/actions/applicationAction';
 
 export function JointTestPlanDetail() {
   const { jointTestPlanId } = useParams();
@@ -13,6 +13,7 @@ export function JointTestPlanDetail() {
 
   useEffect(() => {
     dispatch(getJointTestPlanById(jointTestPlanId));
+    dispatch(getJointTestPlanSonById(jointTestPlanId));
   }, []);
 
   return (
