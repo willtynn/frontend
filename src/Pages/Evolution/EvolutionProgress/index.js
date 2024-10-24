@@ -79,6 +79,9 @@ export function EvolutionProgress(props) {
     evo_remarks,
     create_by,
     cre_time,
+    evo_data_args,
+    evo_ana_args,
+    evo_exe_args,
   } = useSelector(state => {
     return {
       evo_id: state.Evolution.evo_id,
@@ -91,6 +94,9 @@ export function EvolutionProgress(props) {
       evo_remarks: state.Evolution.evo_remakes,
       create_by: state.Evolution.create_by,
       cre_time: state.Evolution.cre_time,
+      evo_data_args: state.Evolution.evo_data_args,
+      evo_ana_args:state.Evolution.evo_ana_args,
+      evo_exe_args:state.Evolution.evo_exe_args,
     };
   });
   //提交表单，此处还可以做一个验证
@@ -107,6 +113,9 @@ export function EvolutionProgress(props) {
       evo_enable: "1",
       evo_remarks: evo_remarks,
       create_by: create_by,
+      evo_data_args: evo_data_args,
+      evo_ana_args:evo_ana_args,
+      evo_exe_args:evo_exe_args,
     }
     //如果用户没有输入备注。那么就存为none
     if(evo_remarks == undefined){
@@ -114,6 +123,8 @@ export function EvolutionProgress(props) {
     }
     //如果id不等于-1，那么说明是修改，如果id = -1 那么是新建
     if(evo_id == "-1"){
+      console.log(plan);
+      console.log("增加演化计划");
       dispatch(evo_add(plan));
     }else{
       dispatch(evo_modify(plan));
@@ -130,7 +141,7 @@ export function EvolutionProgress(props) {
     if (currentStage === 1) {
       return <MonitorConfiguration showError={showError} setError={setEvolutionPlanError} />;
     } else if (currentStage === 2) {
-      return <AnalyseConfiguration showError={showError} setError={setEvolutionPlanError} />;
+      return <AnalyseConfiguration close={handleCancelClick} showError={showError} setError={setEvolutionPlanError} />;
     } else if (currentStage === 3) {
       return <PlanConfiguration showError={showError} setError={setEvolutionPlanError} />;
     } else {

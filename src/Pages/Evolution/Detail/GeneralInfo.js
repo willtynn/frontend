@@ -324,6 +324,7 @@ export default function GeneralInfo(props) {
           spacing={1.5}
           alignItems='center'
         >
+          {/* 更多操作按钮 */}
           <KubeCancelButton sx={{ height: '32px', minWidth: '96px' }} onClick={() => {
             handleExecute();
           }}>
@@ -414,6 +415,24 @@ export default function GeneralInfo(props) {
             <Box sx={labelStyle}>{intl.messages['common.remark']}</Box>
             <Box sx={valueStyle}>
               {currentPlan !== null ? currentPlan.evo_remarks : ''}
+            </Box>
+          </Stack>
+          <Stack direction='row' spacing={0.75}>
+            <Box sx={labelStyle}>{"数据源参数"}</Box>
+            <Box sx={valueStyle}>
+              {currentPlan !== null ? currentPlan.evo_data_args : ''}
+            </Box>
+          </Stack>
+          <Stack direction='row' spacing={0.75}>
+            <Box sx={labelStyle}>{"分析算法参数"}</Box>
+            <Box sx={valueStyle}>
+              {currentPlan !== null ? currentPlan.evo_ana_args : ''}
+            </Box>
+          </Stack>
+          <Stack direction='row' spacing={0.75}>
+            <Box sx={labelStyle}>{"执行算法参数"}</Box>
+            <Box sx={valueStyle}>
+              {currentPlan !== null ? currentPlan.evo_exe_args : ''}
             </Box>
           </Stack>
         </Stack>

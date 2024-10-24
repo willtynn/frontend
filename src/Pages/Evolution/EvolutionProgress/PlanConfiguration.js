@@ -11,7 +11,7 @@ import { useIntl } from 'react-intl';
 import { StyledCheckbox } from '@/components/Checkbox';
 import { useSelector, useDispatch } from 'react-redux';
 import _ from "lodash";
-import { EVO_UPDATE_EXE_ALG } from '../../../actions/evolutionAction';
+import { EVO_UPDATE_EXE_ALG,EVO_UPDATE_EVO_EXE_ARGS } from '../../../actions/evolutionAction';
 
 const regExp = new RegExp(/^[a-zA-Z0-9][a-zA-Z0-9 -]{0,251}[a-zA-Z0-9]$/);
 
@@ -25,6 +25,7 @@ export function PlanConfiguration(props) {
     exe_alg_list,
     data_resource,
     exe_data_mapping,
+    evo_exe_args,
   } = useSelector(state => {
     return {
       planName: state.Evolution.planName,
@@ -33,6 +34,7 @@ export function PlanConfiguration(props) {
       exe_alg_list: state.Evolution.exe_alg_list,
       data_resource: state.Evolution.data_resource,
       exe_data_mapping: state.Evolution.exe_data_mapping,
+      evo_exe_args: state.Evolution.evo_exe_args,
     };
   });
 
@@ -46,12 +48,17 @@ export function PlanConfiguration(props) {
     setError(planNameError);
   }, [planNameError])
 
-  //符合匹配表的分析算法列表
+  //符合匹配表的执行算法列表
   const exe_data_list = _.filter(exe_alg_list,function(obj){
     if(_.find(exe_data_mapping,{'plan_name':obj.plan_name,'data_resource':data_resource}) !== undefined){
       return obj;
     }
   })
+
+  //下面为对执行算法的高级配置
+  const handleExeArgs = e => {
+    dispatch({ type: EVO_UPDATE_EVO_EXE_ARGS, data: e.target.value });
+  }
 
   return (
     <Stack sx={{ p: '32px 64px', bgcolor: '#FFFFFF', height: "calc(100% - 244px)" }} direction='column' justifyContent='space-between' >
@@ -101,6 +108,19 @@ export function PlanConfiguration(props) {
         >
           {intl.messages['evolution.planConfigurationDescription']}
         </Box>
+        <br></br>
+        <KubeInput
+              label={"执行算法参数"}
+              decription={"此处配置执行算法相关的详细参数，请遵照执行算法的详情进行配置，否则可能导致演化计划不可用"}
+              requried={false}
+              id='test-evo_name-input'
+              variant='outlined'
+              value={evo_exe_args}
+              onChange={handleExeArgs}
+              validation={{
+                required: "First Name is required!"
+              }}
+            />
       </Stack>
     </Stack>
   );
