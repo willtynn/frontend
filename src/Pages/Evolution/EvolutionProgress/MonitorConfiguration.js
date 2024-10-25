@@ -111,6 +111,7 @@ export function MonitorConfiguration(props) {
       }
     }
 
+    console.log(args.join(","));
     dispatch({ type: EVO_UPDATE_EVO_DATA_ARGS, data: args.join(",") });
   };
 

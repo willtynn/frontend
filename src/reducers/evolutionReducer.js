@@ -74,7 +74,7 @@ const initState = {
   ana_data_mapping: [],
   exe_data_mapping: [],
   //进入详情界面后展示出来的某一演化计划的详细信息
-  evo_id: '-1',
+  evo_id: "-1",
   evo_name: '',
   cre_time: "",
   exe_times: "0",
@@ -90,8 +90,8 @@ const initState = {
   exe_times: "0",
   evo_enable: "0",
   evo_data_args: "\"dataArgs\":{},\"timeArgs\":{}", // 数据源所带参数
-  evo_ana_args: "\"anaArgs\":{}", // 分析算法所带参数  
-  evo_exe_args: "\"exeArgs\":{}", // 执行算法所带参数
+  evo_ana_args: "{\"anaArgs\":{}}", // 分析算法所带参数  
+  evo_exe_args: "{\"exeArgs\":{}}", // 执行算法所带参数
   //存储对应演化计划的执行结果，是数组
   evolution_plan_result_list: [],
 
