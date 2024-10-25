@@ -11,13 +11,11 @@ import {
   TableRow,
 } from '@mui/material';
 import { useDispatch, useSelector } from 'react-redux';
-import { ContainedButton, KubeConfirmButton } from '@/components/Button';
+import { KubeConfirmButton } from '@/components/Button';
 import { fontFamily } from '@/utils/commonUtils';
 import { StyledModal } from '../../../components/Modal';
 import {
-  StyledTableBox,
   StyledTableContainer,
-  StyledTableRowCell,
   StyledTableBodyCell,
   StyledTableFooter,
   StyledTableHead,
@@ -35,11 +33,9 @@ import PendingIcon from '@/assets/PendingIcon.svg';
 import FailedIcon from '@/assets/FailedIcon.svg';
 import SucceededIcon from '@/assets/SucceededIcon.svg';
 import Question from '@/assets/Question.svg';
-import { KubeCheckbox } from '@/components/Checkbox';
 import Task from '@/assets/Task.svg';
 import { NormalBoldFont, SmallLightFont } from '@/components/Fonts';
 import { useNavigate } from 'react-router-dom';
-
 import {
   UPDATE_GROUP_EDIT,
   RESET_GROUP,
@@ -48,6 +44,7 @@ import {
   UPDATE_TEST_PLAN_PAGE_SIZE,
   getJointTestPlans,
 } from '../../../actions/applicationAction';
+import { AddModal } from './Add/AddWindow';
 
 export const RUNNING = 'Running';
 export const CREATED = 'Created';
@@ -737,13 +734,15 @@ export default function JointStressTesting() {
       </Box>
 
        <StyledModal open={planOpen} onClose={handleClose}>
-       <TestingProgress
-          handleConfirmClick={handleConfirmClick}
-          handleCancelClick={handleCancelClick}
-          showError={showError}
-          setShowError={setShowError}
-        />
+              <AddModal
+                          handleConfirmClick={handleConfirmClick}
+                          handleCancelClick={handleCancelClick}
+                          showError={showError}
+                          setShowError={setShowError}
+              />
        </StyledModal> 
+
+
     </Stack>
   );
 }

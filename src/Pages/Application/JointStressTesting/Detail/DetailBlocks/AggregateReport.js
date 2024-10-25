@@ -232,9 +232,10 @@ export function AggregateReportEnhance() {
           </Stack>
         )}
       </Stack>
-      <LineChart>
-        
-      </LineChart>
+      <Stack>
+      <LineChart/>
+      </Stack>
+      
     </Stack>
   );
   

@@ -1,11 +1,11 @@
 import React, { useState } from 'react';
 import ReactEcharts from 'echarts-for-react';
 import { useSelector } from 'react-redux';
-
-
-
+import { useIntl } from 'react-intl';
+import { Box, FormControl, InputLabel, Select, MenuItem } from '@mui/material';
 
 const LineChart = () => {
+  const intl = useIntl();
   const [xAxisKey, setXAxisKey] = useState('namespace');
   const [yAxisKey, setYAxisKey] = useState('average');
 
@@ -37,27 +37,38 @@ const LineChart = () => {
   };
 
   return (
-    <div>
-      <div>
-        <label>
-          X轴:
-          <select value={xAxisKey} onChange={(e) => setXAxisKey(e.target.value)}>
+<Box>
+      <Box display="flex" alignItems="center" mb={2}>
+        <FormControl variant="outlined" style={{ marginRight: '16px', minWidth: 200 }}>
+          <InputLabel>{intl.messages['jointStressTesting.horiCoordinate']}</InputLabel>
+          <Select
+            value={xAxisKey}
+            onChange={(e) => setXAxisKey(e.target.value)}
+            label={intl.messages['jointStressTesting.horiCoordinate']}
+          >
             {xAxisOptions.map(option => (
-              <option key={option} value={option}>{option}</option>
+              <MenuItem key={option} value={option}>{option}</MenuItem>
             ))}
-          </select>
-        </label>
-        <label>
-          Y轴:
-          <select value={yAxisKey} onChange={(e) => setYAxisKey(e.target.value)}>
+          </Select>
+        </FormControl>
+
+        <Box width="16px" /> {/* 添加一个空的 Box 作为间隔 */}
+        
+        <FormControl variant="outlined" style={{ minWidth: 200 }}>
+          <InputLabel>{intl.messages['jointStressTesting.vertiCoordinate']}</InputLabel>
+          <Select
+            value={yAxisKey}
+            onChange={(e) => setYAxisKey(e.target.value)}
+            label={intl.messages['jointStressTesting.vertiCoordinate']}
+          >
             {yAxisOptions.map(option => (
-              <option key={option} value={option}>{option}</option>
+              <MenuItem key={option} value={option}>{option}</MenuItem>
             ))}
-          </select>
-        </label>
-      </div>
-      <ReactEcharts option={option} style={{ height: '400px' }} />
-    </div>
+          </Select>
+        </FormControl>
+      </Box>
+      <ReactEcharts option={option} style={{ height: '400px',marginLeft: '-90px'}} />
+    </Box>
   );
 };
 

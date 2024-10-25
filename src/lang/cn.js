@@ -124,7 +124,6 @@ export const messages = {
     errorRate: "错误率",
     clusterNetwork:'集群网络',
     clusterNetworkDescription: '用于模拟不同的网络环境，设置不同服务器之间的网络延迟、带宽等。',
-
   },
   lang: {
     language: '语言',
@@ -446,16 +445,13 @@ export const messages = {
   },
   jointStressTesting: {
     performancePressureTest: '多负载性能压测',
-    stressTestingDescription:
-      '建立不同的测试场景（负载情况），对服务进行压测，并得到多场景下的性能数据',
-    createTestPlan:
-      '创建联合测试计划',
-      planCreatedMsg:
-      '创建联合测试计划成功',
-      planCreationFailedMsg:
-      '创建联合测试计划失败',
-      testStartMsg:
-      '执行联合测试计划成功'
+    stressTestingDescription: '建立不同的测试场景（负载情况），对服务进行压测，并得到多场景下的性能数据',
+    createTestPlan: '创建联合测试计划',
+    planCreatedMsg: '创建联合测试计划成功',
+    planCreationFailedMsg: '创建联合测试计划失败',
+    testStartMsg: '执行联合测试计划成功',
+    horiCoordinate: '横坐标',
+    vertiCoordinate: '纵坐标',
   },
   routeTrace: {
     title: '路由链路',
