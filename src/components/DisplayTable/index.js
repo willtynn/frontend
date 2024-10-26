@@ -240,6 +240,7 @@ function PageSizePopper(props) {
           {pageSizeList&&pageSizeList.map((value, index) => {
             return (
               <Box
+                key={index}
                 sx={{
                   '&:hover': {
                     bgcolor: '#eff4f9',
