@@ -58,169 +58,172 @@ import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
 import { KubeCheckbox } from '../../../components/Checkbox';
 import { NormalBoldFont, SmallLightFont } from '../../../components/Fonts';
 import { useIntl } from 'react-intl';
+import { useNavigate } from 'react-router-dom';
 
-const data = {
-  items: [
-    {
-      metadata: {
-        name: 'jagger-es-index-cleaner-28242715-psq9k',
-        labels: {
-          app: 'jaeger',
-          'app.kubernetes.io/managed-by': 'jaeger-operator',
-          'job-name': 'jagger-es-index-cleaner-28242715',
-          'app.kubernetes.io/name': 'jagger-es-index-cleaner',
-          'app.kubernetes.io/part-of': 'jaeger',
-          'app.kubernetes.io/instance': 'jagger',
-          'controller-uid': '081a6c72-dac8-4909-8f10-936d81bc39fc',
-          'app.kubernetes.io/component': 'cronjob-es-index-cleaner',
-        },
-      },
-      status: {
-        phase: 'Succeeded',
-        hostIP: '192.168.1.173',
-        podIP: '10.244.6.130',
-        startTime: '2023-09-12T23:55:00.000+00:00',
-      },
-    },
-    {
-      metadata: {
-        name: 'jagger-es-index-cleaner-28239835-8s2nl',
-        labels: {
-          app: 'jaeger',
-          'app.kubernetes.io/managed-by': 'jaeger-operator',
-          'job-name': 'jagger-es-index-cleaner-28239835',
-          'app.kubernetes.io/name': 'jagger-es-index-cleaner',
-          'app.kubernetes.io/part-of': 'jaeger',
-          'app.kubernetes.io/instance': 'jagger',
-          'controller-uid': '601ac280-4909-485b-a24c-84f0504caff0',
-          'app.kubernetes.io/component': 'cronjob-es-index-cleaner',
-        },
-      },
-      status: {
-        phase: 'Succeeded',
-        hostIP: '192.168.1.173',
-        podIP: '10.244.6.162',
-        startTime: '2023-09-10T23:55:08.000+00:00',
-      },
-    },
-    {
-      metadata: {
-        name: 'mysql-558bcb5f99-n4hsk',
-        labels: {
-          app: 'mysql',
-          'pod-template-hash': '558bcb5f99',
-        },
-      },
-      status: {
-        phase: 'Running',
-        hostIP: '192.168.1.173',
-        podIP: '10.244.6.176',
-        startTime: '2023-08-14T08:16:14.000+00:00',
-      },
-    },
-    {
-      metadata: {
-        name: 'kubefed-controller-manager-5c65ff8499-gj6kj',
-        labels: {
-          'pod-template-hash': '5c65ff8499',
-          'kubefed-control-plane': 'controller-manager',
-        },
-      },
-      status: {
-        phase: 'Failed',
-        hostIP: '192.168.1.173',
-        podIP: '10.244.6.174',
-        startTime: '2023-08-14T07:42:47.000+00:00',
-      },
-    },
-    {
-      metadata: {
-        name: 'logstash-58486bb89b-4hpsh',
-        labels: {
-          app: 'logstash',
-          'pod-template-hash': '58486bb89b',
-        },
-      },
-      status: {
-        phase: 'Pending',
-        hostIP: '192.168.1.173',
-        podIP: '10.244.6.181',
-        startTime: '2023-08-08T06:17:16.000+00:00',
-      },
-    },
-    {
-      metadata: {
-        name: 'jagger-query-7b86944786-ntx7w',
-        labels: {
-          app: 'jaeger',
-          'app.kubernetes.io/managed-by': 'jaeger-operator',
-          'app.kubernetes.io/name': 'jagger-query',
-          'app.kubernetes.io/part-of': 'jaeger',
-          'pod-template-hash': '7b86944786',
-          'app.kubernetes.io/instance': 'jagger',
-          'app.kubernetes.io/component': 'query',
-        },
-      },
-      status: {
-        phase: 'Running',
-        hostIP: '192.168.1.173',
-        podIP: '10.244.6.175',
-        startTime: '2023-08-08T04:01:53.000+00:00',
-      },
-    },
-    {
-      metadata: {
-        name: 'es-es-default-0',
-        labels: {
-          'elasticsearch.k8s.elastic.co/node-ml': 'true',
-          'elasticsearch.k8s.elastic.co/version': '7.14.1',
-          'controller-revision-hash': 'es-es-default-79899f447c',
-          'elasticsearch.k8s.elastic.co/node-transform': 'true',
-          'elasticsearch.k8s.elastic.co/node-data_frozen': 'true',
-          'elasticsearch.k8s.elastic.co/node-data_content': 'true',
-          'elasticsearch.k8s.elastic.co/node-data_hot': 'true',
-          'elasticsearch.k8s.elastic.co/statefulset-name': 'es-es-default',
-          'elasticsearch.k8s.elastic.co/http-scheme': 'http',
-          'elasticsearch.k8s.elastic.co/node-ingest': 'true',
-          'elasticsearch.k8s.elastic.co/node-master': 'true',
-          'common.k8s.elastic.co/type': 'elasticsearch',
-          'elasticsearch.k8s.elastic.co/node-data_warm': 'true',
-          'elasticsearch.k8s.elastic.co/node-voting_only': 'false',
-          'elasticsearch.k8s.elastic.co/node-remote_cluster_client': 'true',
-          'elasticsearch.k8s.elastic.co/node-data_cold': 'true',
-          'statefulset.kubernetes.io/pod-name': 'es-es-default-0',
-          'elasticsearch.k8s.elastic.co/cluster-name': 'es',
-          'elasticsearch.k8s.elastic.co/node-data': 'true',
-        },
-      },
-      status: {
-        phase: 'Running',
-        hostIP: '192.168.1.173',
-        podIP: '10.244.6.177',
-        startTime: '2023-08-08T03:31:13.000+00:00',
-      },
-    },
-    {
-      metadata: {
-        name: 'filebeat-beat-filebeat-9lkrk',
-        labels: {
-          'controller-revision-hash': '696668bf7',
-          'pod-template-generation': '4',
-          'beat.k8s.elastic.co/name': 'filebeat',
-          'beat.k8s.elastic.co/version': '7.14.1',
-          'common.k8s.elastic.co/type': 'beat',
-        },
-      },
-      status: {
-        phase: 'Running',
-        hostIP: '192.168.1.173',
-        podIP: '192.168.1.173',
-        startTime: '2023-08-08T03:25:37.000+00:00',
-      },
-    },
-  ],
-  totalItems: 18,
-};
+// import { encodeId } from '@/utils/commonUtils';
+
+// const data = {
+//   items: [
+//     {
+//       metadata: {
+//         name: 'jagger-es-index-cleaner-28242715-psq9k',
+//         labels: {
+//           app: 'jaeger',
+//           'app.kubernetes.io/managed-by': 'jaeger-operator',
+//           'job-name': 'jagger-es-index-cleaner-28242715',
+//           'app.kubernetes.io/name': 'jagger-es-index-cleaner',
+//           'app.kubernetes.io/part-of': 'jaeger',
+//           'app.kubernetes.io/instance': 'jagger',
+//           'controller-uid': '081a6c72-dac8-4909-8f10-936d81bc39fc',
+//           'app.kubernetes.io/component': 'cronjob-es-index-cleaner',
+//         },
+//       },
+//       status: {
+//         phase: 'Succeeded',
+//         hostIP: '192.168.1.173',
+//         podIP: '10.244.6.130',
+//         startTime: '2023-09-12T23:55:00.000+00:00',
+//       },
+//     },
+//     {
+//       metadata: {
+//         name: 'jagger-es-index-cleaner-28239835-8s2nl',
+//         labels: {
+//           app: 'jaeger',
+//           'app.kubernetes.io/managed-by': 'jaeger-operator',
+//           'job-name': 'jagger-es-index-cleaner-28239835',
+//           'app.kubernetes.io/name': 'jagger-es-index-cleaner',
+//           'app.kubernetes.io/part-of': 'jaeger',
+//           'app.kubernetes.io/instance': 'jagger',
+//           'controller-uid': '601ac280-4909-485b-a24c-84f0504caff0',
+//           'app.kubernetes.io/component': 'cronjob-es-index-cleaner',
+//         },
+//       },
+//       status: {
+//         phase: 'Succeeded',
+//         hostIP: '192.168.1.173',
+//         podIP: '10.244.6.162',
+//         startTime: '2023-09-10T23:55:08.000+00:00',
+//       },
+//     },
+//     {
+//       metadata: {
+//         name: 'mysql-558bcb5f99-n4hsk',
+//         labels: {
+//           app: 'mysql',
+//           'pod-template-hash': '558bcb5f99',
+//         },
+//       },
+//       status: {
+//         phase: 'Running',
+//         hostIP: '192.168.1.173',
+//         podIP: '10.244.6.176',
+//         startTime: '2023-08-14T08:16:14.000+00:00',
+//       },
+//     },
+//     {
+//       metadata: {
+//         name: 'kubefed-controller-manager-5c65ff8499-gj6kj',
+//         labels: {
+//           'pod-template-hash': '5c65ff8499',
+//           'kubefed-control-plane': 'controller-manager',
+//         },
+//       },
+//       status: {
+//         phase: 'Failed',
+//         hostIP: '192.168.1.173',
+//         podIP: '10.244.6.174',
+//         startTime: '2023-08-14T07:42:47.000+00:00',
+//       },
+//     },
+//     {
+//       metadata: {
+//         name: 'logstash-58486bb89b-4hpsh',
+//         labels: {
+//           app: 'logstash',
+//           'pod-template-hash': '58486bb89b',
+//         },
+//       },
+//       status: {
+//         phase: 'Pending',
+//         hostIP: '192.168.1.173',
+//         podIP: '10.244.6.181',
+//         startTime: '2023-08-08T06:17:16.000+00:00',
+//       },
+//     },
+//     {
+//       metadata: {
+//         name: 'jagger-query-7b86944786-ntx7w',
+//         labels: {
+//           app: 'jaeger',
+//           'app.kubernetes.io/managed-by': 'jaeger-operator',
+//           'app.kubernetes.io/name': 'jagger-query',
+//           'app.kubernetes.io/part-of': 'jaeger',
+//           'pod-template-hash': '7b86944786',
+//           'app.kubernetes.io/instance': 'jagger',
+//           'app.kubernetes.io/component': 'query',
+//         },
+//       },
+//       status: {
+//         phase: 'Running',
+//         hostIP: '192.168.1.173',
+//         podIP: '10.244.6.175',
+//         startTime: '2023-08-08T04:01:53.000+00:00',
+//       },
+//     },
+//     {
+//       metadata: {
+//         name: 'es-es-default-0',
+//         labels: {
+//           'elasticsearch.k8s.elastic.co/node-ml': 'true',
+//           'elasticsearch.k8s.elastic.co/version': '7.14.1',
+//           'controller-revision-hash': 'es-es-default-79899f447c',
+//           'elasticsearch.k8s.elastic.co/node-transform': 'true',
+//           'elasticsearch.k8s.elastic.co/node-data_frozen': 'true',
+//           'elasticsearch.k8s.elastic.co/node-data_content': 'true',
+//           'elasticsearch.k8s.elastic.co/node-data_hot': 'true',
+//           'elasticsearch.k8s.elastic.co/statefulset-name': 'es-es-default',
+//           'elasticsearch.k8s.elastic.co/http-scheme': 'http',
+//           'elasticsearch.k8s.elastic.co/node-ingest': 'true',
+//           'elasticsearch.k8s.elastic.co/node-master': 'true',
+//           'common.k8s.elastic.co/type': 'elasticsearch',
+//           'elasticsearch.k8s.elastic.co/node-data_warm': 'true',
+//           'elasticsearch.k8s.elastic.co/node-voting_only': 'false',
+//           'elasticsearch.k8s.elastic.co/node-remote_cluster_client': 'true',
+//           'elasticsearch.k8s.elastic.co/node-data_cold': 'true',
+//           'statefulset.kubernetes.io/pod-name': 'es-es-default-0',
+//           'elasticsearch.k8s.elastic.co/cluster-name': 'es',
+//           'elasticsearch.k8s.elastic.co/node-data': 'true',
+//         },
+//       },
+//       status: {
+//         phase: 'Running',
+//         hostIP: '192.168.1.173',
+//         podIP: '10.244.6.177',
+//         startTime: '2023-08-08T03:31:13.000+00:00',
+//       },
+//     },
+//     {
+//       metadata: {
+//         name: 'filebeat-beat-filebeat-9lkrk',
+//         labels: {
+//           'controller-revision-hash': '696668bf7',
+//           'pod-template-generation': '4',
+//           'beat.k8s.elastic.co/name': 'filebeat',
+//           'beat.k8s.elastic.co/version': '7.14.1',
+//           'common.k8s.elastic.co/type': 'beat',
+//         },
+//       },
+//       status: {
+//         phase: 'Running',
+//         hostIP: '192.168.1.173',
+//         podIP: '192.168.1.173',
+//         startTime: '2023-08-08T03:25:37.000+00:00',
+//       },
+//     },
+//   ],
+//   totalItems: 18,
+// };
 
 function descendingComparator(a, b, orderBy) {
   if (b[orderBy] < a[orderBy]) {
@@ -317,6 +320,7 @@ const namePattern = new RegExp(/^(名称|Name):/);
 export default function ServiceStatusTable(props) {
   const { embeddingButton } = props;
   const intl = useIntl();
+  const navigate = useNavigate();
   const [searchList, setSearchList] = useState([]);
   const [loading, setLoading] = useState(false);
   const [tableData, setTableData] = useState([]);
@@ -349,13 +353,37 @@ export default function ServiceStatusTable(props) {
 
   useEffect(() => {
     if (localStorage.getItem('current_cluster')) {
-      dispatch(getNamaspaces(localStorage.getItem('current_cluster')));
+      // load namespace from session storage
+      let namespace_ = sessionStorage.getItem('service_status_table_namespace');
+      if (namespace_) {
+        // console.log('sessionStorage.getItem(service_status_table_namespace)', sessionStorage.getItem('service_status_table_namespace'));
+        dispatch({
+          type: UPDATE_CURRENT_NAMESPACE,
+          data: namespace_,
+        });
+      } else {
+        dispatch(getNamaspaces(localStorage.getItem('current_cluster')));
+      }
     }
+
+    let search_list = sessionStorage.getItem('service_status_table_search_list');
+    if (search_list) {
+      setSearchList(JSON.parse(search_list));
+    }
+
   }, []);
 
   useEffect(() => {
     if (namespaces && namespaces.length > 0) {
-      dispatch({ type: UPDATE_CURRENT_NAMESPACE, data: namespaces[0] });
+      let session_storage = sessionStorage.getItem('service_status_table_namespace');
+      if (session_storage) {
+        dispatch({
+          type: UPDATE_CURRENT_NAMESPACE,
+          data: session_storage,
+        });
+      } else {
+        dispatch({ type: UPDATE_CURRENT_NAMESPACE, data: namespaces[0] });
+      }
     }
   }, [namespaces]);
 
@@ -377,6 +405,7 @@ export default function ServiceStatusTable(props) {
   }, [currentNamespace]);
 
   useEffect(() => {
+    console.log('searchList', searchList);
     if (searchList.length == 2) {
       setSearchBy([]);
       return;
@@ -397,6 +426,7 @@ export default function ServiceStatusTable(props) {
       return;
     }
     const items = gottenInstances.items;
+    // console.log('items', items);
     const tmpData = items.map((value, index) => {
       return {
         name: value.metadata.name,
@@ -404,6 +434,9 @@ export default function ServiceStatusTable(props) {
         hostIP: value.status.hostIP,
         podIP: value.status.podIP,
         startTime: value.status.startTime,
+        // add attribute below to support click to detail
+        namespace: value.metadata.namespace,
+        app: value.metadata.labels.app,
       };
     });
     setCount(tmpData.length);
@@ -542,6 +575,24 @@ export default function ServiceStatusTable(props) {
     });
   };
 
+  const encodeId = (namespace, app) => {
+    return namespace + '___' + app;
+  };
+  // 添加点击跳转
+  const handleClickById = id => {
+    // console.log('encodeId(id.namespace, id.app)', encodeId(id.namespace, id.app));
+    // the encodeId function in utils is not applicable to this case
+    navigate(`/detail/service/${encodeId(id.namespace, id.app)}`);
+  }
+
+  // handle search list change, save to session storage
+  const handleSearchListChange = (newValue) => {
+    // console.log('newValue', newValue);
+    setSearchList(newValue);
+    sessionStorage.setItem('service_status_table_search_list', JSON.stringify(newValue));
+  }
+
+
   return (
     <Box>
       {/* 条件过滤悬浮框 */}
@@ -676,6 +727,7 @@ export default function ServiceStatusTable(props) {
             padding='6px 5px 5px 12px'
             value={currentNamespace}
             onChange={(event, newValue) => {
+              sessionStorage.setItem('service_status_table_namespace', newValue);
               dispatch({ type: UPDATE_CURRENT_NAMESPACE, data: newValue });
             }}
             id='instance_status_table_autocomplete'
@@ -699,7 +751,7 @@ export default function ServiceStatusTable(props) {
             value={searchValue}
             setValue={setSearchValue}
             contentList={searchList}
-            setContentList={setSearchList}
+            setContentList={handleSearchListChange}
             isDuplicate={isDuplicate}
             startAdornment={<SearchIcon />}
             sx={{
@@ -812,15 +864,20 @@ export default function ServiceStatusTable(props) {
                     >
                       <Stack alignItems='center' direction='row' spacing={2}>
                         <Task />
-                        <span
-                          style={{
+                        <Box
+                          sx={{
                             height: '30px',
                             lineHeight: '30px',
                             fontWeight: 600,
+                            cursor: 'pointer',
+                            '&:hover': {
+                              color: '#55bc8a',
+                            },
                           }}
+                          onClick={handleClickById.bind(this, row)}
                         >
                           {row.name}
-                        </span>
+                        </Box>
                       </Stack>
                     </StyledTableBodyCell>
 
