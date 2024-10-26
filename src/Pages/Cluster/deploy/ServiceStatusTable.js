@@ -572,6 +572,7 @@ export default function ServiceStatusTable(props) {
           {searchBy.map((value, index) => {
             return (
               <Box
+                key={index}
                 sx={{
                   '&:hover': {
                     bgcolor: '#36435c',
@@ -624,6 +625,7 @@ export default function ServiceStatusTable(props) {
           {colDisplay.map((value, index) => {
             return (
               <Stack
+                key={index}
                 direction='row'
                 onClick={handleColEyeClick.bind(this, index)}
                 sx={{
