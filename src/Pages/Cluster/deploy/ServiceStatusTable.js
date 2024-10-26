@@ -355,7 +355,7 @@ export default function ServiceStatusTable(props) {
     if (localStorage.getItem('current_cluster')) {
       // load namespace from session storage
       let namespace_ = sessionStorage.getItem('service_status_table_namespace');
-      if (namespace_) {
+      if (namespace_ && namespace_ != 'null') {
         // console.log('sessionStorage.getItem(service_status_table_namespace)', sessionStorage.getItem('service_status_table_namespace'));
         dispatch({
           type: UPDATE_CURRENT_NAMESPACE,
@@ -376,7 +376,7 @@ export default function ServiceStatusTable(props) {
   useEffect(() => {
     if (namespaces && namespaces.length > 0) {
       let session_storage = sessionStorage.getItem('service_status_table_namespace');
-      if (session_storage) {
+      if (session_storage && session_storage != 'null') {
         dispatch({
           type: UPDATE_CURRENT_NAMESPACE,
           data: session_storage,
@@ -405,7 +405,7 @@ export default function ServiceStatusTable(props) {
   }, [currentNamespace]);
 
   useEffect(() => {
-    console.log('searchList', searchList);
+    // console.log('searchList', searchList);
     if (searchList.length == 2) {
       setSearchBy([]);
       return;
@@ -582,6 +582,7 @@ export default function ServiceStatusTable(props) {
   const handleClickById = row => {
     // console.log('encodeId(id.namespace, id.app)', encodeId(id.namespace, id.app));
     // the encodeId function in utils is not applicable to this case
+    localStorage.setItem('serviceFrom', 'cluster_deploy');
     navigate(`/detail/service/${encodeId(row.namespace, row.app)}`);
   }
 
