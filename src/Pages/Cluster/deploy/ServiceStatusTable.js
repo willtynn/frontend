@@ -579,10 +579,10 @@ export default function ServiceStatusTable(props) {
     return namespace + '___' + app;
   };
   // 添加点击跳转
-  const handleClickById = id => {
+  const handleClickById = row => {
     // console.log('encodeId(id.namespace, id.app)', encodeId(id.namespace, id.app));
     // the encodeId function in utils is not applicable to this case
-    navigate(`/detail/service/${encodeId(id.namespace, id.app)}`);
+    navigate(`/detail/service/${encodeId(row.namespace, row.app)}`);
   }
 
   // handle search list change, save to session storage
