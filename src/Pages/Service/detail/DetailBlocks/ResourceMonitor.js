@@ -26,6 +26,8 @@ import dayjs from 'dayjs';
 import { KubeDatePicker } from '@/components/DatePicker';
 import { KubeConfirmButton, KubeCancelButton } from '@/components/Button';
 
+import { baseURLLink } from '@/actions/instanceAction';
+
 const RangeCandidate = [
   ['最近10分钟', -10, 'minute'],
   ['最近20分钟', -20, 'minute'],
@@ -224,6 +226,52 @@ function PodResourceMonitor(props) {
     setStart(tmpStart);
     setEnd(tmpEnd);
     handleClose();
+  };
+
+  const handleExportClick = (event, pod) => {
+    // stop propagation to avoid opening or closing the tab
+    event.stopPropagation();
+    
+    let clusterName = localStorage.getItem('current_cluster');
+    let namespace = pod.metadata.namespace;
+    let podName = pod.metadata.name;
+    let startTime = parseInt(start.valueOf() / 1000);
+    let endTime = parseInt(end.valueOf() / 1000);
+    // console.log('Cluster Name:', clusterName, 'Namespace:', namespace, 'Pod Name:', podName, 'Start Time:', startTime, 'End Time:', endTime);
+    // console.log('Cluster Name:', clusterName);
+
+    // send request to the url directly to download the file
+    let url = `/instance/resourceHistory/export`;
+    // let base = 'http://100.105.103.116:31953'
+    let data = {
+      clusterName: clusterName,
+      namespace: namespace,
+      podName: podName,
+      begin: startTime,
+      end: endTime,
+      step: 600, // not sure what this is
+    };
+    url = new URL(url, baseURLLink);
+    fetch(url, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(data),
+    })
+      .then(response => {
+        response.blob().then(blob => {
+          let url = window.URL.createObjectURL(blob);
+          let a = document.createElement('a');
+          a.href = url;
+          a.download = `${podName}_resource_history.xlsx`;
+          a.click();
+        });
+      })
+      .catch(error => {
+        console.error('Error:', error);
+      });
+
   };
 
   return (
@@ -556,6 +604,20 @@ function PodResourceMonitor(props) {
               {intl.messages['serviceOverview.podIP']}
             </Box>
           </Stack>
+
+          <Box>
+            <KubeConfirmButton
+              onClick={(event) => handleExportClick(event, pod)}
+              sx={{
+                width: '96px',
+                height: '32px',
+                boxShadow: "0 8px 12px 0 rgba(35,45,65,.28)",
+                fontWeight: 400,
+              }}
+            >
+              {intl.messages['serviceOverview.export']}
+            </KubeConfirmButton>
+          </Box>
 
           <Box sx={{ padding: '12px 12px 6px 12px' }}>
             {open === false ? (
