@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState,useEffect } from 'react';
 import { Box, Stack } from '@mui/material';
 import { KubeDeploymentCard } from '@/components/InfoCard';
 import { fontFamily } from '@/utils/commonUtils';
@@ -66,9 +66,8 @@ export function EvolutionProgress(props) {
     handleCancelClick();
     setCurrentStage(1);
   };
-
   //获取到相关的需要提交的变量
-  const {
+  var {
     evo_id,
     evo_name,
     data_resource,
@@ -100,8 +99,8 @@ export function EvolutionProgress(props) {
     };
   });
   //提交表单，此处还可以做一个验证
-  const handleConfirmButtonClick = () => {
-    const plan = {
+  async function handleConfirmButtonClick(){
+    var plan = {
       evo_id:evo_id,
       evo_name: evo_name,
       data_resource: data_resource,
@@ -117,12 +116,15 @@ export function EvolutionProgress(props) {
       evo_ana_args:evo_ana_args,
       evo_exe_args:evo_exe_args,
     }
+    if(state == "add"){
+      plan.evo_id = "-1";
+    }
     //如果用户没有输入备注。那么就存为none
     if(evo_remarks == undefined){
       plan.evo_remarks = "none";
     }
     //如果id不等于-1，那么说明是修改，如果id = -1 那么是新建
-    if(evo_id == "-1"){
+    if(plan.evo_id == "-1"){
       console.log(plan);
       console.log("增加演化计划");
       dispatch(evo_add(plan));
@@ -130,8 +132,8 @@ export function EvolutionProgress(props) {
       dispatch(evo_modify(plan));
     }
     //无论如何，恢复默认数据，更新计划列表，返回主页
-    dispatch({type:EVO_RESET_FORM});
-    dispatch(evo_getPlanList("",""));
+    await dispatch({type:EVO_RESET_FORM});
+    await dispatch(evo_getPlanList("",""));
     //关闭窗口
     handleConfirmClick();
     navigate("/evolution/plan")
