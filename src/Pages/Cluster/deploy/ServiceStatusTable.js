@@ -19,6 +19,7 @@ import {
 } from '@mui/material';
 import Question from '@/assets/Question.svg';
 import { useDispatch, useSelector } from 'react-redux';
+import { createSelector } from 'reselect';
 import {
   GET_INSTANCES,
   getNamaspaces,
@@ -317,6 +318,17 @@ function createRow(
 const statusPattern = new RegExp(/^(状态|Status):/);
 const namePattern = new RegExp(/^(名称|Name):/);
 
+const selectServiceStatus = createSelector(
+  state => state.Instance.gottenInstances,
+  state => state.Instance.pageSize,
+  state => state.Instance.pageNum,
+  state => state.Instance.namespaces,
+  state => state.Instance.currentNamespace,
+  (gottenInstances, pageSize, pageNum, namespaces, currentNamespace) => {
+    return { gottenInstances, pageSize, pageNum, namespaces, currentNamespace };
+  }
+);
+
 export default function ServiceStatusTable(props) {
   const { embeddingButton } = props;
   const intl = useIntl();
@@ -340,16 +352,18 @@ export default function ServiceStatusTable(props) {
   const dispatch = useDispatch();
   
 
-  const { gottenInstances, pageSize, pageNum, namespaces, currentNamespace } =
-    useSelector(state => {
-      return {
-        gottenInstances: state.Instance.gottenInstances,
-        pageSize: state.Instance.pageSize,
-        pageNum: state.Instance.pageNum,
-        namespaces: state.Instance.namespaces,
-        currentNamespace: state.Instance.currentNamespace,
-      };
-    });
+  // const { gottenInstances, pageSize, pageNum, namespaces, currentNamespace } =
+  //   useSelector(state => {
+  //     return {
+  //       gottenInstances: state.Instance.gottenInstances,
+  //       pageSize: state.Instance.pageSize,
+  //       pageNum: state.Instance.pageNum,
+  //       namespaces: state.Instance.namespaces,
+  //       currentNamespace: state.Instance.currentNamespace,
+  //     };
+  //   });
+
+  const { gottenInstances, pageSize, pageNum, namespaces, currentNamespace } = useSelector(selectServiceStatus);
 
   useEffect(() => {
     if (localStorage.getItem('current_cluster')) {

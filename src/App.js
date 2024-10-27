@@ -2,15 +2,14 @@
  * src\App.js
  */
 import './App.css';
-import * as React from 'react';
+// import * as React from 'react';
+import { useEffect } from 'react';
 import { BrowserRouter } from 'react-router-dom';
 import MyRoutes from './Route';
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import { createSelector } from 'reselect';
 import { messages } from './lang/intl';
 import { IntlProvider } from 'react-intl';
-import { useEffect } from 'react';
-import { useDispatch } from 'react-redux';
 
 const selectLocale = createSelector(
   state => state.Lang.locale,

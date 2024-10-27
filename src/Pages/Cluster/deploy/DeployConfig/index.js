@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, forwardRef } from 'react';
 import { Box, Stack } from '@mui/material';
 import { KubeDeploymentCard } from '@/components/InfoCard';
 import { useIntl } from 'react-intl';
@@ -10,7 +10,7 @@ import {
   KubeConfirmButton,
 } from '@/components/Button';
 import { useDispatch } from 'react-redux';
-import { dispatch } from 'd3';
+// import { dispatch } from 'd3';
 import { deployWithJson } from '@/actions/instanceAction';
 import json5 from 'json5';
 import { SEVERITIES } from '../../../../components/CommonSnackbar';
@@ -29,7 +29,8 @@ const style = {
   fontFamily: fontFamily,
 };
 
-export default function DeployConfig(props) {
+// export default function DeployConfig(props) {
+const DeployConfig = forwardRef((props, ref) => {
   const { handleCancelClick } = props;
 
   const intl = useIntl();
@@ -113,4 +114,6 @@ export default function DeployConfig(props) {
       </KubeDeploymentCard>
     </Box>
   );
-}
+});
+
+export default DeployConfig;

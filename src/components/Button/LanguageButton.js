@@ -6,6 +6,7 @@ import { useState } from 'react';
 import TranslateIcon from '@mui/icons-material/Translate';
 import { UPDATE_LANGUAGE } from '../../actions/langAction';
 import { useDispatch, useSelector } from 'react-redux';
+import { createSelector } from 'reselect';
 import { useIntl } from 'react-intl';
 
 const styledButton = {
@@ -16,17 +17,18 @@ const styledButton = {
   textTransform:'none'
 };
 
+const selectLocale = createSelector(
+  state => state.Lang.locale,
+  locale => ({ locale })
+);
+
 export const LanguageButton = () => {
   const [languageSelectionEl, setLanguageSelectionEl] = useState(null);
   const languageSelectionElOpen = Boolean(languageSelectionEl);
   const dispatch = useDispatch();
   const intl = useIntl();
 
-  const { locale } = useSelector(state => {
-    return {
-      locale: state.Lang.locale,
-    };
-  });
+  const { locale } = useSelector(selectLocale);
 
   const items = [
     [

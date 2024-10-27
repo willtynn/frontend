@@ -1,7 +1,7 @@
 /**
  * src\Pages\Cluster\deploy\DeployProgress\index.js
  */
-import { useState, useEffect } from 'react';
+import { useState, useEffect, forwardRef } from 'react';
 import { Box, Stack } from '@mui/material';
 import { KubeDeploymentCard } from '@/components/InfoCard';
 import { fontFamily } from '../../../../utils/commonUtils';
@@ -32,7 +32,8 @@ const style = {
   fontFamily: fontFamily,
 };
 
-export default function DeployProgress(props) {
+// export default function DeployProgress(props) {
+const DeployProgress = forwardRef((props, ref) => {
   const { handleConfirmClick, handleCancelClick, totalStage, currentPage, basicInfoError, setShowError, isConfig } =
     props;
   const [currentStage, setCurrentStage] = useState(1);
@@ -132,4 +133,6 @@ export default function DeployProgress(props) {
       </KubeDeploymentCard>
     </Box>
   );
-}
+});
+
+export default DeployProgress;
