@@ -89,7 +89,7 @@ const initState = {
   create_by: "admin",
   exe_times: "0",
   evo_enable: "0",
-  evo_data_args: "\"dataArgs\":{},\"timeArgs\":{}", // 数据源所带参数
+  evo_data_args: "{\"dataArgs\":{},\"timeArgs\":{}}", // 数据源所带参数
   evo_ana_args: "{\"anaArgs\":{}}", // 分析算法所带参数  
   evo_exe_args: "{\"exeArgs\":{}}", // 执行算法所带参数
   //存储对应演化计划的执行结果，是数组
@@ -526,7 +526,7 @@ export default function EvolutionReducer(state = initState, action) {
         exe_alg: "",
         exe_mtd: "",
         create_by: "",
-        evo_data_args: "\"dataArgs\":{},\"timeArgs\":{}", // 数据源所带参数
+        evo_data_args: "{\"dataArgs\":{},\"timeArgs\":{}}", // 数据源所带参数
         evo_ana_args: "{\"anaArgs\":{}}", // 分析算法所带参数  
         evo_exe_args: "{\"exeArgs\":{}}", // 执行算法所带参数
       }
