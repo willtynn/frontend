@@ -97,7 +97,7 @@ export function HeadBar() {
               </Box>
             </Stack>
           </Grid>
-          <Grid xs={3}></Grid>
+          <Grid xs={3} item></Grid>
         </Grid>
       </Box>
 
