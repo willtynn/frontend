@@ -11,7 +11,7 @@ import { useIntl } from 'react-intl';
 import { StyledCheckbox } from '@/components/Checkbox';
 import { useSelector, useDispatch } from 'react-redux';
 import _, { constant, set } from 'lodash';
-import { EVO_UPDATE_ANA_ALG, EVO_UPDATE_EVO_ANA_ARGS, evo_get_algorithm,ana_register } from '../../../actions/evolutionAction';
+import { EVO_UPDATE_ANA_ALG, EVO_UPDATE_EVO_ANA_ARGS, evo_get_algorithm, ana_register } from '../../../actions/evolutionAction';
 import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
 import {
   KubeCancelButton,
@@ -22,11 +22,15 @@ import { Typography } from '@mui/material';
 import axios from 'axios';
 import qs from 'qs';
 import { useNavigate } from 'react-router-dom';
+import { isJsonString } from '../../../utils/commonUtils';
+import { setSnackbarMessageAndOpen } from '../../../actions/snackbarAction';
+import { SEVERITIES } from '../../../components/CommonSnackbar';
+import { saveAs } from 'file-saver';
 
 const regExp = new RegExp(/^[a-zA-Z0-9][a-zA-Z0-9 -]{0,251}[a-zA-Z0-9]$/);
 
 export function AnalyseConfiguration(props) {
-  const { showError, setError,close} = props;
+  const { showError, setError, close } = props;
 
   const {
     planName,
@@ -69,8 +73,16 @@ export function AnalyseConfiguration(props) {
     }
   })
 
+  //表示JSON字符串验证结果
+  const [jsonRight, setJsonRight] = useState(false);
   const handleAnaArgs = e => {
     dispatch({ type: EVO_UPDATE_EVO_ANA_ARGS, data: e.target.value });
+    //如果不符合JSON格式那么就会提示报错
+    if (!isJsonString(evo_ana_args)) {
+      setJsonRight(true);
+    } else {
+      setJsonRight(false);
+    }
   }
 
   //下面与高级配置相关，即增加用户自己的算法
@@ -89,20 +101,40 @@ export function AnalyseConfiguration(props) {
   const handleNewAlgName = e => {
     setNewAnaAlgName(e.target.value);
   }
-
   const handleNewAlgDescribe = e => {
     setNewAnaAlgDescribe(e.target.value);
   }
   const handleNewAlgContent = e => {
     setNewAnaAlgContent(e.target.value);
   }
-
+  //处理新算法的注册，将其添加到算法表当中
   const handleRegister = () => {
     let data = {
       analyze_name: newAnaAlgName,
       analyze_content: newAnaAlgContent,
       analyze_text: newAnaAlgDescribe
     }
+    if (data.analyze_name == null || '') {
+      dispatch(
+        setSnackbarMessageAndOpen(
+          'common.errorMessage',
+          { msg: "新算法名称不能为空" },
+          SEVERITIES.warning
+        )
+      );
+      return;
+    }
+    if (data.analyze_content == null || '') {
+      dispatch(
+        setSnackbarMessageAndOpen(
+          'common.errorMessage',
+          { msg: "新算法内容不能为空" },
+          SEVERITIES.warning
+        )
+      );
+      return;
+    }
+
     dispatch(ana_register(data));
     //关闭窗口进行刷新
     close();
@@ -168,10 +200,18 @@ export function AnalyseConfiguration(props) {
           variant='outlined'
           value={evo_ana_args}
           onChange={handleAnaArgs}
-          validation={{
-            required: "First Name is required!"
-          }}
         />
+        {/* 是否通过JSON格式验证  */}
+        {jsonRight && <Typography
+          sx={{
+            color: '#DC143C',
+            fontSize: '12px',
+            lineHeight: 1.67,
+            fontWeight: 400,
+          }}
+        >
+          {"您输入的参数格式不正确"}
+        </Typography>}
         <br></br>
         <KubeCancelButton
           onClick={handleNewAlgotithm}
