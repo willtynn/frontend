@@ -33,7 +33,7 @@ export const LanguageButton = () => {
       <TranslateIcon />,
       '中文',
       () => {
-        dispatch({ type: UPDATE_LANGUAGE, data: 'cn' });
+        dispatch({ type: UPDATE_LANGUAGE, data: 'zh-CN' });
       },
     ],
     [
@@ -74,7 +74,7 @@ export const LanguageButton = () => {
             lineHeight: 1.67,
           }}
         >
-          {`${intl.messages['lang.language']}: ${locale === "cn"? "中文" : "English"}`}
+          {`${intl.messages['lang.language']}: ${locale === "zh-CN"? "中文" : "English"}`}
         </span>
       </KubeTransparentButton>
     </>

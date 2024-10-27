@@ -223,6 +223,7 @@ export const messages = {
     majorVersion:"Major Version",
     minorVersion:"Minor Version",
     patchVersion:"Patch Version",
+    export:"Export JSON",
   },
   serviceDependency: {
     serviceDependencyNotFound:

@@ -19,5 +19,5 @@ function flattenMessages(nestedMessages, prefix = '') {
 
 export const messages = {
   en: flattenMessages(enMessages),
-  cn: flattenMessages(cnMessages),
+  'zh-CN': flattenMessages(cnMessages),
 };
