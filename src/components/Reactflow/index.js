@@ -282,7 +282,7 @@ export const CustomNode = memo(({ data, isConnectable }) => {
         <Stack sx={{ margin: '8px 13px' }} direction='column' spacing={0.25}>
           {data.infoList &&
             data.infoList.map((item, index) => (
-              <Stack direction='row' spacing={0.5}>
+              <Stack key={index} direction='row' spacing={0.5}>
                   <Box sx={labelStyle }>{item}</Box>
                   <Box sx={valueStyle }>{data[item]}</Box>
               </Stack>

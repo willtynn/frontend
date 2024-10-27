@@ -9,6 +9,7 @@ import {
   } from '@mui/material';
   import React, { useEffect, useState } from 'react';
   import { useDispatch, useSelector } from 'react-redux';
+  import { createSelector } from 'reselect';
   import { closeSnackbar } from '../../actions/snackbarAction';
   import { FormattedMessage } from 'react-intl';
   import SuccessIcon from '../../assets/popup/success.svg';
@@ -93,6 +94,19 @@ import {
     );
   }
   
+  const selectSnackbar = createSelector(
+    state => state.Snack.open,
+    state => state.Snack.messageId,
+    state => state.Snack.values,
+    state => state.Snack.severity,
+    state => state.Snack.position,
+    state => state.Snack.action,
+    state => state.Snack.key,
+    (open, messageId, values, severity, position, action, key) => {
+      return { open, messageId, values, severity, position, action, key };
+    }
+  );
+
   /**
    * 【注意】：
    *    已经在全局创建了这个组件，在需要的地方直接dispatch就行了
@@ -123,18 +137,19 @@ import {
   export default function CommonSnackBar(props) {
     const { sx, ...other } = props;
     const dispatch = useDispatch();
-    const { open, messageId, values, severity, position, action, key } = useSelector(
-      state => {
-        return {
-          open: state.Snack.open,
-          messageId: state.Snack.messageId,
-          values: state.Snack.values,
-          severity: state.Snack.severity,
-          position: state.Snack.position,
-          action: state.Snack.action,
-        };
-      }
-    );
+    // const { open, messageId, values, severity, position, action, key } = useSelector(
+    //   state => {
+    //     return {
+    //       open: state.Snack.open,
+    //       messageId: state.Snack.messageId,
+    //       values: state.Snack.values,
+    //       severity: state.Snack.severity,
+    //       position: state.Snack.position,
+    //       action: state.Snack.action,
+    //     };
+    //   }
+    // );
+    const { open, messageId, values, severity, position, action } = useSelector(selectSnackbar);
   
     // 真正展示出来的values，会通过intl取一遍值
     const [displayValues, setDisplayValues] = useState({});

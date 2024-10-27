@@ -1,7 +1,7 @@
 import * as actions from "../actions/langAction";
 
 const initState = {
-  locale: "cn"
+  locale: "zh-CN"
 }
 
 export default function LangReducer(state = initState, action) {

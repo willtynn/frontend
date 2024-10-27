@@ -6,6 +6,7 @@ import { useState } from 'react';
 import TranslateIcon from '@mui/icons-material/Translate';
 import { UPDATE_LANGUAGE } from '../../actions/langAction';
 import { useDispatch, useSelector } from 'react-redux';
+import { createSelector } from 'reselect';
 import { useIntl } from 'react-intl';
 
 const styledButton = {
@@ -16,31 +17,36 @@ const styledButton = {
   textTransform:'none'
 };
 
+const selectLocale = createSelector(
+  state => state.Lang.locale,
+  locale => ({ locale })
+);
+
 export const LanguageButton = () => {
   const [languageSelectionEl, setLanguageSelectionEl] = useState(null);
   const languageSelectionElOpen = Boolean(languageSelectionEl);
   const dispatch = useDispatch();
   const intl = useIntl();
 
-  const { locale } = useSelector(state => {
-    return {
-      locale: state.Lang.locale,
-    };
-  });
+  const { locale } = useSelector(selectLocale);
 
   const items = [
     [
       <TranslateIcon />,
       '中文',
       () => {
-        dispatch({ type: UPDATE_LANGUAGE, data: 'cn' });
+        localStorage.setItem('lang', 'zh-CN');
+        dispatch({ type: UPDATE_LANGUAGE, data: 'zh-CN' });
+        handleCloseLanguageSelection();
       },
     ],
     [
       <TranslateIcon />,
       'English',
       () => {
+        localStorage.setItem('lang', 'en');
         dispatch({ type: UPDATE_LANGUAGE, data: 'en' });
+        handleCloseLanguageSelection();
       },
     ],
   ];
@@ -49,6 +55,10 @@ export const LanguageButton = () => {
     setLanguageSelectionEl(e.currentTarget);
   };
 
+  const handleCloseLanguageSelection = () => {
+    setLanguageSelectionEl(null);
+  }
+
 
   return (
     <>
@@ -56,7 +66,7 @@ export const LanguageButton = () => {
         id='language-selection-popover'
         open={languageSelectionElOpen}
         anchorEl={languageSelectionEl}
-        handleClose={() => setLanguageSelectionEl(null)}
+        handleClose={handleCloseLanguageSelection}
         items={items}
         sx={{
           mt: '8px !important',
@@ -74,7 +84,7 @@ export const LanguageButton = () => {
             lineHeight: 1.67,
           }}
         >
-          {`${intl.messages['lang.language']}: ${locale === "cn"? "中文" : "English"}`}
+          {`${intl.messages['lang.language']}: ${locale === "zh-CN"? "中文" : "English"}`}
         </span>
       </KubeTransparentButton>
     </>

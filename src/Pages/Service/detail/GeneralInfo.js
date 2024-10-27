@@ -77,6 +77,8 @@ export default function GeneralInfo(props) {
     const from = localStorage.getItem("serviceFrom");
     if(from === "dependency") {
       navigate('/service/dependency');
+    } else if(from === "cluster_deploy") {
+      navigate('/cluster/deploy');
     } else {
       navigate('/service/query');
     }
