@@ -219,6 +219,12 @@ export const messages = {
     minorVersion:"次版本号",
     patchVersion:"修订号",
     export:"导出 JSON",
+    exportInfo:"导出信息",
+    download:"下载",
+    startTime:"起始时间",
+    endTime:"截止时间",
+    step:"采样间隔",
+    downloadError:"下载失败，请稍后重试...",
   },
   serviceDependency: {
     serviceDependencyNotFound: '所查询服务没有相关调用关系...',

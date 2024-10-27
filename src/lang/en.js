@@ -224,6 +224,12 @@ export const messages = {
     minorVersion:"Minor Version",
     patchVersion:"Patch Version",
     export:"Export JSON",
+    exportInfo:"Export Information",
+    download:"Download",
+    startTime: "Start At",
+    endTime: "End At",
+    step: "Step",
+    downloadError:"Download failed, please try again later...",
   },
   serviceDependency: {
     serviceDependencyNotFound:
