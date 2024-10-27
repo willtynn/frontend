@@ -126,7 +126,14 @@ export const messages = {
     args:'Args',
     frequency:'Frequency',
     loading:'Loading',
-    modify:'Modify'
+    modify:'Modify',
+    last: 'Last',
+    minute: 'minute',
+    hour: 'hour',
+    day: 'day',
+    minutes: 'minutes',
+    hours: 'hours',
+    days: 'days',
   },
   lang: {
     language: 'Language',

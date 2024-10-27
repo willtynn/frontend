@@ -127,7 +127,13 @@ export const messages = {
     frequency:'频率',
     loading:'加载中',
     modify: '修改',
-
+    last: '最近',
+    minute: '分钟',
+    hour: '小时',
+    day: '天',
+    minutes: '分钟',
+    hours: '小时',
+    days: '天',
   },
   lang: {
     language: '语言',
