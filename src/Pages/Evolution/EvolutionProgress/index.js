@@ -67,7 +67,7 @@ export function EvolutionProgress(props) {
     setCurrentStage(1);
   };
   //获取到相关的需要提交的变量
-  var {
+  const {
     evo_id,
     evo_name,
     data_resource,
@@ -90,14 +90,15 @@ export function EvolutionProgress(props) {
       ana_alg: state.Evolution.ana_alg,
       exe_alg: state.Evolution.exe_alg,
       exe_mtd: state.Evolution.exe_mtd,
-      evo_remarks: state.Evolution.evo_remakes,
       create_by: state.Evolution.create_by,
+      evo_remarks: state.Evolution.evo_remakes,
       cre_time: state.Evolution.cre_time,
       evo_data_args: state.Evolution.evo_data_args,
       evo_ana_args:state.Evolution.evo_ana_args,
       evo_exe_args:state.Evolution.evo_exe_args,
     };
   });
+
   //提交表单，此处还可以做一个验证
   async function handleConfirmButtonClick(){
     var plan = {

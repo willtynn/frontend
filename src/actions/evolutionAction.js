@@ -792,8 +792,7 @@ export function evo_modify(newPlan){
             SEVERITIES.warning
           )
         );
-      }else{        //正确返回的情况下则更新演化计划列表以便于展示
-        //TODO:此处修改未必正确
+      }else{        
         if(res.data.code === 403){
           dispatch(
             setSnackbarMessageAndOpen(
@@ -804,7 +803,6 @@ export function evo_modify(newPlan){
           );
           return;
         }
-        dispatch({ type: EVO_MODIFY,data: res.data});
         dispatch(
           setSnackbarMessageAndOpen(
             'common.confirm',

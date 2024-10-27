@@ -423,6 +423,10 @@ export default function EvolutionReducer(state = initState, action) {
         exe_alg: data.exe_alg,
         exe_mtd: data.exe_mtd,
         create_by: data.create_by,
+        evo_data_args: data.evo_data_args,
+        evo_ana_args: data.evo_ana_args,
+        evo_exe_args: data.evo_exe_args,
+        
       }
 
     case actions.EVO_GET_DATASOURCE:
@@ -525,7 +529,7 @@ export default function EvolutionReducer(state = initState, action) {
         ana_alg: "",
         exe_alg: "",
         exe_mtd: "",
-        create_by: "",
+        create_by: "admin",
         evo_data_args: "{\"dataArgs\":{},\"timeArgs\":{}}", // 数据源所带参数
         evo_ana_args: "{\"anaArgs\":{}}", // 分析算法所带参数  
         evo_exe_args: "{\"exeArgs\":{}}", // 执行算法所带参数
