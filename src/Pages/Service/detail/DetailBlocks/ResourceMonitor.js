@@ -706,7 +706,7 @@ function PodResourceMonitor(props) {
                     >
                       {intl.messages['serviceOverview.startTime']}
                     </Box>
-                    <KubeDateViewer value={tmpStart} width="140px"/>
+                    <KubeDateViewer value={start} width="140px"/>
                   </Stack>
                   <Stack direction='row' spacing={2} sx={{ paddingBottom: "3px" }}>
                     <Box
@@ -722,7 +722,7 @@ function PodResourceMonitor(props) {
                     >
                       {intl.messages['serviceOverview.endTime']}
                     </Box>
-                    <KubeDateViewer value={tmpEnd} width="140px"/>
+                    <KubeDateViewer value={end} width="140px"/>
                   </Stack>
                   <Stack direction='row' spacing={2}>
                     <Box
