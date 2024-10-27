@@ -39,21 +39,6 @@ import { SEVERITIES } from '@/components/CommonSnackbar';
 
 import { baseURLLink } from '@/actions/instanceAction';
 
-const RangeCandidate = [
-  ['最近10分钟', -10, 'minute'],
-  ['最近20分钟', -20, 'minute'],
-  ['最近30分钟', -30, 'minute'],
-  ['最近1小时', -1, 'hour'],
-  ['最近2小时', -2, 'hour'],
-  ['最近3小时', -3, 'hour'],
-  ['最近5小时', -5, 'hour'],
-  ['最近12小时', -12, 'hour'],
-  ['最近1天', -1, 'day'],
-  ['最近2天', -2, 'day'],
-  ['最近3天', -3, 'day'],
-  ['最近7天', -7, 'day'],
-];
-
 export default function ResourceMonitor(props) {
   const { service } = props;
   const intl = useIntl();
@@ -133,6 +118,28 @@ function PodResourceMonitor(props) {
 
   // const [downloadInfo, setDownloadInfo] = useState(null);
   const [downloadStep, setDownloadStep] = useState(600);
+  
+  let last_ = intl.messages['common.last'];
+  // let minute_ = intl.messages['common.minute'];
+  let hour_ = intl.messages['common.hour'];
+  let day_ = intl.messages['common.day'];
+  let minutes_ = intl.messages['common.minutes'];
+  let hours_ = intl.messages['common.hours'];
+  let days_ = intl.messages['common.days'];
+  const RangeCandidate = [
+    [last_ + ' 10 ' + minutes_, -10, 'minute'],
+    [last_ + ' 20 ' + minutes_, -20, 'minute'],
+    [last_ + ' 30 ' + minutes_, -30, 'minute'],
+    [last_ + ' 1 ' + hour_, -1, 'hour'],
+    [last_ + ' 2 ' + hours_, -2, 'hour'],
+    [last_ + ' 3 ' + hours_, -3, 'hour'],
+    [last_ + ' 5 ' + hours_, -5, 'hour'],
+    [last_ + ' 12 ' + hours_, -12, 'hour'],
+    [last_ + ' 1 ' + day_, -1, 'day'],
+    [last_ + ' 2 ' + days_, -2, 'day'],
+    [last_ + ' 3 ' + days_, -3, 'day'],
+    [last_ + ' 7 ' + days_, -7, 'day'],
+  ];
 
   const dispatch = useDispatch();
 
