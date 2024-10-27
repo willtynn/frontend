@@ -22,7 +22,7 @@ function App() {
   return (
     <IntlProvider
       locale={locale}
-      defaultLocale='cn'
+      defaultLocale='zh-CN'
       messages={messages[locale]}
     >
       <div className='Myindex' style={{ backgroundColor: '#EFF4F9' }}>

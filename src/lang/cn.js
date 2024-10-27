@@ -213,6 +213,7 @@ export const messages = {
     majorVersion:"主版本号",
     minorVersion:"次版本号",
     patchVersion:"修订号",
+    export:"导出 JSON",
   },
   serviceDependency: {
     serviceDependencyNotFound: '所查询服务没有相关调用关系...',
