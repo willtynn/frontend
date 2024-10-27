@@ -1,7 +1,7 @@
 /**
  * src\Pages\Menu\ClusterSelectModal.js
  */
-import { useState, useEffect, useMemo } from 'react';
+import { useState, useEffect, useMemo, forwardRef  } from 'react';
 import { Box, Stack, InputAdornment } from '@mui/material';
 import { KubeDeploymentCard } from '@/components/InfoCard';
 import { fontFamily } from '@/utils/commonUtils';
@@ -28,7 +28,8 @@ const style = {
   fontFamily: fontFamily,
 };
 
-export default function ClusterSelectModal(props) {
+// export default function ClusterSelectModal(props) {
+const ClusterSelectModal = forwardRef((props, ref) => {
   const { handleCancelClick } = props;
 
   const [clusterSearchValue, setClusterSearchValue] = useState('');
@@ -318,4 +319,6 @@ export default function ClusterSelectModal(props) {
       </KubeDeploymentCard>
     </Box>
   );
-}
+});
+
+export default ClusterSelectModal;
