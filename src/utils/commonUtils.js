@@ -153,3 +153,13 @@ export const encodeId = (id) => {
 export const parseId = (id) => {
   return id.replace(/___/, "/");
 }
+
+//辅助判断是否为JSON字符串
+export const isJsonString = (str) => {
+  try {
+    JSON.parse(str);
+  } catch (e) {
+    return false;
+  }
+  return true;
+}

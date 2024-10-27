@@ -34,6 +34,10 @@ import { DateTimePicker } from '@mui/x-date-pickers/DateTimePicker';
 import { KubeDatePicker } from '../../../components/DatePicker';
 import { Typography } from '@mui/material';
 import axios from 'axios';
+import { setSnackbarMessageAndOpen } from '../../../actions/snackbarAction';
+import { SEVERITIES } from '../../../components/CommonSnackbar';
+import { saveAs } from 'file-saver';
+import { isJsonString } from '../../../utils/commonUtils';
 
 const regExp = new RegExp(/^[a-zA-Z0-9][a-zA-Z0-9 -]{0,251}[a-zA-Z0-9]$/);
 
@@ -101,18 +105,69 @@ export function MonitorConfiguration(props) {
   };
 
   const handleSaveHighConfig = () => {
+    if (startTime != null || endTime != null) {
+      console.log(startTime);
+      console.log(endTime)
+      var timeNow = Date.now(); //获取当前时间戳，单位：毫秒
+      if (endTime!= null && endTime <= timeNow) {
+        dispatch(
+          setSnackbarMessageAndOpen(
+            'common.errorMessage',
+            { msg: "结束时间不能早于现在" },
+            SEVERITIES.warning
+          )
+        );
+        return;
+      }
+
+      if (startTime != null && endTime != null && endTime < startTime) {
+        dispatch(
+          setSnackbarMessageAndOpen(
+            'common.errorMessage',
+            { msg: "结束时间不能早于开始时间" },
+            SEVERITIES.warning
+          )
+        );
+        return;
+      }
+    }
     //把高级配置的参数给交过去
     for (var i = 0; i < args.length; i++) {
       if (args[i].startsWith("\"timeArgs\"")) {
-        args[i] = "\"timeArgs\":{\"startTime\":"+startTime+",\"endTime\":"+endTime+"}}";
+        args[i] = "\"timeArgs\":{\"startTime\":" + startTime + ",\"endTime\":" + endTime + "}}";
       }
       if (args[i].startsWith("\"dataArgs\"") || args[i].startsWith("{\"dataArgs\"")) {
-        args[i] = "{\"dataArgs\":{"+dataResourceArgs+"}"
+        args[i] = "{\"dataArgs\":{" + dataResourceArgs + "}"
       }
+    }
+    
+    //当数据源参数不为空的时候就需要进行Json格式判断
+    if (dataResourceArgs != null || dataResourceArgs != "") {
+      console.log(args.join(","));
+      if (!isJsonString(args.join(","))) {
+        dispatch(
+          setSnackbarMessageAndOpen(
+            'common.errorMessage',
+            { msg: "您的数据源格式错误,请使用指定格式填写" },
+            SEVERITIES.warning
+          )
+        );
+        return;
+      }
+
     }
 
     console.log(args.join(","));
+    //提交到Redux
     dispatch({ type: EVO_UPDATE_EVO_DATA_ARGS, data: args.join(",") });
+    //提示用户成功
+    dispatch(
+      setSnackbarMessageAndOpen(
+        'common.confirm',
+        { msg: "高级配置保存成功" },
+        SEVERITIES.success
+      )
+    );
   };
 
 
