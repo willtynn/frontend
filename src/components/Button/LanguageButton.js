@@ -33,14 +33,18 @@ export const LanguageButton = () => {
       <TranslateIcon />,
       '中文',
       () => {
+        localStorage.setItem('lang', 'zh-CN');
         dispatch({ type: UPDATE_LANGUAGE, data: 'zh-CN' });
+        handleCloseLanguageSelection();
       },
     ],
     [
       <TranslateIcon />,
       'English',
       () => {
+        localStorage.setItem('lang', 'en');
         dispatch({ type: UPDATE_LANGUAGE, data: 'en' });
+        handleCloseLanguageSelection();
       },
     ],
   ];
@@ -49,6 +53,10 @@ export const LanguageButton = () => {
     setLanguageSelectionEl(e.currentTarget);
   };
 
+  const handleCloseLanguageSelection = () => {
+    setLanguageSelectionEl(null);
+  }
+
 
   return (
     <>
@@ -56,7 +64,7 @@ export const LanguageButton = () => {
         id='language-selection-popover'
         open={languageSelectionElOpen}
         anchorEl={languageSelectionEl}
-        handleClose={() => setLanguageSelectionEl(null)}
+        handleClose={handleCloseLanguageSelection}
         items={items}
         sx={{
           mt: '8px !important',
