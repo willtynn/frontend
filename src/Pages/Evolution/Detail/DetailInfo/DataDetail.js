@@ -96,7 +96,7 @@ export function DataDetail() {
     
     const getData = async ()=> {
         console.log("开始请求数据");
-        await axios("http://localhost:1234/evolution/getdata"+DataResource.name).then(res => {
+        await axios("http://localhost:1234/evolution/getdata"+currentPlan.evo_id).then(res => {
             res.data.dataTime = getHourMinSec(res.data.dataTime);
             setDataList(dataList => [...dataList,
             {
