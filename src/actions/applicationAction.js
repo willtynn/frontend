@@ -2,7 +2,7 @@ import axios from 'axios';
 import { setSnackbarMessageAndOpen } from './snackbarAction';
 import { SEVERITIES } from '../components/CommonSnackbar';
 import { saveAs } from 'file-saver';
-import { Expand } from '@mui/icons-material';
+import { Expand, ExposureTwoTone } from '@mui/icons-material';
 
 export const UPDATE_PLAN_NAME = 'UPDATE_PLAN_NAME';
 export const UPDATE_PLAN_COMMENT = 'UPDATE_PLAN_COMMENT';
@@ -85,6 +85,9 @@ export const UPDATE_CURRENT_JOINT_TEST_PLAN_SON = 'UPDATE_CURRENT_JOINT_TEST_PLA
 export const UPDATE_AGGREGATE_ENHANCE_REPORT = 'UPDATE_AGGREGATE_ENHANCE_REPORT';
 export const UPDATE_AGGREGATE_GROUP_REPORT = 'UPDATE_AGGREGATE_GROUP_REPORT';
 export const UPDATE_JOINT_CHANGE_FLAG = 'UPDATE_JOINT_CHANGE_FLAG';
+export const UPDATE_JOINT_PLAN_NAME = 'UPDATE_JOINT_PLAN_NAME';
+export const UPDATE_JOINT_PLAN_COMMENT = 'UPDATE_JOINT_PLAN_COMMENT';
+export const RESET_JOINT_PLAN = 'RESET_JOINT_PLAN';
 
 
 //const baseURLLink = 'http://192.168.1.104:14447';
@@ -863,6 +866,7 @@ export function createJointTestPlan(jointTestPlan) {
             SEVERITIES.success
           )
         );
+        dispatch(getJointTestPlans());
       } else if (res.data.code === 1) {
         // alert(res.data.message)
         dispatch(

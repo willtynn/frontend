@@ -449,7 +449,8 @@ export const messages = {
     stepReport: 'Step Report',
     communicationPressureBoundary: 'Communication pressure boundary',
     stepPressureDiagram: 'Stepped pressure diagram',
-    groupAggregateReport: 'Thread Group Aggregate Report'
+    groupAggregateReport: 'Thread Group Aggregate Report',
+    comment: 'Comment'
   },
   jointStressTesting: {
     performancePressureTest: 'Multi-load Performance Stress Test',
@@ -460,6 +461,13 @@ export const messages = {
     testStartMsg: 'Execute Joint Test Plan Success',
     horiCoordinate: 'Horizontal Coordinate',
     vertiCoordinate: 'Vertical Coordinate',
+    name: 'Joint Test Plan Name',
+    nameDescription:'Please input the name of joint test plan',
+    nameEmptyError: 'The name of joint test plan can not be empty',
+    comment: 'The comment of this joint test plan',
+    commentDescription: "Please input the simple comment of this joint test plan",
+    jointStressTesting: "Subtest Plans",
+    jointTestPlanName: 'Joint Test Plan Name',
 
   },
   routectl: {

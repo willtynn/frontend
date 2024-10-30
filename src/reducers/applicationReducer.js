@@ -448,34 +448,52 @@ export default function ApplicationReducer(state = initState, action) {
       };
 
     case actions.UPDATE_JOINT_TEST_PLANS:
-        return {
-          ...state,
-          jointTestPlans: data,
+      return {
+        ...state,
+        jointTestPlans: data,
       };
 
-      case actions.UPDATE_CURRENT_JOINT_TEST_PLAN:
-          return {
-            ...state,
-            currentJointPlan: data,
+    case actions.UPDATE_CURRENT_JOINT_TEST_PLAN:
+      return {
+        ...state,
+        currentJointPlan: data,
       };
 
-      case actions.UPDATE_CURRENT_JOINT_TEST_PLAN_SON:
-          return {
-            ...state,
-            currentJointPlanSon: data,
+    case actions.UPDATE_CURRENT_JOINT_TEST_PLAN_SON:
+      return {
+        ...state,
+        currentJointPlanSon: data,
       };
 
-      case actions.UPDATE_AGGREGATE_ENHANCE_REPORT:
-          return {
-            ...state,
-            aggregateReportEnhance: data,
+    case actions.UPDATE_AGGREGATE_ENHANCE_REPORT:
+      return {
+        ...state,
+        aggregateReportEnhance: data,
       };
 
-      case actions.UPDATE_AGGREGATE_GROUP_REPORT:
-        return {
-          ...state,
-          aggregateGroupReport: data,
-    };
+    case actions.UPDATE_AGGREGATE_GROUP_REPORT:
+      return {
+        ...state,
+        aggregateGroupReport: data,
+      };
+
+    case actions.UPDATE_JOINT_PLAN_NAME:
+      return {
+        ...state,
+        jointPlanName: data
+      };
+    case actions.UPDATE_JOINT_PLAN_COMMENT:
+      return {
+        ...state,
+        jointPlanComment: data
+      };
+    case actions.RESET_JOINT_PLAN:
+      return {
+        ...state,
+        jointPlanName: '',
+        jointPlanComment: '',
+        testPlans:[],
+      };
     default:
       return state;
   }

@@ -442,7 +442,8 @@ export const messages = {
     stepReport: '阶梯报告',
     communicationPressureBoundary: '通信压力边界',
     stepPressureDiagram: '阶梯压力图',
-    groupAggregateReport: '线程组聚合报告'
+    groupAggregateReport: '线程组聚合报告',
+    comment: '描述'
   },
   jointStressTesting: {
     performancePressureTest: '多负载性能压测',
@@ -453,6 +454,15 @@ export const messages = {
     testStartMsg: '执行联合测试计划成功',
     horiCoordinate: '横坐标',
     vertiCoordinate: '纵坐标',
+    name: '联合测试计划名称',
+    nameDescription: '请输入联合测试计划的名称',
+    nameEmptyError: '测试计划名称不可为空',
+    comment: '联合测试计划描述',
+    commentDescription: "请输入对此联合测试计划的简单描述",
+    sonTestPlans: '子测试计划',
+    jointTestPlanName: '联合测试计划名称',
+
+
   },
   routeTrace: {
     title: '路由链路',

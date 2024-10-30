@@ -37,9 +37,7 @@ import Task from '@/assets/Task.svg';
 import { NormalBoldFont, SmallLightFont } from '@/components/Fonts';
 import { useNavigate } from 'react-router-dom';
 import {
-  UPDATE_GROUP_EDIT,
-  RESET_GROUP,
-  RESET_PLAN,
+  RESET_JOINT_PLAN,
   UPDATE_TEST_PLAN_PAGE_NUM,
   UPDATE_TEST_PLAN_PAGE_SIZE,
   getJointTestPlans,
@@ -284,9 +282,7 @@ export default function JointStressTesting() {
   };
 
   const resetParameters = () => {
-    dispatch({ type: UPDATE_GROUP_EDIT, data: false });
-    dispatch({ type: RESET_PLAN });
-    dispatch({ type: RESET_GROUP });
+    dispatch({ type: RESET_JOINT_PLAN});
   };
 
   const isDuplicate = () => {
@@ -303,6 +299,7 @@ export default function JointStressTesting() {
     setPlanOpen(false);
   };
 
+  
   const handleConfirmClick = () => {
     resetParameters();
     setPlanOpen(false);
@@ -738,7 +735,7 @@ export default function JointStressTesting() {
                           handleConfirmClick={handleConfirmClick}
                           handleCancelClick={handleCancelClick}
                           showError={showError}
-                          setShowError={setShowError}
+                          setError={setShowError}
               />
        </StyledModal> 
 
