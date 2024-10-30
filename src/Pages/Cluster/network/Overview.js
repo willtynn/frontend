@@ -41,7 +41,7 @@ import {
     getAllNetworkControlInfo,
     getNetworkControlInfo,
     deleteBandwidthControl,
-    UPDATE_ALL_NETWORK_CONTROL_INFO,
+    UPDATE_ALL_NETWORK_CONTROL_INFO, setBandwidthControl,
 } from '../../../actions/clusterAction';
 import { EclipseTransparentButton } from '../../../components/Button';
 import { KubeCheckbox } from '../../../components/Checkbox';
@@ -102,8 +102,8 @@ export default function NetworkNodeControl(props) {
     const [project, setProject] = useState(null);
     const [projectList, setProjectList] = useState([]);
     const [searchList, setSearchList] = useState([]);
-    const [filteredData, setFilteredData] = useState([]);
-    const [tableData, setTableData] = useState([]);
+    const [filteredData, setFilteredData] = useState(data || []);
+    const [tableData, setTableData] = useState(data || []);
     const [count, setCount] = useState(0);
     const [order, setOrder] = useState('asc');
     const [orderBy, setOrderBy] = useState('name');
@@ -136,7 +136,12 @@ export default function NetworkNodeControl(props) {
     const [allData, setAllData] = useState(data || []);
 
     useEffect(() => {
-        setAllData(data);
+        if (data) {
+            setAllData(data);
+            setTableData(data);
+            setFilteredData(data);
+            setCount(data.length); // 更新记录数
+        }
     }, [data]);
 
     /*useEffect(() => {
@@ -257,27 +262,6 @@ export default function NetworkNodeControl(props) {
         setSearchBy([intl.messages['cluster.localIp']]);
     }, [intl.messages]);
 
-
-    /*useEffect(() => {
-        if (!allData) {
-            return;
-        }
-        const items = allData.flat();
-        console.log('Processed items:', items);
-        const tmpData = items
-            .filter(value => value && value.localIp)
-            .map(value => ({
-                localIp: value.localIp || '',
-                targetIp: value.targetIp || '',
-                bandWidth: value.bandWidth || '',
-            }));
-        console.log('tmpData:', tmpData);
-        setCount(tmpData.length);
-        setTableData(tmpData);
-        setFilteredData(tmpData);
-    }, [allData]);
-
-     */
     useEffect(() => {
         if (!allData) {
             return;
@@ -292,6 +276,8 @@ export default function NetworkNodeControl(props) {
         setTableData(tmpData);
         setFilteredData(tmpData);
     }, [allData]);
+
+
 
     useEffect(() => {
         if (searchValue) {
@@ -456,9 +442,22 @@ export default function NetworkNodeControl(props) {
         setAddOpen(false);
     };
 
-    const handleConfirmClick = () => {
+    // const handleConfirmClick = () => {
+    //     resetParameters();
+    //     setAddOpen(false);
+    // };
+
+    const handleConfirmClick = async (newBandwidthData) => {
+        const newData = await dispatch(setBandwidthControl(newBandwidthData));
+        if (newData) {
+            // 添加新数据到当前表格数据
+            setTableData(prevData => [...prevData, newData]); // 直接更新 tableData
+            setFilteredData(prevData => [...prevData, newData]); // 也更新过滤后的数据
+            setCount(prevCount => prevCount + 1); // 增加记录数
+        }
         resetParameters();
         setAddOpen(false);
+        dispatch(getAllNetworkControlInfo());
     };
 
     const handleCancelClick = () => {
