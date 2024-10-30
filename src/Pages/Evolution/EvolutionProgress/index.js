@@ -146,7 +146,7 @@ export function EvolutionProgress(props) {
     } else if (currentStage === 2) {
       return <AnalyseConfiguration close={handleCancelClick} showError={showError} setError={setEvolutionPlanError} />;
     } else if (currentStage === 3) {
-      return <PlanConfiguration showError={showError} setError={setEvolutionPlanError} />;
+      return <PlanConfiguration close={handleCancelClick} showError={showError} setError={setEvolutionPlanError} />;
     } else {
       return <ExecuteConfiguration showError={showError} setError={setEvolutionPlanError} />;
     }

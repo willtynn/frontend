@@ -336,7 +336,6 @@ export default function EvolutionPlan() {
     );
   },[pageNum, pageSize,searchList,evo_plans]);
 
-  // const visibleRows = evo_plans
 
   const handlePlanClick = () => {
     setPlanOpen(true);
@@ -491,7 +490,6 @@ export default function EvolutionPlan() {
               fontFamily: fontFamily,
             }}
           >
-            {/* //TODO:此处修改，可能需要调整回searchBy */}
             {searchByList.map((value, index) => {
               return (
                 <Box

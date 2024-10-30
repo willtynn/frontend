@@ -1047,6 +1047,7 @@ export function evo_get_plan_result(id){
   };
 }
 
+//注册分析算法
 export function ana_register(data){
   const url = '/evolution/alg/anaAlg/register'
   return async dispatch => {
@@ -1076,6 +1077,62 @@ export function ana_register(data){
             setSnackbarMessageAndOpen(
               'common.errorMessage',
               {msg: "创建分析算法失败，名称重复"},
+              SEVERITIES.warning
+            )
+          );
+          return;
+        }
+        dispatch(
+          setSnackbarMessageAndOpen(
+            'common.confirm',
+            {},
+            SEVERITIES.success
+          )
+        );
+      }
+    } catch {
+      dispatch(
+        setSnackbarMessageAndOpen(
+          'common.erroMessage',
+          {msg: "未能成功连接后端，请等待后端服务重启"},
+          SEVERITIES.warning
+        )
+      );
+    }
+  };
+}
+
+
+//注册执行算法
+export function exe_register(data){
+  const url = '/evolution/alg/exeAlg/register'
+  return async dispatch => {
+    try {
+      const res = await axios_for_evolution.post(
+        url,
+        {
+          ...data
+        },
+        {
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        }
+      );
+      if(res.status !== 200){      //未能正确返回则提示用户  status为返回头自带的状态字段，暂时可以用来表示是否成功返回，但是不够灵活
+        dispatch(
+          setSnackbarMessageAndOpen(
+            'common.errorMessage',
+            {msg: "创建新执行算法失败，请检查算法相关信息或网络情况"},
+            SEVERITIES.warning
+          )
+        );
+      }else{        //正确返回的情况提示用户
+        if(res.data.code === 403){
+          dispatch(
+            setSnackbarMessageAndOpen(
+              'common.errorMessage',
+              {msg: "创建执行算法失败，名称重复"},
               SEVERITIES.warning
             )
           );
