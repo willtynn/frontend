@@ -62,7 +62,9 @@ const initState = {
 
   aggregateReport: null,
   changeFlag: 0,
+  jointChangeFlag: 0,
   startAndEnd: [-1, -1],
+  aggregateGroupReport: [],
 
   boundaryResult: [],
   bound: null,
@@ -355,6 +357,12 @@ export default function ApplicationReducer(state = initState, action) {
         changeFlag: data,
       };
 
+    case actions.UPDATE_JOINT_CHANGE_FLAG:
+      return {
+        ...state,
+        jointChangeFlag: data,
+      };
+
     case actions.UPDATE_START_AND_END:
       return {
         ...state,
@@ -462,6 +470,12 @@ export default function ApplicationReducer(state = initState, action) {
             ...state,
             aggregateReportEnhance: data,
       };
+
+      case actions.UPDATE_AGGREGATE_GROUP_REPORT:
+        return {
+          ...state,
+          aggregateGroupReport: data,
+    };
     default:
       return state;
   }

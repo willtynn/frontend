@@ -449,6 +449,7 @@ export const messages = {
     stepReport: 'Step Report',
     communicationPressureBoundary: 'Communication pressure boundary',
     stepPressureDiagram: 'Stepped pressure diagram',
+    groupAggregateReport: 'Thread Group Aggregate Report'
   },
   jointStressTesting: {
     performancePressureTest: 'Multi-load Performance Stress Test',

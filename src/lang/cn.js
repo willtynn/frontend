@@ -442,6 +442,7 @@ export const messages = {
     stepReport: '阶梯报告',
     communicationPressureBoundary: '通信压力边界',
     stepPressureDiagram: '阶梯压力图',
+    groupAggregateReport: '线程组聚合报告'
   },
   jointStressTesting: {
     performancePressureTest: '多负载性能压测',

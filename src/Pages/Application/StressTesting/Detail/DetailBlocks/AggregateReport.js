@@ -18,7 +18,8 @@ import {
   createAggregateReport,
   updateAggregateReport,
   getStartAndEndOfTest,
-  getAggregateExcel
+  getAggregateExcel,
+  getAggregateGroupReportByPlanId
 } from '../../../../../actions/applicationAction';
 import { useParams } from 'react-router';
 import Question from '@/assets/Question.svg';
@@ -55,9 +56,10 @@ function createRow(
 export function AggregateReport() {
   const { testPlanId } = useParams();
   const intl = useIntl();
-  const { aggregateReport, changeFlag, startAndEnd, currentPlan } = useSelector(state => {
+  const { aggregateReport, changeFlag, startAndEnd, currentPlan, aggregateGroupReport } = useSelector(state => {
     return {
       aggregateReport: state.Application.aggregateReport,
+      aggregateGroupReport: state.Application.aggregateGroupReport,
       changeFlag: state.Application.changeFlag,
       startAndEnd: state.Application.startAndEnd,
       currentPlan: state.Application.currentPlan,
@@ -71,7 +73,7 @@ export function AggregateReport() {
   const [memoryUsage, setMemoryUsage] = useState([]);
   const [byteTransmitted, setByteTransmitted] = useState([]);
   const [byteReceived, setByteReceived] = useState([]);
-  
+
 
   const dispatch = useDispatch();
 
@@ -92,6 +94,7 @@ export function AggregateReport() {
   useEffect(() => {
     dispatch(getAggregateReportByPlanId(testPlanId));
     dispatch(getStartAndEndOfTest(testPlanId));
+    dispatch(getAggregateGroupReportByPlanId(testPlanId));
   }, [changeFlag]);
 
   useEffect(() => {
@@ -224,6 +227,7 @@ export function AggregateReport() {
         </KubeConfirmButton>
       </Stack>
 
+      <NormalBoldFont>{intl.messages['stressTesting.aggregateReport']}</NormalBoldFont>
       <Stack
         direction='column'
         sx={{
@@ -384,6 +388,184 @@ export function AggregateReport() {
                 </TableBody>
               </Table>
             </StyledTableContainer>
+          </>
+        ) : (
+          <Stack
+            sx={{
+              height: '220px',
+            }}
+            justifyContent='center'
+            alignItems='center'
+          >
+            <Question />
+            <NormalBoldFont>{intl.messages['common.serviceTableContentNoData']}</NormalBoldFont>
+
+            <SmallLightFont>{intl.messages['common.serviceTableContentNoDataHint']}</SmallLightFont>
+          </Stack>
+        )}
+      </Stack>
+
+      <NormalBoldFont>{intl.messages['stressTesting.groupAggregateReport']}</NormalBoldFont>
+      <Stack
+        direction='column'
+        sx={{
+          borderRadius: '4px',
+          bgcolor: '#FFFFFF',
+          p: '20px',
+          boxShadow: '0 4px 8px 0 rgba(36,46,66,.06)',
+          '&:hover': {
+            boxShadow: '0 6px 16px 0 rgba(33,43,54,.2)',
+          },
+        }}
+        spacing={2}
+      >
+        {aggregateGroupReport && aggregateGroupReport.length > 0 ? (
+          <>
+            <StyledTableContainer sx={{ maxHeight: '680px' }}>
+              <Table
+                stickyHeader
+                size='small'
+                sx={{
+                  tableLayout: 'auto',
+                }}
+              >
+                <TableHead>
+                  <TableRow>
+                    {headRow.map((item) => (
+                      <StyledTableRowCell
+                        key={item.id}
+                        align={item.align}
+                        sx={{
+                          maxWidth: item.maxWidth,
+                          minWidth: item.minWidth,
+                        }}
+                      >
+                        {item.label}
+                      </StyledTableRowCell>
+                    ))}
+                  </TableRow>
+                </TableHead>
+                <TableBody>
+                  {aggregateGroupReport.map((report, index) => (
+                    <TableRow
+                      key={index}
+                      aria-checked={false}
+                      sx={{
+                        '&:last-child td, &:last-child th': {
+                          border: 0,
+                        },
+                        fontWeight: 600,
+                        maxWidth: '110px',
+                        position: 'relative',
+                        backgroundColor: '#FFF !important',
+                      }}
+                      selected={false}
+                    >
+                      <StyledTableBodyCell
+                        align={headRow[0].align}
+                        sx={{
+                          maxWidth: headRow[0].maxWidth,
+                          minWidth: headRow[0].minWidth,
+                        }}
+                      >
+                        {report.groupName} {/* 或者您可以显示其他标识 */}
+                      </StyledTableBodyCell>
+                      <StyledTableBodyCell
+                        align={headRow[1].align}
+                        sx={{
+                          maxWidth: headRow[1].maxWidth,
+                          minWidth: headRow[1].minWidth,
+                        }}
+                      >
+                        {report.samplesNum}
+                      </StyledTableBodyCell>
+                      <StyledTableBodyCell
+                        align={headRow[2].align}
+                        sx={{
+                          maxWidth: headRow[2].maxWidth,
+                          minWidth: headRow[2].minWidth,
+                        }}
+                      >
+                        {`${report.average} ms`}
+                      </StyledTableBodyCell>
+                      <StyledTableBodyCell
+                        align={headRow[3].align}
+                        sx={{
+                          maxWidth: headRow[3].maxWidth,
+                          minWidth: headRow[3].minWidth,
+                        }}
+                      >
+                        {`${report.median} ms`}
+                      </StyledTableBodyCell>
+                      <StyledTableBodyCell
+                        align={headRow[4].align}
+                        sx={{
+                          maxWidth: headRow[4].maxWidth,
+                          minWidth: headRow[4].minWidth,
+                        }}
+                      >
+                        {`${report.min} ms`}
+                      </StyledTableBodyCell>
+                      <StyledTableBodyCell
+                        align={headRow[5].align}
+                        sx={{
+                          maxWidth: headRow[5].maxWidth,
+                          minWidth: headRow[5].minWidth,
+                        }}
+                      >
+                        {`${report.max} ms`}
+                      </StyledTableBodyCell>
+                      <StyledTableBodyCell
+                        align={headRow[6].align}
+                        sx={{
+                          maxWidth: headRow[6].maxWidth,
+                          minWidth: headRow[6].minWidth,
+                        }}
+                      >
+                        {`${report.p90} ms`}
+                      </StyledTableBodyCell>
+                      <StyledTableBodyCell
+                        align={headRow[7].align}
+                        sx={{
+                          maxWidth: headRow[7].maxWidth,
+                          minWidth: headRow[7].minWidth,
+                        }}
+                      >
+                        {`${report.p95} ms`}
+                      </StyledTableBodyCell>
+                      <StyledTableBodyCell
+                        align={headRow[8].align}
+                        sx={{
+                          maxWidth: headRow[8].maxWidth,
+                          minWidth: headRow[8].minWidth,
+                        }}
+                      >
+                        {`${report.p99} ms`}
+                      </StyledTableBodyCell>
+                      <StyledTableBodyCell
+                        align={headRow[9].align}
+                        sx={{
+                          maxWidth: headRow[9].maxWidth,
+                          minWidth: headRow[9].minWidth,
+                        }}
+                      >
+                        {`${report.tps.toFixed(2)} /s`}
+                      </StyledTableBodyCell>
+                      <StyledTableBodyCell
+                        align={headRow[10].align}
+                        sx={{
+                          maxWidth: headRow[10].maxWidth,
+                          minWidth: headRow[10].minWidth,
+                        }}
+                      >
+                        {report.errorRate}
+                      </StyledTableBodyCell>
+                    </TableRow>
+                  ))}
+                </TableBody>
+              </Table>
+            </StyledTableContainer>
+            
             {data ? (
               <Stack
                 spacing={3}
@@ -473,11 +655,12 @@ export function AggregateReport() {
           >
             <Question />
             <NormalBoldFont>{intl.messages['common.serviceTableContentNoData']}</NormalBoldFont>
-
             <SmallLightFont>{intl.messages['common.serviceTableContentNoDataHint']}</SmallLightFont>
           </Stack>
         )}
       </Stack>
+
+
     </Stack>
   );
 }

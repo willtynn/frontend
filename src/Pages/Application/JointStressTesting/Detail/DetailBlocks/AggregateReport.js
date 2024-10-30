@@ -14,11 +14,14 @@ import {
   StyledTableContainer,
 } from '@/components/DisplayTable';
 import {
-  getJointReportByID
+  getJointReportByID,
+  createJointReport,
+  updateJointReport
 } from '../../../../../actions/applicationAction';
 import { useParams } from 'react-router';
 import Question from '@/assets/Question.svg';
 import { NormalBoldFont, SmallLightFont } from '@/components/Fonts';
+import { KubeConfirmButton } from '../../../../../components/Button';
 import { useIntl } from 'react-intl';
 import React from 'react';
 import LineChart from '../../Chart/LineChart';
@@ -50,9 +53,10 @@ function createRow(
 export function AggregateReportEnhance() {
   const { jointTestPlanId } = useParams();
   const intl = useIntl();
-  const { aggregateReportEnhance } = useSelector(state => {
+  const { aggregateReportEnhance,jointChangeFlag } = useSelector(state => {
     return {
       aggregateReportEnhance: state.Application.aggregateReportEnhance,
+      jointChangeFlag: state.Application.jointChangeFlag,
     };
   });
 
@@ -76,12 +80,59 @@ export function AggregateReportEnhance() {
 
   useEffect(() => {
     dispatch(getJointReportByID(jointTestPlanId));
-  }, []);
+  }, [jointChangeFlag]);
+
+
+  const handleUpdateAggregateReport = () => {
+    dispatch(updateJointReport(jointTestPlanId));
+    setTimeout(() => {
+      dispatch({ type: 'UPDATE_JOINT_CHANGE_FLAG', data: jointChangeFlag + 1 });
+    }, 1000);
+  };
+
+  const handleCreateAggregateReport = () => {
+    dispatch(createJointReport(jointTestPlanId));
+    setTimeout(() => {
+      dispatch({ type: 'UPDATE_JOINT_CHANGE_FLAG', data: jointChangeFlag + 1 });
+    }, 1000);
+  };
+
 
 
 
   return (
     <Stack direction='column' sx={{ pb: '40px' }} spacing={2}>
+      <Stack direction='row' justifyContent='space-between' spacing={2}>
+        {aggregateReportEnhance.length != 0 ? (
+          <KubeConfirmButton
+            sx={{
+              width: '45%',
+            }}
+            onClick={handleUpdateAggregateReport}
+          >
+            {intl.messages['stressTesting.updateAggregateReport']}
+          </KubeConfirmButton>
+        ) : (
+          <KubeConfirmButton
+            sx={{
+              width: '45%',
+            }}
+            onClick={handleCreateAggregateReport}
+          >
+            {intl.messages['stressTesting.createAggregateReport']}
+          </KubeConfirmButton>
+        )}
+        {/* <KubeConfirmButton
+          sx={{
+            width: '40%',
+          }}
+          onClick={handleExportExcel}
+        >
+          {intl.messages['stressTesting.exportXlsReport']}
+        </KubeConfirmButton> */}
+      </Stack>
+
+
       <Stack
         direction='column'
         sx={{
