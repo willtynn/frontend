@@ -88,6 +88,7 @@ export const UPDATE_JOINT_CHANGE_FLAG = 'UPDATE_JOINT_CHANGE_FLAG';
 export const UPDATE_JOINT_PLAN_NAME = 'UPDATE_JOINT_PLAN_NAME';
 export const UPDATE_JOINT_PLAN_COMMENT = 'UPDATE_JOINT_PLAN_COMMENT';
 export const RESET_JOINT_PLAN = 'RESET_JOINT_PLAN';
+export const DELETE_JOINT_PLAN = 'DELETE_JOINT_PLAN';
 
 
 //const baseURLLink = 'http://192.168.1.104:14447';
@@ -1287,6 +1288,120 @@ export function updateJointReport(jointPlanId) {
       dispatch(
         setSnackbarMessageAndOpen(
           'stressTesting.aggregateReportUpdateeError',
+          {},
+          SEVERITIES.warning
+        )
+      );
+    }
+  };
+}
+
+export function deleteJointPlanByID(jointPlanId) {
+  const url = '/jointMeasure/deleteJointPlanByPlanId';
+  return async dispatch => {
+    try {
+      const res = await axios_instance.get(
+        url,
+        {
+          params: {
+            jointPlanId: jointPlanId,
+          },
+        },
+        {
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        }
+      );
+      if (res.data.code === 200 || res.data.code === 0) {
+        dispatch(
+          setSnackbarMessageAndOpen(
+            'jointStressTesting.deleteJointPlanSuccess',
+            {},
+            SEVERITIES.success
+          )
+        );
+        dispatch({ type: DELETE_JOINT_PLAN, data: jointPlanId })
+      } else if (res.data.code === 1) {
+        dispatch(
+          setSnackbarMessageAndOpen(
+            'common.errorMessage',
+            { msg: res.data.message },
+            SEVERITIES.warning
+          )
+        );
+      } else {
+        dispatch(
+          setSnackbarMessageAndOpen(
+            'stressTesting.resultsSearchError',
+            {},
+            SEVERITIES.warning
+          )
+        );
+      }
+    } catch {
+      dispatch(
+        setSnackbarMessageAndOpen(
+          'stressTesting.resultsSearchError',
+          {},
+          SEVERITIES.warning
+        )
+      );
+    }
+  };
+}
+
+/**
+ * 更新联合测试计划
+ * @param {*} jointTestPlan 
+ * @returns 
+ */
+export function updateJointPlan(jointTestPlan) {
+  const url = '/jointMeasure/updateJointPlan';
+  return async dispatch => {
+    try {
+      const res = await axios_instance.post(
+        url,
+        {
+          ...jointTestPlan,
+        },
+        {
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        }
+      );
+      if (res.data.code === 200 || res.data.code === 0) {
+        dispatch(
+          setSnackbarMessageAndOpen(
+            'jointStressTesting.planUpdateMsg',
+            {},
+            SEVERITIES.success
+          )
+        );
+        dispatch(getJointTestPlans());
+      } else if (res.data.code === 1) {
+        // alert(res.data.message)
+        dispatch(
+          setSnackbarMessageAndOpen(
+            'common.errorMessage',
+            { msg: res.data.valueMap.msg },
+            SEVERITIES.warning
+          )
+        );
+      } else {
+        dispatch(
+          setSnackbarMessageAndOpen(
+            'jointStressTesting.planUpdateFailedMsg',
+            {},
+            SEVERITIES.warning
+          )
+        );
+      }
+    } catch {
+      dispatch(
+        setSnackbarMessageAndOpen(
+          'jointStressTesting.planUpdateFailedMsg',
           {},
           SEVERITIES.warning
         )

@@ -461,7 +461,10 @@ export const messages = {
     commentDescription: "请输入对此联合测试计划的简单描述",
     sonTestPlans: '子测试计划',
     jointTestPlanName: '联合测试计划名称',
-
+    deleteJointPlanSuccess:'删除联合测试计划成功',
+    planUpdateMsg:'更新联合测试计划成功',
+    updateTestPlan:'更新联合测试计划',
+    planUpdateFailedMsg:'联合测试计划更新失败'
 
   },
   routeTrace: {

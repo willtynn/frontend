@@ -468,7 +468,10 @@ export const messages = {
     commentDescription: "Please input the simple comment of this joint test plan",
     jointStressTesting: "Subtest Plans",
     jointTestPlanName: 'Joint Test Plan Name',
-
+    deleteJointPlanSuccess:'Delete Joint Test Plan Success',
+    planUpdateMsg:'Update Joint Test Plan Success',
+    updateTestPlan:'Update Joint Test Plan',
+    planUpdateFailedMsg:'Update Joint Test Plan Failed'
   },
   routectl: {
     jsonConfig: 'Configure Routerule through JSON',

@@ -492,7 +492,14 @@ export default function ApplicationReducer(state = initState, action) {
         ...state,
         jointPlanName: '',
         jointPlanComment: '',
-        testPlans:[],
+        testPlans: [],
+      };
+    case actions.DELETE_JOINT_PLAN:
+      return {
+        ...state,
+        jointTestPlans: [],
+        currentJointPlan: null,
+        currentJointPlanSon: [],
       };
     default:
       return state;

@@ -177,9 +177,14 @@ export default function JointStressTesting() {
   }, []);
 
   useEffect(() => {
-    setTableData(jointTestPlans);
+    if (jointTestPlans) {
+      setTableData(jointTestPlans);
+    } else {
+      setTableData([]);
+    }
   }, [jointTestPlans]);
 
+  
   const headRow = [
     createRow(
       'testPlanName',

@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { Box, Stack } from '@mui/material';
 import { useIntl } from 'react-intl';
+import { useParams } from 'react-router';
 import { useSelector, useDispatch } from 'react-redux';
-import { createJointTestPlan, getTestPlans } from '../../../../actions/applicationAction';
+import { updateJointPlan, getTestPlans, UPDATE_CURRENT_JOINT_TEST_PLAN } from '../../../../actions/applicationAction';
 import { KubeInput } from '@/components/Input';
 import { fontFamily } from '@/utils/commonUtils';
 import { KubeDeploymentCard } from '@/components/InfoCard';
@@ -11,7 +12,7 @@ import {
     UPDATE_JOINT_PLAN_NAME,
     UPDATE_JOINT_PLAN_COMMENT,
 } from '../../../../actions/applicationAction';
-import AddListTable from './AddListTable';
+import AddListTable from '../Add/AddListTable';
 
 const style = {
     position: 'absolute',
@@ -28,21 +29,24 @@ const style = {
 };
 
 
-export function AddModal(props) {
+export function UpdateModal(props) {
     const { handleConfirmClick, handleCancelClick, showError, setError } = props;
     const intl = useIntl();
     const dispatch = useDispatch();
+    const { jointTestPlanId } = useParams();
 
     const {
-        jointPlanName,
-        jointPlanComment,
+        currentJointPlan,
         testPlans,
+        selectedIds,
     } = useSelector(state => ({
-        jointPlanName: state.Application.jointPlanName,
-        jointPlanComment: state.Application.jointPlanComment,
+        currentJointPlan: state.Application.currentJointPlan,
         testPlans: state.Application.testPlans,
+        selectedIds: state.Application.currentJointPlan.testPlanIds,
     }));
 
+    const [jointPlanName, setJointPlanName] = useState('');
+    const [jointPlanComment, setJointPlanComment] = useState('');
     const [jointPlanNameError, setJointPlanNameError] = useState(false);
     const [testPlanIds, setTestPlanIds] = useState([]);
 
@@ -51,17 +55,21 @@ export function AddModal(props) {
     }, [jointPlanNameError]);
 
     useEffect(() => {
+        setJointPlanName(currentJointPlan.name);
+        setJointPlanComment(currentJointPlan.comment);
         dispatch(getTestPlans());
       }, []);
 
     const handleJointPlanNameChange = e => {
         const value = e.target.value;
         setJointPlanNameError(value === '');
+        setJointPlanName(value);
         dispatch({ type: UPDATE_JOINT_PLAN_NAME, data: value });
     };
 
     const handleJointPlanCommentChange = e => {
         const value = e.target.value;
+        setJointPlanComment(value);
         dispatch({ type: UPDATE_JOINT_PLAN_COMMENT, data: value });
     };
 
@@ -69,18 +77,18 @@ export function AddModal(props) {
     const handleConfirmButtonClick = (event) => {
         event.preventDefault(); 
         const jointTestPlan = {
+            id: jointTestPlanId,
             name: jointPlanName,
             comment: jointPlanComment,
             testPlanIds: testPlanIds,
         };
-        dispatch(createJointTestPlan(jointTestPlan));
+
+        dispatch(updateJointPlan(jointTestPlan));
+        dispatch({type: UPDATE_CURRENT_JOINT_TEST_PLAN ,data: jointTestPlan})
         handleConfirmClick(); 
-        
     };
 
     const handleCancelButtonClick = () => {
-        dispatch({ type: UPDATE_JOINT_PLAN_NAME, data: '' });
-        dispatch({ type: UPDATE_JOINT_PLAN_COMMENT, data: '' });
         handleCancelClick();
     };
 
@@ -89,7 +97,7 @@ export function AddModal(props) {
     return (
         <Box sx={style}>
             <KubeDeploymentCard
-                title={intl.messages['jointStressTesting.createTestPlan']}
+                title={intl.messages['jointStressTesting.updateTestPlan']}
                 handleClose={handleCancelClick}
             >
                 <Stack
@@ -126,7 +134,7 @@ export function AddModal(props) {
                             </Box>
                             
                             <Box>
-                                <AddListTable listItems={testPlans} setTestPlanIds={setTestPlanIds}/>
+                                <AddListTable listItems={testPlans} setTestPlanIds={setTestPlanIds} selectedIds={selectedIds}/>
                             </Box>
                         </Stack>
                     </Stack>

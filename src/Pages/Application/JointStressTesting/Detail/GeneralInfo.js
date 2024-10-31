@@ -12,8 +12,10 @@ import { useNavigate, useParams } from 'react-router-dom';
 import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
 import { StyledPopover } from '@/components/Popover';
 import { getBoolString } from '../../../../utils/commonUtils';
-import { measureJointPlan } from '@/actions/applicationAction';
+import { measureJointPlan,deleteJointPlanByID } from '@/actions/applicationAction';
 import { useIntl } from 'react-intl';
+import { UpdateModal } from '../Update/UpdateWindow';
+import { StyledModal } from '../../../../components/Modal';
 
 const labelStyle = {
   fontSize: '12px',
@@ -49,7 +51,10 @@ export default function GeneralInfo(props) {
   const [backText, setBackText] = useState('联合测试');
   const dispatch = useDispatch();
   const intl = useIntl();
-
+  const [planOpen, setPlanOpen] = useState(false);
+  const [showError, setShowError] = useState(false);
+  
+  const { jointTestPlanId } = useParams();
   const { currentJointPlan } = useSelector(state => {
     return {
       currentJointPlan: state.Application.currentJointPlan,
@@ -57,8 +62,15 @@ export default function GeneralInfo(props) {
   });
 
   const items = [
-    [<EditService />, '编辑计划', () => {}],
-    [<Delete16 />, '删除', () => {}],
+    [<EditService />, '编辑计划', () => {
+      setPlanOpen(true);
+    }],
+    [<Delete16 />, '删除', () => {
+      dispatch(deleteJointPlanByID(jointTestPlanId));
+      setTimeout(() => {
+        handleReturn();
+      }, 300);
+    }],
   ];
 
   const handleReturn = () => {
@@ -68,6 +80,21 @@ export default function GeneralInfo(props) {
   const handleMoreOperation = e => {
     setMoreOperationAnchorEl(e.currentTarget);
   };
+
+  const handleClose = () => {
+    setPlanOpen(false);
+  };
+
+  const handleCancelClick = () => {
+    setPlanOpen(false);
+  };
+
+  
+  const handleConfirmClick = () => {
+    window.location.reload();
+    setPlanOpen(false);
+  };
+
 
   return (
     <Stack
@@ -243,6 +270,18 @@ export default function GeneralInfo(props) {
           </Stack>
         </Stack>
       </Box>
+
+      <Stack>
+      <StyledModal open={planOpen} onClose={handleClose}>
+              <UpdateModal
+                          handleConfirmClick={handleConfirmClick}
+                          handleCancelClick={handleCancelClick}
+                          showError={showError}
+                          setError={setShowError}
+              />
+       </StyledModal> 
+      </Stack>
+
     </Stack>
   );
 }

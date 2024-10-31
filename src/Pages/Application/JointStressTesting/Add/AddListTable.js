@@ -1,5 +1,5 @@
 
-import { useState } from 'react';
+import { useState,useEffect } from 'react';
 import { DataGrid } from '@mui/x-data-grid';
 import Paper from '@mui/material/Paper';
 import { SmallLightFont } from '@/components/Fonts';
@@ -8,7 +8,7 @@ import { useIntl } from 'react-intl';
 
 
 
-const AddListTable = ({ listItems, setTestPlanIds }) => {
+const AddListTable = ({ listItems, setTestPlanIds,selectedIds }) => {
     const intl = useIntl();
     const [selectionModel, setSelectionModel] = useState([]);
 
@@ -25,8 +25,16 @@ const AddListTable = ({ listItems, setTestPlanIds }) => {
 
     const handleSelectionModelChange = (newSelectionModel) => {
         setSelectionModel(newSelectionModel);
-        setTestPlanIds(newSelectionModel); // 传递勾选的 ID
+        setTestPlanIds(newSelectionModel); 
     };
+
+    useEffect(() => {
+      setTestPlanIds(selectedIds);
+    },[]);
+
+    useEffect(() => {
+      setSelectionModel(selectedIds);
+  }, [selectedIds]);
 
     return (
         <Stack>
@@ -42,6 +50,7 @@ const AddListTable = ({ listItems, setTestPlanIds }) => {
             pageSizeOptions={[5, 10]}
             checkboxSelection
             onSelectionModelChange={handleSelectionModelChange} 
+            selectionModel={selectionModel}
             sx={{ border: 0 }}
           />
         </Paper>
