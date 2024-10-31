@@ -14,9 +14,11 @@ import { HeadBar } from '../Pages/Menu/HeadBar';
 import { ServiceDetail } from '../Pages/Service/detail';
 import { RouteTraceInfoPage } from '../Pages/Route/trace/RouteTraceInfoPage';
 import StressTesting from '../Pages/Application/StressTesting';
+import JointStressTesting from '../Pages/Application/JointStressTesting';
 import ImagesList from '../Pages/Image';
 import { TestPlanDetail } from '../Pages/Application/StressTesting/Detail';
 import { ResultDetail } from '../Pages/Application/StressTesting/ResultDetail';
+import { JointTestPlanDetail } from '../Pages/Application/JointStressTesting/Detail';
 import SchemeDeploy from '../Pages/Cluster/scheme';
 import EvolutionPlan from '../Pages/Evolution';
 import { EvolutionPlanDetail } from '../Pages/Evolution/Detail';
@@ -39,6 +41,7 @@ export default function MyRoute() {
         <Route path='service/:serviceId' element={<ServiceDetail />}/>
         <Route path='scheme/:schemeId' element={<SchemeDetail />} />
         <Route path='testplan/:testPlanId' element={<TestPlanDetail />}/>
+        <Route path='jointTestplan/:jointTestPlanId' element={<JointTestPlanDetail />}/>
         <Route path='evolutionplan/:evolutionPlanId' element={<EvolutionPlanDetail />}/>
         <Route path='planresult/:testResultId' element={<ResultDetail />}/>
         <Route path='trace/:start/:end/:traceId' element={<RouteTraceInfoPage />}/>
@@ -65,6 +68,7 @@ export default function MyRoute() {
         </Route>
         <Route path='application/'>
           <Route path="stress_testing" element={<StressTesting />} />
+          <Route path="joint_stress_testing" element={<JointStressTesting />}/>
         </Route>
         <Route path='images/'>
           <Route path="list" element={<ImagesList />} />

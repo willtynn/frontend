@@ -62,10 +62,21 @@ const initState = {
 
   aggregateReport: null,
   changeFlag: 0,
+  jointChangeFlag: 0,
   startAndEnd: [-1, -1],
+  aggregateGroupReport: [],
 
   boundaryResult: [],
   bound: null,
+
+  //joint test plan
+  jointPlanName: null,
+  jointPlanComment: null,
+  testPlanIds: [],
+  jointTestPlans: [],
+  currentJointPlan: null,
+  currentJointPlanSon: [],
+  aggregateReportEnhance: [],
 };
 
 export default function ApplicationReducer(state = initState, action) {
@@ -346,6 +357,12 @@ export default function ApplicationReducer(state = initState, action) {
         changeFlag: data,
       };
 
+    case actions.UPDATE_JOINT_CHANGE_FLAG:
+      return {
+        ...state,
+        jointChangeFlag: data,
+      };
+
     case actions.UPDATE_START_AND_END:
       return {
         ...state,
@@ -430,6 +447,60 @@ export default function ApplicationReducer(state = initState, action) {
         bound: data,
       };
 
+    case actions.UPDATE_JOINT_TEST_PLANS:
+      return {
+        ...state,
+        jointTestPlans: data,
+      };
+
+    case actions.UPDATE_CURRENT_JOINT_TEST_PLAN:
+      return {
+        ...state,
+        currentJointPlan: data,
+      };
+
+    case actions.UPDATE_CURRENT_JOINT_TEST_PLAN_SON:
+      return {
+        ...state,
+        currentJointPlanSon: data,
+      };
+
+    case actions.UPDATE_AGGREGATE_ENHANCE_REPORT:
+      return {
+        ...state,
+        aggregateReportEnhance: data,
+      };
+
+    case actions.UPDATE_AGGREGATE_GROUP_REPORT:
+      return {
+        ...state,
+        aggregateGroupReport: data,
+      };
+
+    case actions.UPDATE_JOINT_PLAN_NAME:
+      return {
+        ...state,
+        jointPlanName: data
+      };
+    case actions.UPDATE_JOINT_PLAN_COMMENT:
+      return {
+        ...state,
+        jointPlanComment: data
+      };
+    case actions.RESET_JOINT_PLAN:
+      return {
+        ...state,
+        jointPlanName: '',
+        jointPlanComment: '',
+        testPlans: [],
+      };
+    case actions.DELETE_JOINT_PLAN:
+      return {
+        ...state,
+        jointTestPlans: [],
+        currentJointPlan: null,
+        currentJointPlanSon: [],
+      };
     default:
       return state;
   }
