@@ -83,10 +83,16 @@ export default function InstanceDeploy() {
   const intl = useIntl();
   const dispatch = useDispatch();
 
-  const handleOpen = () => setOpen(true);
+  const handleOpen = () => {
+    setMethodSelectOpenEl(null);
+    setOpen(true);
+  };
   const handleClose = () => setOpen(false);
 
-  const handleConfigOpen = () => setOpenConfig(true);
+  const handleConfigOpen = () => {
+    setMethodSelectOpenEl(null);
+    setOpenConfig(true);
+  };
   const handleConfigClose = () => setOpenConfig(false);
 
   const items = [

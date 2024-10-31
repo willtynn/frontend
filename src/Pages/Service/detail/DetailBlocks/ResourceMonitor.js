@@ -3,7 +3,14 @@
  */
 import { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { Box, Stack, Tooltip, Popover } from '@mui/material';
+import { 
+  Box, 
+  Stack, 
+  Tooltip, 
+  Popover,
+  Backdrop,
+  TextField,
+} from '@mui/material';
 import { KubeSimpleCard } from '../../../../components/InfoCard';
 import { TimeAdaptiveAreaChart } from '../../../../components/Charts/AreaChart';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
@@ -23,23 +30,14 @@ import Watch from '@/assets/Watch.svg';
 import ArrowDropUpIcon from '@mui/icons-material/ArrowDropUp';
 import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
 import dayjs from 'dayjs';
-import { KubeDatePicker } from '@/components/DatePicker';
+import { KubeDatePicker, KubeDateViewer } from '@/components/DatePicker';
 import { KubeConfirmButton, KubeCancelButton } from '@/components/Button';
+import { KubeTextField } from '@/components/Input';
 
-const RangeCandidate = [
-  ['最近10分钟', -10, 'minute'],
-  ['最近20分钟', -20, 'minute'],
-  ['最近30分钟', -30, 'minute'],
-  ['最近1小时', -1, 'hour'],
-  ['最近2小时', -2, 'hour'],
-  ['最近3小时', -3, 'hour'],
-  ['最近5小时', -5, 'hour'],
-  ['最近12小时', -12, 'hour'],
-  ['最近1天', -1, 'day'],
-  ['最近2天', -2, 'day'],
-  ['最近3天', -3, 'day'],
-  ['最近7天', -7, 'day'],
-];
+import { setSnackbarMessageAndOpen } from '@/actions/snackbarAction';
+import { SEVERITIES } from '@/components/CommonSnackbar';
+
+import { baseURLLink } from '@/actions/instanceAction';
 
 export default function ResourceMonitor(props) {
   const { service } = props;
@@ -113,6 +111,35 @@ function PodResourceMonitor(props) {
   const [byteReceived, setByteReceived] = useState([]);
   const [memoryUsage, setMemoryUsage] = useState([]);
   const [data, setData] = useState(null);
+
+  const [popoverAnchorEl, setPopoverAnchorEl] = useState(null);
+  const popoverOpen = Boolean(popoverAnchorEl);
+  const popoverId = popoverOpen ? 'download-popover' : undefined;
+
+  // const [downloadInfo, setDownloadInfo] = useState(null);
+  const [downloadStep, setDownloadStep] = useState(600);
+  
+  let last_ = intl.messages['common.last'];
+  // let minute_ = intl.messages['common.minute'];
+  let hour_ = intl.messages['common.hour'];
+  let day_ = intl.messages['common.day'];
+  let minutes_ = intl.messages['common.minutes'];
+  let hours_ = intl.messages['common.hours'];
+  let days_ = intl.messages['common.days'];
+  const RangeCandidate = [
+    [last_ + ' 10 ' + minutes_, -10, 'minute'],
+    [last_ + ' 20 ' + minutes_, -20, 'minute'],
+    [last_ + ' 30 ' + minutes_, -30, 'minute'],
+    [last_ + ' 1 ' + hour_, -1, 'hour'],
+    [last_ + ' 2 ' + hours_, -2, 'hour'],
+    [last_ + ' 3 ' + hours_, -3, 'hour'],
+    [last_ + ' 5 ' + hours_, -5, 'hour'],
+    [last_ + ' 12 ' + hours_, -12, 'hour'],
+    [last_ + ' 1 ' + day_, -1, 'day'],
+    [last_ + ' 2 ' + days_, -2, 'day'],
+    [last_ + ' 3 ' + days_, -3, 'day'],
+    [last_ + ' 7 ' + days_, -7, 'day'],
+  ];
 
   const dispatch = useDispatch();
 
@@ -225,6 +252,74 @@ function PodResourceMonitor(props) {
     setEnd(tmpEnd);
     handleClose();
   };
+
+  const handlePopoverClose = () => {
+    setPopoverAnchorEl(null);
+  };
+
+  const handleStepChange = (event) => {
+    setDownloadStep(event.target.value);
+  };
+
+  const handleExportClick = (event) => {
+    // stop propagation to avoid opening or closing the tab
+    event.stopPropagation();
+    // open the popover
+    setPopoverAnchorEl(event.currentTarget);
+  };
+
+  const handleDownloadClick = (event, pod) => {
+    // stop propagation to avoid opening or closing the tab
+    event.stopPropagation();
+
+    let clusterName = localStorage.getItem('current_cluster');
+    let namespace = pod.metadata.namespace;
+    let podName = pod.metadata.name;
+    let startTime = parseInt(start.valueOf() / 1000);
+    let endTime = parseInt(end.valueOf() / 1000);
+
+    // send request to the url directly to download the file
+    let url = `/instance/resourceHistory/export`;
+    let data = {
+      clusterName: clusterName,
+      namespace: namespace,
+      podName: podName,
+      begin: startTime,
+      end: endTime,
+      step: downloadStep,
+    };
+    url = new URL(url, baseURLLink);
+    fetch(url, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(data),
+    })
+      .then(response => {
+        response.blob().then(blob => {
+          let url = window.URL.createObjectURL(blob);
+          let a = document.createElement('a');
+          a.href = url;
+          a.download = `${podName}_resource_history.xlsx`;
+          a.click();
+        });
+      })
+      .catch(error => {
+        console.error('Error:', error);
+        dispatch(
+          setSnackbarMessageAndOpen(
+            'serviceOverview.downloadError',
+            {},
+            SEVERITIES.warning
+          )
+        );
+      });
+    
+    // close the popover
+    handlePopoverClose();
+  };
+
 
   return (
     <Box>
@@ -556,6 +651,166 @@ function PodResourceMonitor(props) {
               {intl.messages['serviceOverview.podIP']}
             </Box>
           </Stack>
+
+          <Box>
+            <KubeConfirmButton
+              onClick={handleExportClick}
+              sx={{
+                width: '96px',
+                height: '32px',
+                boxShadow: "0 8px 12px 0 rgba(35,45,65,.28)",
+                fontWeight: 400,
+              }}
+            >
+              {intl.messages['serviceOverview.export']}
+            </KubeConfirmButton>
+            <Popover
+              id={popoverId}
+              open={popoverOpen}
+              anchorEl={popoverAnchorEl}
+              onClose={handlePopoverClose}
+              anchorOrigin={{
+                vertical: 'top',
+                horizontal: 'left',
+              }}
+              onClick={(event) => event.stopPropagation()}
+            >
+              <Stack sx={{ 
+                padding: '12px 16px 12px 16px',
+                width: '245px',
+                }} direction='column'>
+                <Box
+                  sx={{
+                    fontSize: '14px',
+                    fontFamily: fontFamily,
+                    fontStyle: 'normal',
+                    fontWeight: 600,
+                    lineHeight: 1.2,
+                    color: '#79879c',
+                  }}
+                >
+                  {intl.messages['serviceOverview.exportInfo']}
+                </Box>
+                <Stack sx={{ paddingLeft: "10px", width: "100%"}}>
+                  <Stack direction='row' spacing={2} sx={{ paddingBottom: "3px" }}>
+                    <Box
+                      sx={{
+                        fontSize: '13px',
+                        fontFamily: fontFamily,
+                        fontStyle: 'normal',
+                        fontWeight: 600,
+                        lineHeight: 1.67,
+                        color: '#242e42',
+                        paddingTop: '10px',
+                      }}
+                    >
+                      {intl.messages['serviceOverview.startTime']}
+                    </Box>
+                    <KubeDateViewer value={start} width="140px"/>
+                  </Stack>
+                  <Stack direction='row' spacing={2} sx={{ paddingBottom: "3px" }}>
+                    <Box
+                      sx={{
+                        fontSize: '13px',
+                        fontFamily: fontFamily,
+                        fontStyle: 'normal',
+                        fontWeight: 600,
+                        lineHeight: 1.67,
+                        color: '#242e42',
+                        paddingTop: '10px',
+                      }}
+                    >
+                      {intl.messages['serviceOverview.endTime']}
+                    </Box>
+                    <KubeDateViewer value={end} width="140px"/>
+                  </Stack>
+                  <Stack direction='row' spacing={2}>
+                    <Box
+                      sx={{
+                        fontSize: '13px',
+                        fontFamily: fontFamily,
+                        fontStyle: 'normal',
+                        fontWeight: 600,
+                        lineHeight: 1.67,
+                        color: '#242e42',
+                        paddingTop: '10px',
+                        mr: '10px',
+                      }}
+                    >
+                      {intl.messages['serviceOverview.step']}
+                    </Box>
+                    {/* <TextField
+                      label="Size"
+                      id="standard-size-small"
+                      defaultValue="Small"
+                      size="small"
+                      variant="standard"
+                    /> */}
+                    <Stack direction='row' spacing='3px'>
+                      <KubeTextField variant='standard' inputProps={{
+                          style: { textAlign: 'center' } // 设置文本居中
+                        }}
+                        sx={{
+                          '& input': {
+                            padding: '6px 12px !important',
+                            fontSize: '12px',
+                            fontFamily: fontFamily,
+                            fontStyle: 'normal',
+                            fontWeight: 600,
+                            lineHeight: 1.67,
+                            color: '#36435c',
+                          },
+                          width: '60px',
+                          height: '24px',
+                          pt: '2px',
+                        }} 
+                        defaultValue="600"
+                        value={downloadStep}
+                        onChange={handleStepChange}
+                      />
+                      <Box
+                        sx={{
+                          fontSize: '13px',
+                          fontFamily: fontFamily,
+                          fontStyle: 'normal',
+                          fontWeight: 600,
+                          lineHeight: 1.1,
+                          color: '#242e42',
+                          paddingTop: '10px',
+                          mr: '10px',
+                        }}
+                      >
+                        s
+                      </Box>
+                    </Stack>
+
+                  </Stack>
+                  
+                    
+                  <KubeConfirmButton
+                      onClick={(event) => handleDownloadClick(event, pod)}
+                      sx={{
+                        width: '80px',
+                        height: '32px',
+                        boxShadow: "0 2px 2px 0 rgba(35,45,65,.28)",
+                        fontWeight: 400,
+                        mt: '-15px',
+                        ml: "calc(100% - 88px)",
+                      }}
+                    >
+                      {intl.messages['serviceOverview.download']}
+                    </KubeConfirmButton>
+                </Stack>
+              </Stack>
+            </Popover>
+            {/* <Backdrop
+              open={popoverOpen}
+              onClick={handlePopoverClose}
+              style={{ zIndex: 1000, color: '#111' }}
+            >
+              {/* 可在这里添加其他内容，比如加载动画 /}
+            </Backdrop> */}
+          </Box>
 
           <Box sx={{ padding: '12px 12px 6px 12px' }}>
             {open === false ? (

@@ -4,6 +4,7 @@
 import {useEffect, useRef, useState} from 'react';
 import { Box, Stack, TextField, Typography } from '@mui/material';
 import { useDispatch, useSelector } from 'react-redux';
+import { createSelector } from 'reselect';
 import { ClusterTopologyOnlyCanvas } from './ClusterTopology';
 //import { getNetworkControlInfo,UPDATE_SELECTED_SERVER } from '@/actions/clusterAction';
 import { getAllNetworkControlInfo, UPDATE_SELECTED_SERVER } from '@/actions/clusterAction';
@@ -178,6 +179,22 @@ const fakeInstancesData = {
   valueMap: {},
 };
 
+const selectNetworkControlInfo = createSelector(
+  state => state.Cluster.networkControlInfo,
+  networkControlInfo => ({ networkControlInfo })
+);
+
+const selectClusterData = createSelector(
+  state => state.Cluster.selectedInstanceName,
+  state => state.Cluster.clusters,
+  state => state.Cluster.selectedServer,
+  (selectedInstanceName, clusters, selectedServer) => ({
+    selectedInstanceName,
+    clusters,
+    selectedServer,
+  })
+);
+
 export default function ClusterOverview() {
   const [clusterData, setClusterData] = useState({});
   const [targetCluster, setTargetCluster] = useState('cluster1');
@@ -191,20 +208,22 @@ export default function ClusterOverview() {
   const dispatch = useDispatch();
   const intl = useIntl();
 
-  const { networkControlInfo } = useSelector((state) => ({
-    networkControlInfo: state.Cluster.networkControlInfo,
-  }));
+  // const { networkControlInfo } = useSelector((state) => ({
+  //   networkControlInfo: state.Cluster.networkControlInfo,
+  // }));
+  const { networkControlInfo } = useSelector(selectNetworkControlInfo);
 
 
-  const { selectedInstanceName, clusters, selectedServer } = useSelector(
-    state => {
-      return {
-        selectedInstanceName: state.Cluster.selectedInstanceName,
-        clusters: state.Cluster.clusters,
-        selectedServer: state.Cluster.selectedServer,
-      };
-    }
-  );
+  // const { selectedInstanceName, clusters, selectedServer } = useSelector(
+  //   state => {
+  //     return {
+  //       selectedInstanceName: state.Cluster.selectedInstanceName,
+  //       clusters: state.Cluster.clusters,
+  //       selectedServer: state.Cluster.selectedServer,
+  //     };
+  //   }
+  // );
+  const { selectedInstanceName, clusters, selectedServer } = useSelector(selectClusterData);
 
   useEffect(() => {
     const fetchAllNetworkControlInfo = async () => {

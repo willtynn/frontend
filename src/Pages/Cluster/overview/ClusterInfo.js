@@ -154,6 +154,7 @@ export default function ClusterInfo(props) {
                 {data.servers.map(row => {
                   return (
                     <TableRow
+                      key={row.id}
                       aria-checked={false}
                       sx={{
                         '&:last-child td, &:last-child th': {

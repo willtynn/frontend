@@ -110,7 +110,8 @@ export default function MiniDrawer() {
         }}
       >
         <Grid container spacing={0}>
-          <Grid xs={3}>
+          {/* 'Grid' using in this file is v1, which is deprecated. The Document is not universal, please note */}
+          <Grid item xs={3}>
             <Stack
               direction='row'
               spacing={2}
@@ -135,7 +136,7 @@ export default function MiniDrawer() {
             </Stack>
           </Grid>
 
-          <Grid xs={6}>
+          <Grid item xs={6}>
             <Stack
               direction='row'
               spacing={6}
@@ -154,7 +155,7 @@ export default function MiniDrawer() {
               </Box>
             </Stack>
           </Grid>
-          <Grid xs={3}></Grid>
+          <Grid item xs={3}></Grid>
         </Grid>
       </Box>
 
