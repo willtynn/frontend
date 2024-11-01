@@ -24,6 +24,7 @@ import EvolutionPlan from '../Pages/Evolution';
 import { EvolutionPlanDetail } from '../Pages/Evolution/Detail';
 import SchemeDetail from '../Pages/Cluster/scheme/SchemeDetail';
 import ClusterNetwork from '../Pages/Cluster/network';
+import { DataSourceDetail } from '../Pages/DataSource/info/Detail/DataSourceDetail'
 import DataSourceInfo from '../Pages/DataSource/info'; // 导入数据源信息页面
 import IndustryOverview from '../Pages/Industry/Overview';
 import Log from '../Pages/Industry/Log';
@@ -45,6 +46,7 @@ export default function MyRoute() {
         <Route path='evolutionplan/:evolutionPlanId' element={<EvolutionPlanDetail />}/>
         <Route path='planresult/:testResultId' element={<ResultDetail />}/>
         <Route path='trace/:start/:end/:traceId' element={<RouteTraceInfoPage />}/>
+        <Route path='datasource/:name' element={<DataSourceDetail />} />  {/* 数据源详情页面，使用 name 作为参数 */}
       </Route>
 
       {/* 存在导航栏 */}

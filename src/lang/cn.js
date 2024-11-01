@@ -576,7 +576,7 @@ export const messages = {
   dataSource:{
     dataSourceManagement: '数据源管理',
     dataSourceInfo: '数据源信息',
-    dataSourceDescription: '数据源信息',
+    dataSourceDescription: '数据源信息描述',
     dataSource: '数据源',
     dataType:'数据类型',
     startTime: '起始时间',
@@ -588,6 +588,24 @@ export const messages = {
     value:'值',
     noData:'无数据',
     noDataHint:'请选择数据源与数据类型',
+    dataSourceName:'数据源名称',
+    dataSourceDes:'数据源描述',
+    dataSourceTypes:'包含的数据种类',
+    dataSourceSearchPrompt:'请输入数据源名称',
+    numsPerPage:'每页显示',
+    dataSourceCluster:'所属集群',
+    dataSourceHost:'主机地址',
+    dataSourceStatus:'当前状态',
+    dataSourceInterval:'数据源检测间隔',
+    dataSourceLastSeen:'最后被检测到的时间戳',
+    dataDetailInfo:'数据详细信息',
+    dataGetOptions:'请选择该数据源包含数据的请求方式',
+    confirm:'确认',
+    dataDetailInfoQuery:'数据信息查询',
+    dataInfoQueryInput:'查询条件填写',
+    dataQueryInfoSelect:'请选择要查询的数据',
+
+
   },
   industry:{
     label: '工业互联网平台',

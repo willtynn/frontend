@@ -20,6 +20,7 @@ const axios_instance = axios.create({
     crossDomain: true,
 });
 
+// 获取全部数据源
 export function fetchAllDataSources() {
     const url = '/data-source';
     return async dispatch => {
