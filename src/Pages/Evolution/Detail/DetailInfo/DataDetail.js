@@ -23,6 +23,9 @@ import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContai
 import { isVisible } from "@testing-library/user-event/dist/utils";
 import axios from "axios";
 import { KubeInput, KubeAutocomplete } from '@/components/Input';
+import { setSnackbarMessageAndOpen } from '@/actions/snackbarAction';
+import { SEVERITIES } from '@/components/CommonSnackbar';
+import { saveAs } from 'file-saver';
 
 
 export function DataDetail() {
@@ -97,6 +100,11 @@ export function DataDetail() {
     const getData = async ()=> {
         console.log("开始请求数据");
         await axios("http://localhost:1234/evolution/getdata/"+currentPlan.evo_id).then(res => {
+            if(res.data == null){
+                console.log("未能获取到数据")
+                return;
+            }
+            
             res.data.dataTime = getHourMinSec(res.data.dataTime);
             setDataList(dataList => [...dataList,
             {
@@ -107,6 +115,15 @@ export function DataDetail() {
                 dataTime: res.data.dataTime,
             }]);
             count++;
+            if(res.data.dataname == null){
+                dispatch(
+                    setSnackbarMessageAndOpen(
+                      'common.errorMessage',
+                      { msg: "无法正确获取数据，请检查数据源参数是否配置正确" },
+                      SEVERITIES.warning
+                    )
+                  );
+            }
         })
         console.log(dataList)
         

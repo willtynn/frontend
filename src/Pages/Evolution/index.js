@@ -35,6 +35,7 @@ import FailedIcon from '@/assets/FailedIcon.svg';
 import SucceededIcon from '@/assets/SucceededIcon.svg';
 import Question from '@/assets/Question.svg';
 import { EvolutionProgress } from './EvolutionProgress';
+import {AlgorithmManage} from './AlgorithmManage';
 import Task from '@/assets/Task.svg';
 import { NormalBoldFont, SmallLightFont } from '@/components/Fonts';
 import { useNavigate } from 'react-router-dom';
@@ -55,6 +56,7 @@ import {
 } from '../../actions/evolutionAction';
 import LeftArrow from '@/assets/WhiteLeftArrow.svg';
 import RightArrow from '@/assets/WhiteRightArrow.svg';
+import { set } from 'lodash';
 
 export const RUNNING = 'Running';
 export const PENDING = 'Pending';
@@ -151,6 +153,7 @@ const namePattern = new RegExp(/^(名称|Name):/);
 export default function EvolutionPlan() {
   const intl = useIntl();
   const [planOpen, setPlanOpen] = useState(false);
+  const [algorithmOpen,setAlgorithmOpen] = useState(false);
   const [showError, setShowError] = useState(false);
 
   const [loading, setLoading] = useState(false);
@@ -202,7 +205,6 @@ export default function EvolutionPlan() {
     searchByTwo();
   },[searchList]);
 
-  //此处修有改
   useEffect(() => {
     // setTableData(evolutionPlans);
     setTableData(evo_plans);
@@ -341,6 +343,10 @@ export default function EvolutionPlan() {
     setPlanOpen(true);
   };
 
+  const handleAlgorithmClick = () => {
+    setAlgorithmOpen(true);
+  }
+
   //改变每页的数量
   const handlePerPageChange = pageSize => {
     dispatch({ type: UPDATE_TEST_PLAN_PAGE_SIZE, data: pageSize });
@@ -372,19 +378,28 @@ export default function EvolutionPlan() {
     return false;
   };
 
+  //不加前缀的是处理创建计划框的，加了前缀的为处理管理算法框的
   const handleClose = () => {
     resetParameters();
     setPlanOpen(false);
   };
-
   const handleCancelClick = () => {
     resetParameters();
     setPlanOpen(false);
   };
-
   const handleConfirmClick = () => {
     resetParameters();
     setPlanOpen(false);
+  };
+
+  const handleAlgorithmConfirmClick = () => {
+    setAlgorithmOpen(false);
+  };
+  const handleAlgorithmClose = () => {
+    setAlgorithmOpen(false);
+  };
+  const handleAlgorithmCancelClick = () => {
+    setAlgorithmOpen(false);
   };
 
   const handleSearchFocus = event => {
@@ -645,6 +660,7 @@ export default function EvolutionPlan() {
             >
               <VisibilityIcon />
             </EclipseTransparentButton>
+            {/* 创建演化计划按钮 */}
             <KubeConfirmButton
               sx={{
                 width: '200px',
@@ -652,6 +668,15 @@ export default function EvolutionPlan() {
               onClick={handlePlanClick}
             >
               {intl.messages['evolution.createEvolutionPlan']}
+            </KubeConfirmButton>
+              {/* 管理演化功能相关的分析算法和执行算法 */}
+            <KubeConfirmButton
+              sx={{
+                width: '200px',
+              }}
+              onClick={handleAlgorithmClick}
+            >
+              {"管理演化算法"}
             </KubeConfirmButton>
           </Stack>
         </Box>
@@ -813,10 +838,21 @@ export default function EvolutionPlan() {
           }}
         />
       </Box>
+      {/* 新增计划框 */}
       <StyledModal open={planOpen} onClose={handleClose}>
         <EvolutionProgress
           handleConfirmClick={handleConfirmClick}
           handleCancelClick={handleCancelClick}
+          showError={showError}
+          setShowError={setShowError}
+          state="add"
+        />
+      </StyledModal>
+      {/* 管理算法框 */}
+      <StyledModal open={algorithmOpen} onClose={handleAlgorithmClose}>
+        <AlgorithmManage
+          handleConfirmClick={handleAlgorithmConfirmClick}
+          handleCancelClick={handleAlgorithmCancelClick}
           showError={showError}
           setShowError={setShowError}
           state="add"

@@ -68,6 +68,9 @@ export function PlanConfiguration(props) {
     if (_.find(exe_data_mapping, { 'plan_name': obj.plan_name, 'data_resource': data_resource }) !== undefined) {
       return obj;
     }
+    if (_.find(exe_data_mapping, { 'plan_name': obj.plan_name, 'data_resource': "all" }) !== undefined) {
+      return obj;
+    }
   })
 
   //下面为对执行算法的高级配置

@@ -33,7 +33,7 @@ export function MonitorLog() {
             setLog(log => log + html)
         }
 
-        setInterval(() => {
+        var intervalID = setInterval(() => {
             ws.send("get");
         }, 1000)
 
@@ -46,6 +46,7 @@ export function MonitorLog() {
             } catch (error) {
                 console.error('Error closing WebSocket:', error);
             }
+            clearInterval(intervalID);
         };
     }, [])
 

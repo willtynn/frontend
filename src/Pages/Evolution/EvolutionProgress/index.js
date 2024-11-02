@@ -110,7 +110,7 @@ export function EvolutionProgress(props) {
       ana_alg: ana_alg,
       exe_alg: exe_alg,
       exe_mtd: exe_mtd,
-      evo_enable: "1",
+      evo_enable: "0",
       evo_remarks: evo_remarks,
       create_by: create_by,
       evo_data_args: evo_data_args,
