@@ -155,7 +155,7 @@ export default function JointStressTesting() {
     intl.messages['common.status'],
   ]);
 
-  const [colDisplay, setColDisplay] = useState([true, true, true, true, true, true]);
+  const [colDisplay, setColDisplay] = useState([true, true, true, true]);
   const [customContentAnchorEl, setCustomContentAnchorEl] = useState(null);
   const customContentOpen = Boolean(customContentAnchorEl);
 
