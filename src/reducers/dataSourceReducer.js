@@ -22,6 +22,11 @@ export default function DataSourceReducer(state = initState, action) {
                 ...state,
                 tableData: data
             }
+        case actions.CLEAR_TABLE_DATA:
+            return {
+                ...state,
+                tableData: null
+            }; // 将 tableData 清空
         case actions.SELECT_DATA_SOURCE:
             return {
                 ...state,

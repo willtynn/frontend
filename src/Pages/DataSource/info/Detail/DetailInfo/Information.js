@@ -1,6 +1,6 @@
 // Information.js
-import React, { useState } from 'react';
-import { useSelector } from 'react-redux';
+import React, { useState, useEffect } from 'react';
+import { useSelector, useDispatch } from 'react-redux';
 import {Box, Typography, MenuItem, Select, FormControl} from '@mui/material';
 import { useIntl } from 'react-intl';
 import {KubeCancelButton, KubeConfirmButton} from "../../../../../components/Button";
@@ -9,12 +9,18 @@ import Dialog from "@mui/material/Dialog";
 import {KubeDeploymentCard} from "../../../../../components/InfoCard";
 import {KubeInput} from "../../../../../components/Input";
 import DialogContent from "@mui/material/DialogContent";
-import axios from "axios";
 import Question from '@/assets/Question.svg';
+import {clearTableData, fetchDataQuery} from "../../../../../actions/dataSourceAction";
 
 export function Information({ dataSourceName }) {
 
     const intl = useIntl();
+    const dispatch = useDispatch();
+
+    // 在组件加载时清空上次查询的数据
+    useEffect(() => {
+        dispatch(clearTableData());
+    }, [dispatch])
 
     // 从 Redux 中获取指定 dataSourceName 的数据源详细信息
     const dataSourceDetail = useSelector(state =>
@@ -32,8 +38,11 @@ export function Information({ dataSourceName }) {
 
     const [queryParams, setQueryParams] = useState({});
 
+    const [isQuerying, setIsQuerying] = useState(false);
+
+
     // 存储请求返回的数据
-    const [responseData, setResponseData] = useState(null);
+    const responseData = useSelector(state => state.DataSource.tableData);
 
     const handleTypeChange = (event) => {
         setSelectedType(event.target.value);
@@ -63,28 +72,39 @@ export function Information({ dataSourceName }) {
         }));
     };
 
-    const fetchData = async () => {
-        const baseUrl = `http://192.168.1.104:31141/data-source/${dataSourceName}/data/${selectedType}`;
-        const isPostRequest = selectedTypeDetails?.driver === 'http-post';
 
-        try {
-            const response = isPostRequest
-                ? await axios.post(`${baseUrl}/query`, { queryParameters: queryParams }, {
-                    headers: {
-                        'Accept': 'application/json',
-                        'Content-Type': 'application/json'
-                    }
-                })
-                : await axios.get(`${baseUrl}?${new URLSearchParams(queryParams).toString()}`, {
-                    headers: { 'Accept': 'application/json' }
-                });
 
-            setResponseData(response.data); // 存储返回的数据
-            handleCloseDialog();
-        } catch (error) {
-            console.error("Error fetching data:", error);
-        }
+    const fetchData = () => {
+        setIsQuerying(true); // 开始查询
+        dispatch(fetchDataQuery(dataSourceName, selectedType, queryParams, selectedTypeDetails)).then(() => {
+            setIsQuerying(false); // 查询结束
+            handleCloseDialog(); // 关闭表单
+        });
     };
+
+
+    // const fetchData = async () => {
+    //     const baseUrl = `http://192.168.1.104:31141/data-source/${dataSourceName}/data/${selectedType}`;
+    //     const isPostRequest = selectedTypeDetails?.driver === 'http-post';
+    //
+    //     try {
+    //         const response = isPostRequest
+    //             ? await axios.post(`${baseUrl}/query`, { queryParameters: queryParams }, {
+    //                 headers: {
+    //                     'Accept': 'application/json',
+    //                     'Content-Type': 'application/json'
+    //                 }
+    //             })
+    //             : await axios.get(`${baseUrl}?${new URLSearchParams(queryParams).toString()}`, {
+    //                 headers: { 'Accept': 'application/json' }
+    //             });
+    //
+    //         setResponseData(response.data); // 存储返回的数据
+    //         handleCloseDialog();
+    //     } catch (error) {
+    //         console.error("Error fetching data:", error);
+    //     }
+    // };
 
     if (!dataSourceDetail) {
         return <Typography>Loading data...</Typography>; // 或者显示加载状态
@@ -244,7 +264,11 @@ export function Information({ dataSourceName }) {
             </Dialog>
 
             {/* 显示请求结果或提示文字 */}
-            {responseData ? (
+            {isQuerying ? (
+                <Box sx={{ marginTop: 4, padding: 2, backgroundColor: '#f9f9f9', borderRadius: 2 }}>
+                    <Typography variant="h6">查询中...</Typography>
+                </Box>
+            ) : responseData ? (
                 <Box sx={{ marginTop: 4, padding: 2, backgroundColor: '#f1f1f1', borderRadius: 2 }}>
                     <Typography variant="h6">请求结果:</Typography>
                     <pre>{JSON.stringify(responseData, null, 2)}</pre>

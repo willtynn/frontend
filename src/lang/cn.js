@@ -604,8 +604,7 @@ export const messages = {
     dataDetailInfoQuery:'数据信息查询',
     dataInfoQueryInput:'查询条件填写',
     dataQueryInfoSelect:'请选择要查询的数据',
-
-
+    dataQueryFetchError:'数据获取失败',
   },
   industry:{
     label: '工业互联网平台',

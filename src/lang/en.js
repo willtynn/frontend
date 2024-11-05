@@ -637,6 +637,7 @@ export const messages = {
     dataDetailInfoQuery:'Data Detail Query',
     dataInfoQueryInput:'Query Condition Entry',
     dataQueryInfoSelect:'Please select the data to query',
+    dataQueryFetchError:'Data Query Error',
 
   },
 
