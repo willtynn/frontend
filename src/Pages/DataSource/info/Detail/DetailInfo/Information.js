@@ -11,6 +11,10 @@ import {KubeInput} from "../../../../../components/Input";
 import DialogContent from "@mui/material/DialogContent";
 import Question from '@/assets/Question.svg';
 import {clearTableData, fetchDataQuery} from "../../../../../actions/dataSourceAction";
+import { DateTimePicker } from '@mui/x-date-pickers/DateTimePicker';
+import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
+import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
+
 
 export function Information({ dataSourceName }) {
 
@@ -36,9 +40,13 @@ export function Information({ dataSourceName }) {
     // 控制 Dialog 的显示状态
     const [openDialog, setOpenDialog] = useState(false);
 
-    const [queryParams, setQueryParams] = useState({});
+    const [queryParams, setQueryParams] = useState({}); // 存储查询参数，包括时间字段
 
+    // 控制在点击确认按钮时进行查询
     const [isQuerying, setIsQuerying] = useState(false);
+
+    // 选择起始结束时间 进行与时间戳的转换
+    const [selectedDate, setSelectedDate] = useState(null);
 
 
     // 存储请求返回的数据
@@ -65,6 +73,7 @@ export function Information({ dataSourceName }) {
     const selectedTypeDetails = dataSourceDetail?.types.find(type => type.name === selectedType);
     const queryParameters = selectedTypeDetails?.queryParameters || [];
 
+    // 普通输入框的变更处理
     const handleQueryParamChange = (name) => (event) => {
         setQueryParams(prevParams => ({
             ...prevParams,
@@ -72,6 +81,13 @@ export function Information({ dataSourceName }) {
         }));
     };
 
+    // 时间选择器的变更处理，将日期转换为时间戳
+    const handleDateChange = (name) => (date) => {
+        setQueryParams(prevParams => ({
+            ...prevParams,
+            [name]: date ? date.getTime() : null  // 将Date转换为时间戳
+        }));
+    }
 
 
     const fetchData = () => {
@@ -82,35 +98,9 @@ export function Information({ dataSourceName }) {
         });
     };
 
-
-    // const fetchData = async () => {
-    //     const baseUrl = `http://192.168.1.104:31141/data-source/${dataSourceName}/data/${selectedType}`;
-    //     const isPostRequest = selectedTypeDetails?.driver === 'http-post';
-    //
-    //     try {
-    //         const response = isPostRequest
-    //             ? await axios.post(`${baseUrl}/query`, { queryParameters: queryParams }, {
-    //                 headers: {
-    //                     'Accept': 'application/json',
-    //                     'Content-Type': 'application/json'
-    //                 }
-    //             })
-    //             : await axios.get(`${baseUrl}?${new URLSearchParams(queryParams).toString()}`, {
-    //                 headers: { 'Accept': 'application/json' }
-    //             });
-    //
-    //         setResponseData(response.data); // 存储返回的数据
-    //         handleCloseDialog();
-    //     } catch (error) {
-    //         console.error("Error fetching data:", error);
-    //     }
-    // };
-
     if (!dataSourceDetail) {
         return <Typography>Loading data...</Typography>; // 或者显示加载状态
     }
-
-
 
     return (
         <Box
@@ -221,17 +211,69 @@ export function Information({ dataSourceName }) {
 
                                 {/* 动态生成查询参数输入框 */}
                                 {queryParameters.map((param, index) => (
-                                    <KubeInput
-                                        key={index}
-                                        label={`${param.name} (${param.description || ''} - ${param.type || ''})`}  // 在 name 后面加上 description 和 type
-                                        required={param.required}
-                                        variant='outlined'
-                                        value={queryParams[param.name] || ''}
-                                        onChange={handleQueryParamChange(param.name)}
-                                    />
+                                    param.description && (param.description.includes('time') || param.description.includes('Time')) ?  (
+                                        <LocalizationProvider dateAdapter={AdapterDateFns} key={index}>
+                                            <Box sx={{ marginBottom: 1, width: '100%' }}> {/* 外部容器，确保与其他输入框一致 */}
+                                                {/* 使用 Typography 将 label 放在上方 */}
+                                                <Typography
+                                                    sx={{
+                                                        fontSize: '12px',  // 调整为与其他输入框标签一致
+                                                        fontWeight: 500,
+                                                        color: '#36435c',  // 调整为与其他输入框标签一致
+                                                        marginBottom: '4px'
+                                                    }}
+                                                >
+                                                    {`${param.name} (${param.description || ''})`}
+                                                </Typography>
+
+                                                <DateTimePicker
+                                                    value={queryParams[param.name] || null}
+                                                    onChange={handleDateChange(param.name)}
+                                                    sx={{
+                                                        width: '100%', // 确保宽度占满父容器
+                                                        '& .MuiOutlinedInput-root': {
+                                                            height: '34px', // 控制外部容器高度
+                                                            borderRadius: '5px', // 统一圆角
+                                                            paddingRight: '14px', // 控制右侧内边距
+                                                            display: 'flex',
+                                                            alignItems: 'center', // 垂直居中内容
+                                                        },
+                                                        '& .MuiInputBase-input': {
+                                                            height: '34px', // 控制内部输入框高度
+                                                            padding: '8px 12px', // 内边距与其他输入框一致
+                                                            fontSize: '0.875rem', // 将输入框文字大小设置为较小尺寸
+                                                        },
+                                                        '& .MuiSvgIcon-root': {
+                                                            fontSize: '1.25rem', // 控制图标大小
+                                                            marginRight: '8px', // 控制图标与文字的间距
+                                                        },
+                                                    }}
+                                                    renderInput={(params) => <KubeInput {...params} />}
+                                                />
+                                            </Box>
+                                        </LocalizationProvider>
+                                    ) : (
+                                        <KubeInput
+                                            key={index}
+                                            label={`${param.name} (${param.description || ''})`}
+                                            required={param.required}
+                                            variant='outlined'
+                                            value={queryParams[param.name] || ''}
+                                            onChange={handleQueryParamChange(param.name)}
+                                            fullWidth
+                                            sx={{
+                                                marginBottom: 2, // 保持垂直间距一致
+                                                height: '36px', // 统一高度
+                                                '& .MuiOutlinedInput-root': {
+                                                    borderRadius: '5px', // 保持圆角一致
+                                                },
+                                            }}
+                                        />
+                                    )
                                 ))}
                             </Box>
                         </Stack>
+
 
                         <Stack
                             sx={{
