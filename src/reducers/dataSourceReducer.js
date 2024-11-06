@@ -32,6 +32,14 @@ export default function DataSourceReducer(state = initState, action) {
                 ...state,
                 selectedDataSource: data
             }
+        case actions.REGISTER_DATA_SOURCE:
+            return {
+                ...state,
+                dataSources: state.dataSources
+                    ? [...state.dataSources, data] // 添加新注册的数据源
+                    : [data], // 如果 dataSources 为空，直接设置为数组
+            };
+
         default:
             return state;
     }

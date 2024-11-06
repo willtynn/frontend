@@ -10,7 +10,7 @@ import {
     TableRow,
     TableHead,
     InputAdornment,
-    TablePagination
+    TablePagination,
 } from '@mui/material';
 import {useIntl} from 'react-intl';
 import {KubeConfirmButton} from '@/components/Button';
@@ -20,6 +20,8 @@ import Task from '@/assets/Task.svg';
 import {NormalBoldFont, SmallLightFont} from '@/components/Fonts';
 import SearchIcon from '@mui/icons-material/Search';
 import {useNavigate} from "react-router-dom";
+import RegisterDataSourceDialog from "./RegisterDataSource";
+import Question from '@/assets/Question.svg';
 
 
 export default function DataSourceComponent() {
@@ -27,6 +29,7 @@ export default function DataSourceComponent() {
     const [searchTerm, setSearchTerm] = useState(''); // 搜索框的状态
     const [page, setPage] = useState(0);
     const [rowsPerPage, setRowsPerPage] = useState(10); // 每页显示的行数
+    const [open, setOpen] = useState(false); // 控制注册表单弹窗状态
 
 
     const intl = useIntl();
@@ -82,6 +85,15 @@ export default function DataSourceComponent() {
         {id: 'dataSourceTypes', label: intl.messages['dataSource.dataSourceTypes'], minWidth: 150, align: 'left'}
     ];
 
+    // 控制注册数据源表单
+    const handleOpen = () => {
+        setOpen(true);
+    }
+
+    const handleClose = () => {
+        setOpen(false);
+    }
+
 
     return (
         <Box sx={{p: 3}}>
@@ -114,7 +126,7 @@ export default function DataSourceComponent() {
                         }
                     }}
                     sx={{
-                        width: '900px',
+                        width: '700px',
                         '& .MuiOutlinedInput-root': {
                             paddingRight: '8px',
                             '& fieldset': {
@@ -134,14 +146,27 @@ export default function DataSourceComponent() {
 
                 <Box sx={{ flexGrow: 1 }} /> {/* 用于将按钮推到右边 */}
 
+                {/*查询按钮*/}
                 <KubeConfirmButton
                     sx={{width: '150px'}}
                     onClick={handleSearch}
                 >
                     {intl.messages['dataSource.query']}
                 </KubeConfirmButton>
+
+                {/*注册数据源按钮*/}
+                <KubeConfirmButton
+                    sx={{width: '150px'}}
+                    onClick={handleOpen}
+                >
+                    {intl.messages['dataSource.dataSourceRegister']}
+                </KubeConfirmButton>
             </Stack>
 
+            {/*数据源注册表单弹窗-使用 RegisterDataSourceDialog 组件 */}
+            <RegisterDataSourceDialog open={open} handleClose={handleClose} />
+
+            {/*数据源展示表格内容*/}
             <StyledTableContainer sx={{bgcolor: '#FFF'}}>
                 <Table stickyHeader size="small" sx={{tableLayout: 'auto'}}>
                     <TableHead>
@@ -184,13 +209,10 @@ export default function DataSourceComponent() {
                         ) : (
                             <TableRow style={{height: '220px'}}>
                                 <TableCell colSpan={3} align="center">
-                                    <Task />
+                                    <Question />
                                     <NormalBoldFont>
                                         {intl.messages['dataSource.noData']}
                                     </NormalBoldFont>
-                                    <SmallLightFont>
-                                        {intl.messages['dataSource.noDataHint']}
-                                    </SmallLightFont>
                                 </TableCell>
                             </TableRow>
                         )}

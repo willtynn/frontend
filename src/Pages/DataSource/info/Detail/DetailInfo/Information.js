@@ -31,8 +31,8 @@ export function Information({ dataSourceName }) {
         state.DataSource.dataSources?.find(source => source.name === dataSourceName)
     );
 
-    // 提取 types 中的 name 属性并设置到下拉框
-    const typesOptions = dataSourceDetail?.types.map(type => type.name) || [];
+    // 提取 types 中的 driver 属性并设置到下拉框
+    const typesOptions = dataSourceDetail?.types.map(type => type.driver) || [];
 
     // 设置下拉框的状态
     const [selectedType, setSelectedType] = useState(typesOptions[0] || '');
@@ -70,7 +70,7 @@ export function Information({ dataSourceName }) {
     };
 
 
-    const selectedTypeDetails = dataSourceDetail?.types.find(type => type.name === selectedType);
+    const selectedTypeDetails = dataSourceDetail?.types.find(type => type.driver === selectedType);
     const queryParameters = selectedTypeDetails?.queryParameters || [];
 
     // 普通输入框的变更处理
@@ -90,11 +90,13 @@ export function Information({ dataSourceName }) {
     }
 
 
+    // 当发送请求时对名称进行编码
     const fetchData = () => {
-        setIsQuerying(true); // 开始查询
-        dispatch(fetchDataQuery(dataSourceName, selectedType, queryParams, selectedTypeDetails)).then(() => {
-            setIsQuerying(false); // 查询结束
-            handleCloseDialog(); // 关闭表单
+        const encodedTypeName = encodeURIComponent(selectedTypeDetails?.name || ''); // 使用 encodeURIComponent 编码
+        setIsQuerying(true);
+        dispatch(fetchDataQuery(dataSourceName, encodedTypeName, queryParams, selectedTypeDetails)).then(() => {
+            setIsQuerying(false);
+            handleCloseDialog();
         });
     };
 
@@ -171,14 +173,12 @@ export function Information({ dataSourceName }) {
                 </KubeConfirmButton>
             </Stack>
 
-            {/* 你可以展示更多的详细信息 */}
-
 
             {/* 弹出表单 */}
             <Dialog open={openDialog} onClose={handleCloseDialog} fullWidth maxWidth="md">
                 <DialogContent sx={{ overflowY: 'auto', maxHeight: '80vh', padding: '16px 32px 16px 32px' }}>
                     <KubeDeploymentCard
-                        title={intl.messages['dataSource.dataDetailInfoQuery']}
+                        title={<span style={{ fontSize: '20px', fontWeight: 'bold' }}> {intl.messages['dataSource.dataDetailInfoQuery']}</span>}
                         handleClose={handleCloseDialog}
                         sx={{
                             padding: '32px',
@@ -191,21 +191,34 @@ export function Information({ dataSourceName }) {
                         <Stack direction='column' spacing={2} sx={{ padding: '16px 32px', bgcolor: '#eff4f9', p: '20px', overflowY: 'auto', flex: 1 }}>
                             <Box>
                                 <h3>{intl.messages['dataSource.dataInfoQueryInput']}</h3>
+                                {/*数据名称*/}
+                                {/*解码后的名称显示在前端*/}
                                 <KubeInput
-                                    label="数据源名称"
+                                    label={intl.messages['dataSource.dataName']}
                                     description=""
                                     required={true}
                                     variant='outlined'
-                                    value={dataSourceName}
+                                    value={decodeURIComponent(selectedTypeDetails?.name || '')} // 使用 decodeURIComponent 解码
                                     disabled
                                 />
 
+                                {/*数据描述*/}
                                 <KubeInput
-                                    label="请求方式"
+                                    label={intl.messages['dataSource.dataDescription']}
                                     description=""
                                     required={true}
                                     variant='outlined'
-                                    value={selectedType}
+                                    value={selectedTypeDetails?.description || ''}
+                                    disabled
+                                />
+
+                                {/*数据源驱动方式*/}
+                                <KubeInput
+                                    label={intl.messages['dataSource.dataSourceDriver']}
+                                    description=""
+                                    required={true}
+                                    variant='outlined'
+                                    value={selectedTypeDetails?.driver || ''}
                                     disabled
                                 />
 

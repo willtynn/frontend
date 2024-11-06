@@ -9,6 +9,7 @@ export const UPDATE_DATA_SOURCE = 'UPDATE_DATA_SOURCE';
 export const SELECT_DATA_SOURCE = 'SELECT_DATA_SOURCE';
 export const UPDATE_TABLE_DATA = 'UPDATE_TABLE_DATA';
 export const CLEAR_TABLE_DATA = 'CLEAR_TABLE_DATA';
+export const REGISTER_DATA_SOURCE = 'REGISTER_DATA_SOURCE';
 
 
 const baseURLLink = 'http://192.168.1.104:31141';
@@ -59,50 +60,6 @@ export function fetchAllDataSources() {
     };
 }
 
-// export function fetchDataSourceData(name, type, start, end) {
-//     const urlBuilder = new URL(`/data-source/${name}/data/${type}`,baseURLLink);
-//     if (start > 0) {
-//         urlBuilder.searchParams.append('start', start);
-//     }
-//     if (end > 0) {
-//         urlBuilder.searchParams.append('end', end);
-//     }
-//     const url = urlBuilder.href;
-//     return async dispatch => {
-//         try {
-//             const res = await axios_instance.get(
-//                 url,
-//                 {
-//                     headers: {
-//                         'Content-Type': 'application/json',
-//                     },
-//                 }
-//             );
-//             if (res.status === 200) {
-//                 dispatch({type: UPDATE_TABLE_DATA, data: res.data});
-//             } else {
-//                 dispatch(
-//                     setSnackbarMessageAndOpen(
-//                         'dataSource.dataSourceDataFetchError',
-//                         {},
-//                         SEVERITIES.warning
-//                     )
-//                 );
-//                 dispatch({type: UPDATE_TABLE_DATA, data: []});
-//             }
-//         } catch {
-//             dispatch(
-//                 setSnackbarMessageAndOpen(
-//                     'dataSource.dataSourceDataFetchError',
-//                     {},
-//                     SEVERITIES.warning
-//                 )
-//             );
-//             dispatch({type: UPDATE_TABLE_DATA, data: []});
-//         }
-//     };
-// }
-
 // 根据数据源名称和数据源获取方式获取相应的具体数据
 export function fetchDataQuery(dataSourceName, selectedType, queryParams, selectedTypeDetails) {
     const baseUrl = `/data-source/${dataSourceName}/data/${selectedType}`;
@@ -147,6 +104,56 @@ export function fetchDataQuery(dataSourceName, selectedType, queryParams, select
     };
 }
 
+// 清除图表中的数据
 export function clearTableData() {
     return { type: CLEAR_TABLE_DATA };
+}
+
+// 注册数据源
+export function registerDataSource(dataSource) {
+    const url = '/data-source';
+    return async dispatch => {
+        try {
+            const response = await axios_instance.post(
+                url,
+                dataSource,
+                {
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                }
+            );
+
+            if (response.status === 200 || response.status === 201) {
+                dispatch({
+                    type: REGISTER_DATA_SOURCE,
+                    data: response.data,
+                });
+                dispatch(
+                    setSnackbarMessageAndOpen(
+                        'dataSource.dataSourceRegisterSuccess',
+                        {},
+                        SEVERITIES.success
+                    )
+                );
+            } else {
+                dispatch(
+                    setSnackbarMessageAndOpen(
+                        'dataSource.dataSourceRegisterError',
+                        {},
+                        SEVERITIES.warning
+                    )
+                );
+            }
+        } catch (error) {
+            console.error("Error registering data source:", error);
+            dispatch(
+                setSnackbarMessageAndOpen(
+                    'dataSource.dataSourceRegisterError',
+                    {},
+                    SEVERITIES.error
+                )
+            );
+        }
+    };
 }
