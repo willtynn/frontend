@@ -11,14 +11,14 @@ import {
 import { fontFamily } from '@/utils/commonUtils';
 import DetailBG from '@/assets/DetailBG.svg';
 import Service21 from '@/assets/Service21.svg';
-import EditService from '@/assets/EditService.svg';
+// import EditService from '@/assets/EditService.svg';
 import Delete16 from '@/assets/Delete16.svg';
 import NavigateBeforeIcon from '@mui/icons-material/NavigateBefore';
 import { useNavigate, useParams } from 'react-router-dom';
 import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
 import { StyledPopover } from '@/components/Popover';
 import { useIntl } from 'react-intl';
-import { fetchAllDataSources } from '@/actions/dataSourceAction';
+import { deleteDataSource, fetchAllDataSources } from '@/actions/dataSourceAction';
 
 const labelStyle = {
   fontSize: '12px',
@@ -70,9 +70,17 @@ export default function GeneralInfo({ dataSourceName }) {
         navigate('/datasource/info');
     };
 
+    // 根据数据源名称删除数据源
+    const handleDelete = () => {
+        dispatch(deleteDataSource(dataSourceName)).then(() => {
+            navigate('/datasource/info'); //删除后返回数据源信息页面
+            setMoreOperationAnchorEl(null);  // 关闭操作菜单
+        });
+    };
+
     const items = [
-        [<EditService />, '编辑数据源', () => { }],
-        [<Delete16 />, '删除', () => { }],
+        // [<EditService />, '编辑数据源', () => { }],
+        [<Delete16 />, '删除', handleDelete],
     ];
 
     const handleMoreOperation = e => {

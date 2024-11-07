@@ -25,10 +25,10 @@ export default function RegisterDataSourceDialog({open, handleClose}) {
     const initialDataSourceState = {
         cluster: 0,
         description: '',
-        host: '192.168.1.104',
+        host: '',
         name: '',
         types: [],
-        url: 'http://192.168.1.104:31953',
+        url: '',
         interval: 0,
     };
 
@@ -57,7 +57,7 @@ export default function RegisterDataSourceDialog({open, handleClose}) {
 
     // 添加数据类型
     const addDataType = () => {
-        setDataTypes([...dataTypes, { description: '', driver: '', index: dataTypes.length, name: 'instance/fresourceHistory', queryParameters: [], schema:'' }]);
+        setDataTypes([...dataTypes, { description: '', driver: '', index: dataTypes.length, name: '', queryParameters: [], schema:'' }]);
     };
 
     // 处理数据类型输入框的变化
@@ -322,10 +322,10 @@ export default function RegisterDataSourceDialog({open, handleClose}) {
                                     ))}
                                     <KubeConfirmButton onClick={() => addQueryParameter(typeIndex)}
                                         sx={{
-                                        backgroundColor: '#7a1ea1', // 设定背景色
+                                        backgroundColor: '#242e42', // 设定背景色
                                         color: '#FFFFFF', // 设定字体颜色
                                         '&:hover': {
-                                        backgroundColor: '#7a1ea1' // 设置悬停时的背景色
+                                        backgroundColor: '#242e42' // 设置悬停时的背景色
                                     }
                                     }}
                                     >

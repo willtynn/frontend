@@ -39,6 +39,11 @@ export default function DataSourceReducer(state = initState, action) {
                     ? [...state.dataSources, data] // 添加新注册的数据源
                     : [data], // 如果 dataSources 为空，直接设置为数组
             };
+        case actions.DELETE_DATA_SOURCE:
+            return {
+                ...state,
+                dataSources: state.dataSources?.filter(source => source.name !== data) || [],
+            };
 
         default:
             return state;

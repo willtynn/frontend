@@ -1,6 +1,7 @@
 // Information.js
 import React, { useState, useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
+import ReactJson from 'react-json-view';
 import {Box, Typography, MenuItem, Select, FormControl} from '@mui/material';
 import { useIntl } from 'react-intl';
 import {KubeCancelButton, KubeConfirmButton} from "../../../../../components/Button";
@@ -14,6 +15,7 @@ import {clearTableData, fetchDataQuery} from "../../../../../actions/dataSourceA
 import { DateTimePicker } from '@mui/x-date-pickers/DateTimePicker';
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
+
 
 
 export function Information({ dataSourceName }) {
@@ -326,7 +328,21 @@ export function Information({ dataSourceName }) {
             ) : responseData ? (
                 <Box sx={{ marginTop: 4, padding: 2, backgroundColor: '#f1f1f1', borderRadius: 2 }}>
                     <Typography variant="h6">请求结果:</Typography>
-                    <pre>{JSON.stringify(responseData, null, 2)}</pre>
+                    <ReactJson
+                        src={responseData}                // 展示的 JSON 数据
+                        collapsed={2}
+                        enableClipboard={true}
+                        displayDataTypes={false}
+                        style={{
+                            backgroundColor: '#ffffff',     // 背景白色
+                            padding: '16px',                // 内边距
+                            borderRadius: '8px',            // 圆角
+                            fontFamily: 'Roboto, Arial, sans-serif', // 字体
+                            fontSize: '14px',               // 字体大小
+                            lineHeight: '1.5',              // 行高
+                            color: '#333333'                // 文字颜色
+                        }}
+                    />
                 </Box>
             ) : (
                 <Box sx={{

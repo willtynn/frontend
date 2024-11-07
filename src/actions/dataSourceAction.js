@@ -10,6 +10,7 @@ export const SELECT_DATA_SOURCE = 'SELECT_DATA_SOURCE';
 export const UPDATE_TABLE_DATA = 'UPDATE_TABLE_DATA';
 export const CLEAR_TABLE_DATA = 'CLEAR_TABLE_DATA';
 export const REGISTER_DATA_SOURCE = 'REGISTER_DATA_SOURCE';
+export const DELETE_DATA_SOURCE = 'DELETE_DATA_SOURCE';
 
 
 const baseURLLink = 'http://192.168.1.104:31141';
@@ -157,3 +158,49 @@ export function registerDataSource(dataSource) {
         }
     };
 }
+
+// 删除数据源
+export function deleteDataSource(dataSourceName) {
+    const url = `/data-source/${dataSourceName}`;
+    return async dispatch => {
+        try {
+            const response = await axios_instance.delete(url, {
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+            });
+
+            if (response.status === 200 || response.status === 204) {
+                dispatch({
+                    type: DELETE_DATA_SOURCE,
+                    data: dataSourceName,
+                });
+                dispatch(
+                    setSnackbarMessageAndOpen(
+                        'dataSource.dataSourceDeleteSuccess',
+                        {},
+                        SEVERITIES.success
+                    )
+                );
+            } else {
+                dispatch(
+                    setSnackbarMessageAndOpen(
+                        'dataSource.dataSourceDeleteError',
+                        {},
+                        SEVERITIES.warning
+                    )
+                );
+            }
+        } catch (error) {
+            console.error("Error deleting data source:", error);
+            dispatch(
+                setSnackbarMessageAndOpen(
+                    'dataSource.dataSourceDeleteError',
+                    {},
+                    SEVERITIES.error
+                )
+            );
+        }
+    };
+}
+

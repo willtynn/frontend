@@ -1,15 +1,14 @@
 /**
  * src\Pages\DataSource\info\index.js
  */
-import React,{ useEffect, useState } from 'react';
-import { Box, Stack, TextField, Typography } from '@mui/material';
-import { useDispatch, useSelector } from 'react-redux';
+import React from 'react';
+import { Box, Stack, Typography } from '@mui/material';
 import { useIntl } from 'react-intl';
 import ClusterNode from '@/assets/ClusterNode.svg';
 import DataSourceComponent from './Overview';  // 导入 Overview 组件
 
 export default function DataSource() {
-    const dispatch = useDispatch();
+
     const intl = useIntl();
 
     return (

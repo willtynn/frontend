@@ -657,7 +657,8 @@ export const messages = {
     addDataType:'add data type',
     dataSourceRegisterSuccess:'dataSource register success',
     dataSourceRegisterError:'dataSource register error',
-
+    dataSourceDeleteSuccess:'dataSource delete success',
+    dataSourceDeleteError:'dataSource delete error',
   },
 
   industry:{

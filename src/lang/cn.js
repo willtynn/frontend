@@ -624,6 +624,8 @@ export const messages = {
     addDataType:'添加数据类型',
     dataSourceRegisterSuccess:'数据源注册成功',
     dataSourceRegisterError:'数据源注册失败',
+    dataSourceDeleteSuccess:'数据源删除成功',
+    dataSourceDeleteError:'数据源删除失败',
 
   },
   industry:{
