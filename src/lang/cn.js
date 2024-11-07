@@ -626,6 +626,8 @@ export const messages = {
     dataSourceRegisterError:'数据源注册失败',
     dataSourceDeleteSuccess:'数据源删除成功',
     dataSourceDeleteError:'数据源删除失败',
+    responseData: '请求结果',
+    inquiry:'查询中...',
 
   },
   industry:{

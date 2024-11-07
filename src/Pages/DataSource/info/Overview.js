@@ -228,7 +228,7 @@ export default function DataSourceComponent() {
                 onPageChange={handleChangePage}
                 rowsPerPage={rowsPerPage}
                 onRowsPerPageChange={handleChangeRowsPerPage}
-                rowsPerPageOptions={[1, 2, 10, 100]}
+                rowsPerPageOptions={[10, 20, 50, 100]}
                 labelRowsPerPage={intl.messages['dataSource.numsPerPage']}
                 labelDisplayedRows={({ from, count, page }) => `${page + 1} of ${Math.ceil(count / rowsPerPage)}`} // 自定义显示格式
             />

@@ -659,6 +659,8 @@ export const messages = {
     dataSourceRegisterError:'dataSource register error',
     dataSourceDeleteSuccess:'dataSource delete success',
     dataSourceDeleteError:'dataSource delete error',
+    responseData: 'Response Data',
+    inquiry:'Inquiry...',
   },
 
   industry:{

@@ -2,7 +2,17 @@
 import React, { useState, useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import ReactJson from 'react-json-view';
-import {Box, Typography, MenuItem, Select, FormControl} from '@mui/material';
+import {
+    Box,
+    Typography,
+    MenuItem,
+    Select,
+    FormControl,
+    TableRow,
+    TableContainer,
+    Table,
+    TableHead, TableCell, TableBody
+} from '@mui/material';
 import { useIntl } from 'react-intl';
 import {KubeCancelButton, KubeConfirmButton} from "../../../../../components/Button";
 import {Stack} from "@mui/system";
@@ -15,13 +25,18 @@ import {clearTableData, fetchDataQuery} from "../../../../../actions/dataSourceA
 import { DateTimePicker } from '@mui/x-date-pickers/DateTimePicker';
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
+import { Chart as ChartJS, LineElement, PointElement, LinearScale, Title, Tooltip, CategoryScale, TimeScale } from 'chart.js';
+import Paper from "@mui/material/Paper";
+import { Line } from 'react-chartjs-2';
+import 'chartjs-adapter-date-fns';
 
-
+ChartJS.register(LineElement, PointElement, LinearScale, Title, Tooltip, CategoryScale, TimeScale);
 
 export function Information({ dataSourceName }) {
 
     const intl = useIntl();
     const dispatch = useDispatch();
+    const [chartData, setChartData] = useState(null); // 图表数据
 
     // 在组件加载时清空上次查询的数据
     useEffect(() => {
@@ -58,8 +73,6 @@ export function Information({ dataSourceName }) {
         setSelectedType(event.target.value);
         setQueryParams({}); // Reset query params when type changes
     };
-
-
 
     const handleConfirmClick = () => {
         if (selectedType) {
@@ -101,6 +114,215 @@ export function Information({ dataSourceName }) {
             handleCloseDialog();
         });
     };
+
+    // 渲染基本信息的表格
+    const renderBasicInfo = () => {
+        const dataName = decodeURIComponent(selectedTypeDetails?.name || '');
+        const dataDescription = selectedTypeDetails?.description || '';
+        const dataSourceDriver = selectedTypeDetails?.driver || '';
+
+        return (
+            <TableContainer component={Paper} sx={{ marginBottom: 2 }}>
+                <Table>
+                    <TableHead>
+                        <TableRow>
+                            <TableCell align="center" sx={{ fontWeight: 'bold', padding: '4px 8px', textAlign: 'center'  }}>{intl.messages['dataSource.dataName']}</TableCell>
+                            <TableCell align="center" sx={{ fontWeight: 'bold', padding: '4px 8px', textAlign: 'center'  }}>{intl.messages['dataSource.dataDescription']}</TableCell>
+                            <TableCell align="center" sx={{ fontWeight: 'bold', padding: '4px 8px', textAlign: 'center'  }}>{intl.messages['dataSource.dataSourceDriver']}</TableCell>
+                        </TableRow>
+                    </TableHead>
+                    <TableBody>
+                        <TableRow>
+                            <TableCell align="center" sx={{ padding: '6px 8px',textAlign: 'center'  }}>{dataName}</TableCell>
+                            <TableCell align="center" sx={{ padding: '6px 8px',textAlign: 'center'  }}>{dataDescription}</TableCell>
+                            <TableCell align="center" sx={{ padding: '6px 8px',textAlign: 'center'  }}>{dataSourceDriver}</TableCell>
+                        </TableRow>
+                    </TableBody>
+                </Table>
+            </TableContainer>
+        );
+    };
+
+
+    // 根据返回的数据类型动态展示数据内容
+    const renderContent = () => {
+        // 返回
+        if (Array.isArray(responseData)) {
+            if (Array.isArray(responseData[0]) && responseData[0].length === 2) {
+                // 识别为二维数组的情况，生成单独图表
+                const data = {
+                    datasets: [
+                        {
+                            label: 'Data Points',
+                            data: responseData.map(([x, y]) => ({ x: new Date(x * 1000), y: parseFloat(y) })),
+                            borderColor: 'rgba(75,192,192,1)',
+                            tension: 0.1,
+                            fill: false,
+                        },
+                    ],
+                };
+
+                const options = {
+                    scales: {
+                        x: {
+                            type: 'time',
+                            time: {
+                                unit: 'minute',
+                                displayFormats: {
+                                    minute: 'MM-dd HH:mm', // 24小时制
+                                    hour: 'MM-dd HH:mm',
+                                },
+                            },
+                            title: { display: true, text: 'Time' },
+                        },
+                        y: {
+                            title: { display: true, text: 'Value' },
+                        },
+                    },
+                    plugins: {
+                        title: { display: true, text: 'Time Series Data' },
+                    },
+                };
+
+                return (
+                    <Box sx={{ marginTop: 4, padding: 2, backgroundColor: '#f1f1f1', borderRadius: 2 }}>
+                        <Line data={data} options={options} />
+                    </Box>
+                );
+            }
+
+            //  第二种情况：返回的是一维数组，展示为表格
+            return (
+                <TableContainer component={Paper}>
+                    <Table>
+                        <TableHead>
+                            <TableRow>
+                                {/*根据返回数据动态生成表头*/}
+                                {Object.keys(responseData[0] || {}).map((key) => (
+                                    key === 'value'
+                                        ? Object.keys(responseData[0].value).map((subKey) => (
+                                            <TableCell
+                                                key={subKey}
+                                                sx={{ fontWeight: 'bold',padding: '4px 8px',textAlign: 'center'  }}
+                                            >
+                                                {subKey}
+                                            </TableCell>
+                                        ))
+                                        : <TableCell
+                                            key={key}
+                                            sx={{ fontWeight: 'bold', padding: '4px 8px', textAlign: 'center'  }}
+                                        >
+                                            {key}
+                                        </TableCell>
+                                ))}
+                            </TableRow>
+                        </TableHead>
+                        <TableBody>
+                            {responseData.map((row, index) => (
+                                <TableRow key={index}>
+                                    {/* 动态生成行数据 */}
+                                    {Object.keys(row).map((key) => (
+                                        key === 'value'
+                                            ? Object.values(row.value).map((val, i) => (
+                                                <TableCell
+                                                    key={i}
+                                                    sx={{ padding: '6px 8px',textAlign: 'center'  }}
+                                                >
+                                                    {val}
+                                                </TableCell>
+                                            ))
+                                            : <TableCell
+                                                key={key}
+                                                sx={{ padding: '6px 8px',textAlign: 'center'  }}
+                                            >
+                                                {/* 如果是 time 字段，将时间戳转换为 24 小时制日期格式 */}
+                                                {key === 'time'
+                                                    ? new Date(row[key]).toLocaleString('zh-CN', {
+                                                        hour12: false,
+                                                        year: 'numeric',
+                                                        month: '2-digit',
+                                                        day: '2-digit',
+                                                        hour: '2-digit',
+                                                        minute: '2-digit',
+                                                        second: '2-digit'
+                                                    })
+                                                    : row[key]}
+                                            </TableCell>
+                                    ))}
+                                </TableRow>
+                            ))}
+                        </TableBody>
+                    </Table>
+                </TableContainer>
+            );
+        } else if (responseData && typeof responseData === 'object') {
+            // 目前附加情况：多维数组，用于绘制图表
+            if (responseData.data?.results) {
+                return responseData.data.results.map((metric, index) => {
+                    const values = metric.data.result[0].values;
+                    const data = {
+                        datasets: [
+                            {
+                                label: metric.metric_name,
+                                data: values.map(([x, y]) => ({ x: new Date(x * 1000), y: parseFloat(y) })),
+                                borderColor: 'rgba(75,192,192,1)',
+                                tension: 0.1,
+                                fill: false,
+                            }
+                        ]
+                    };
+
+                    const options = {
+                        scales: {
+                            x: {
+                                type: 'time',
+                                time: {
+                                    unit: 'minute',
+                                    displayFormats: {
+                                        minute: 'MM-dd HH:mm', // 设置为24小时制，例如: 月-日 小时:分钟
+                                        hour: 'MM-dd HH:mm',
+                                        day: 'MM-dd HH:mm'
+                                    }
+                                },
+                                title: { display: true, text: 'Time' },
+                            },
+                            y: {
+                                title: { display: true, text: 'Value' },
+                            },
+                        },
+                        plugins: {
+                            title: { display: true, text: metric.metric_name },
+                        },
+                    };
+
+
+                    return (
+                        <Box key={index} sx={{ marginTop: 4, padding: 2, backgroundColor: '#f1f1f1', borderRadius: 2 }}>
+                            <Line data={data} options={options} />
+                        </Box>
+                    );
+                });
+            }
+        //    第一种情况：展示为可交互的JSON格式
+            return (
+                <ReactJson
+                src={responseData}                // 展示的 JSON 数据
+                collapsed={2}
+                enableClipboard={true}
+                displayDataTypes={false}
+                style={{
+                    backgroundColor: '#ffffff',     // 背景白色
+                    padding: '16px',                // 内边距
+                    borderRadius: '8px',            // 圆角
+                    fontFamily: 'Roboto, Arial, sans-serif', // 字体
+                    fontSize: '14px',               // 字体大小
+                    lineHeight: '1.5',              // 行高
+                    color: '#333333'                // 文字颜色
+                }}
+                />
+            )
+        }
+    }
 
     if (!dataSourceDetail) {
         return <Typography>Loading data...</Typography>; // 或者显示加载状态
@@ -290,32 +512,35 @@ export function Information({ dataSourceName }) {
                         </Stack>
 
 
-                        <Stack
-                            sx={{
-                                mt: '40px',
-                                padding: '8px 32px 8px 16px', // 左右增加 padding
-                                bottom: '12px',
-                                width: '100%',
-                                bgcolor: '#f9fbfd',
-                            }}
-                            direction='row'
-                            spacing={3}
-                            justifyContent='flex-end'
-                            alignItems='flex-end'
-                        >
-                            <KubeCancelButton
-                                sx={{ height: '32px', padding: '5px 23px' }}
-                                onClick={handleCloseDialog}
+                        <Box sx={{ paddingRight: '40px' }}>
+                            <Stack
+                                sx={{
+                                    mt: '20px',
+                                    padding: '8px 16px 8px 16px',
+                                    bottom: '12px',
+                                    width: '100%',
+                                    bgcolor: '#f9fbfd',
+                                }}
+                                direction='row'
+                                spacing={3}
+                                justifyContent='flex-end'
+                                alignItems='flex-end'
                             >
-                                {intl.messages['common.cancel']}
-                            </KubeCancelButton>
-                            <KubeConfirmButton
-                                sx={{ height: '32px', padding: '5px 23px' }}
-                                onClick={fetchData}
-                            >
-                                {intl.messages['dataSource.query']}
-                            </KubeConfirmButton>
-                        </Stack>
+                                <KubeCancelButton
+                                    sx={{ height: '32px', padding: '5px 16px' }}
+                                    onClick={handleCloseDialog}
+                                >
+                                    {intl.messages['common.cancel']}
+                                </KubeCancelButton>
+                                <KubeConfirmButton
+                                    sx={{ height: '32px', padding: '5px 16px' }}
+                                    onClick={fetchData}
+                                >
+                                    {intl.messages['dataSource.query']}
+                                </KubeConfirmButton>
+                            </Stack>
+                        </Box>
+
                     </KubeDeploymentCard>
                 </DialogContent>
             </Dialog>
@@ -323,26 +548,32 @@ export function Information({ dataSourceName }) {
             {/* 显示请求结果或提示文字 */}
             {isQuerying ? (
                 <Box sx={{ marginTop: 4, padding: 2, backgroundColor: '#f9f9f9', borderRadius: 2 }}>
-                    <Typography variant="h6">查询中...</Typography>
+                    <Typography
+                        variant="h6"
+                        sx={{
+                            fontSize: '16px',    // 调整文字大小
+                            marginBottom: '8px', // 设置下边距缩小和上移
+                            fontWeight: 'bold'
+                        }}
+                    >
+                        {intl.messages['dataSource.inquiry']}
+                    </Typography>
                 </Box>
             ) : responseData ? (
                 <Box sx={{ marginTop: 4, padding: 2, backgroundColor: '#f1f1f1', borderRadius: 2 }}>
-                    <Typography variant="h6">请求结果:</Typography>
-                    <ReactJson
-                        src={responseData}                // 展示的 JSON 数据
-                        collapsed={2}
-                        enableClipboard={true}
-                        displayDataTypes={false}
-                        style={{
-                            backgroundColor: '#ffffff',     // 背景白色
-                            padding: '16px',                // 内边距
-                            borderRadius: '8px',            // 圆角
-                            fontFamily: 'Roboto, Arial, sans-serif', // 字体
-                            fontSize: '14px',               // 字体大小
-                            lineHeight: '1.5',              // 行高
-                            color: '#333333'                // 文字颜色
+                    <Typography
+                        variant="h6"
+                        sx={{
+                            fontSize: '16px',    // 调整文字大小
+                            marginBottom: '8px', // 设置下边距缩小和上移
+                            fontWeight: 'bold'
                         }}
-                    />
+                    >
+                        {intl.messages['dataSource.responseData']}</Typography>
+
+                    {/*展示返回结果*/}
+                    {renderBasicInfo()}
+                    {renderContent()}
                 </Box>
             ) : (
                 <Box sx={{
