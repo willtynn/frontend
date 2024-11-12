@@ -115,7 +115,7 @@ export function DataDetail() {
                 dataTime: res.data.dataTime,
             }]);
             count++;
-            if(res.data.dataname == null){
+            if(res.data.dataValue == null || res.data.dataValue == ""){
                 dispatch(
                     setSnackbarMessageAndOpen(
                       'common.errorMessage',
