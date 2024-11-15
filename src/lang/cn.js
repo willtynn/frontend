@@ -461,7 +461,8 @@ export const messages = {
     communicationPressureBoundary: '通信压力边界',
     stepPressureDiagram: '阶梯压力图',
     groupAggregateReport: '线程组聚合报告',
-    comment: '描述'
+    comment: '描述',
+    deletePlanSuccess: '删除测试计划成功'
   },
   jointStressTesting: {
     performancePressureTest: '多负载性能压测',

@@ -12,7 +12,7 @@ import { useNavigate, useParams } from 'react-router-dom';
 import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
 import { StyledPopover } from '@/components/Popover';
 import { getBoolString } from '../../../../utils/commonUtils';
-import { measure } from '@/actions/applicationAction';
+import { measure,deleteTestPlanByID } from '@/actions/applicationAction';
 import { useIntl } from 'react-intl';
 
 
@@ -49,6 +49,7 @@ export default function GeneralInfo(props) {
   const moreOperationOpen = Boolean(moreOperationAnchorEl);
   const [backText, setBackText] = useState('能力测试');
   const dispatch = useDispatch();
+  const { testPlanId } = useParams();
   const intl = useIntl();
 
   const { currentPlan } = useSelector(state => {
@@ -59,7 +60,16 @@ export default function GeneralInfo(props) {
 
   const items = [
     [<EditService />, '编辑计划', () => {}],
-    [<Delete16 />, '删除', () => {}],
+    [<Delete16 />, '删除', () => {
+      dispatch(deleteTestPlanByID(testPlanId))
+      .then((code) => {
+        if (code === 200 || code === 0) {
+          setTimeout(() => {
+            handleReturn();
+          }, 300);
+        }
+      });
+    }],
   ];
 
   // const handleReturn = () => {
