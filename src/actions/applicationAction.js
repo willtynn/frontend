@@ -93,6 +93,7 @@ export const DELETE_JOINT_PLAN = 'DELETE_JOINT_PLAN';
 
 //const baseURLLink = 'http://192.168.1.104:14447';
 const baseURLLink = 'http://192.168.1.104:30293';
+//const baseURLLink = 'http://localhost:8848';
 
 
 const axios_instance = axios.create({
@@ -777,6 +778,61 @@ export function getBoundaryTestResult(planId) {
       }
     } catch {
       dispatch({ type: UPDATE_BOUNDARY_RESULT, data: [] });
+      dispatch(
+        setSnackbarMessageAndOpen(
+          'stressTesting.resultsSearchError',
+          {},
+          SEVERITIES.warning
+        )
+      );
+    }
+  };
+}
+
+export function deleteTestPlanByID(testPlanId) {
+  const url = '/pressureMeasurement/deleteTestPlan';
+  return async dispatch => {
+    try {
+      const res = await axios_instance.get(
+        url,
+        {
+          params: {
+           testPlanId: testPlanId,
+          },
+        },
+        {
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        }
+      );
+      if (res.data.code === 200 || res.data.code === 0) {
+        dispatch(
+          setSnackbarMessageAndOpen(
+            'stressTesting.deletePlanSuccess',
+            {},
+            SEVERITIES.success
+          )
+        );
+      } else if (res.data.code === 1) {
+        dispatch(
+          setSnackbarMessageAndOpen(
+            'common.errorMessage',
+            { msg: res.data.message },
+            SEVERITIES.warning
+          )
+        );
+      } else {
+        dispatch(
+          setSnackbarMessageAndOpen(
+            'stressTesting.resultsSearchError',
+            {},
+            SEVERITIES.warning
+          )
+        );
+      }
+      return res.data.code;
+    } catch {
       dispatch(
         setSnackbarMessageAndOpen(
           'stressTesting.resultsSearchError',
