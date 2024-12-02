@@ -78,7 +78,7 @@ export function AggregateReport() {
   const dispatch = useDispatch();
 
   const headRow = [
-    createRow('label', 'Label', false, '70px', '70px', true, 'center'),
+    createRow('label', 'Label', false, '70px', '80px', true, 'center'),
     createRow('samples', '# Samples', false, '70px', '70px', true, 'center'),
     createRow('average', 'Average', false, '70px', '70px', true, 'center'),
     createRow('median', 'Median', false, '70px', '70px', true, 'center'),
