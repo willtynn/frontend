@@ -25,7 +25,7 @@ export default function ControlQuery() {
         networkControlInfo: state.Cluster.networkControlInfo,
     }));
 
-    const ip = '192.168.1.104';
+    const ip = '100.105.103.116';
     useEffect(() => {
         dispatch(getNetworkControlInfo(ip));
         localStorage.setItem('serviceFrom', 'overview');
@@ -39,7 +39,7 @@ export default function ControlQuery() {
 
     /*useEffect(() => {
         const ips = [
-            '192.168.1.104',
+            '100.105.103.116',
             '192.168.1.171',
             '192.168.1.172',
             '192.168.1.173',

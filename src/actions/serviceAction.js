@@ -77,10 +77,10 @@ export const UPDATE_SERVICE_DESIREDGPUMEM = 'UPDATE_SERVICE_DESIREDGPUMEM';
 export const UPDATE_SERVICE_PROCESSCAPABILITY = 'UPDATE_SERVICE_PROCESSCAPABILITY';
 
 
-// const baseURLLink = 'http://192.168.1.104:31931';
+// const baseURLLink = 'http://100.105.103.116:31931';
 export const UPDATE_SEARCH_POD = 'UPDATE_SEARCH_POD';
 
-const baseURLLink = 'http://192.168.1.104:30990';
+const baseURLLink = 'http://100.105.103.116:30990';
 
 const axios_instance = axios.create({
   baseURL: baseURLLink,
@@ -411,7 +411,7 @@ export function batchDeleteServices(serviceIds, cb=()=>{}) {
 export function searchPodsByServiceName(cluster, name) {
   const url = '/instance/status/service';
   const tmpInstance = axios.create({
-    baseURL: 'http://192.168.1.104:31953',
+    baseURL: 'http://100.105.103.116:31953',
     timeout: 10000,
     // withCredentials: isCookie,
     crossDomain: true,

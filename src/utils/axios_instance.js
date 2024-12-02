@@ -1,7 +1,7 @@
 import axios from 'axios';
 import { getLocalStorage } from '@/utils/localStorageHandler';
 
-export const baseURLLink = "http://192.168.1.104:31931";
+export const baseURLLink = "http://100.105.103.116:31931";
 console.log('Now using base link: ', baseURLLink);
 
 export const cookieSet = () => {
