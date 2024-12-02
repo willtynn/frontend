@@ -278,6 +278,8 @@ function PodResourceMonitor(props) {
     let startTime = parseInt(start.valueOf() / 1000);
     let endTime = parseInt(end.valueOf() / 1000);
 
+    let fileName = `${podName}_resource_history_${start.format('YYYYMMDD')}_${end.format('YYYYMMDD')}_${downloadStep}s.xlsx`;
+
     // send request to the url directly to download the file
     let url = `/instance/resourceHistory/export`;
     let data = {
@@ -301,7 +303,7 @@ function PodResourceMonitor(props) {
           let url = window.URL.createObjectURL(blob);
           let a = document.createElement('a');
           a.href = url;
-          a.download = `${podName}_resource_history.xlsx`;
+          a.download = fileName;
           a.click();
         });
       })

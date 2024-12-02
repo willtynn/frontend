@@ -14,14 +14,17 @@ import { HeadBar } from '../Pages/Menu/HeadBar';
 import { ServiceDetail } from '../Pages/Service/detail';
 import { RouteTraceInfoPage } from '../Pages/Route/trace/RouteTraceInfoPage';
 import StressTesting from '../Pages/Application/StressTesting';
+import JointStressTesting from '../Pages/Application/JointStressTesting';
 import ImagesList from '../Pages/Image';
 import { TestPlanDetail } from '../Pages/Application/StressTesting/Detail';
 import { ResultDetail } from '../Pages/Application/StressTesting/ResultDetail';
+import { JointTestPlanDetail } from '../Pages/Application/JointStressTesting/Detail';
 import SchemeDeploy from '../Pages/Cluster/scheme';
 import EvolutionPlan from '../Pages/Evolution';
 import { EvolutionPlanDetail } from '../Pages/Evolution/Detail';
 import SchemeDetail from '../Pages/Cluster/scheme/SchemeDetail';
 import ClusterNetwork from '../Pages/Cluster/network';
+import { DataSourceDetail } from '../Pages/DataSource/info/Detail/DataSourceDetail'
 import DataSourceInfo from '../Pages/DataSource/info'; // 导入数据源信息页面
 import IndustryOverview from '../Pages/Industry/Overview';
 import Log from '../Pages/Industry/Log';
@@ -40,8 +43,10 @@ export default function MyRoute() {
         <Route path='scheme/:schemeId' element={<SchemeDetail />} />
         <Route path='testplan/:testPlanId' element={<TestPlanDetail />}/>
         <Route path='evolutionplan/:evo_id' element={<EvolutionPlanDetail />}/>
+        <Route path='jointTestplan/:jointTestPlanId' element={<JointTestPlanDetail />}/>
         <Route path='planresult/:testResultId' element={<ResultDetail />}/>
         <Route path='trace/:start/:end/:traceId' element={<RouteTraceInfoPage />}/>
+        <Route path='datasource/:name' element={<DataSourceDetail />} />  {/* 数据源详情页面，使用 name 作为参数 */}
       </Route>
 
       {/* 存在导航栏 */}
@@ -65,6 +70,7 @@ export default function MyRoute() {
         </Route>
         <Route path='application/'>
           <Route path="stress_testing" element={<StressTesting />} />
+          <Route path="joint_stress_testing" element={<JointStressTesting />}/>
         </Route>
         <Route path='images/'>
           <Route path="list" element={<ImagesList />} />

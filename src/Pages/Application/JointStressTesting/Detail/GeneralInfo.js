@@ -12,9 +12,10 @@ import { useNavigate, useParams } from 'react-router-dom';
 import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
 import { StyledPopover } from '@/components/Popover';
 import { getBoolString } from '../../../../utils/commonUtils';
-import { measure } from '@/actions/applicationAction';
+import { measureJointPlan,deleteJointPlanByID } from '@/actions/applicationAction';
 import { useIntl } from 'react-intl';
-
+import { UpdateModal } from '../Update/UpdateWindow';
+import { StyledModal } from '../../../../components/Modal';
 
 const labelStyle = {
   fontSize: '12px',
@@ -47,33 +48,53 @@ export default function GeneralInfo(props) {
 
   const [moreOperationAnchorEl, setMoreOperationAnchorEl] = useState(null);
   const moreOperationOpen = Boolean(moreOperationAnchorEl);
-  const [backText, setBackText] = useState('能力测试');
+  const [backText, setBackText] = useState('联合测试');
   const dispatch = useDispatch();
   const intl = useIntl();
-
-  const { currentPlan } = useSelector(state => {
+  const [planOpen, setPlanOpen] = useState(false);
+  const [showError, setShowError] = useState(false);
+  
+  const { jointTestPlanId } = useParams();
+  const { currentJointPlan } = useSelector(state => {
     return {
-      currentPlan: state.Application.currentPlan,
+      currentJointPlan: state.Application.currentJointPlan,
     };
   });
 
   const items = [
-    [<EditService />, '编辑计划', () => {}],
-    [<Delete16 />, '删除', () => {}],
+    [<EditService />, '编辑计划', () => {
+      setPlanOpen(true);
+    }],
+    [<Delete16 />, '删除', () => {
+      dispatch(deleteJointPlanByID(jointTestPlanId));
+      setTimeout(() => {
+        handleReturn();
+      }, 300);
+    }],
   ];
 
-  // const handleReturn = () => {
-  //   navigate('/application/stress_testing');
-  // };
-
-
   const handleReturn = () => {
-    navigate(-1); // 返回到上一个页面
+    navigate('/application/joint_stress_testing');
   };
 
   const handleMoreOperation = e => {
     setMoreOperationAnchorEl(e.currentTarget);
   };
+
+  const handleClose = () => {
+    setPlanOpen(false);
+  };
+
+  const handleCancelClick = () => {
+    setPlanOpen(false);
+  };
+
+  
+  const handleConfirmClick = () => {
+    window.location.reload();
+    setPlanOpen(false);
+  };
+
 
   return (
     <Stack
@@ -148,7 +169,7 @@ export default function GeneralInfo(props) {
                 },
               },
             }}
-            title={currentPlan !== null ? currentPlan.testPlanName : ''}
+            title={currentJointPlan !== null ? currentJointPlan.name : ''}
             placement='bottom'
           >
             <Box
@@ -166,7 +187,7 @@ export default function GeneralInfo(props) {
                 whiteSpace: 'nowrap',
               }}
             >
-              {currentPlan !== null ? currentPlan.testPlanName : ''}
+              {currentJointPlan !== null ? currentJointPlan.name : ''}
             </Box>
           </Tooltip>
         </Stack>
@@ -179,7 +200,7 @@ export default function GeneralInfo(props) {
           <KubeCancelButton
             sx={{ height: '32px', width: '96px' }}
             onClick={() => {
-              dispatch(measure(currentPlan.id));
+              dispatch(measureJointPlan(currentJointPlan.id));
             }}
           >
             {intl.messages['stressTesting.startTest']}
@@ -228,49 +249,39 @@ export default function GeneralInfo(props) {
           <Stack direction='row' spacing={0.75}>
             <Box sx={labelStyle}>{intl.messages['common.status']}</Box>
             <Box sx={valueStyle}>
-              {currentPlan !== null ? currentPlan.status : ''}
+              {currentJointPlan !== null ? currentJointPlan.status : ''}
             </Box>
           </Stack>
           <Stack direction='row' spacing={0.75}>
-            <Box sx={labelStyle}>{intl.messages['common.serialized']}</Box>
+            <Box sx={labelStyle}>{intl.messages['common.sonTestPlans']}</Box>
             <Box sx={valueStyle}>
-              {currentPlan !== null
-                ? getBoolString(currentPlan.serialized)
-                : ''}
-            </Box>
-          </Stack>
-          <Stack direction='row' spacing={0.75}>
-            <Box sx={labelStyle}>{intl.messages['common.functionMode']}</Box>
-            <Box sx={valueStyle}>
-              {currentPlan !== null
-                ? getBoolString(currentPlan.functionalMode)
-                : ''}
-            </Box>
-          </Stack>
-          <Stack direction='row' spacing={0.75}>
-            <Box sx={labelStyle}>tear</Box>
-            <Box sx={valueStyle}>
-              {currentPlan !== null ? getBoolString(currentPlan.tearDown) : ''}
-            </Box>
-          </Stack>
-          <Stack direction='row' spacing={0.75}>
-            <Box sx={labelStyle}>{intl.messages['common.boundaryTest']}</Box>
-            <Box sx={valueStyle}>
-              {currentPlan !== null
-                ? currentPlan.boundary
-                  ? intl.messages['common.yes']
-                  : intl.messages['common.no']
+              {currentJointPlan !== null
+                ? currentJointPlan.testPlansName !== null
+                  ? currentJointPlan.testPlansName.join(', ')
+                  : ''
                 : ''}
             </Box>
           </Stack>
           <Stack direction='row' spacing={0.75}>
             <Box sx={labelStyle}>{intl.messages['common.description']}</Box>
             <Box sx={valueStyle}>
-              {currentPlan !== null ? currentPlan.comment : ''}
+              {currentJointPlan !== null ? currentJointPlan.comment : ''}
             </Box>
           </Stack>
         </Stack>
       </Box>
+
+      <Stack>
+      <StyledModal open={planOpen} onClose={handleClose}>
+              <UpdateModal
+                          handleConfirmClick={handleConfirmClick}
+                          handleCancelClick={handleCancelClick}
+                          showError={showError}
+                          setError={setShowError}
+              />
+       </StyledModal> 
+      </Stack>
+
     </Stack>
   );
 }

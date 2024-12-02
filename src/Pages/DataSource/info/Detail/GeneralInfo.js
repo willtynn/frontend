@@ -1,20 +1,24 @@
 import { useEffect, useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import { Box, Stack, Tooltip } from '@mui/material';
-import { KubeCancelButton } from '@/components/Button';
+import {
+  Box,
+  Stack,
+  Tooltip,
+} from '@mui/material';
+import {
+  KubeCancelButton,
+} from '@/components/Button';
 import { fontFamily } from '@/utils/commonUtils';
 import DetailBG from '@/assets/DetailBG.svg';
 import Service21 from '@/assets/Service21.svg';
-import EditService from '@/assets/EditService.svg';
+// import EditService from '@/assets/EditService.svg';
 import Delete16 from '@/assets/Delete16.svg';
 import NavigateBeforeIcon from '@mui/icons-material/NavigateBefore';
 import { useNavigate, useParams } from 'react-router-dom';
 import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
 import { StyledPopover } from '@/components/Popover';
-import { getBoolString } from '../../../../utils/commonUtils';
-import { measure } from '@/actions/applicationAction';
 import { useIntl } from 'react-intl';
-
+import { deleteDataSource, fetchAllDataSources } from '@/actions/dataSourceAction';
 
 const labelStyle = {
   fontSize: '12px',
@@ -42,38 +46,47 @@ const valueStyle = {
   wordBreak: 'break-all',
 };
 
-export default function GeneralInfo(props) {
-  const navigate = useNavigate();
+export default function GeneralInfo({ dataSourceName }) {
+    const navigate = useNavigate();
+    const dispatch = useDispatch();
+    const intl = useIntl();
+    const backText = intl.messages['dataSource.dataSourceInfo']
+    const [moreOperationAnchorEl, setMoreOperationAnchorEl] = useState(null);
+    const moreOperationOpen = Boolean(moreOperationAnchorEl);
 
-  const [moreOperationAnchorEl, setMoreOperationAnchorEl] = useState(null);
-  const moreOperationOpen = Boolean(moreOperationAnchorEl);
-  const [backText, setBackText] = useState('能力测试');
-  const dispatch = useDispatch();
-  const intl = useIntl();
+    //  获取所有的数据源，并找到名称匹配的目标数据源
+    const dataSourceDetail = useSelector(state =>
+        state.DataSource.dataSources ? state.DataSource.dataSources.find(source => source.name === dataSourceName) : null
+    );
 
-  const { currentPlan } = useSelector(state => {
-    return {
-      currentPlan: state.Application.currentPlan,
+    useEffect(() => {
+        // 如果数据源信息不存在，先加载所有数据源信息
+        if (!dataSourceDetail) {
+            dispatch(fetchAllDataSources());
+        }
+    }, [dataSourceName, dataSourceDetail, dispatch]);
+
+    const handleReturn = () => {
+        navigate('/datasource/info');
     };
-  });
 
-  const items = [
-    [<EditService />, '编辑计划', () => {}],
-    [<Delete16 />, '删除', () => {}],
-  ];
+    // 根据数据源名称删除数据源
+    const handleDelete = () => {
+        dispatch(deleteDataSource(dataSourceName)).then(() => {
+            navigate('/datasource/info'); //删除后返回数据源信息页面
+            setMoreOperationAnchorEl(null);  // 关闭操作菜单
+        });
+    };
 
-  // const handleReturn = () => {
-  //   navigate('/application/stress_testing');
-  // };
+    const items = [
+        // [<EditService />, '编辑数据源', () => { }],
+        [<Delete16 />, '删除', handleDelete],
+    ];
 
+    const handleMoreOperation = e => {
+        setMoreOperationAnchorEl(e.currentTarget);
+    };
 
-  const handleReturn = () => {
-    navigate(-1); // 返回到上一个页面
-  };
-
-  const handleMoreOperation = e => {
-    setMoreOperationAnchorEl(e.currentTarget);
-  };
 
   return (
     <Stack
@@ -144,11 +157,11 @@ export default function GeneralInfo(props) {
               sx: {
                 '& .MuiTooltip-tooltip': {
                   backgroundColor: '#242e42',
-                  margin: '0 !important',
+                  margin: "0 !important"
                 },
               },
             }}
-            title={currentPlan !== null ? currentPlan.testPlanName : ''}
+            title={dataSourceDetail ? dataSourceDetail.description : ''}
             placement='bottom'
           >
             <Box
@@ -161,12 +174,12 @@ export default function GeneralInfo(props) {
                 lineHeight: 1.4,
                 letterSpacing: 'normal',
                 color: '#36435C',
-                textOverflow: 'ellipsis',
-                overflow: 'hidden',
-                whiteSpace: 'nowrap',
+                textOverflow: "ellipsis",
+                overflow: "hidden",
+                whiteSpace: 'nowrap'
               }}
             >
-              {currentPlan !== null ? currentPlan.testPlanName : ''}
+              {dataSourceDetail ? dataSourceDetail.name : ''}
             </Box>
           </Tooltip>
         </Stack>
@@ -176,25 +189,17 @@ export default function GeneralInfo(props) {
           spacing={1.5}
           alignItems='center'
         >
-          <KubeCancelButton
-            sx={{ height: '32px', width: '96px' }}
-            onClick={() => {
-              dispatch(measure(currentPlan.id));
-            }}
-          >
-            {intl.messages['stressTesting.startTest']}
-          </KubeCancelButton>
+
           <KubeCancelButton
             onClick={handleMoreOperation}
-            sx={{ height: '32px', width: '96px' }}
+            sx={{ height: '32px', minWidth: '96px' }}
           >
             <Stack direction='row' alignItems='center' justifyContent='center'>
-              <Box sx={{ ml: '4px' }}>
-                {intl.messages['common.moreOperation']}
-              </Box>
+              <Box sx={{ ml: '4px' }}>{intl.messages['common.moreOperation']}</Box>
               <ArrowDropDownIcon fontSize='small' />
             </Stack>
           </KubeCancelButton>
+
         </Stack>
       </Box>
       <Box
@@ -224,51 +229,49 @@ export default function GeneralInfo(props) {
         </Box>
 
         {/* Key-Value Pair */}
-        <Stack sx={{ margin: '6px 0px' }} direction='column' spacing={1.5}>
-          <Stack direction='row' spacing={0.75}>
-            <Box sx={labelStyle}>{intl.messages['common.status']}</Box>
-            <Box sx={valueStyle}>
-              {currentPlan !== null ? currentPlan.status : ''}
-            </Box>
-          </Stack>
-          <Stack direction='row' spacing={0.75}>
-            <Box sx={labelStyle}>{intl.messages['common.serialized']}</Box>
-            <Box sx={valueStyle}>
-              {currentPlan !== null
-                ? getBoolString(currentPlan.serialized)
-                : ''}
-            </Box>
-          </Stack>
-          <Stack direction='row' spacing={0.75}>
-            <Box sx={labelStyle}>{intl.messages['common.functionMode']}</Box>
-            <Box sx={valueStyle}>
-              {currentPlan !== null
-                ? getBoolString(currentPlan.functionalMode)
-                : ''}
-            </Box>
-          </Stack>
-          <Stack direction='row' spacing={0.75}>
-            <Box sx={labelStyle}>tear</Box>
-            <Box sx={valueStyle}>
-              {currentPlan !== null ? getBoolString(currentPlan.tearDown) : ''}
-            </Box>
-          </Stack>
-          <Stack direction='row' spacing={0.75}>
-            <Box sx={labelStyle}>{intl.messages['common.boundaryTest']}</Box>
-            <Box sx={valueStyle}>
-              {currentPlan !== null
-                ? currentPlan.boundary
-                  ? intl.messages['common.yes']
-                  : intl.messages['common.no']
-                : ''}
-            </Box>
-          </Stack>
-          <Stack direction='row' spacing={0.75}>
-            <Box sx={labelStyle}>{intl.messages['common.description']}</Box>
-            <Box sx={valueStyle}>
-              {currentPlan !== null ? currentPlan.comment : ''}
-            </Box>
-          </Stack>
+        <Stack sx={{ margin: '6px 0px' }} direction='column' spacing={2}>
+            <Stack direction='row' spacing={0.75}>
+                <Box sx={labelStyle}>{intl.messages['dataSource.dataSourceName']}</Box>
+                <Box sx={valueStyle}>
+                {dataSourceDetail ? dataSourceDetail.name : ''}
+                </Box>
+            </Stack>
+            <Stack direction='row' spacing={0.75}>
+                <Box sx={labelStyle}>{intl.messages['dataSource.dataSourceDes']}</Box>
+                <Box sx={valueStyle}>
+                    {dataSourceDetail ? dataSourceDetail.description : ''}
+                </Box>
+            </Stack>
+            <Stack direction='row' spacing={0.75}>
+                <Box sx={labelStyle}>{intl.messages['dataSource.dataSourceCluster']}</Box>
+                <Box sx={valueStyle}>
+                    {dataSourceDetail ? dataSourceDetail.cluster : ''}
+                </Box>
+            </Stack>
+            <Stack direction='row' spacing={0.75}>
+                <Box sx={labelStyle}>{intl.messages['dataSource.dataSourceHost']}</Box>
+                <Box sx={valueStyle}>
+                    {dataSourceDetail ? dataSourceDetail.host : ''}
+                </Box>
+            </Stack>
+            <Stack direction='row' spacing={0.75}>
+                <Box sx={labelStyle}>{intl.messages['dataSource.dataSourceStatus']}</Box>
+                <Box sx={valueStyle}>
+                    {dataSourceDetail ? dataSourceDetail.status : ''}
+                </Box>
+            </Stack>
+            <Stack direction='row' spacing={0.75}>
+                <Box sx={labelStyle}>{intl.messages['dataSource.dataSourceInterval']}</Box>
+                <Box sx={valueStyle}>
+                    {dataSourceDetail ? dataSourceDetail.interval : ''}
+                </Box>
+            </Stack>
+            <Stack direction='row' spacing={0.75}>
+                <Box sx={labelStyle}>{intl.messages['dataSource.dataSourceLastSeen']}</Box>
+                <Box sx={valueStyle}>
+                    {dataSourceDetail ? dataSourceDetail.lastSeen : ''}
+                </Box>
+            </Stack>
         </Stack>
       </Box>
     </Stack>

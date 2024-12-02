@@ -1,179 +1,182 @@
-import React, {useState, useEffect} from 'react';
+import React, {useState, useEffect, useCallback} from 'react';
 import {useSelector, useDispatch} from 'react-redux';
-import {Box, Stack, TextField, Autocomplete, Table, TableBody, TableCell, TableRow, TableHead} from '@mui/material';
+import {
+    Box,
+    Stack,
+    TextField,
+    Table,
+    TableBody,
+    TableCell,
+    TableRow,
+    TableHead,
+    InputAdornment,
+    TablePagination,
+} from '@mui/material';
 import {useIntl} from 'react-intl';
 import {KubeConfirmButton} from '@/components/Button';
-import dayjs from 'dayjs';
-import {fetchAllDataSources, fetchDataSourceData} from '@/actions/dataSourceAction';
-import {StyledTableContainer, StyledTableBodyCell, StyledTableHead} from '@/components/DisplayTable';
-import Question from '@/assets/Question.svg';
+import {fetchAllDataSources} from '@/actions/dataSourceAction';
+import {StyledTableContainer, StyledTableBodyCell} from '@/components/DisplayTable';
+import Task from '@/assets/Task.svg';
 import {NormalBoldFont, SmallLightFont} from '@/components/Fonts';
+import SearchIcon from '@mui/icons-material/Search';
+import {useNavigate} from "react-router-dom";
+import RegisterDataSourceDialog from "./RegisterDataSource";
+import Question from '@/assets/Question.svg';
+
 
 export default function DataSourceComponent() {
-    const [dataTypes, setDataTypes] = useState([]);
-    const [selectedDataSource, setSelectedDataSource] = useState(null);
-    const [selectedDataType, setSelectedDataType] = useState(null);
-    const [startDate, setStartDate] = useState('');
-    const [endDate, setEndDate] = useState('');
     const [tableData, setTableData] = useState([]);
+    const [searchTerm, setSearchTerm] = useState(''); // 搜索框的状态
+    const [page, setPage] = useState(0);
+    const [rowsPerPage, setRowsPerPage] = useState(10); // 每页显示的行数
+    const [open, setOpen] = useState(false); // 控制注册表单弹窗状态
+
 
     const intl = useIntl();
     const dispatch = useDispatch();
+    const navigate = useNavigate(); // 初始化 useNavigate 钩子用于详情页面跳转
     const dataSources = useSelector(state => state.DataSource.dataSources);
-    const tableDataFromState = useSelector(state => state.DataSource.tableData);
 
     useEffect(() => {
         dispatch(fetchAllDataSources());
-
-        const today = dayjs().format('YYYY-MM-DD');
-        setStartDate(`${today} 00:00:00`);
-        setEndDate(`${today} 23:59:59`);
     }, [dispatch]);
 
     useEffect(() => {
-        if (selectedDataSource) {
-            setDataTypes(selectedDataSource.types || []);
-            setSelectedDataType(null); // Reset selected data type when data source changes
-        } else {
-            setDataTypes([]);
-        }
-    }, [selectedDataSource]);
-
-    useEffect(() => {
-        if (Array.isArray(tableDataFromState)) {
-            setTableData(tableDataFromState);
+        if (Array.isArray(dataSources)) {
+            const formattedData = dataSources.map(source => ({
+                name: source.name,
+                description: source.description,
+                typesCount: source.types ? source.types.length : 0,
+            }));
+            setTableData(formattedData);
         } else {
             setTableData([]);
         }
-    }, [tableDataFromState]);
+    }, [dataSources]);
 
-    const handleQuery = () => {
-        if (selectedDataSource && selectedDataType) {
-            // convert to long if set, else -1 (unset state, will be  ignored in fetchDataSourceData())
-            const serializedStartDate = startDate ? 1 * startDate : -1;
-            const serializedEndDate = endDate ? 1 * endDate : -1;
-            dispatch(fetchDataSourceData(selectedDataSource.name, selectedDataType.name, serializedStartDate, serializedEndDate));
-        }
+    // 使用 useCallback 确保 handleSearch 引用最新的 searchTerm 值
+    const handleSearch = useCallback(() => {
+        setTableData(
+            dataSources
+                .filter(source => source.name.toLowerCase().includes(searchTerm.toLowerCase()))
+                .map(source => ({
+                    name: source.name,
+                    description: source.description,
+                    typesCount: source.types ? source.types.length : 0,
+                }))
+        );
+        setPage(0); // 搜索后重置到第一页
+    }, [dataSources, searchTerm]);
+
+    // 切换分页
+    const handleChangePage = (event, newPage) => {
+        setPage(newPage);
     };
 
-    const autocompleteStyles = {
-        '& .MuiOutlinedInput-root': {
-            height: '32px',
-            fontSize: '12px',
-            fontWeight: 600,
-            padding: '0 12px',
-            display: 'flex',
-            alignItems: 'center',
-        },
-        '& .MuiInputBase-input::placeholder': {
-            color: '#A0A0A0',
-            opacity: 1,
-        },
-        '& .MuiInputBase-input': {
-            padding: 0,
-            display: 'flex',
-            alignItems: 'center',
-            height: '100%',
-        },
-        '& .MuiAutocomplete-inputRoot[class*="MuiOutlinedInput-root"]': {
-            padding: 0,
-        },
-        '& .MuiAutocomplete-input': {
-            padding: '0 12px',
-            boxSizing: 'border-box',
-            display: 'flex',
-            alignItems: 'center',
-            height: '100%',
-        }
-    };
-
-    const textFieldStyles = {
-        '& .MuiOutlinedInput-root': {
-            height: '32px',
-            fontSize: '12px',
-            fontWeight: 600,
-            padding: '0 12px',
-            display: 'flex',
-            alignItems: 'center',
-        },
-        '& .MuiInputBase-input::placeholder': {
-            color: '#A0A0A0',
-            opacity: 1,
-        },
-        '& .MuiInputBase-input': {
-            padding: 0,
-            display: 'flex',
-            alignItems: 'center',
-            height: '100%',
-        }
+    // 更改每页显示的行数
+    const handleChangeRowsPerPage = (event) => {
+        setRowsPerPage(parseInt(event.target.value, 10));
+        setPage(0); // 重置到第一页
     };
 
     const headFirstRow = [
-        {id: 'id', label: intl.messages['dataSource.ID'], minWidth: 150, align: 'left'},
-        {id: 'value', label: intl.messages['dataSource.value'], minWidth: 150, align: 'left'}
+        {id: 'dataSourceName', label: intl.messages['dataSource.dataSourceName'], minWidth: 150, align: 'left'},
+        {id: 'dataSourceDes', label: intl.messages['dataSource.dataSourceDes'], minWidth: 150, align: 'left'},
+        {id: 'dataSourceTypes', label: intl.messages['dataSource.dataSourceTypes'], minWidth: 150, align: 'left'}
     ];
+
+    // 控制注册数据源表单
+    const handleOpen = () => {
+        setOpen(true);
+    }
+
+    const handleClose = () => {
+        setOpen(false);
+    }
+
 
     return (
         <Box sx={{p: 3}}>
-            <Stack direction="row" spacing={2} sx={{mb: 2}}>
-                <Autocomplete
-                    options={dataSources || []}
-                    getOptionLabel={(option) => option.name}
-                    onChange={(event, newValue) => setSelectedDataSource(newValue)}
-                    renderInput={(params) => (
-                        <TextField
-                            {...params}
-                            placeholder={intl.messages['dataSource.dataSource']}
-                            variant="outlined"
-                            sx={autocompleteStyles}
-                        />
-                    )}
-                    sx={{width: 300}}
-                />
-                <Autocomplete
-                    options={dataTypes || []}
-                    getOptionLabel={(option) => option.name}
-                    onChange={(event, newValue) => setSelectedDataType(newValue)}
-                    renderInput={(params) => (
-                        <TextField
-                            {...params}
-                            placeholder={intl.messages['dataSource.dataType']}
-                            variant="outlined"
-                            sx={autocompleteStyles}
-                        />
-                    )}
-                    sx={{width: 300}}
-                />
+            <Stack direction="row" spacing={2} sx={{mb: 2, alignItems: 'center'}}>
+                {/* 搜索框 */}
                 <TextField
-                    placeholder={intl.messages['dataSource.startTime']}
-                    value={startDate}
-                    onChange={(event) => setStartDate(event.target.value)}
-                    variant="outlined"
-                    sx={{width: 200, ...textFieldStyles}}
+                    value={searchTerm}
+                    onChange={(e) => setSearchTerm(e.target.value)}
+                    placeholder={intl.messages['dataSource.dataSourceSearchPrompt']}
+                    onKeyDown={(e) => {
+                        if (e.key === 'Enter') {
+                            e.preventDefault();
+                            handleSearch(); // 回车执行搜索
+                        }
+                    }}
+                    InputProps={{
+                        startAdornment: (
+                            <InputAdornment position="start">
+                                <SearchIcon />
+                            </InputAdornment>
+                        ),
+                        style: {
+                            fontSize: '12px',
+                            fontWeight: 600,
+                            color: '#36435c',
+                            backgroundColor: '#EFF4F9',
+                            padding: '4px 12px',
+                            borderRadius: '20px', // 增加圆角
+                            height: '36px', // 调整高度
+                        }
+                    }}
+                    sx={{
+                        width: '700px',
+                        '& .MuiOutlinedInput-root': {
+                            paddingRight: '8px',
+                            '& fieldset': {
+                                borderColor: 'rgba(0, 0, 0, 0.23)',
+                            },
+                            '&:hover fieldset': {
+                                borderColor: '#000',
+                            },
+                            '&.Mui-focused fieldset': {
+                                borderColor: '#55bc8a',
+                                boxShadow: '0 4px 8px 0 rgba(85,188,138,.2)',
+                            },
+                            borderRadius: '20px' // 增加圆角
+                        }
+                    }}
                 />
-                <TextField
-                    placeholder={intl.messages['dataSource.endTime']}
-                    value={endDate}
-                    onChange={(event) => setEndDate(event.target.value)}
-                    variant="outlined"
-                    sx={{width: 200, ...textFieldStyles}}
-                />
+
+                <Box sx={{ flexGrow: 1 }} /> {/* 用于将按钮推到右边 */}
+
+                {/*查询按钮*/}
                 <KubeConfirmButton
                     sx={{width: '150px'}}
-                    onClick={handleQuery}
+                    onClick={handleSearch}
                 >
                     {intl.messages['dataSource.query']}
                 </KubeConfirmButton>
+
+                {/*注册数据源按钮*/}
+                <KubeConfirmButton
+                    sx={{width: '150px'}}
+                    onClick={handleOpen}
+                >
+                    {intl.messages['dataSource.dataSourceRegister']}
+                </KubeConfirmButton>
             </Stack>
+
+            {/*数据源注册表单弹窗-使用 RegisterDataSourceDialog 组件 */}
+            <RegisterDataSourceDialog open={open} handleClose={handleClose} />
+
+            {/*数据源展示表格内容*/}
             <StyledTableContainer sx={{bgcolor: '#FFF'}}>
                 <Table stickyHeader size="small" sx={{tableLayout: 'auto'}}>
                     <TableHead>
                         <TableRow>
+                            <TableCell style={{ padding: '4px 8px', width: '40px' ,textAlign: 'center', verticalAlign: 'middle'}} /> {/* 图标列 */}
                             {headFirstRow.map((column) => (
                                 <TableCell
                                     key={column.id}
                                     align={column.align}
-                                    style={{minWidth: column.minWidth, color: '#A0A0A0', fontSize: '12px'}}
+                                    style={{minWidth: column.minWidth, color: '#333', fontSize: '12px', fontWeight: 'bold'}}
                                 >
                                     {column.label}
                                 </TableCell>
@@ -182,28 +185,53 @@ export default function DataSourceComponent() {
                     </TableHead>
                     <TableBody>
                         {tableData.length > 0 ? (
-                            tableData.map((row) => (
-                                <TableRow key={row.id}>
-                                    <StyledTableBodyCell>{row.id}</StyledTableBodyCell>
-                                    <StyledTableBodyCell>{JSON.stringify(row.value)}</StyledTableBodyCell>
+                            tableData.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((row, index) => (
+                                <TableRow key={index}>
+                                    <TableCell>
+                                        <Task style={{ width: 35, height: 35 }} />
+                                    </TableCell>
+                                    {/*数据源名称列*/}
+                                    <StyledTableBodyCell
+                                        sx = {{
+                                            fontWeight: 'bold',
+                                            color: '#000',
+                                            cursor: 'pointer',
+                                            '&:hover': { color: '#2e7d32' } // 深绿色
+                                        }}
+                                        onClick={() => navigate(`/detail/dataSource/${row.name}`)} // 跳转到详情页面
+                                    >
+                                        {row.name}
+                                    </StyledTableBodyCell>
+                                    <StyledTableBodyCell>{row.description}</StyledTableBodyCell>
+                                    <StyledTableBodyCell>{row.typesCount}</StyledTableBodyCell>
                                 </TableRow>
                             ))
                         ) : (
                             <TableRow style={{height: '220px'}}>
-                                <TableCell colSpan={2} align="center">
-                                    <Question/>
+                                <TableCell colSpan={3} align="center">
+                                    <Question />
                                     <NormalBoldFont>
                                         {intl.messages['dataSource.noData']}
                                     </NormalBoldFont>
-                                    <SmallLightFont>
-                                        {intl.messages['dataSource.noDataHint']}
-                                    </SmallLightFont>
                                 </TableCell>
                             </TableRow>
                         )}
                     </TableBody>
                 </Table>
             </StyledTableContainer>
+
+            {/* 分页控件 */}
+            <TablePagination
+                component="div"
+                count={tableData.length}
+                page={page}
+                onPageChange={handleChangePage}
+                rowsPerPage={rowsPerPage}
+                onRowsPerPageChange={handleChangeRowsPerPage}
+                rowsPerPageOptions={[10, 20, 50, 100]}
+                labelRowsPerPage={intl.messages['dataSource.numsPerPage']}
+                labelDisplayedRows={({ from, count, page }) => `${page + 1} of ${Math.ceil(count / rowsPerPage)}`} // 自定义显示格式
+            />
         </Box>
     );
 }

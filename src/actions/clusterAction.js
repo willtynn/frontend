@@ -149,55 +149,45 @@ export function getNetworkControlInfo(ip) {
 
 //设置带宽控制
 export function setBandwidthControl(data) {
-  const url = '/api/network/set/bandwidth';
-  return async dispatch => {
-    try {
-      const res = await axios_instance.post(
-          url,
-          data,
-          {
-            headers: {
-              'Content-Type': 'application/json',
-            },
-          }
-      );
-      if (res.data.code === 200 || res.data.code === 0) {
-        dispatch({ type: SET_BANDWIDTH_CONTROL, data: res.data.data });
-        dispatch(
-            setSnackbarMessageAndOpen(
-                'cluster.setBandwidthSuccess',
-                {},
-                SEVERITIES.success
-            )
-        );
-      } else if (res.data.code === 1) {
-        dispatch(
-            setSnackbarMessageAndOpen(
-                'cluster.setBandwidthError',
-                { msg: res.data.message },
-                SEVERITIES.warning
-            )
-        );
-      } else {
-        dispatch(
-            setSnackbarMessageAndOpen(
-                'cluster.setBandwidthError',
-                {},
-                SEVERITIES.warning
-            )
-        );
-      }
-    } catch {
-      dispatch(
-          setSnackbarMessageAndOpen(
-              'cluster.setBandwidthError',
-              {},
-              SEVERITIES.warning
-          )
-      );
-    }
-  };
+    const url = '/api/network/set/bandwidth';
+    return async dispatch => {
+        try {
+            const res = await axios_instance.post(
+                url,
+                data,
+                {
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                }
+            );
+            if (res.data.code === 200 || res.data.code === 0) {
+                dispatch({ type: SET_BANDWIDTH_CONTROL, data: res.data.data });
+                dispatch(
+                    setSnackbarMessageAndOpen(
+                        'cluster.setBandwidthSuccess',
+                        {},
+                        SEVERITIES.success
+                    )
+                );
+                return res.data.data; // 确保返回新数据
+            } else {
+                // 错误处理
+                return null;
+            }
+        } catch (error) {
+            dispatch(
+                setSnackbarMessageAndOpen(
+                    'cluster.setBandwidthError',
+                    { msg: error.message },
+                    SEVERITIES.warning
+                )
+            );
+            return null;
+        }
+    };
 }
+
 
 // 删除带宽控制
 export function deleteBandwidthControl(localIp, targetIp) {

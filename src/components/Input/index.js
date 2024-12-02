@@ -367,7 +367,8 @@ export function ChipTextField(props) {
       }}
       InputProps={{
         startAdornment: (startAdornment !== null
-          ? [<InputAdornment position='start'>{startAdornment}</InputAdornment>]
+          // we need to add a key to the InputAdornment to avoid a warning
+          ? [<InputAdornment key={-1} position='start'>{startAdornment}</InputAdornment>]
           : []
         ).concat(
           contentList.map((value, index) => {

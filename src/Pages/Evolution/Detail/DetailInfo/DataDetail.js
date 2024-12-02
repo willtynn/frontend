@@ -99,7 +99,7 @@ export function DataDetail() {
     
     const getData = async ()=> {
         console.log("开始请求数据");
-        await axios("http://localhost:1234/evolution/getdata/"+currentPlan.evo_id).then(res => {
+        await axios("http://100.105.103.116:30030/evolution/getdata/"+currentPlan.evo_id).then(res => {
             if(res.data == null){
                 console.log("未能获取到数据")
                 return;
