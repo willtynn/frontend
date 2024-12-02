@@ -93,13 +93,13 @@ export const EVO_UPDATE_EVO_ANA_ARGS = 'EVO_UPDATE_EVO_ANA_ARGS'
 export const EVO_UPDATE_EVO_EXE_ARGS = 'EVO_UPDATE_EVO_EXE_ARGS'
 
 
-const baseURLLink = 'http://100.105.103.116:14447';
+const baseURLLink = 'http://192.168.1.104:14447';
 // const baseURLLink = 'http://localhost:8848';
 
 //演化功能对应开发环境下的的baseURL
 // const baseURL = 'http://172.31.0.3:1234';
 //TODO
-const baseURL = 'http://100.105.103.116:30030';
+const baseURL = 'http://192.168.1.104:30030';
 
 const axios_instance = axios.create({
   baseURL: baseURLLink,
