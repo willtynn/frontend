@@ -92,7 +92,7 @@ export const DELETE_JOINT_PLAN = 'DELETE_JOINT_PLAN';
 
 
 //const baseURLLink = 'http://192.168.1.104:14447';
-const baseURLLink = 'http://192.168.1.104:30293';
+const baseURLLink = 'http://100.105.103.116:30293';
 //const baseURLLink = 'http://localhost:8848';
 
 
@@ -1238,6 +1238,7 @@ export function getJointReportByID(jointPlanId) {
             SEVERITIES.warning
           )
         );
+        dispatch({ type: UPDATE_AGGREGATE_ENHANCE_REPORT, data: [] });
       } else {
         dispatch(
           setSnackbarMessageAndOpen(
@@ -1379,6 +1380,7 @@ export function deleteJointPlanByID(jointPlanId) {
           )
         );
         dispatch({ type: DELETE_JOINT_PLAN, data: jointPlanId })
+        dispatch({ type: UPDATE_AGGREGATE_ENHANCE_REPORT, data: null })
       } else if (res.data.code === 1) {
         dispatch(
           setSnackbarMessageAndOpen(

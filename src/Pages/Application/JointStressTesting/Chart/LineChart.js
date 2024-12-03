@@ -9,12 +9,12 @@ const LineChart = () => {
   const [xAxisKey, setXAxisKey] = useState('namespace');
   const [yAxisKey, setYAxisKey] = useState('average');
 
-  const xAxisOptions = ['namespace', 'podName', 'name','samplesNum'];
+  const xAxisOptions = ['namespace', 'podName', 'name','samplesNum','threadNum'];
   const yAxisOptions = ['average', 'median', 'max', 'min','p90','p95','p99','tps',,'errorRate'];
 
   const { aggregateReportEnhance, currentJointPlan } = useSelector(state => {
     return {
-      aggregateReportEnhance: state.Application.aggregateReportEnhance,
+      aggregateReportEnhance: state.Application.aggregateReportEnhance || [], 
       currentJointPlan: state.Application.currentJointPlan,
     };
   });
