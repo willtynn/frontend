@@ -332,7 +332,8 @@ export default function ApplicationReducer(state = initState, action) {
     case actions.UPDATE_CURRENT_TEST_RESULTS:
       return {
         ...state,
-        currrentTestResults: data,
+        currrentTestResults: action.data.records,
+        total: action.data.total
       };
     case actions.UPDATE_TEST_PLANS:
       return {
