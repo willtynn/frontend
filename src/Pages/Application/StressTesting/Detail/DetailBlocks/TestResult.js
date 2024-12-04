@@ -408,7 +408,7 @@ export function TestResult() {
                       align={headRow[3].align}
                       sx={{ display: headRow[2].show ? 'table-cell' : 'none' }}
                     >
-                      {'Succeeded'}
+                      {row.success === 1 ? 'Succeeded' : 'Failed'}
                     </StyledTableBodyCell>
 
                     <StyledTableBodyCell
