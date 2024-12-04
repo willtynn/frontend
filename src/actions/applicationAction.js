@@ -93,7 +93,8 @@ export const DELETE_JOINT_PLAN = 'DELETE_JOINT_PLAN';
 
 //const baseURLLink = 'http://192.168.1.104:14447';
 //const baseURLLink = 'http://100.105.103.116:30293';
-const baseURLLink = 'http://localhost:8848';
+const baseURLLink = 'http://192.168.1.104:30293';
+//const baseURLLink = 'http://localhost:8848';
 
 
 const axios_instance = axios.create({
