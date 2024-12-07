@@ -40,44 +40,28 @@ const style = {
 const totalStage = 2;
 
 export function AlgorithmManage(props) {
-    const { handleConfirmClick, handleCancelClick, showError, setShowError } =
+    const { handleConfirmClick, handleCancelClick,target,type} =
         props;
+    //target指示最终要打开的界面,Algorithm为修改界面附带的算法数据
     const [currentStage, setCurrentStage] = useState(1);
     const [evolutionPlanError, setEvolutionPlanError] = useState(0);
     const [state, setState] = useState("analysis");//用于表示当前窗口界面进行什么算法管理
-    const [newAlgorithmType, setNewAlgorithmType] = useState("analysis"); // 用于记录需要创建的算法类型
     const navigate = useNavigate();
     const intl = useIntl();
     const dispatch = useDispatch();
-    const checkout = () => {
-        if (state == "analysis") {
-            setState("plan");
-            setNewAlgorithmType("plan");
-        } else if (state == "plan") {
-            setState("analysis");
-            setNewAlgorithmType("analysis");
-        } else if (state == "create") {
-            setState("analysis");
-            setNewAlgorithmType("analysis");
-        }
-    }
 
     //根据传入字段来进行界面切换，给子组件使用来进行页面切换
     const checkoutByState = (nowState) => {
         setState(nowState);
     }
 
-    const handleCreate = () => {
-        setState("create");
-    }
-
     const currentPage = () => {
-        if (state === "analysis") {
-            return <AnalysisManage checkoutByState={checkoutByState}/>;
-        } else if (state === "plan") {
+        if (target === "analysis") {
+            return <AnalysisManage />;
+        } else if (target === "plan") {
             return <PlanAlgorithmManage checkoutByState={checkoutByState}/>;
-        } else if (state === "create") {
-            return <CreateAlgorithm state={newAlgorithmType} checkoutByState={checkoutByState} />;
+        } else if (target === "create") {
+            return <CreateAlgorithm state={type} checkoutByState={checkoutByState} exit={handleCancelClick}/>;
         }
     };
 
@@ -101,7 +85,7 @@ export function AlgorithmManage(props) {
                             fontWeight: 400,
                         }}
                     >
-                        {state == "analysis" ? "分析算法管理" : (state == "plan" ? "执行算法管理" : "算法注册")}
+                        {target == "analysis" ? "分析算法管理" : (target == "plan" ? "规划算法管理" : "算法注册")}
                     </Typography>
 
                 </Stack>
@@ -127,17 +111,10 @@ export function AlgorithmManage(props) {
 
 
                     <KubeConfirmButton
-                        sx={{ height: '32px', p: '5px 23px' }}
-                        onClick={checkout}
+                        sx={{ height: '32px', p: '5px 23px',width:"150px" }}
+                        onClick={handleCancelClick}
                     >
-                        {"切换"}
-                    </KubeConfirmButton>
-
-                    <KubeConfirmButton
-                        sx={{ height: '32px', p: '5px 23px' }}
-                        onClick={handleCreate}
-                    >
-                        {"新建算法"}
+                        {"返回"}
                     </KubeConfirmButton>
                 </Stack>
             </KubeDeploymentCard>

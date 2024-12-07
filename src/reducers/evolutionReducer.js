@@ -93,6 +93,9 @@ const initState = {
   //存储对应演化计划的执行结果，是数组
   evolution_plan_result_list: [],
 
+  //表示现在修改界面中正在使用的算法
+  evo_ana_alg: [],
+  evo_plan_alg: []
   //结束
 
 };
@@ -424,7 +427,7 @@ export default function EvolutionReducer(state = initState, action) {
         evo_data_args: data.evo_data_args,
         evo_ana_args: data.evo_ana_args,
         evo_exe_args: data.evo_exe_args,
-        
+
       }
 
     case actions.EVO_GET_DATASOURCE:
@@ -577,6 +580,16 @@ export default function EvolutionReducer(state = initState, action) {
       return {
         ...state,
         evo_exe_args: data
+      }
+    case actions.EVO_UPDATE_EVO_ANA_ALG:
+      return {
+        ...state,
+        evo_ana_alg: data
+      }
+    case actions.EVO_UPDATE_EVO_PLAN_ALG:
+      return {
+        ...state,
+        evo_plan_alg: data
       }
     //新增结束
     default:

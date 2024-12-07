@@ -14,7 +14,7 @@ export function MonitorLog() {
     useEffect(() => {
         // 采用websocket和后端通信
         //TODO:修改掉
-        let ws = new WebSocket('ws://192.168.1.104:30030/log')
+        let ws = new WebSocket('ws://localhost:1234/log')
         // 连接成功后的回调函数
         ws.onopen = function (params) {
             console.log('客户端连接成功')

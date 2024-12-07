@@ -31,9 +31,9 @@ import Log from '../Pages/Industry/Log';
 import ServiceMonitoring from "../Pages/Industry/ServiceMonitoring";
 import ServiceConfiguration from "../Pages/Industry/ServiceConfiguration";
 import ServiceManagement from "../Pages/Industry/ServiceManagement";
-import {AnalysisManage} from "../Pages/Evolution/AlgorithmManage/AnalysisAlgorithmManage";
 import {PlanAlgorithmManage} from "../Pages/Evolution/AlgorithmManage/PlanAlgorithmManage";
-
+import {AnalysisAlgList} from "../Pages/Evolution/AlgorithmManage/AnalysisAlgList";
+import {PlanAlgList} from "../Pages/Evolution/AlgorithmManage/PlanAlgList";
 export default function MyRoute() {
   return (
     <Routes>
@@ -79,8 +79,8 @@ export default function MyRoute() {
         </Route>
         <Route path='evolution/'>
           <Route path="plan" element={<EvolutionPlan />} />
-          <Route path="analysis" element={<AnalysisManage />} />
-          <Route path="planning" element={<PlanAlgorithmManage />} />
+          <Route path="analysis" element={<AnalysisAlgList />} />
+          <Route path="planning" element={<PlanAlgList />} />
         </Route>
         <Route path='datasource/'>  {/* 新增数据源管理路由 */}
           <Route path='info' element={<DataSourceInfo />} />  {/* 新增数据源信息路由 */}

@@ -91,7 +91,8 @@ export const EVO_GET_PLAN_RESULT = 'EVO_GET_PLAN_RESULT'
 export const EVO_UPDATE_EVO_DATA_ARGS = 'EVO_UPDATE_EVO_DATA_ARGS'
 export const EVO_UPDATE_EVO_ANA_ARGS = 'EVO_UPDATE_EVO_ANA_ARGS'
 export const EVO_UPDATE_EVO_EXE_ARGS = 'EVO_UPDATE_EVO_EXE_ARGS'
-
+export const EVO_UPDATE_EVO_ANA_ALG = 'EVO_UPDATE_EVO_ANA_ALG'
+export const EVO_UPDATE_EVO_PLAN_ALG = 'EVO_UPDATE_EVO_PLAN_ALG'
 
 const baseURLLink = 'http://192.168.1.104:14447';
 // const baseURLLink = 'http://localhost:8848';
@@ -99,7 +100,7 @@ const baseURLLink = 'http://192.168.1.104:14447';
 //演化功能对应开发环境下的的baseURL
 // const baseURL = 'http://172.31.0.3:1234';
 //TODO
-const baseURL = 'http://192.168.1.104:30030';
+const baseURL = 'http://100.105.103.116:30030';
 
 const axios_instance = axios.create({
   baseURL: baseURLLink,

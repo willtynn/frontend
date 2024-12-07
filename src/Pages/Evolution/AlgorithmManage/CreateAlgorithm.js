@@ -62,10 +62,8 @@ const style = {
     fontFamily: fontFamily,
 };
 
-const totalStage = 2;
-
 export function CreateAlgorithm(props) {
-    const { state,checkoutByState } = props;
+    const { state,exit } = props;
     const dispatch = useDispatch();
 
     const [algID, setAlgID] = useState("");
@@ -101,14 +99,14 @@ export function CreateAlgorithm(props) {
             }
             dispatch(exe_register(data))
         }
-        checkoutByState(state);
         dispatch(evo_get_algorithm());
+        exit();
         
 
     }
 
     return (
-        <Stack sx={{ p: '32px 64px', bgcolor: '#FFFFFF', height: "350px", overflow: 'scroll' }} direction='column' justifyContent='space-between' >
+        <Stack sx={{ p: '32px 64px', bgcolor: '#FFFFFF', height: "500px", overflow: 'scroll' }} direction='column' justifyContent='space-between' >
             <Box>
                 <Typography
                     sx={{
@@ -163,7 +161,8 @@ export function CreateAlgorithm(props) {
                 {/* 写算法的内容，直接用JAVA代码写 */}
                 <KubeTextField
                     multiline
-                    maxRows={10}
+                    maxRows={50}
+                    rows={5}
                     value={algContent}
                     onChange={handleNewAlgContent}
                 />
