@@ -92,6 +92,7 @@ export const DELETE_JOINT_PLAN = 'DELETE_JOINT_PLAN';
 
 
 //const baseURLLink = 'http://192.168.1.104:14447';
+//const baseURLLink = 'http://100.105.103.116:30293';
 const baseURLLink = 'http://192.168.1.104:30293';
 //const baseURLLink = 'http://localhost:8848';
 
@@ -151,7 +152,7 @@ export function getTestResultByResultId(testResultId) {
   };
 }
 
-export function getTestResultsByID(testPlanId) {
+export function getTestResultsByID(testPlanId, pageNum, pageSize) {
   const url = '/pressureMeasurement/getTestResultsByID';
   return async dispatch => {
     try {
@@ -160,6 +161,8 @@ export function getTestResultsByID(testPlanId) {
         {
           params: {
             testPlanId: testPlanId,
+            current: pageNum,
+            size: pageSize,
           },
         },
         {
@@ -169,7 +172,13 @@ export function getTestResultsByID(testPlanId) {
         }
       );
       if (res.data.code === 200 || res.data.code === 0) {
-        dispatch({ type: UPDATE_CURRENT_TEST_RESULTS, data: res.data.data });
+        dispatch({ 
+          type: UPDATE_CURRENT_TEST_RESULTS, 
+          data: {
+            records: res.data.data.records,
+            total: res.data.data.total
+          }
+        });
       } else if (res.data.code === 1) {
         dispatch(
           setSnackbarMessageAndOpen(
@@ -1238,6 +1247,7 @@ export function getJointReportByID(jointPlanId) {
             SEVERITIES.warning
           )
         );
+        dispatch({ type: UPDATE_AGGREGATE_ENHANCE_REPORT, data: [] });
       } else {
         dispatch(
           setSnackbarMessageAndOpen(
@@ -1379,6 +1389,7 @@ export function deleteJointPlanByID(jointPlanId) {
           )
         );
         dispatch({ type: DELETE_JOINT_PLAN, data: jointPlanId })
+        dispatch({ type: UPDATE_AGGREGATE_ENHANCE_REPORT, data: null })
       } else if (res.data.code === 1) {
         dispatch(
           setSnackbarMessageAndOpen(

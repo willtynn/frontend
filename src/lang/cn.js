@@ -586,6 +586,8 @@ export const messages = {
     deleteWarning: '删除提示',
     backendLog: '后台监控',
     monitorLog: '监控日志',
+    analysisAlgorithm: '分析算法管理',
+    planningAlgorithm:'规划算法管理'
   },
   dataSource:{
     dataSourceManagement: '数据源管理',

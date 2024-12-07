@@ -508,6 +508,30 @@ export default function MiniDrawer() {
                       {intl.messages['evolution.evolutionPlan']}
                     </Box>
                   </ListItemButton>
+                    <ListItemButton
+                        sx={styleListButton}
+                        onClick={() => {
+                            navigate('/evolution/analysis');
+                        }}
+                    >
+                        <Box
+                            sx={{ ...styledFont, color: currentPath === '/evolution/analysis' ? '#55bc8a' : '#242e42' }}
+                        >
+                            {intl.messages['evolution.analysisAlgorithm']}
+                        </Box>
+                    </ListItemButton>
+                    <ListItemButton
+                        sx={styleListButton}
+                        onClick={() => {
+                            navigate('/evolution/planning');
+                        }}
+                    >
+                        <Box
+                            sx={{ ...styledFont, color: currentPath === '/evolution/planning' ? '#55bc8a' : '#242e42' }}
+                        >
+                            {intl.messages['evolution.planningAlgorithm']}
+                        </Box>
+                    </ListItemButton>
                 </List>
               </Collapse>
             </List>

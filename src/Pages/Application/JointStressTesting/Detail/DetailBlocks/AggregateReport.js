@@ -55,7 +55,7 @@ export function AggregateReportEnhance() {
   const intl = useIntl();
   const { aggregateReportEnhance,jointChangeFlag } = useSelector(state => {
     return {
-      aggregateReportEnhance: state.Application.aggregateReportEnhance,
+      aggregateReportEnhance: state.Application.aggregateReportEnhance || [],
       jointChangeFlag: state.Application.jointChangeFlag,
     };
   });
@@ -80,7 +80,7 @@ export function AggregateReportEnhance() {
 
   useEffect(() => {
     dispatch(getJointReportByID(jointTestPlanId));
-  }, [jointChangeFlag]);
+  }, [jointChangeFlag,jointTestPlanId]);
 
 
   const handleUpdateAggregateReport = () => {

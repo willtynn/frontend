@@ -611,6 +611,8 @@ export const messages = {
     deleteWarning: 'Delete Warning',
     backendLog: 'Backend Log',
     monitorLog: 'Monitor Log',
+    analysisAlgorithm: 'Analysis Algorithm',
+    planningAlgorithm: 'Planning Algorithm',
   },
   image: {
     listQueryError:

@@ -150,21 +150,24 @@ export function TestResult() {
   const [customContentAnchorEl, setCustomContentAnchorEl] = useState(null);
   const customContentOpen = Boolean(customContentAnchorEl);
 
-  const { pageSize, pageNum, currrentTestResults } = useSelector(state => {
+  const { pageSize, pageNum, currrentTestResults, total } = useSelector(state => {
     return {
       pageSize: state.Application.pageSize,
       pageNum: state.Application.pageNum,
       currrentTestResults: state.Application.currrentTestResults,
+      total: state.Application.total,
     };
   });
+  
 
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
   useEffect(() => {
-    dispatch(getTestResultsByID(testPlanId));
-  }, []);
-
+    dispatch(getTestResultsByID(testPlanId, pageNum, pageSize));
+  }, [testPlanId, pageNum, pageSize]);
+  
+  
   useEffect(() => {
     if (currrentTestResults && currrentTestResults.length) {
       setCount(currrentTestResults.length);
@@ -213,37 +216,35 @@ export function TestResult() {
     ),
   ];
 
+
   const handleRequestSort = (event, property) => {
     const isAsc = orderBy === property && order === 'asc';
-    setOrder(isAsc ? 'desc' : 'asc');
+    const newOrder = isAsc ? 'desc' : 'asc';
+    setOrder(newOrder);
     setOrderBy(property);
+    dispatch(getTestResultsByID(testPlanId, pageNum, pageSize));
   };
+  
+
+
 
   const visibleRows = useMemo(() => {
-    if (tableData === null || tableData === undefined) return [];
-    const tmpData = JSON.parse(JSON.stringify(tableData));
-    if (pageSize * (pageNum - 1) > count) {
-      dispatch({ type: UPDATE_TEST_PLAN_PAGE_NUM, data: 1 });
-      return stableSort(tmpData, getComparator(order, orderBy)).slice(
-        0,
-        pageSize
-      );
-    }
-    return stableSort(tmpData, getComparator(order, orderBy)).slice(
-      (pageNum - 1) * pageSize,
-      (pageNum - 1) * pageSize + pageSize
-    );
-  }, [order, orderBy, pageNum, pageSize, tableData]);
+    if (!currrentTestResults) return [];
+    return stableSort(currrentTestResults, getComparator(order, orderBy));
+  }, [currrentTestResults, order, orderBy]);
+  
+  
 
-  //改变每页的数量
-  const handlePerPageChange = pageSize => {
-    dispatch({ type: UPDATE_TEST_PLAN_PAGE_SIZE, data: pageSize });
+  const handlePerPageChange = newPageSize => {
+    dispatch({ type: UPDATE_TEST_PLAN_PAGE_SIZE, data: newPageSize });
+    dispatch(getTestResultsByID(testPlanId, 1, newPageSize));
   };
-
-  //改变页码
-  const handlePageChange = (_event, newPage) => {
+  
+  const handlePageChange = (event, newPage) => {
     dispatch({ type: UPDATE_TEST_PLAN_PAGE_NUM, data: newPage });
+    dispatch(getTestResultsByID(testPlanId, newPage, pageSize));
   };
+  
 
   const handleEyeClick = event => {
     setCustomContentAnchorEl(event.currentTarget);
@@ -407,7 +408,7 @@ export function TestResult() {
                       align={headRow[3].align}
                       sx={{ display: headRow[2].show ? 'table-cell' : 'none' }}
                     >
-                      {'Succeeded'}
+                      {row.success === 1 ? 'Succeeded' : 'Failed'}
                     </StyledTableBodyCell>
 
                     <StyledTableBodyCell
@@ -454,7 +455,7 @@ export function TestResult() {
         pageNum={pageNum}
         pageSize={pageSize}
         perPageList={[10, 20, 50, 100]}
-        count={count}
+        count={total}
         handlePerPageChange={handlePerPageChange}
         handlePageChange={handlePageChange}
         sx={{
