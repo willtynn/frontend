@@ -57,9 +57,9 @@ export function AlgorithmManage(props) {
 
     const currentPage = () => {
         if (target === "analysis") {
-            return <AnalysisManage />;
+            return <AnalysisManage exit={handleCancelClick}/>;
         } else if (target === "plan") {
-            return <PlanAlgorithmManage checkoutByState={checkoutByState}/>;
+            return <PlanAlgorithmManage exit={handleCancelClick}/>;
         } else if (target === "create") {
             return <CreateAlgorithm state={type} checkoutByState={checkoutByState} exit={handleCancelClick}/>;
         }

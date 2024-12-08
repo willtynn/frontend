@@ -45,7 +45,9 @@ import {
     exe_modify,
     ana_register,
     exe_register,
-    evo_get_algorithm
+    evo_get_algorithm,
+    evo_get_plan_alg_list,
+    evo_get_ana_alg_list
 } from '../../../actions/evolutionAction';
 import { setSnackbarMessageAndOpen } from '../../../actions/snackbarAction';
 import { SEVERITIES } from '../../../components/CommonSnackbar';
@@ -81,7 +83,7 @@ export function CreateAlgorithm(props) {
         setAlgContent(e.target.value);
     }
 
-    const handleRegisterAlgorithm = () => {
+    async function handleRegisterAlgorithm(){
         if (state == "analysis") {
             var data = {
                 analyze_id: algID,
@@ -99,7 +101,13 @@ export function CreateAlgorithm(props) {
             }
             dispatch(exe_register(data))
         }
-        dispatch(evo_get_algorithm());
+        await dispatch(evo_get_algorithm());
+        if(state == 'plan'){
+            dispatch(evo_get_plan_alg_list("",""));
+        }else if(state == 'analysis'){
+            dispatch(evo_get_ana_alg_list("",""));
+        }
+        
         exit();
         
 

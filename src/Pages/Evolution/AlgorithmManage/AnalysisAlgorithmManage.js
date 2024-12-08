@@ -46,9 +46,7 @@ import { useIntl } from 'react-intl';
 import {
     ana_delete,
     ana_modify,
-    exe_delete,
-    exe_modify,
-    evo_get_algorithm,
+    evo_get_ana_alg_list,
 } from '../../../actions/evolutionAction';
 import { setSnackbarMessageAndOpen } from '../../../actions/snackbarAction';
 import { SEVERITIES } from '../../../components/CommonSnackbar';
@@ -237,7 +235,7 @@ export function AnalysisManage(props) {
     const handleNewAlgContent = e => {
         setAlgContent(e.target.value);
     }
-    const handleModifyAlgorithm = () => {
+    async function handleModifyAlgorithm(){
         var modifyAlgorithm = {
             analyze_id: algID,
             analyze_name: algName,
@@ -255,11 +253,14 @@ export function AnalysisManage(props) {
                 )
             );
         }
-        dispatch(ana_modify(modifyAlgorithm))
+        await dispatch(ana_modify(modifyAlgorithm))
+        dispatch(evo_get_ana_alg_list("",""));
     }
-    const handleDeleteAlgorithm = () => {
-        dispatch(ana_delete(algID));
+    async function handleDeleteAlgorithm(){
+        await dispatch(ana_delete(algID));
         handleDeleteDialogClose();
+        dispatch(evo_get_ana_alg_list("",""));
+        exit();
     }
 
     const handleDeleteDialogOpen = () => {
@@ -317,7 +318,8 @@ export function AnalysisManage(props) {
                             {/* 写算法的内容，直接用JAVA代码写 */}
                             <KubeTextField
                                 multiline
-                                maxRows={10}
+                                maxRows={50}
+                                rows={5}
                                 value={algContent}
                                 onChange={handleNewAlgContent}
                             />
@@ -340,7 +342,7 @@ export function AnalysisManage(props) {
                             </KubeCancelButton>
                         </Box>
                     </Stack>
-                }
+                
 
                 {/* 确认删除提示框 */}
                 <Dialog

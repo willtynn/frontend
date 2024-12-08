@@ -48,8 +48,6 @@ const initState = {
   groupEditIndex: null,
   currentGroupEditStage: 1,
 
-  pageNum: 1,
-  pageSize: 10,
   currentPlan: null,
   evolutionPlans: [],
   currrentTestResults: [],
@@ -95,7 +93,10 @@ const initState = {
 
   //表示现在修改界面中正在使用的算法
   evo_ana_alg: [],
-  evo_plan_alg: []
+  evo_plan_alg: [],
+
+  pageNum: 1,
+  pageSize: 10,
   //结束
 
 };
@@ -594,12 +595,14 @@ export default function EvolutionReducer(state = initState, action) {
     case actions.EVO_UPDATE_PLAN_ALG_LIST:
       return {
         ...state,
-        exe_alg_list: data
+        exe_alg_list: data,
+        pageNum: 1
       }
     case actions.EVO_UPDATE_ANA_ALG_LIST:
       return {
         ...state,
-        ana_alg_list: data
+        ana_alg_list: data,
+        pageNum: 1
       }
     //新增结束
     default:

@@ -44,11 +44,10 @@ import DialogTitle from '@mui/material/DialogTitle';
 import Warning from '@/assets/popup/warning.svg'
 import { useIntl } from 'react-intl';
 import {
-    ana_delete,
-    ana_modify,
     exe_delete,
     exe_modify,
     evo_get_algorithm,
+    evo_get_plan_alg_list,
 } from '../../../actions/evolutionAction';
 import { setSnackbarMessageAndOpen } from '../../../actions/snackbarAction';
 import { SEVERITIES } from '../../../components/CommonSnackbar';
@@ -212,9 +211,9 @@ EnhancedTableToolbar.propTypes = {
 
 
 export function PlanAlgorithmManage(props) {
-    const { checkoutByState,exit} = props;
+    const { checkoutByState, exit } = props;
 
-    const {plan_alg} = useSelector(state => {
+    const { plan_alg } = useSelector(state => {
         return {
             plan_alg: state.Evolution.evo_plan_alg,
         };
@@ -236,7 +235,7 @@ export function PlanAlgorithmManage(props) {
     const handleNewAlgContent = e => {
         setAlgContent(e.target.value);
     }
-    const handleModifyAlgorithm = () => {
+    async function handleModifyAlgorithm() {
         var modifyAlgorithm = {
             plan_id: algID,
             plan_name: algName,
@@ -254,11 +253,14 @@ export function PlanAlgorithmManage(props) {
                 )
             );
         }
-        dispatch(ana_modify(modifyAlgorithm))
+        await dispatch(exe_modify(modifyAlgorithm))
+        dispatch(evo_get_plan_alg_list("", ""));
     }
-    const handleDeleteAlgorithm = () => {
-        dispatch(ana_delete(algID));
+    async function handleDeleteAlgorithm(){
+        await dispatch(exe_delete(algID));
         handleDeleteDialogClose();
+        dispatch(evo_get_plan_alg_list("", ""));
+        exit(); //退出界面
     }
 
     const handleDeleteDialogOpen = () => {
@@ -273,73 +275,74 @@ export function PlanAlgorithmManage(props) {
         <div>
             <Box sx={{ width: '100%' }} >
                 <Stack sx={{ p: '32px 64px', bgcolor: '#FFFFFF', height: "500px", overflow: 'scroll' }} direction='column' justifyContent='space-between' >
-                        <Box>
-                            <KubeInput
-                                label={"算法名称"}
-                                decription={"此处为算法的名称"}
-                                requried={true}
-                                id='test-evo_name-input'
-                                variant='outlined'
-                                value={algName}
-                                onChange={handleNewAlgName}
-                                validation={{
-                                    required: "First Name is required!"
-                                }}
-                            />
-                            <br></br>
-                            <KubeInput
-                                label={"算法描述"}
-                                decription={"简要描述算法"}
-                                requried={false}
-                                id='test-evo_name-input'
-                                variant='outlined'
-                                value={algDesc}
-                                onChange={handleNewAlgDescribe}
-                                validation={{
-                                    required: "First Name is required!"
-                                }}
+                    <Box>
+                        <KubeInput
+                            label={"算法名称"}
+                            decription={"此处为算法的名称"}
+                            requried={true}
+                            id='test-evo_name-input'
+                            variant='outlined'
+                            value={algName}
+                            onChange={handleNewAlgName}
+                            validation={{
+                                required: "First Name is required!"
+                            }}
+                        />
+                        <br></br>
+                        <KubeInput
+                            label={"算法描述"}
+                            decription={"简要描述算法"}
+                            requried={false}
+                            id='test-evo_name-input'
+                            variant='outlined'
+                            value={algDesc}
+                            onChange={handleNewAlgDescribe}
+                            validation={{
+                                required: "First Name is required!"
+                            }}
 
-                            />
-                            <br></br>
-                            {/* //TODO 参考手册还没写，故连接还没确定 */}
-                            <Typography
-                                sx={{
-                                    color: '#36435c',
-                                    fontSize: '12px',
-                                    lineHeight: 1.67,
-                                    fontWeight: 400,
-                                }}
-                            >
-                                {"算法内容,请使用JAVA语言并阅读"}
-                                {<Link href="#">参考手册</Link>}
-                            </Typography>
-                            {/* 写算法的内容，直接用JAVA代码写 */}
-                            <KubeTextField
-                                multiline
-                                maxRows={10}
-                                value={algContent}
-                                onChange={handleNewAlgContent}
-                            />
-                            <br></br>
-                            <KubeCancelButton
-                                onClick={handleModifyAlgorithm}
-                                sx={{ height: '32px', minWidth: '96px', width: '10%' }}
-                            >
-                                <Stack direction='row' alignItems='center' justifyContent='center'>
-                                    <Box sx={{ ml: '4px' }}>{"修改该算法"}</Box>
-                                </Stack>
-                            </KubeCancelButton>
-                            <KubeCancelButton
-                                onClick={handleDeleteDialogOpen}
-                                sx={{ height: '32px', minWidth: '96px', width: '10%' }}
-                            >
-                                <Stack direction='row' alignItems='center' justifyContent='center'>
-                                    <Box sx={{ ml: '4px' }}>{"删除该算法"}</Box>
-                                </Stack>
-                            </KubeCancelButton>
-                        </Box>
-                    </Stack>
-                }
+                        />
+                        <br></br>
+                        {/* //TODO 参考手册还没写，故连接还没确定 */}
+                        <Typography
+                            sx={{
+                                color: '#36435c',
+                                fontSize: '12px',
+                                lineHeight: 1.67,
+                                fontWeight: 400,
+                            }}
+                        >
+                            {"算法内容,请使用JAVA语言并阅读"}
+                            {<Link href="#">参考手册</Link>}
+                        </Typography>
+                        {/* 写算法的内容，直接用JAVA代码写 */}
+                        <KubeTextField
+                            multiline
+                            maxRows={50}
+                            rows={5}
+                            value={algContent}
+                            onChange={handleNewAlgContent}
+                        />
+                        <br></br>
+                        <KubeCancelButton
+                            onClick={handleModifyAlgorithm}
+                            sx={{ height: '32px', minWidth: '96px', width: '10%' }}
+                        >
+                            <Stack direction='row' alignItems='center' justifyContent='center'>
+                                <Box sx={{ ml: '4px' }}>{"修改该算法"}</Box>
+                            </Stack>
+                        </KubeCancelButton>
+                        <KubeCancelButton
+                            onClick={handleDeleteDialogOpen}
+                            sx={{ height: '32px', minWidth: '96px', width: '10%' }}
+                        >
+                            <Stack direction='row' alignItems='center' justifyContent='center'>
+                                <Box sx={{ ml: '4px' }}>{"删除该算法"}</Box>
+                            </Stack>
+                        </KubeCancelButton>
+                    </Box>
+                </Stack>
+
 
                 {/* 确认删除提示框 */}
                 <Dialog
