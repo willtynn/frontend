@@ -32,14 +32,8 @@ import { useIntl } from 'react-intl';
 import SearchIcon from '@mui/icons-material/Search';
 import RefreshIcon from '@mui/icons-material/Refresh';
 import { EclipseTransparentButton } from '@/components/Button';
-import RunningIcon from '@/assets/RunningIcon.svg';
-import PendingIcon from '@/assets/PendingIcon.svg';
-import FailedIcon from '@/assets/FailedIcon.svg';
-import SucceededIcon from '@/assets/SucceededIcon.svg';
 import Question from '@/assets/Question.svg';
-import { EvolutionProgress } from '../EvolutionProgress';
 import { AlgorithmManage } from '.';
-import Task from '@/assets/Task.svg';
 import { NormalBoldFont, SmallLightFont } from '@/components/Fonts';
 import { useNavigate } from 'react-router-dom';
 import {
@@ -52,16 +46,11 @@ import {
 } from '../../../actions/applicationAction';
 import { StyledModal } from '../../../components/Modal';
 import {
-    evo_getPlanList,
-    evo_get_dataSource,
+    evo_get_plan_alg_list,
     evo_modify,
-    evo_get_algorithm_data_mapping,
-    evo_get_algorithm,
     EVO_UPDATE_EVO_PLAN_ALG
 } from '../../../actions/evolutionAction';
-import LeftArrow from '@/assets/WhiteLeftArrow.svg';
-import RightArrow from '@/assets/WhiteRightArrow.svg';
-import { set } from 'lodash';
+import PLAN from '@/assets/API.svg';
 
 function descendingComparator(a, b, orderBy) {
     if (b[orderBy] < a[orderBy]) {
@@ -120,7 +109,7 @@ function createRow(
 }
 
 const IDPattern = new RegExp(/^(ID|ID):/);
-const namePattern = new RegExp(/^(算法名称|Algorithm Name):/);
+const namePattern = new RegExp(/^(名称|Algorithm Name):/);
 
 export function PlanAlgList() {
     const intl = useIntl();
@@ -173,10 +162,7 @@ export function PlanAlgList() {
 
     useEffect(() => {
         //获取到对应的evolist，dataSource和算法与data的匹配表
-        dispatch(evo_getPlanList("", ""));
-        dispatch(evo_get_algorithm());
-        dispatch(evo_get_dataSource());
-        dispatch(evo_get_algorithm_data_mapping());
+        dispatch(evo_get_plan_alg_list("",""));
     }, []);
 
     useEffect(() => {
@@ -256,10 +242,10 @@ export function PlanAlgList() {
 
     const searchByTwo = () => {
         const listSearchName = [];
-        const listSearchTime = [];
+        const listSearchID = [];
         searchList.forEach((value, _) => {
             if (value.startsWith(`${"ID"}:`)) {
-                listSearchTime.push(value.replace(IDPattern, ''))
+                listSearchID.push(value.replace(IDPattern, ''))
             } else if (value.startsWith(`${"名称"}:`)) {
                 listSearchName.push(value.replace(namePattern, ''))
             } else {
@@ -269,14 +255,14 @@ export function PlanAlgList() {
 
         //暂时先只允许第一个参数起效
         //TODO 后续可能需要改成允许同时查询多个名称
-        if (listSearchName.length != 0 && listSearchTime != 0) {
-            dispatch(evo_getPlanList(listSearchName[0], listSearchTime[0]))
+        if (listSearchName.length != 0 && listSearchID != 0) {
+            dispatch(evo_get_plan_alg_list(listSearchName[0], listSearchID[0]))
         } else if (listSearchName.length != 0) {
-            dispatch(evo_getPlanList(listSearchName[0], ""))
-        } else if (listSearchTime.length != 0) {
-            dispatch(evo_getPlanList("", listSearchTime[0]))
+            dispatch(evo_get_plan_alg_list(listSearchName[0], ""))
+        } else if (listSearchID.length != 0) {
+            dispatch(evo_get_plan_alg_list("", listSearchID[0]))
         } else {
-            dispatch(evo_getPlanList("", ""))
+            dispatch(evo_get_plan_alg_list("", ""))
         }
 
     };
@@ -660,7 +646,7 @@ export function PlanAlgList() {
                                                 }}
                                             >
                                                 <Stack alignItems='center' direction='row' spacing={2}>
-                                                    <Task />
+                                                    <PLAN />
                                                     <Box
                                                         sx={{
                                                             height: '40px',

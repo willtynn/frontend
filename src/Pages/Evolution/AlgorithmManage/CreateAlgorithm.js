@@ -158,7 +158,7 @@ export function CreateAlgorithm(props) {
                     {"算法内容,请使用JAVA语言并阅读"}
                     {<Link href="#">参考手册</Link>}
                 </Typography>
-                {/* 写算法的内容，直接用JAVA代码写 */}
+                {/* 写算法的内容,需要直接用JAVA代码写 */}
                 <KubeTextField
                     multiline
                     maxRows={50}

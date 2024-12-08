@@ -591,6 +591,16 @@ export default function EvolutionReducer(state = initState, action) {
         ...state,
         evo_plan_alg: data
       }
+    case actions.EVO_UPDATE_PLAN_ALG_LIST:
+      return {
+        ...state,
+        exe_alg_list: data
+      }
+    case actions.EVO_UPDATE_ANA_ALG_LIST:
+      return {
+        ...state,
+        ana_alg_list: data
+      }
     //新增结束
     default:
       return state;

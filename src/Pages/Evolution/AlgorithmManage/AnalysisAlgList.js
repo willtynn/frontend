@@ -52,11 +52,8 @@ import {
 } from '../../../actions/applicationAction';
 import { StyledModal } from '../../../components/Modal';
 import {
-    evo_getPlanList,
-    evo_get_dataSource,
+    evo_get_ana_alg_list,
     evo_modify,
-    evo_get_algorithm_data_mapping,
-    evo_get_algorithm,
     EVO_UPDATE_EVO_ANA_ALG
 } from '../../../actions/evolutionAction';
 import LeftArrow from '@/assets/WhiteLeftArrow.svg';
@@ -120,7 +117,7 @@ function createRow(
 }
 
 const IDPattern = new RegExp(/^(ID|ID):/);
-const namePattern = new RegExp(/^(算法名称|Algorithm Name):/);
+const namePattern = new RegExp(/^(名称|Algorithm Name):/);
 
 export function AnalysisAlgList() {
     const intl = useIntl();
@@ -172,11 +169,7 @@ export function AnalysisAlgList() {
     const navigate = useNavigate();
 
     useEffect(() => {
-        //获取到对应的evolist，dataSource和算法与data的匹配表
-        dispatch(evo_getPlanList("", ""));
-        dispatch(evo_get_algorithm());
-        dispatch(evo_get_dataSource());
-        dispatch(evo_get_algorithm_data_mapping());
+        dispatch(evo_get_ana_alg_list("", ""));
     }, []);
 
     useEffect(() => {
@@ -256,10 +249,10 @@ export function AnalysisAlgList() {
 
     const searchByTwo = () => {
         const listSearchName = [];
-        const listSearchTime = [];
+        const listSearchID = [];
         searchList.forEach((value, _) => {
             if (value.startsWith(`${"ID"}:`)) {
-                listSearchTime.push(value.replace(IDPattern, ''))
+                listSearchID.push(value.replace(IDPattern, ''))
             } else if (value.startsWith(`${"名称"}:`)) {
                 listSearchName.push(value.replace(namePattern, ''))
             } else {
@@ -269,14 +262,14 @@ export function AnalysisAlgList() {
 
         //暂时先只允许第一个参数起效
         //TODO 后续可能需要改成允许同时查询多个名称
-        if (listSearchName.length != 0 && listSearchTime != 0) {
-            dispatch(evo_getPlanList(listSearchName[0], listSearchTime[0]))
+        if (listSearchName.length != 0 && listSearchID != 0) {
+            dispatch(evo_get_ana_alg_list(listSearchName[0], listSearchID[0]))
         } else if (listSearchName.length != 0) {
-            dispatch(evo_getPlanList(listSearchName[0], ""))
-        } else if (listSearchTime.length != 0) {
-            dispatch(evo_getPlanList("", listSearchTime[0]))
+            dispatch(evo_get_ana_alg_list(listSearchName[0], ""))
+        } else if (listSearchID.length != 0) {
+            dispatch(evo_get_ana_alg_list("", listSearchID[0]))
         } else {
-            dispatch(evo_getPlanList("", ""))
+            dispatch(evo_get_ana_alg_list("", ""))
         }
 
     };

@@ -91,8 +91,12 @@ export const EVO_GET_PLAN_RESULT = 'EVO_GET_PLAN_RESULT'
 export const EVO_UPDATE_EVO_DATA_ARGS = 'EVO_UPDATE_EVO_DATA_ARGS'
 export const EVO_UPDATE_EVO_ANA_ARGS = 'EVO_UPDATE_EVO_ANA_ARGS'
 export const EVO_UPDATE_EVO_EXE_ARGS = 'EVO_UPDATE_EVO_EXE_ARGS'
+//对更新管理界面的单个算法界面
 export const EVO_UPDATE_EVO_ANA_ALG = 'EVO_UPDATE_EVO_ANA_ALG'
 export const EVO_UPDATE_EVO_PLAN_ALG = 'EVO_UPDATE_EVO_PLAN_ALG'
+//单独更新对应的算法列表
+export const EVO_UPDATE_ANA_ALG_LIST = 'EVO_UPDATE_ANA_ALG_LIST'
+export const EVO_UPDATE_PLAN_ALG_LIST = 'EVO_UPDATE_PLAN_ALG_LIST'
 
 const baseURLLink = 'http://192.168.1.104:14447';
 // const baseURLLink = 'http://localhost:8848';
@@ -100,7 +104,8 @@ const baseURLLink = 'http://192.168.1.104:14447';
 //演化功能对应开发环境下的的baseURL
 // const baseURL = 'http://172.31.0.3:1234';
 //TODO
-const baseURL = 'http://100.105.103.116:30030';
+// const baseURL = 'http://100.105.103.116:30030';
+const baseURL = 'http://localhost:1234';
 
 const axios_instance = axios.create({
   baseURL: baseURLLink,
@@ -1049,6 +1054,102 @@ export function evo_get_plan_result(id){
   };
 }
 
+
+//获取/搜索分析算法
+export function evo_get_ana_alg_list(name,id){
+  const url = '/evolution/alg/anaAlg/list';
+  return async dispatch => {
+    try {
+      const res = await axios_for_evolution.get(
+        url,
+        {
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          params:{
+            alg_id:id,
+            ana_alg_name:name
+          }
+        }
+      );
+      if(res.status !== 200){      //未能正确返回则提示用户  status为返回头自带的状态字段，暂时可以用来表示是否成功返回，但是不够灵活
+        dispatch(
+          setSnackbarMessageAndOpen(
+            'common.errorMessage',
+            {msg: "获取分析算法失败，请检查后端是否正确运行"},
+            SEVERITIES.warning
+          )
+        );
+      }else{        //正确返回的情况下则更新演化计划的运行状态以便于展示
+        dispatch({ type: EVO_UPDATE_ANA_ALG_LIST,data:res.data});
+        dispatch(
+          setSnackbarMessageAndOpen(
+            'common.confirm',
+            {},
+            SEVERITIES.success
+          )
+        );
+      }
+    } catch {
+      dispatch(
+        setSnackbarMessageAndOpen(
+          'common.erroMessage',
+          {msg: "未能成功连接后端，请等待后端服务重启"},
+          SEVERITIES.warning
+        )
+      );
+    }
+  };
+}
+//获取或者搜索规划算法
+export function evo_get_plan_alg_list(name,id){
+  const url = '/evolution/alg/exeAlg/list';
+  return async dispatch => {
+    try {
+      const res = await axios_for_evolution.get(
+        url,
+        {
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          params:{
+            alg_id:id,
+            plan_alg_name:name
+          }
+        }
+      );
+      if(res.status !== 200){      //未能正确返回则提示用户  status为返回头自带的状态字段，暂时可以用来表示是否成功返回，但是不够灵活
+        dispatch(
+          setSnackbarMessageAndOpen(
+            'common.errorMessage',
+            {msg: "获取规划算法失败，请检查后端是否正确运行"},
+            SEVERITIES.warning
+          )
+        );
+      }else{        //正确返回的情况下则更新演化计划的运行状态以便于展示
+        dispatch({ type: EVO_UPDATE_PLAN_ALG_LIST,data:res.data});
+        dispatch(
+          setSnackbarMessageAndOpen(
+            'common.confirm',
+            {},
+            SEVERITIES.success
+          )
+        );
+      }
+    } catch {
+      dispatch(
+        setSnackbarMessageAndOpen(
+          'common.erroMessage',
+          {msg: "未能成功连接后端，请等待后端服务重启"},
+          SEVERITIES.warning
+        )
+      );
+    }
+  };
+}
+
+
+
 //注册分析算法
 export function ana_register(data){
   const url = '/evolution/alg/anaAlg/register'
@@ -1105,7 +1206,7 @@ export function ana_register(data){
 }
 
 
-//注册执行算法
+//注册规划算法
 export function exe_register(data){
   const url = '/evolution/alg/exeAlg/register'
   return async dispatch => {
@@ -1216,7 +1317,7 @@ export function ana_modify(data){
   };
 }
 
-//修改执行算法
+//修改规划算法
 export function exe_modify(data){
   const url = '/evolution/alg/exeAlg/modify'
   return async dispatch => {
