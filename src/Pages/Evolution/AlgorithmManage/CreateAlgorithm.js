@@ -51,7 +51,7 @@ import {
 } from '../../../actions/evolutionAction';
 import { setSnackbarMessageAndOpen } from '../../../actions/snackbarAction';
 import { SEVERITIES } from '../../../components/CommonSnackbar';
-import { saveAs } from 'file-saver';
+
 
 const style = {
     position: 'absolute',
@@ -65,6 +65,7 @@ const style = {
 };
 
 export function CreateAlgorithm(props) {
+    const intl = useIntl();
     const { state,exit } = props;
     const dispatch = useDispatch();
 
@@ -124,12 +125,12 @@ export function CreateAlgorithm(props) {
                         fontWeight: 400,
                     }}
                 >
-                    {"注册算法类型为" + state}
+                    {intl.messages['evolution.registerAlgorithmType']+ state}
                 </Typography>
                 <br></br>
                 <KubeInput
-                    label={"算法名称"}
-                    decription={"此处为算法的名称"}
+                    label={intl.messages['evolution.algorithmName']}
+                    decription={intl.messages['evolution.algorithmNameDes']}
                     requried={true}
                     id='test-evo_name-input'
                     variant='outlined'
@@ -141,8 +142,8 @@ export function CreateAlgorithm(props) {
                 />
                 <br></br>
                 <KubeInput
-                    label={"算法描述"}
-                    decription={"简要描述算法"}
+                    label={intl.messages['evolution.algorithmDescription']}
+                    decription={intl.messages['evolution.algorithmDescriptionDes']}
                     requried={false}
                     id='test-evo_name-input'
                     variant='outlined'
@@ -163,8 +164,8 @@ export function CreateAlgorithm(props) {
                         fontWeight: 400,
                     }}
                 >
-                    {"算法内容,请使用JAVA语言并阅读"}
-                    {<Link href="#">参考手册</Link>}
+                    {intl.messages['evolution.java']}
+                    {<Link href="#">{intl.messages['evolution.referenceManual']}</Link>}
                 </Typography>
                 {/* 写算法的内容,需要直接用JAVA代码写 */}
                 <KubeTextField
@@ -180,7 +181,7 @@ export function CreateAlgorithm(props) {
                     sx={{ height: '32px', minWidth: '96px', width: '10%' }}
                 >
                     <Stack direction='row' alignItems='center' justifyContent='center'>
-                        <Box sx={{ ml: '4px' }}>{"注册该算法"}</Box>
+                        <Box sx={{ ml: '4px' }}>{intl.messages['evolution.registerAlgorithm']}</Box>
                     </Stack>
                 </KubeCancelButton>
 

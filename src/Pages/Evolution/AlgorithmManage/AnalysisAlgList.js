@@ -397,7 +397,7 @@ export function AnalysisAlgList() {
                                 lineHeight: '32px',
                             }}
                         >
-                            {"分析算法管理"}
+                            {intl.messages['evolution.analysisAlgorithm']}
                         </Typography>
                         <Typography
                             sx={{
@@ -408,7 +408,7 @@ export function AnalysisAlgList() {
                                 lineHeight: 1.67,
                             }}
                         >
-                            {"分析算法"}
+                            {intl.messages['evolution.analysisAlgorithmDes']}
                         </Typography>
                     </Box>
                 </Stack>
@@ -605,7 +605,7 @@ export function AnalysisAlgList() {
                                 handleAlgorithmClick();
                             }}
                         >
-                            {"创建分析算法"}
+                            {intl.messages['evolution.createAnalysisAlgorithm']}
                         </KubeConfirmButton>
                     </Stack>
                 </Box>
@@ -722,7 +722,7 @@ export function AnalysisAlgList() {
                                                     display: headRow[3].show ? 'table-cell' : 'none',
                                                 }}
                                             >
-                                                {row.analyze_content == null ? "系统" : "用户"}
+                                                {row.analyze_content == null ? intl.messages['evolution.system'] : intl.messages['evolution.user']}
                                             </StyledTableBodyCell>
                                         </TableRow>
                                     );

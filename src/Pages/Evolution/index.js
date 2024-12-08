@@ -676,7 +676,7 @@ export default function EvolutionPlan() {
               }}
               onClick={handleAlgorithmClick}
             >
-              {"管理演化算法"}
+              {intl.messages['evolution.evolutionAlgorithmManagement']}
             </KubeConfirmButton>
           </Stack>
         </Box>

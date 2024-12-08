@@ -68,7 +68,7 @@ export function AlgorithmManage(props) {
 
     return (
         <Box sx={style}>
-            <KubeDeploymentCard title={"算法管理"} handleClose={handleCancelClick}>
+            <KubeDeploymentCard title={intl.messages['evolution.algorithmManagement']} handleClose={handleCancelClick}>
                 <Stack
                     direction='row'
                     spacing={0}
@@ -85,7 +85,7 @@ export function AlgorithmManage(props) {
                             fontWeight: 400,
                         }}
                     >
-                        {target == "analysis" ? "分析算法管理" : (target == "plan" ? "规划算法管理" : "算法注册")}
+                        {target == "analysis" ? intl.messages['evolution.planningAlgorithm'] : (target == "plan" ? intl.messages['evolution.planningAlgorithm'] : intl.messages['evolution.algorithmRegistration'])}
                     </Typography>
 
                 </Stack>
@@ -114,7 +114,7 @@ export function AlgorithmManage(props) {
                         sx={{ height: '32px', p: '5px 23px',width:"150px" }}
                         onClick={handleCancelClick}
                     >
-                        {"返回"}
+                        {intl.messages['evolution.back']}
                     </KubeConfirmButton>
                 </Stack>
             </KubeDeploymentCard>

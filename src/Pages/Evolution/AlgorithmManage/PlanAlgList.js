@@ -390,7 +390,7 @@ export function PlanAlgList() {
                                 lineHeight: '32px',
                             }}
                         >
-                            {"规划算法管理"}
+                            {intl.messages['evolution.planningAlgorithm']}
                         </Typography>
                         <Typography
                             sx={{
@@ -401,7 +401,7 @@ export function PlanAlgList() {
                                 lineHeight: 1.67,
                             }}
                         >
-                            {"对规划算法进行高自由度的管理"}
+                            {intl.messages['evolution.planningAlgorithmDes']}
                         </Typography>
                     </Box>
                 </Stack>
@@ -598,7 +598,7 @@ export function PlanAlgList() {
                                 handleAlgorithmClick();
                             }}
                         >
-                            {"创建规划算法"}
+                            {intl.messages['evolution.createPlanningAlgorithm']}
                         </KubeConfirmButton>
                     </Stack>
                 </Box>
@@ -715,7 +715,7 @@ export function PlanAlgList() {
                                                     display: headRow[3].show ? 'table-cell' : 'none',
                                                 }}
                                             >
-                                                {row.plan_content == null ? "系统" : "用户"}
+                                                {row.plan_content == null ? intl.messages['evolution.system'] : intl.messages['evolution.user']}
                                             </StyledTableBodyCell>
                                         </TableRow>
                                     );

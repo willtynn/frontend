@@ -277,7 +277,7 @@ export function PlanAlgorithmManage(props) {
                 <Stack sx={{ p: '32px 64px', bgcolor: '#FFFFFF', height: "500px", overflow: 'scroll' }} direction='column' justifyContent='space-between' >
                     <Box>
                         <KubeInput
-                            label={"算法名称"}
+                            label={intl.messages['evolution.algorithmName']}
                             decription={"此处为算法的名称"}
                             requried={true}
                             id='test-evo_name-input'
@@ -290,7 +290,7 @@ export function PlanAlgorithmManage(props) {
                         />
                         <br></br>
                         <KubeInput
-                            label={"算法描述"}
+                            label={intl.messages['evolution.algorithmDescription']}
                             decription={"简要描述算法"}
                             requried={false}
                             id='test-evo_name-input'
@@ -312,8 +312,8 @@ export function PlanAlgorithmManage(props) {
                                 fontWeight: 400,
                             }}
                         >
-                            {"算法内容,请使用JAVA语言并阅读"}
-                            {<Link href="#">参考手册</Link>}
+                            {intl.messages['evolution.java']}
+                            {<Link href="#">{intl.messages['evolution.referenceManual']}</Link>}
                         </Typography>
                         {/* 写算法的内容，直接用JAVA代码写 */}
                         <KubeTextField
@@ -329,7 +329,7 @@ export function PlanAlgorithmManage(props) {
                             sx={{ height: '32px', minWidth: '96px', width: '10%' }}
                         >
                             <Stack direction='row' alignItems='center' justifyContent='center'>
-                                <Box sx={{ ml: '4px' }}>{"修改该算法"}</Box>
+                                <Box sx={{ ml: '4px' }}>{intl.messages['evolution.revision']}</Box>
                             </Stack>
                         </KubeCancelButton>
                         <KubeCancelButton
@@ -337,7 +337,7 @@ export function PlanAlgorithmManage(props) {
                             sx={{ height: '32px', minWidth: '96px', width: '10%' }}
                         >
                             <Stack direction='row' alignItems='center' justifyContent='center'>
-                                <Box sx={{ ml: '4px' }}>{"删除该算法"}</Box>
+                                <Box sx={{ ml: '4px' }}>{intl.messages['evolution.delete']}</Box>
                             </Stack>
                         </KubeCancelButton>
                     </Box>
@@ -365,7 +365,7 @@ export function PlanAlgorithmManage(props) {
                     </DialogTitle>
                     <DialogContent>
                         <DialogContentText id="alert-dialog-description">
-                            {"该操作不可逆，是否确定删除？"}
+                            {intl.messages['evolution.deletePrompt']}
                         </DialogContentText>
                     </DialogContent>
                     <DialogActions>
