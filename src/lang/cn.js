@@ -591,6 +591,7 @@ export const messages = {
     planningAlgorithm: '规划算法管理',
     planningAlgorithmDes: '对规划算法进行高自由度的管理',
     ID: 'ID',
+    name: '算法名称',
     algorithmRegistration: '算法注册',
     algorithmManagement: '算法管理',
     back: '返回',

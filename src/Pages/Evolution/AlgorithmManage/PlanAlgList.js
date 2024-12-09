@@ -177,7 +177,7 @@ export function PlanAlgList() {
     const headRow = [
         createRow(
             'algorithmID',
-            "ID",
+            intl.messages['evolution.ID'],
             true,
             '30px',
             '30px',
@@ -186,7 +186,7 @@ export function PlanAlgList() {
         ),
         createRow(
             'algorithmName',
-            "Algorithm Name",
+            intl.messages['evolution.name'],
             false,
             '100px',
             '100px',
@@ -195,7 +195,7 @@ export function PlanAlgList() {
         ),
         createRow(
             'description',
-            "description",
+            intl.messages['evolution.algorithmDescription'],
             false,
             '400px',
             '400px',
@@ -204,7 +204,7 @@ export function PlanAlgList() {
         ),
         createRow(
             'type',
-            "type",
+            intl.messages['evolution.type'],
             false,
             '120px',
             '130px',

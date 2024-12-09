@@ -616,6 +616,7 @@ export const messages = {
     planningAlgorithm: 'Planning Algorithm',
     planningAlgorithmDes: 'Implement high-degree-of-freedom management for planning algorithms.',
     ID: 'ID',
+    name: 'Name',
     algorithmRegistration: 'Algorithm Registration',
     algorithmManagement: 'Algorithm Management',
     back: 'Back',
