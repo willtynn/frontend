@@ -161,7 +161,7 @@ export default function NetworkNodeControl(props) {
 
     /*useEffect(() => {
         const fetchData = async () => {
-            const ips = ['100.105.103.116','192.168.1.171','192.168.1.172','192.168.1.173','192.168.1.181'];
+            const ips = ['192.168.1.104','192.168.1.171','192.168.1.172','192.168.1.173','192.168.1.181'];
             const promises = ips.map(ip => dispatch(getNetworkControlInfo(ip)));
             const results = await Promise.all(promises);
             console.log('Fetched data:', results);

@@ -46,7 +46,7 @@ export const UPDATE_IP = 'UPDATE_IP';
 export const UPDATE_ALL_NETWORK_CONTROL_INFO = 'UPDATE_ALL_NETWORK_CONTROL_INFO';
 
 
-const baseURLLink = 'http://100.105.103.116:32318';
+const baseURLLink = 'http://192.168.1.104:32318';
 
 const axios_instance = axios.create({
   baseURL: baseURLLink,

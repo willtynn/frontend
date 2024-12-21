@@ -91,9 +91,9 @@ export const RESET_JOINT_PLAN = 'RESET_JOINT_PLAN';
 export const DELETE_JOINT_PLAN = 'DELETE_JOINT_PLAN';
 
 
-//const baseURLLink = 'http://100.105.103.116:14447';
-//const baseURLLink = 'http://100.105.103.116:30293';
-const baseURLLink = 'http://100.105.103.116:30293';
+//const baseURLLink = 'http://192.168.1.104:14447';
+//const baseURLLink = 'http://192.168.1.104:30293';
+const baseURLLink = 'http://192.168.1.104:30293';
 //const baseURLLink = 'http://localhost:8848';
 
 

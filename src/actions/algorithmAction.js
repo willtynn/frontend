@@ -17,7 +17,7 @@ export const QUERY_INSTANCE = 'QUERY_INSTANCE';
 export const ADD_INSTANCE = 'ADD_INSTANCE'
 
 
-const baseURLLink = 'http://100.105.103.116:32758';
+const baseURLLink = 'http://192.168.1.104:32758';
 //const baseURLLink = 'http://localhost:32758';
 
 const axios_instance = axios.create({
