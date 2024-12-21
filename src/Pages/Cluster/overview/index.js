@@ -230,9 +230,9 @@ export default function ClusterOverview() {
       const allNetworkControlInfo = await dispatch(getAllNetworkControlInfo());
       if (!allNetworkControlInfo) return;
 
-      const ips = ['192.168.1.104', '192.168.1.171', '192.168.1.172', '192.168.1.173', '192.168.1.181'];
+      const ips = ['100.105.103.116', '192.168.1.171', '192.168.1.172', '192.168.1.173', '192.168.1.181'];
       const servers = [
-        { id: 'cluster1::h1', label: 'cluster1::h1', hostname: '192.168.1.104', ip: '192.168.1.104', configuredRes: { cpu: 1, memory: 100 }, usedRes: { cpu: 1, memory: 50 }, totalRes: { cpu: 1, memory: 100 }, cpuInfo: '无', description: 'Description', pos: { x: 500, y: 300 } },
+        { id: 'cluster1::h1', label: 'cluster1::h1', hostname: '100.105.103.116', ip: '100.105.103.116', configuredRes: { cpu: 1, memory: 100 }, usedRes: { cpu: 1, memory: 50 }, totalRes: { cpu: 1, memory: 100 }, cpuInfo: '无', description: 'Description', pos: { x: 500, y: 300 } },
         { id: 'cluster1::h2', label: 'cluster1::h2', hostname: '192.168.1.171', ip: '192.168.1.171', configuredRes: { cpu: 1, memory: 100 }, usedRes: { cpu: 1, memory: 50 }, totalRes: { cpu: 1, memory: 100 }, cpuInfo: '无', description: 'Description', pos: { x: 300, y: 100 } },
         { id: 'cluster1::h3', label: 'cluster1::h3', hostname: '192.168.1.172', ip: '192.168.1.172', configuredRes: { cpu: 1, memory: 100 }, usedRes: { cpu: 1, memory: 50 }, totalRes: { cpu: 1, memory: 100 }, cpuInfo: '无', description: 'Description', pos: { x: 700, y: 100 } },
         { id: 'cluster1::h4', label: 'cluster1::h4', hostname: '192.168.1.173', ip: '192.168.1.173', configuredRes: { cpu: 1, memory: 100 }, usedRes: { cpu: 1, memory: 50 }, totalRes: { cpu: 1, memory: 100 }, cpuInfo: '无', description: 'Description', pos: { x: 300, y: 500 } },

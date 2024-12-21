@@ -31,9 +31,11 @@ import Log from '../Pages/Industry/Log';
 import ServiceMonitoring from "../Pages/Industry/ServiceMonitoring";
 import ServiceConfiguration from "../Pages/Industry/ServiceConfiguration";
 import ServiceManagement from "../Pages/Industry/ServiceManagement";
-import {PlanAlgorithmManage} from "../Pages/Evolution/AlgorithmManage/PlanAlgorithmManage";
-import {AnalysisAlgList} from "../Pages/Evolution/AlgorithmManage/AnalysisAlgList";
-import {PlanAlgList} from "../Pages/Evolution/AlgorithmManage/PlanAlgList";
+import AnalysisAlgorithm from "../Pages/Evolution/AnalysisAlgorithm";
+import PlanningAlgorithm from "../Pages/Evolution/PlanningAlgorithm";
+import {PlanningAlgorithmDetail} from "../Pages/Evolution/PlanningAlgorithm/Detail/PlanningAlgorithmDetail";
+import {AnalysisAlgorithmDetail} from "../Pages/Evolution/AnalysisAlgorithm/Detail/AnalysisAlgorithmDetail";
+
 export default function MyRoute() {
   return (
     <Routes>
@@ -49,6 +51,8 @@ export default function MyRoute() {
         <Route path='planresult/:testResultId' element={<ResultDetail />}/>
         <Route path='trace/:start/:end/:traceId' element={<RouteTraceInfoPage />}/>
         <Route path='datasource/:name' element={<DataSourceDetail />} />  {/* 数据源详情页面，使用 name 作为参数 */}
+        <Route path='analysisAlgorithm/:name' element={<AnalysisAlgorithmDetail />} />
+        <Route path='planningAlgorithm/:name' element={<PlanningAlgorithmDetail />} />
       </Route>
 
       {/* 存在导航栏 */}
@@ -79,8 +83,8 @@ export default function MyRoute() {
         </Route>
         <Route path='evolution/'>
           <Route path="plan" element={<EvolutionPlan />} />
-          <Route path="analysis" element={<AnalysisAlgList />} />
-          <Route path="planning" element={<PlanAlgList />} />
+          <Route path="analysisAlgorithm" element={<AnalysisAlgorithm />} />
+          <Route path="planningAlgorithm" element={<PlanningAlgorithm />} />
         </Route>
         <Route path='datasource/'>  {/* 新增数据源管理路由 */}
           <Route path='info' element={<DataSourceInfo />} />  {/* 新增数据源信息路由 */}

@@ -496,26 +496,50 @@ export default function MiniDrawer() {
               </ListItemButton>
               <Collapse in={currentPath.includes('/evolution')} timeout='auto' unmountOnExit={true}>
                 <List component='div' disablePadding>
-                  <ListItemButton
-                    sx={styleListButton}
-                    onClick={() => {
-                      navigate('/evolution/plan');
-                    }}
-                  >
-                    <Box
-                      sx={{ ...styledFont, color: currentPath === '/evolution/plan' ? '#55bc8a' : '#242e42' }}
-                    >
-                      {intl.messages['evolution.evolutionPlan']}
-                    </Box>
-                  </ListItemButton>
+                  {/*<ListItemButton*/}
+                  {/*  sx={styleListButton}*/}
+                  {/*  onClick={() => {*/}
+                  {/*    navigate('/evolution/plan');*/}
+                  {/*  }}*/}
+                  {/*>*/}
+                  {/*  <Box*/}
+                  {/*    sx={{ ...styledFont, color: currentPath === '/evolution/plan' ? '#55bc8a' : '#242e42' }}*/}
+                  {/*  >*/}
+                  {/*    {intl.messages['evolution.evolutionPlan']}*/}
+                  {/*  </Box>*/}
+                  {/*</ListItemButton>*/}
+                    {/*<ListItemButton*/}
+                    {/*    sx={styleListButton}*/}
+                    {/*    onClick={() => {*/}
+                    {/*        navigate('/evolution/analysis');*/}
+                    {/*    }}*/}
+                    {/*>*/}
+                    {/*    <Box*/}
+                    {/*        sx={{ ...styledFont, color: currentPath === '/evolution/analysis' ? '#55bc8a' : '#242e42' }}*/}
+                    {/*    >*/}
+                    {/*        {intl.messages['evolution.analysisAlgorithmManagement']}*/}
+                    {/*    </Box>*/}
+                    {/*</ListItemButton>*/}
+                    {/*<ListItemButton*/}
+                    {/*    sx={styleListButton}*/}
+                    {/*    onClick={() => {*/}
+                    {/*        navigate('/evolution/planning');*/}
+                    {/*    }}*/}
+                    {/*>*/}
+                    {/*    <Box*/}
+                    {/*        sx={{ ...styledFont, color: currentPath === '/evolution/planning' ? '#55bc8a' : '#242e42' }}*/}
+                    {/*    >*/}
+                    {/*        {intl.messages['evolution.planningAlgorithmManagement']}*/}
+                    {/*    </Box>*/}
+                    {/*</ListItemButton>*/}
                     <ListItemButton
                         sx={styleListButton}
                         onClick={() => {
-                            navigate('/evolution/analysis');
+                            navigate('/evolution/analysisAlgorithm');
                         }}
                     >
                         <Box
-                            sx={{ ...styledFont, color: currentPath === '/evolution/analysis' ? '#55bc8a' : '#242e42' }}
+                            sx={{ ...styledFont, color: currentPath === '/evolution/analysisAlgorithm' ? '#55bc8a' : '#242e42' }}
                         >
                             {intl.messages['evolution.analysisAlgorithm']}
                         </Box>
@@ -523,11 +547,11 @@ export default function MiniDrawer() {
                     <ListItemButton
                         sx={styleListButton}
                         onClick={() => {
-                            navigate('/evolution/planning');
+                            navigate('/evolution/planningAlgorithm');
                         }}
                     >
                         <Box
-                            sx={{ ...styledFont, color: currentPath === '/evolution/planning' ? '#55bc8a' : '#242e42' }}
+                            sx={{ ...styledFont, color: currentPath === '/evolution/planningAlgorithm' ? '#55bc8a' : '#242e42' }}
                         >
                             {intl.messages['evolution.planningAlgorithm']}
                         </Box>

@@ -12,7 +12,7 @@ export const SET_STOP_SERVICE_COUNT = 'SET_STOP_SERVICE_COUNT'
 export const GET_IMAGE_LIST = 'GET_IMAGE_LIST'
 export const UPDATE_IMAGE_LOG = 'UPDATE_IMAGE_LOG'
 
-const baseURLLink = 'http://192.168.1.104:31963';
+const baseURLLink = 'http://100.105.103.116:31963';
 const axios_instance = axios.create({
   baseURL: baseURLLink,
   timeout: 30000,

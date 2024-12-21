@@ -98,14 +98,21 @@ export const EVO_UPDATE_EVO_PLAN_ALG = 'EVO_UPDATE_EVO_PLAN_ALG'
 export const EVO_UPDATE_ANA_ALG_LIST = 'EVO_UPDATE_ANA_ALG_LIST'
 export const EVO_UPDATE_PLAN_ALG_LIST = 'EVO_UPDATE_PLAN_ALG_LIST'
 
-const baseURLLink = 'http://192.168.1.104:14447';
+// // 算法管理
+// export const ADD_ALGORITHM = 'ADD_ALGORITHM'
+// export const DELETE_ALGORITHM = 'DELETE_ALGORITHM'
+// export const QUERY_ALGORITHM = 'QUERY_ALGORITHM'
+// export const UPDATE_ALGORITHM = 'UPDATE_ALGORITHM'
+
+
+const baseURLLink = 'http://100.105.103.116:14447';
 // const baseURLLink = 'http://localhost:8848';
 
 //演化功能对应开发环境下的的baseURL
 // const baseURL = 'http://172.31.0.3:1234';
 //TODO
-// const baseURL = 'http://192.168.1.104:30030';
-const baseURL = 'http://localhost:1234';
+const baseURL = 'http://100.105.103.116:30030';
+// const baseURL = 'http://localhost:1234';
 
 const axios_instance = axios.create({
   baseURL: baseURLLink,
@@ -1455,3 +1462,122 @@ export function exe_delete(id){
     }
   };
 }
+
+// // 添加算法
+// export function addAlgorithm(payload) {
+//   const url = '/api/algorithm/add';
+//   return async dispatch => {
+//     try {
+//       const res = await axios_instance.post(
+//           url,
+//           payload,
+//           {
+//             headers: {
+//               'Content-Type': 'application/json',
+//             },
+//           }
+//       );
+//       if (res.status === 200 || res.status === 201) {
+//         dispatch({
+//           type: ADD_ALGORITHM,
+//           data: res.data,
+//         });
+//         dispatch(setSnackbarMessageAndOpen('evolution.addAlgorithmSuccess', {}, SEVERITIES.success));
+//       } else {
+//         dispatch(setSnackbarMessageAndOpen('evolution.addAlgorithmError', {}, SEVERITIES.warning));
+//       }
+//     } catch (error) {
+//       dispatch(setSnackbarMessageAndOpen('evolution.addAlgorithmError', {}, SEVERITIES.warning));
+//     }
+//   };
+// }
+//
+//
+// // 删除算法
+// export function deleteAlgorithm(id) {
+//   const url = '/api/algorithm/delete';
+//   return async dispatch => {
+//     try {
+//       const res = await axios_instance.post(
+//           url,
+//           { id },
+//           {
+//             headers: {
+//               'Content-Type': 'application/json',
+//             },
+//           }
+//       );
+//       if (res.status === 200) {
+//         dispatch({
+//           type: DELETE_ALGORITHM,
+//           data: res.data,
+//         });
+//         dispatch(setSnackbarMessageAndOpen('evolution.deleteAlgorithmSuccess', {}, SEVERITIES.success));
+//       } else {
+//         dispatch(setSnackbarMessageAndOpen('evolution.deleteAlgorithmError', {}, SEVERITIES.warning));
+//       }
+//     } catch (error) {
+//       dispatch(setSnackbarMessageAndOpen('evolution.deleteAlgorithmError', {}, SEVERITIES.warning));
+//     }
+//   };
+// }
+
+
+// // 查询算法
+// export function queryAlgorithm(queryParams) {
+//   const url = '/api/algorithm/query';
+//   return async dispatch => {
+//     try {
+//       const res = await axios_instance.post(
+//           url,
+//           queryParams,
+//           {
+//             headers: {
+//               'Content-Type': 'application/json',
+//             },
+//           }
+//       );
+//       if (res.status === 200) {
+//         dispatch({
+//           type: QUERY_ALGORITHM,
+//           data: res.data.data,
+//         });
+//       } else {
+//         dispatch(setSnackbarMessageAndOpen('evolution.queryAlgorithmError', {}, SEVERITIES.warning));
+//       }
+//     } catch (error) {
+//       dispatch(setSnackbarMessageAndOpen('evolution.queryAlgorithmError', {}, SEVERITIES.warning));
+//     }
+//   };
+// }
+//
+//
+// // 更新算法
+// export function updateAlgorithm(payload) {
+//   const url = '/api/algorithm/update';
+//   return async dispatch => {
+//     try {
+//       const res = await axios_instance.post(
+//           url,
+//           payload,
+//           {
+//             headers: {
+//               'Content-Type': 'application/json',
+//             },
+//           }
+//       );
+//       if (res.status === 200) {
+//         dispatch({
+//           type: UPDATE_ALGORITHM,
+//           data: res.data,
+//         });
+//         dispatch(setSnackbarMessageAndOpen('evolution.updateAlgorithmSuccess', {}, SEVERITIES.success));
+//       } else {
+//         dispatch(setSnackbarMessageAndOpen('evolution.updateAlgorithmError', {}, SEVERITIES.warning));
+//       }
+//     } catch (error) {
+//       dispatch(setSnackbarMessageAndOpen('evolution.updateAlgorithmError', {}, SEVERITIES.warning));
+//     }
+//   };
+// }
+

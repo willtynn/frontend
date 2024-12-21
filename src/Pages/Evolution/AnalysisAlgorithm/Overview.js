@@ -14,17 +14,17 @@ import {
 } from '@mui/material';
 import {useIntl} from 'react-intl';
 import {KubeConfirmButton} from '@/components/Button';
-import {fetchAllDataSources} from '@/actions/dataSourceAction';
+import {fetchAllAlgorithms} from '@/actions/algorithmAction';
 import {StyledTableContainer, StyledTableBodyCell} from '@/components/DisplayTable';
 import Task from '@/assets/Task.svg';
 import {NormalBoldFont, SmallLightFont} from '@/components/Fonts';
 import SearchIcon from '@mui/icons-material/Search';
 import {useNavigate} from "react-router-dom";
-import RegisterDataSourceDialog from "./RegisterDataSource";
+import AddAlgorithm from "../Form/add.js";
 import Question from '@/assets/Question.svg';
 
 
-export default function DataSourceComponent() {
+export default function AnalysisAlgorithmComponent() {
     const [tableData, setTableData] = useState([]);
     const [searchTerm, setSearchTerm] = useState(''); // 搜索框的状态
     const [page, setPage] = useState(0);
@@ -35,38 +35,56 @@ export default function DataSourceComponent() {
     const intl = useIntl();
     const dispatch = useDispatch();
     const navigate = useNavigate(); // 初始化 useNavigate 钩子用于详情页面跳转
-    const dataSources = useSelector(state => state.DataSource.dataSources);
+    const algorithms = useSelector(state => state.AlgorithmReducer.allAlgorithms) || [];
+
 
     useEffect(() => {
-        dispatch(fetchAllDataSources());
+        dispatch(fetchAllAlgorithms());
     }, [dispatch]);
 
     useEffect(() => {
-        if (Array.isArray(dataSources)) {
-            const formattedData = dataSources.map(source => ({
+        if (Array.isArray(algorithms)) {
+            const formattedData = algorithms
+                .filter(source => source.type === 'analyze') // 过滤出type为plan的算法
+                .map(source => ({
+                id: source.id,
                 name: source.name,
-                description: source.description,
-                typesCount: source.types ? source.types.length : 0,
+                info: source.info,
+                type: source.type,
+                input: source.input,
+                output: source.output,
+                url: source.url,
+                createTime: source.createTime,
+                updateTime: source.updateTime,
+                parameter: source.parameter,
+                isDelete:source.isDelete
             }));
             setTableData(formattedData);
         } else {
             setTableData([]);
         }
-    }, [dataSources]);
+    }, [algorithms]);
 
     // 使用 useCallback 确保 handleSearch 引用最新的 searchTerm 值
     const handleSearch = useCallback(() => {
         setTableData(
-            dataSources
+            algorithms
+                .filter(source => source.type === 'analyze') // 过滤出type为plan的算法
                 .filter(source => source.name.toLowerCase().includes(searchTerm.toLowerCase()))
                 .map(source => ({
                     name: source.name,
-                    description: source.description,
-                    typesCount: source.types ? source.types.length : 0,
+                    info: source.info,
+                    type: source.type,
+                    input: source.input,
+                    output: source.output,
+                    url: source.url,
+                    createTime: source.createTime,
+                    updateTime: source.updateTime,
+                    // parameter: source.parameter
                 }))
         );
         setPage(0); // 搜索后重置到第一页
-    }, [dataSources, searchTerm]);
+    }, [algorithms, searchTerm]);
 
     // 切换分页
     const handleChangePage = (event, newPage) => {
@@ -80,9 +98,15 @@ export default function DataSourceComponent() {
     };
 
     const headFirstRow = [
-        {id: 'dataSourceName', label: intl.messages['dataSource.dataSourceName'], minWidth: 150, align: 'left'},
-        {id: 'dataSourceDes', label: intl.messages['dataSource.dataSourceDes'], minWidth: 150, align: 'left'},
-        {id: 'dataSourceTypes', label: intl.messages['dataSource.dataSourceTypes'], minWidth: 150, align: 'left'}
+        {id: 'name', label: intl.messages['evolution.name'], minWidth: 150, align: 'left'},
+        {id: 'info', label: intl.messages['evolution.info'], minWidth: 150, align: 'left'},
+        {id: 'type', label: intl.messages['evolution.type'], minWidth: 150, align: 'left'},
+        {id: 'input', label: intl.messages['evolution.input'], minWidth: 150, align: 'left'},
+        {id: 'output', label: intl.messages['evolution.output'], minWidth: 150, align: 'left'},
+        {id: 'url', label: intl.messages['evolution.url'], minWidth: 150, align: 'left'},
+        {id: 'createTime', label: intl.messages['evolution.createTime'], minWidth: 150, align: 'left'},
+        {id: 'updateTime', label: intl.messages['evolution.updateTime'], minWidth: 150, align: 'left'},
+        // {id: 'parameter', label: intl.messages['evolution.parameter'], minWidth: 150, align: 'left'},
     ];
 
     // 控制注册数据源表单
@@ -102,7 +126,7 @@ export default function DataSourceComponent() {
                 <TextField
                     value={searchTerm}
                     onChange={(e) => setSearchTerm(e.target.value)}
-                    placeholder={intl.messages['dataSource.dataSourceSearchPrompt']}
+                    placeholder={intl.messages['evolution.algorithmSearchPrompt']}
                     onKeyDown={(e) => {
                         if (e.key === 'Enter') {
                             e.preventDefault();
@@ -151,22 +175,22 @@ export default function DataSourceComponent() {
                     sx={{width: '150px'}}
                     onClick={handleSearch}
                 >
-                    {intl.messages['dataSource.query']}
+                    {intl.messages['evolution.query']}
                 </KubeConfirmButton>
 
-                {/*注册数据源按钮*/}
+                {/*新增算法按钮*/}
                 <KubeConfirmButton
                     sx={{width: '150px'}}
                     onClick={handleOpen}
                 >
-                    {intl.messages['dataSource.dataSourceRegister']}
+                    {intl.messages['evolution.addAlgorithm']}
                 </KubeConfirmButton>
             </Stack>
 
-            {/*数据源注册表单弹窗-使用 RegisterDataSourceDialog 组件 */}
-            <RegisterDataSourceDialog open={open} handleClose={handleClose} />
+            {/*新增算法弹窗 */}
+            <AddAlgorithm open={open} handleClose={handleClose} />
 
-            {/*数据源展示表格内容*/}
+            {/*算法展示表格内容*/}
             <StyledTableContainer sx={{bgcolor: '#FFF'}}>
                 <Table stickyHeader size="small" sx={{tableLayout: 'auto'}}>
                     <TableHead>
@@ -190,7 +214,7 @@ export default function DataSourceComponent() {
                                     <TableCell>
                                         <Task style={{ width: 35, height: 35 }} />
                                     </TableCell>
-                                    {/*数据源名称列*/}
+                                    {/*算法名称列*/}
                                     <StyledTableBodyCell
                                         sx = {{
                                             fontWeight: 'bold',
@@ -198,20 +222,26 @@ export default function DataSourceComponent() {
                                             cursor: 'pointer',
                                             '&:hover': { color: '#2e7d32' } // 深绿色
                                         }}
-                                        onClick={() => navigate(`/detail/dataSource/${row.name}`)} // 跳转到详情页面
+                                        onClick={() => navigate(`/detail/analysisAlgorithm/${row.name}`)} // 跳转到详情页面
                                     >
                                         {row.name}
                                     </StyledTableBodyCell>
-                                    <StyledTableBodyCell>{row.description}</StyledTableBodyCell>
-                                    <StyledTableBodyCell>{row.typesCount}</StyledTableBodyCell>
+                                    <StyledTableBodyCell>{row.info}</StyledTableBodyCell>
+                                    <StyledTableBodyCell>{row.type}</StyledTableBodyCell>
+                                    <StyledTableBodyCell>{row.input}</StyledTableBodyCell>
+                                    <StyledTableBodyCell>{row.output}</StyledTableBodyCell>
+                                    <StyledTableBodyCell>{row.url}</StyledTableBodyCell>
+                                    <StyledTableBodyCell>{row.createTime}</StyledTableBodyCell>
+                                    <StyledTableBodyCell>{row.updateTime}</StyledTableBodyCell>
+                                    {/*<StyledTableBodyCell>{row.parameter}</StyledTableBodyCell>*/}
                                 </TableRow>
                             ))
                         ) : (
                             <TableRow style={{height: '220px'}}>
-                                <TableCell colSpan={5} align="center">
+                                <TableCell colSpan={8} align="center">
                                     <Question />
                                     <NormalBoldFont>
-                                        {intl.messages['dataSource.noData']}
+                                        {intl.messages['evolution.noData']}
                                     </NormalBoldFont>
                                 </TableCell>
                             </TableRow>
@@ -229,7 +259,7 @@ export default function DataSourceComponent() {
                 rowsPerPage={rowsPerPage}
                 onRowsPerPageChange={handleChangeRowsPerPage}
                 rowsPerPageOptions={[10, 20, 50, 100]}
-                labelRowsPerPage={intl.messages['dataSource.numsPerPage']}
+                labelRowsPerPage={intl.messages['evolution.numsPerPage']}
                 labelDisplayedRows={({ from, count, page }) => `${page + 1} of ${Math.ceil(count / rowsPerPage)}`} // 自定义显示格式
             />
         </Box>

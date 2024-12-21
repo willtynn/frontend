@@ -99,6 +99,13 @@ const initState = {
   pageSize: 10,
   //结束
 
+
+  // // 算法部分
+  // algorithms: [], // 存储算法数据
+  // algorithm: null, // 存储单个算法数据（例如更新后的算法）
+  // error: null, // 存储错误信息
+  // loading: false, // 存储请求的加载状态
+
 };
 
 export default function EvolutionReducer(state = initState, action) {
@@ -604,6 +611,36 @@ export default function EvolutionReducer(state = initState, action) {
         ana_alg_list: data,
         pageNum: 1
       }
+
+    // //  算法
+    // case actions.ADD_ALGORITHM:
+    //   return {
+    //     ...state,
+    //     algorithms: [...state.algorithms, action.data], // 假设返回的 data 是添加后的算法
+    //     loading: false,
+    //   };
+    // case actions.DELETE_ALGORITHM:
+    //   return {
+    //     ...state,
+    //     algorithms: state.algorithms.filter(algorithm => algorithm.id !== action.data.id), // 通过 id 删除算法
+    //     loading: false,
+    //   };
+    // case actions.QUERY_ALGORITHM:
+    //   return {
+    //     ...state,
+    //     algorithms: action.data, // 假设返回的 data 是查询到的算法列表
+    //     loading: false,
+    //   };
+    // case actions.UPDATE_ALGORITHM:
+    //   return {
+    //     ...state,
+    //     algorithms: state.algorithms.map(algorithm =>
+    //         algorithm.id === action.data.id ? action.data : algorithm // 更新对应算法的数据
+    //     ),
+    //     algorithm: action.data, // 如果返回的 data 是更新后的单个算法
+    //     loading: false,
+    //   };
+
     //新增结束
     default:
       return state;

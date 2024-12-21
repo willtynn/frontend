@@ -11,6 +11,7 @@ import SchemeReducer from './schemeReducer';
 import EvolutionReducer from './evolutionReducer';
 import DataSourceReducer from './dataSourceReducer';
 import IndustryReducer from "./industryReducer";
+import AlgorithmReducer from "./algorithmReducer";
 
 const rootReducer = combineReducers({
     Service: ServiceReducer,
@@ -24,7 +25,9 @@ const rootReducer = combineReducers({
     Scheme: SchemeReducer,
     Evolution: EvolutionReducer,
     DataSource: DataSourceReducer,
+    AlgorithmReducer: AlgorithmReducer,
     Industry: IndustryReducer,
+
 });
 
 export default rootReducer;

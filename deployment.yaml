@@ -26,7 +26,7 @@ spec:
     spec:
       containers:
         - name: cloud-edge-platform
-          image: 192.168.1.104:5000/cloud-edge-platform:v1.0
+          image: 100.105.103.116:5000/cloud-edge-platform:v1.0
           imagePullPolicy: Always
           ports:
             - containerPort: 3000
